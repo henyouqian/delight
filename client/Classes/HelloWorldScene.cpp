@@ -166,8 +166,8 @@ bool HelloWorld::init()
     
     auto gifSpt = GifSprite::create("test.gif");
     this->addChild(gifSpt);
-    gifSpt->setAnchorPoint(Point(0, 0));
-    gifSpt->setPosition(Point(0, 0));
+    //gifSpt->setAnchorPoint(Point(0, 0));
+    gifSpt->setPosition(Point(visibleSize.width*.5f, visibleSize.height*.5f));
     return true;
 }
 

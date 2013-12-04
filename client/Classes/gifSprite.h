@@ -18,6 +18,9 @@ public:
     
 private:
     GifFileType *_gifFile;
+    char *_buf;
+    size_t _bufLen;
+    int _currFrame;
 };
 
 #endif // __GIF_SPRITE_H__
