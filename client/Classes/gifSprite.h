@@ -17,10 +17,16 @@ public:
     void nextFrame();
     
 private:
+    void updateBuf();
+    
     GifFileType *_gifFile;
     char *_buf;
     size_t _bufLen;
     int _currFrame;
+    int _currFrameDuration;
+    int _width2, _height2;
+    
+    bool _turnRight;
 };
 
 #endif // __GIF_SPRITE_H__

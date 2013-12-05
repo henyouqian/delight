@@ -39,69 +39,31 @@ bool GifSprite::initWithFile(const char *filename)
         return false;
     }
     
-    int pwr2Width = pwr2Size(_gifFile->SWidth);
-    int pwr2Height = pwr2Size(_gifFile->SHeight);
+    //for test
+    _turnRight = true;
+    
+    _width2 = _height2 = 0;
+    _buf = nullptr;
     _currFrame = 0;
-    
-    _bufLen = pwr2Width*pwr2Height*4;
-    _buf = new char[_bufLen];
-    memset(_buf, 0, _bufLen);
-    
-    auto *img = _gifFile->SavedImages;
-    auto imgDesc = img->ImageDesc;
-    auto colorMap = imgDesc.ColorMap;
-    auto imgBuf = img->RasterBits;
-    if (!colorMap) {
-        colorMap = _gifFile->SColorMap;
+    auto sWidth = _gifFile->SWidth;
+    auto sHeight = _gifFile->SHeight;
+    if (_turnRight) {
+        sWidth = _gifFile->SHeight;
+        sHeight = _gifFile->SWidth;
     }
     
-    //ext code
-    int delay = 0;
-    bool hasTrans = false;
-    unsigned char transIdx = 0;
-    for (auto i = 0; i < img->ExtensionBlockCount; ++i) {
-        auto extBlk = img->ExtensionBlocks + i;
-        if (extBlk->Function == GRAPHICS_EXT_FUNC_CODE) {
-            auto ext = extBlk->Bytes;
-            delay = (ext[2] << 8 | ext[1]) * 10;
-            if( ext[0] & 1 ) {
-                hasTrans = true;
-                transIdx = ext[3];
-            }
-            break;
-        }
-    }
     
-    //read pixel
-    int i = 0;
-    for (auto y = imgDesc.Top; y < imgDesc.Top+imgDesc.Height; ++y) {
-        for (auto x = imgDesc.Left; x < imgDesc.Left+imgDesc.Width; ++x) {
-            unsigned char colorIdx = imgBuf[i];
-            
-            if (hasTrans && colorIdx == transIdx) {
-                ++i;
-                continue;
-            }
-            
-            auto color = &(colorMap->Colors[imgBuf[i]]);
-            char *p = _buf + (pwr2Width*y+x)*4;
-            p[0] = color->Red;
-            p[1] = color->Green;
-            p[2] = color->Blue;
-            p[3] = 0xff;
-            ++i;
-        }
-    }
+    updateBuf();
     
     auto texture = new Texture2D();
-    texture->initWithData(_buf, _bufLen, Texture2D::PixelFormat::RGBA8888, pwr2Width, pwr2Height, Size(pwr2Width, pwr2Height));
+    texture->initWithData(_buf, _bufLen, Texture2D::PixelFormat::RGBA8888, _width2, _height2, Size(_width2, _height2));
     
-    Rect rect(0, 0, _gifFile->SWidth, _gifFile->SHeight);
+    Rect rect(0, 0, sWidth, sHeight);
     Sprite::initWithTexture(texture, rect);
     
     //palyback
     if (_gifFile->ImageCount > 1) {
-        auto delayTime = DelayTime::create(delay*0.001f);
+        auto delayTime = DelayTime::create(_currFrameDuration*0.001f);
         auto cb = CallFunc::create(std::bind(&GifSprite::nextFrame, this));
         auto seq = Sequence::create(delayTime, cb, NULL);
         this->runAction(seq);
@@ -121,6 +83,44 @@ void GifSprite::nextFrame() {
         _currFrame = 0;
     }
     
+    updateBuf();
+    
+    auto texture = getTexture();
+    auto glid = texture->getName();
+    GL::bindTexture2D(glid);
+    
+    const Texture2D::PixelFormatInfo& info = Texture2D::getPixelFormatInfoMap().at(texture->getPixelFormat());
+    glTexImage2D(GL_TEXTURE_2D, 0, info.internalFormat, (GLsizei)_width2, (GLsizei)_height2, 0, info.format, info.type, _buf);
+
+    
+    //palyback
+    if (_gifFile->ImageCount > 1) {
+        auto delayTime = DelayTime::create(_currFrameDuration*0.001f);
+        auto cb = CallFunc::create(std::bind(&GifSprite::nextFrame, this));
+        auto seq = Sequence::create(delayTime, cb, NULL);
+        this->runAction(seq);
+    }
+}
+
+void GifSprite::updateBuf() {
+    CCASSERT(_currFrame < _gifFile->ImageCount, "invalid frameIdx");
+    
+    if (_buf == nullptr) {
+        _width2 = pwr2Size(_gifFile->SWidth);
+        _height2 = pwr2Size(_gifFile->SHeight);
+        
+        if (_turnRight) {
+            auto tmp = _width2;
+            _width2 = _height2;
+            _height2 = tmp;
+        }
+        
+        _bufLen = _width2*_height2*4;
+        _buf = new char[_bufLen];
+        memset(_buf, 0, _bufLen);
+    }
+    
+    
     auto *img = _gifFile->SavedImages + _currFrame;
     auto imgDesc = img->ImageDesc;
     auto colorMap = imgDesc.ColorMap;
@@ -130,14 +130,14 @@ void GifSprite::nextFrame() {
     }
     
     //ext code
-    int delay = 0;
+    _currFrameDuration = 0;
     bool hasTrans = false;
     unsigned char transIdx = 0;
     for (auto i = 0; i < img->ExtensionBlockCount; ++i) {
         auto extBlk = img->ExtensionBlocks + i;
         if (extBlk->Function == GRAPHICS_EXT_FUNC_CODE) {
             auto ext = extBlk->Bytes;
-            delay = (ext[2] << 8 | ext[1]) * 10;
+            _currFrameDuration = (ext[2] << 8 | ext[1]) * 10;
             if( ext[0] & 1 ) {
                 hasTrans = true;
                 transIdx = ext[3];
@@ -147,54 +147,45 @@ void GifSprite::nextFrame() {
     }
     
     //read pixel
-    auto texture = getTexture();
-    auto texWidth = texture->getPixelsWide();
-    auto texHeight = texture->getPixelsHigh();
     int i = 0;
-    for (auto y = imgDesc.Top; y < imgDesc.Top+imgDesc.Height; ++y) {
-        for (auto x = imgDesc.Left; x < imgDesc.Left+imgDesc.Width; ++x) {
-            unsigned char colorIdx = imgBuf[i];
-            
-            if (hasTrans && colorIdx == transIdx) {
+    
+    if (_turnRight) {
+        for (auto x = _gifFile->SHeight-imgDesc.Top-1; x >= _gifFile->SHeight-imgDesc.Top-imgDesc.Height; --x) {
+            for (auto y = imgDesc.Left; y < imgDesc.Left+imgDesc.Width; ++y) {
+                unsigned char colorIdx = imgBuf[i];
+                
+                if (hasTrans && colorIdx == transIdx) {
+                    ++i;
+                    continue;
+                }
+                
+                auto color = &(colorMap->Colors[imgBuf[i]]);
+                char *p = _buf + (_width2*y+x)*4;
+                p[0] = color->Red;
+                p[1] = color->Green;
+                p[2] = color->Blue;
+                p[3] = 0xff;
                 ++i;
-                continue;
             }
-            
-            auto color = &(colorMap->Colors[imgBuf[i]]);
-            char *p = _buf + (texWidth*y+x)*4;
-            p[0] = color->Red;
-            p[1] = color->Green;
-            p[2] = color->Blue;
-            p[3] = 0xff;
-            ++i;
         }
-    }
-    
-    auto glid = texture->getName();
-    GL::bindTexture2D(glid);
-//    GLenum __error = glGetError();
-    
-//    glPixelStorei(GL_UNPACK_ALIGNMENT, 8);
-//    
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-//    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-    
-    const Texture2D::PixelFormatInfo& info = Texture2D::getPixelFormatInfoMap().at(texture->getPixelFormat());
-    glTexImage2D(GL_TEXTURE_2D, 0, info.internalFormat, (GLsizei)texWidth, (GLsizei)texHeight, 0, info.format, info.type, _buf);
-
-    
-//    delete texture;
-//    texture = new Texture2D();
-//    texture->initWithData(_buf, _bufLen, Texture2D::PixelFormat::RGBA8888, texWidth, texHeight, Size(texWidth, texHeight));
-
-    
-    //palyback
-    if (_gifFile->ImageCount > 1) {
-        auto delayTime = DelayTime::create(delay*0.001f);
-        auto cb = CallFunc::create(std::bind(&GifSprite::nextFrame, this));
-        auto seq = Sequence::create(delayTime, cb, NULL);
-        this->runAction(seq);
+    } else {
+        for (auto y = imgDesc.Top; y < imgDesc.Top+imgDesc.Height; ++y) {
+            for (auto x = imgDesc.Left; x < imgDesc.Left+imgDesc.Width; ++x) {
+                unsigned char colorIdx = imgBuf[i];
+                
+                if (hasTrans && colorIdx == transIdx) {
+                    ++i;
+                    continue;
+                }
+                
+                auto color = &(colorMap->Colors[imgBuf[i]]);
+                char *p = _buf + (_width2*y+x)*4;
+                p[0] = color->Red;
+                p[1] = color->Green;
+                p[2] = color->Blue;
+                p[3] = 0xff;
+                ++i;
+            }
+        }
     }
 }
