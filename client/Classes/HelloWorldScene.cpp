@@ -1,6 +1,7 @@
 #include "HelloWorldScene.h"
 #include "giflib/gif_lib.h"
 #include "gifSprite.h"
+#include "gifTexture.h"
 
 USING_NS_CC;
 
@@ -164,10 +165,27 @@ bool HelloWorld::init()
     //readGif(this);
     
     
-    auto gifSpt = GifSprite::create("test.gif");
-    this->addChild(gifSpt);
-    //gifSpt->setAnchorPoint(Point(0, 0));
-    gifSpt->setPosition(Point(visibleSize.width*.5f, visibleSize.height*.5f));
+//    auto gifSpt = GifSprite::create("test.gif");
+//    this->addChild(gifSpt);
+//    //gifSpt->setAnchorPoint(Point(0, 0));
+//    gifSpt->setPosition(Point(visibleSize.width*.5f, visibleSize.height*.5f));
+    
+    //gif texture
+    auto gifTex = GifTexture::create("test.gif", this);
+    int width, height;
+    gifTex->getScreenSize(width, height);
+    auto spt = Sprite::createWithTexture(gifTex, Rect(0, 0, width, height));
+    spt->setAnchorPoint(Point(0, 0));
+    spt->setScale(2.4f);
+    this->addChild(spt);
+
+//    for (int i = 0; i < 20; ++i) {
+//        spt = Sprite::createWithTexture(gifTex, Rect(0, height-50, width, 60));
+//        spt->setAnchorPoint(Point(0, 0));
+//        spt->setPosition(Point(100, i*64));
+//        this->addChild(spt);
+//    }
+    
     return true;
 }
 

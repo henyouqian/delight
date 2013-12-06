@@ -40,7 +40,7 @@ bool GifSprite::initWithFile(const char *filename)
     }
     
     //for test
-    _turnRight = true;
+    _turnRight = false;
     
     _width2 = _height2 = 0;
     _buf = nullptr;
