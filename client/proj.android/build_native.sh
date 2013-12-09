@@ -51,7 +51,7 @@ fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # ... use paths relative to current directory
-COCOS2DX_ROOT="$DIR/../../.."
+COCOS2DX_ROOT="$DIR/../../../cocos2d-x-3.0alpha0"
 APP_ROOT="$DIR/.."
 APP_ANDROID_ROOT="$DIR"
 
@@ -68,7 +68,7 @@ fi
 mkdir "$APP_ANDROID_ROOT"/assets
 
 # copy resources
-for file in "$APP_ROOT"/Resources/*
+for file in "$APP_ROOT"/res/*
 do
 if [ -d "$file" ]; then
     cp -rf "$file" "$APP_ANDROID_ROOT"/assets

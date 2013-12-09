@@ -11,3 +11,8 @@
 *.lai
 *.la
 *.a
+
+client/proj.android/assets/
+client/proj.android/bin/
+client/proj.android/gen/
+client/proj.android/obj/

@@ -8,9 +8,18 @@ LOCAL_MODULE_FILENAME := libcocos2dcpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
-                   ../../Classes/HelloWorldScene.cpp
+                   ../../Classes/HelloWorldScene.cpp \
+                   ../../Classes/sliderScene.cpp \
+                   ../../Classes/gifTexture.cpp \
+                   ../../external/giflib/dgif_lib.c \
+                   ../../external/giflib/gif_err.c \
+                   ../../external/giflib/gif_font.c \
+                   ../../external/giflib/gif_hash.c \
+                   ../../external/giflib/gifalloc.c \
+                   ../../external/giflib/quantize.c
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
+					$(LOCAL_PATH)/../../external
 
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static

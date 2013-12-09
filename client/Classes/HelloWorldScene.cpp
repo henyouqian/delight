@@ -171,7 +171,7 @@ bool HelloWorld::init()
 //    gifSpt->setPosition(Point(visibleSize.width*.5f, visibleSize.height*.5f));
     
     //gif texture
-    auto gifTex = GifTexture::create("test.gif", this);
+    auto gifTex = GifTexture::create("test.gif", this, false);
     int width, height;
     gifTex->getScreenSize(width, height);
     auto spt = Sprite::createWithTexture(gifTex, Rect(0, 0, width, height));

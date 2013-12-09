@@ -50,6 +50,8 @@ static AppDelegate s_sharedApplication;
     [[UIApplication sharedApplication] setStatusBarHidden:true];
     
     cocos2d::Application::getInstance()->run();
+    
+    [__glView setMultipleTouchEnabled:YES];
 
     return YES;
 }
