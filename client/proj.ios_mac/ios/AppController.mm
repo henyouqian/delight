@@ -51,7 +51,7 @@ static AppDelegate s_sharedApplication;
     
     cocos2d::Application::getInstance()->run();
     
-    [__glView setMultipleTouchEnabled:YES];
+    [__glView setMultipleTouchEnabled:NO];
 
     return YES;
 }

@@ -82,6 +82,7 @@ GifTexture::~GifTexture() {
         delete [] _buf;
     _nodeForAction->stopAllActions();
     _nodeForAction->release();
+    _nodeForAction->removeFromParent();
     DGifCloseFile(_gifFile);
 }
 

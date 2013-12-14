@@ -49,6 +49,8 @@
 		B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBE91850E733003746A6 /* gifTexture.cpp */; };
 		B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
 		B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
+		B303B60C185A402100B5CE01 /* packLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B303B60A185A402100B5CE01 /* packLoader.cpp */; };
+		B303B60D185A402100B5CE01 /* packLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B303B60A185A402100B5CE01 /* packLoader.cpp */; };
 		B33DABE018479AC5001403BA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DABDF18479AC5001403BA /* OpenGLES.framework */; };
 		B33DABE218479AD0001403BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DABE118479AD0001403BA /* UIKit.framework */; };
 		B33DAC1F1847A3EA001403BA /* libcocos2dx iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC0C1847A3B6001403BA /* libcocos2dx iOS.a */; };
@@ -73,6 +75,8 @@
 		B3DC5D0B1854B4FF00F732B7 /* default in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D091854B4FF00F732B7 /* default */; };
 		B3DC5D0D1854E24C00F732B7 /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D0C1854E24C00F732B7 /* img */; };
 		B3DC5D0E1854E24C00F732B7 /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D0C1854E24C00F732B7 /* img */; };
+		B3E841811857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
+		B3E841821857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
@@ -248,6 +252,8 @@
 		B302CBEA1850E733003746A6 /* gifTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gifTexture.h; path = ../Classes/gifTexture.h; sourceTree = "<group>"; };
 		B302CBFB18519276003746A6 /* sliderScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sliderScene.cpp; path = ../Classes/sliderScene.cpp; sourceTree = "<group>"; };
 		B302CBFC18519276003746A6 /* sliderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sliderScene.h; path = ../Classes/sliderScene.h; sourceTree = "<group>"; };
+		B303B60A185A402100B5CE01 /* packLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packLoader.cpp; path = ../Classes/packLoader.cpp; sourceTree = "<group>"; };
+		B303B60B185A402100B5CE01 /* packLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packLoader.h; path = ../Classes/packLoader.h; sourceTree = "<group>"; };
 		B33DABDF18479AC5001403BA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		B33DABE118479AD0001403BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		B33DABE318479B82001403BA /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries/libcurl.a"; sourceTree = "<group>"; };
@@ -265,6 +271,7 @@
 		B33DAC6F184CC6B9001403BA /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
 		B3DC5D091854B4FF00F732B7 /* default */ = {isa = PBXFileReference; lastKnownFileType = folder; path = default; sourceTree = "<group>"; };
 		B3DC5D0C1854E24C00F732B7 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = "<group>"; };
+		B3E841801857774B0004C636 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -341,6 +348,8 @@
 				B302CBFC18519276003746A6 /* sliderScene.h */,
 				B302CBE91850E733003746A6 /* gifTexture.cpp */,
 				B302CBEA1850E733003746A6 /* gifTexture.h */,
+				B303B60A185A402100B5CE01 /* packLoader.cpp */,
+				B303B60B185A402100B5CE01 /* packLoader.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -490,6 +499,7 @@
 		B33DAC84184CE490001403BA /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B3E841801857774B0004C636 /* audio */,
 				B3DC5D0C1854E24C00F732B7 /* img */,
 				B3DC5D091854B4FF00F732B7 /* default */,
 			);
@@ -687,6 +697,7 @@
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
+				B3E841811857774B0004C636 /* audio in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
@@ -710,6 +721,7 @@
 				B3DC5D0E1854E24C00F732B7 /* img in Resources */,
 				B3DC5D0B1854B4FF00F732B7 /* default in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
+				B3E841821857774B0004C636 /* audio in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,6 +742,7 @@
 				B33DAC70184CC6B9001403BA /* dgif_lib.c in Sources */,
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
+				B303B60C185A402100B5CE01 /* packLoader.cpp in Sources */,
 				B33DAC82184CC6B9001403BA /* quantize.c in Sources */,
 				B33DAC7A184CC6B9001403BA /* gifalloc.c in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
@@ -747,6 +760,7 @@
 				B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */,
 				B33DAC77184CC6B9001403BA /* gif_font.c in Sources */,
 				B33DAC79184CC6B9001403BA /* gif_hash.c in Sources */,
+				B303B60D185A402100B5CE01 /* packLoader.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				B33DAC75184CC6B9001403BA /* gif_err.c in Sources */,
 				B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */,
@@ -808,6 +822,8 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/ios",
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/ios/Simulation",
 					../external,
+					../external/leveldb,
+					../external/leveldb/include,
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -853,6 +869,8 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/ios",
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/ios/Simulation",
 					../external,
+					../external/leveldb,
+					../external/leveldb/include,
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
