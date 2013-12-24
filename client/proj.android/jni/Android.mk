@@ -11,12 +11,16 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/HelloWorldScene.cpp \
                    ../../Classes/sliderScene.cpp \
                    ../../Classes/gifTexture.cpp \
+                   ../../Classes/packLoader.cpp \
+                   ../../Classes/http.cpp \
                    ../../external/giflib/dgif_lib.c \
                    ../../external/giflib/gif_err.c \
                    ../../external/giflib/gif_font.c \
                    ../../external/giflib/gif_hash.c \
                    ../../external/giflib/gifalloc.c \
-                   ../../external/giflib/quantize.c
+                   ../../external/giflib/quantize.c \
+                   ../../external/jsonxx/jsonxx.cc \
+                   ../../external/crypto/sha.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
 					$(LOCAL_PATH)/../../external

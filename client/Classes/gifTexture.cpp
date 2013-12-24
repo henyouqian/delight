@@ -40,9 +40,11 @@ bool GifTexture::initWithFile(const char *filename, Node* parentNode, bool turnR
     auto path = FileUtils::getInstance()->fullPathForFilename(filename);
     int err = GIF_OK;
     _gifFile = DGifOpenFileName(path.c_str(), &err);
+    if (err != GIF_OK) {
+        return false;
+    }
     err = DGifSlurp(_gifFile);
-    
-    if (err == GIF_ERROR) {
+    if (err != GIF_OK) {
         return false;
     }
     
@@ -202,3 +204,6 @@ void GifTexture::updateBuf() {
         }
     }
 }
+
+
+

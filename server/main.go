@@ -19,7 +19,7 @@ func main() {
 
 	http.HandleFunc("/www/", staticFile)
 	regAuth()
-	regDig()
+	regPack()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 

@@ -33,9 +33,14 @@ function Controller($scope, $http) {
 					"data": ""
 				},
 				{
+					"name": "list",
+					"method": "POST",
+					"data": {"LastPackId":0, "Limit":10}
+				},
+				{
 					"name": "getContent",
 					"method": "POST",
-					"data": {"PackId":"?"}
+					"data": {"PackId":3}
 				},
 			] 
 		},

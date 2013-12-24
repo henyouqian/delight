@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
+#include "packsListScene.h"
 
 #include "lw/lwLog.h"
 
@@ -89,7 +90,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // choose resolution
     chooseResolution(eglView);
 
-    auto scene = SliderScene::createScene();
+    //auto scene = SliderScene::createScene();
+    auto scene = PacksListScene::createScene();
     
     // run
     director->runWithScene(scene);

@@ -71,6 +71,20 @@
 		B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6B184CC6B9001403BA /* gifalloc.c */; };
 		B33DAC82184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
+		B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638CD185D9A86009ECDF1 /* http.cpp */; };
+		B3A638D0185D9A86009ECDF1 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638CD185D9A86009ECDF1 /* http.cpp */; };
+		B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */ = {isa = PBXBuildFile; fileRef = B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */; };
+		B3A638E2185DA7C7009ECDF1 /* jsonxx.cc in Sources */ = {isa = PBXBuildFile; fileRef = B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */; };
+		B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638E4185DBAE9009ECDF1 /* sha.cpp */; };
+		B3A638E7185DBAE9009ECDF1 /* sha.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638E4185DBAE9009ECDF1 /* sha.cpp */; };
+		B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638E8185F58B0009ECDF1 /* gameplay.cpp */; };
+		B3A638EB185F58B0009ECDF1 /* gameplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638E8185F58B0009ECDF1 /* gameplay.cpp */; };
+		B3A638ED1861B11B009ECDF1 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3A638EC1861B11B009ECDF1 /* ui */; };
+		B3A638EE1861B11B009ECDF1 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3A638EC1861B11B009ECDF1 /* ui */; };
+		B3A638F318620A3C009ECDF1 /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638F118620A3C009ECDF1 /* packsListScene.cpp */; };
+		B3A638F418620A3C009ECDF1 /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638F118620A3C009ECDF1 /* packsListScene.cpp */; };
+		B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A639031862F841009ECDF1 /* spriteLoader.cpp */; };
+		B3A639061862F842009ECDF1 /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A639031862F841009ECDF1 /* spriteLoader.cpp */; };
 		B3DC5D0A1854B4FF00F732B7 /* default in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D091854B4FF00F732B7 /* default */; };
 		B3DC5D0B1854B4FF00F732B7 /* default in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D091854B4FF00F732B7 /* default */; };
 		B3DC5D0D1854E24C00F732B7 /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D0C1854E24C00F732B7 /* img */; };
@@ -269,6 +283,19 @@
 		B33DAC6A184CC6B9001403BA /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
 		B33DAC6B184CC6B9001403BA /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
 		B33DAC6F184CC6B9001403BA /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		B3A638CD185D9A86009ECDF1 /* http.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = http.cpp; path = ../Classes/http.cpp; sourceTree = "<group>"; };
+		B3A638CE185D9A86009ECDF1 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = ../Classes/http.h; sourceTree = "<group>"; };
+		B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsonxx.cc; sourceTree = "<group>"; };
+		B3A638E0185DA7C7009ECDF1 /* jsonxx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonxx.h; sourceTree = "<group>"; };
+		B3A638E4185DBAE9009ECDF1 /* sha.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha.cpp; sourceTree = "<group>"; };
+		B3A638E5185DBAE9009ECDF1 /* sha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha.h; sourceTree = "<group>"; };
+		B3A638E8185F58B0009ECDF1 /* gameplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gameplay.cpp; path = ../Classes/gameplay.cpp; sourceTree = "<group>"; };
+		B3A638E9185F58B0009ECDF1 /* gameplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gameplay.h; path = ../Classes/gameplay.h; sourceTree = "<group>"; };
+		B3A638EC1861B11B009ECDF1 /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
+		B3A638F118620A3C009ECDF1 /* packsListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packsListScene.cpp; path = ../Classes/packsListScene.cpp; sourceTree = "<group>"; };
+		B3A638F218620A3C009ECDF1 /* packsListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsListScene.h; path = ../Classes/packsListScene.h; sourceTree = "<group>"; };
+		B3A639031862F841009ECDF1 /* spriteLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spriteLoader.cpp; path = ../Classes/spriteLoader.cpp; sourceTree = "<group>"; };
+		B3A639041862F841009ECDF1 /* spriteLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spriteLoader.h; path = ../Classes/spriteLoader.h; sourceTree = "<group>"; };
 		B3DC5D091854B4FF00F732B7 /* default */ = {isa = PBXFileReference; lastKnownFileType = folder; path = default; sourceTree = "<group>"; };
 		B3DC5D0C1854E24C00F732B7 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = "<group>"; };
 		B3E841801857774B0004C636 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
@@ -344,12 +371,20 @@
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 				1AFAF8B516D35DE700DB1158 /* HelloWorldScene.cpp */,
 				1AFAF8B616D35DE700DB1158 /* HelloWorldScene.h */,
+				B3A638E8185F58B0009ECDF1 /* gameplay.cpp */,
+				B3A638E9185F58B0009ECDF1 /* gameplay.h */,
 				B302CBFB18519276003746A6 /* sliderScene.cpp */,
 				B302CBFC18519276003746A6 /* sliderScene.h */,
+				B3A639031862F841009ECDF1 /* spriteLoader.cpp */,
+				B3A639041862F841009ECDF1 /* spriteLoader.h */,
+				B3A638F118620A3C009ECDF1 /* packsListScene.cpp */,
+				B3A638F218620A3C009ECDF1 /* packsListScene.h */,
 				B302CBE91850E733003746A6 /* gifTexture.cpp */,
 				B302CBEA1850E733003746A6 /* gifTexture.h */,
 				B303B60A185A402100B5CE01 /* packLoader.cpp */,
 				B303B60B185A402100B5CE01 /* packLoader.h */,
+				B3A638CD185D9A86009ECDF1 /* http.cpp */,
+				B3A638CE185D9A86009ECDF1 /* http.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -473,6 +508,8 @@
 		B33DAC61184CC6B8001403BA /* external */ = {
 			isa = PBXGroup;
 			children = (
+				B3A638E3185DBAE9009ECDF1 /* crypto */,
+				B3A638DE185DA7C7009ECDF1 /* jsonxx */,
 				B33DAC62184CC6B9001403BA /* giflib */,
 			);
 			name = external;
@@ -499,12 +536,31 @@
 		B33DAC84184CE490001403BA /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B3A638EC1861B11B009ECDF1 /* ui */,
 				B3E841801857774B0004C636 /* audio */,
 				B3DC5D0C1854E24C00F732B7 /* img */,
 				B3DC5D091854B4FF00F732B7 /* default */,
 			);
 			name = res;
 			path = ../res;
+			sourceTree = "<group>";
+		};
+		B3A638DE185DA7C7009ECDF1 /* jsonxx */ = {
+			isa = PBXGroup;
+			children = (
+				B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */,
+				B3A638E0185DA7C7009ECDF1 /* jsonxx.h */,
+			);
+			path = jsonxx;
+			sourceTree = "<group>";
+		};
+		B3A638E3185DBAE9009ECDF1 /* crypto */ = {
+			isa = PBXGroup;
+			children = (
+				B3A638E4185DBAE9009ECDF1 /* sha.cpp */,
+				B3A638E5185DBAE9009ECDF1 /* sha.h */,
+			);
+			path = crypto;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -692,6 +748,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3A638ED1861B11B009ECDF1 /* ui in Resources */,
 				B3DC5D0A1854B4FF00F732B7 /* default in Resources */,
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
@@ -718,6 +775,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3A638EE1861B11B009ECDF1 /* ui in Resources */,
 				B3DC5D0E1854E24C00F732B7 /* img in Resources */,
 				B3DC5D0B1854B4FF00F732B7 /* default in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
@@ -738,11 +796,17 @@
 				B33DAC78184CC6B9001403BA /* gif_hash.c in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
+				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				B33DAC70184CC6B9001403BA /* dgif_lib.c in Sources */,
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
+				B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */,
 				B303B60C185A402100B5CE01 /* packLoader.cpp in Sources */,
+				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,
+				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
+				B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
+				B3A638F318620A3C009ECDF1 /* packsListScene.cpp in Sources */,
 				B33DAC82184CC6B9001403BA /* quantize.c in Sources */,
 				B33DAC7A184CC6B9001403BA /* gifalloc.c in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
@@ -758,12 +822,18 @@
 				5087E75717EB910900C73F5D /* AppDelegate.cpp in Sources */,
 				5087E75817EB910900C73F5D /* HelloWorldScene.cpp in Sources */,
 				B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */,
+				B3A638E7185DBAE9009ECDF1 /* sha.cpp in Sources */,
+				B3A638F418620A3C009ECDF1 /* packsListScene.cpp in Sources */,
 				B33DAC77184CC6B9001403BA /* gif_font.c in Sources */,
 				B33DAC79184CC6B9001403BA /* gif_hash.c in Sources */,
 				B303B60D185A402100B5CE01 /* packLoader.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				B33DAC75184CC6B9001403BA /* gif_err.c in Sources */,
+				B3A638E2185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
+				B3A638D0185D9A86009ECDF1 /* http.cpp in Sources */,
+				B3A639061862F842009ECDF1 /* spriteLoader.cpp in Sources */,
 				B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */,
+				B3A638EB185F58B0009ECDF1 /* gameplay.cpp in Sources */,
 				B33DAC83184CC6B9001403BA /* quantize.c in Sources */,
 				B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */,
 				B33DAC71184CC6B9001403BA /* dgif_lib.c in Sources */,
