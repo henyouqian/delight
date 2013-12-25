@@ -71,6 +71,8 @@
 		B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6B184CC6B9001403BA /* gifalloc.c */; };
 		B33DAC82184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
+		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
+		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638CD185D9A86009ECDF1 /* http.cpp */; };
 		B3A638D0185D9A86009ECDF1 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638CD185D9A86009ECDF1 /* http.cpp */; };
 		B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */ = {isa = PBXBuildFile; fileRef = B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */; };
@@ -283,6 +285,9 @@
 		B33DAC6A184CC6B9001403BA /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
 		B33DAC6B184CC6B9001403BA /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
 		B33DAC6F184CC6B9001403BA /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
+		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
+		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
 		B3A638CD185D9A86009ECDF1 /* http.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = http.cpp; path = ../Classes/http.cpp; sourceTree = "<group>"; };
 		B3A638CE185D9A86009ECDF1 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = ../Classes/http.h; sourceTree = "<group>"; };
 		B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsonxx.cc; sourceTree = "<group>"; };
@@ -377,6 +382,8 @@
 				B302CBFC18519276003746A6 /* sliderScene.h */,
 				B3A639031862F841009ECDF1 /* spriteLoader.cpp */,
 				B3A639041862F841009ECDF1 /* spriteLoader.h */,
+				B34FDAD1186A10A9006D05A3 /* pack.cpp */,
+				B34FDAD2186A10A9006D05A3 /* pack.h */,
 				B3A638F118620A3C009ECDF1 /* packsListScene.cpp */,
 				B3A638F218620A3C009ECDF1 /* packsListScene.h */,
 				B302CBE91850E733003746A6 /* gifTexture.cpp */,
@@ -508,6 +515,7 @@
 		B33DAC61184CC6B8001403BA /* external */ = {
 			isa = PBXGroup;
 			children = (
+				B34FDAE2186A198A006D05A3 /* lw */,
 				B3A638E3185DBAE9009ECDF1 /* crypto */,
 				B3A638DE185DA7C7009ECDF1 /* jsonxx */,
 				B33DAC62184CC6B9001403BA /* giflib */,
@@ -543,6 +551,14 @@
 			);
 			name = res;
 			path = ../res;
+			sourceTree = "<group>";
+		};
+		B34FDAE2186A198A006D05A3 /* lw */ = {
+			isa = PBXGroup;
+			children = (
+				B34FDAE3186A198A006D05A3 /* lwLog.h */,
+			);
+			path = lw;
 			sourceTree = "<group>";
 		};
 		B3A638DE185DA7C7009ECDF1 /* jsonxx */ = {
@@ -795,6 +811,7 @@
 				B33DAC74184CC6B9001403BA /* gif_err.c in Sources */,
 				B33DAC78184CC6B9001403BA /* gif_hash.c in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
+				B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
@@ -835,6 +852,7 @@
 				B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */,
 				B3A638EB185F58B0009ECDF1 /* gameplay.cpp in Sources */,
 				B33DAC83184CC6B9001403BA /* quantize.c in Sources */,
+				B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */,
 				B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */,
 				B33DAC71184CC6B9001403BA /* dgif_lib.c in Sources */,
 			);

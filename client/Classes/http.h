@@ -7,7 +7,7 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-void postHttpRequest(const char *path, const char *content, const std::function<void(HttpClient*, HttpResponse*)> &callback);
+HttpRequest* postHttpRequest(const char *path, const char *content, const std::function<void(HttpClient*, HttpResponse*)> &callback);
 
 void getHttpRequest(const char *url, const std::function<void(HttpClient*, HttpResponse*)> &callback);
 

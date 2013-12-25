@@ -86,6 +86,8 @@ void Gameplay::loadTexture(const char *filename) {
 }
 
 void Gameplay::reset(const char *filename, int sliderNum) {
+    filename = "img/aa.gif";
+    
     for (auto it = _sliders.begin(); it != _sliders.end(); ++it) {
         it->sprite->removeFromParent();
     }

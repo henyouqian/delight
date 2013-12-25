@@ -4,11 +4,11 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 namespace {
-    //const char *g_host = "http://192.168.2.100:9999/";
-    const char *g_host = "http://localhost:9999/";
+    const char *g_host = "http://192.168.2.101:9999/";
+    //const char *g_host = "http://localhost:9999/";
 }
 
-void postHttpRequest(const char *path, const char *content,
+HttpRequest* postHttpRequest(const char *path, const char *content,
                      const std::function<void(HttpClient*, HttpResponse*)> &callback) {
     std::string url = g_host;
     url += path;
@@ -20,6 +20,7 @@ void postHttpRequest(const char *path, const char *content,
     request->setCallback(callback);
     HttpClient::getInstance()->send(request);
     request->release();
+    return request;
 }
 
 void getHttpRequest(const char *url, const std::function<void(HttpClient*, HttpResponse*)> &callback) {

@@ -3,29 +3,34 @@
 
 #include "cocos2d.h"
 #include "cocos-ext.h"
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-struct SptLoader {
-    static SptLoader* loadFromUrl(const char *url, Sprite *placeholder = nullptr);
+class SptLoaderListener {
+    
+};
+
+class SptLoader {
+public:
+    static SptLoader* getInstance();
+    static void DestroyInstance();
     SptLoader();
     ~SptLoader();
     
-    std::string url;
-    std::string local;
-    Sprite *placeholder;
-    Sprite *sprite;
+    void setListener(SptLoaderListener *listener);
+    void load(const char* filename);
     
-    enum State {
-        READY,
-        DOWNLOADING,
-        LOADING,
-        SUCCEED,
-        ERROR,
-    };
-    State state;
-    std::function<void(SptLoader*)> _onEvent;
+private:
+    void run();
+    std::thread *_thread;
+    std::mutex _mutex;
+    std::condition_variable _cv;
+    SptLoaderListener *_listener;
+    std::list<std::string> _filenames;
 };
 
 

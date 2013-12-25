@@ -11,6 +11,7 @@ class GifTexture : public Texture2D
 {
 public:
     static GifTexture* create(const char *filename, Node* parentNode, bool turnRight);
+    static Sprite* createSprite(const char *filename, Node* parentNode);
     bool initWithFile(const char *filename, Node* parentNode, bool turnRight);
     GifTexture();
     virtual ~GifTexture();

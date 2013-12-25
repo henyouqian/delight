@@ -1,5 +1,6 @@
 #include "gifTexture.h"
 #include "giflib/gif_lib.h"
+#include "lw/lwLog.h"
 
 USING_NS_CC;
 
@@ -14,8 +15,7 @@ namespace {
     }
 }
 
-GifTexture* GifTexture::create(const char *filename, Node* parentNode, bool turnRight)
-{
+GifTexture* GifTexture::create(const char *filename, Node* parentNode, bool turnRight) {
     GifTexture *p = new GifTexture();
     if (p && p->initWithFile(filename, parentNode, turnRight)) {
         p->autorelease();
@@ -25,13 +25,22 @@ GifTexture* GifTexture::create(const char *filename, Node* parentNode, bool turn
     return nullptr;
 }
 
+Sprite* GifTexture::createSprite(const char *filename, Node* parentNode) {
+    auto texture = GifTexture::create(filename, parentNode, false);
+    if (!texture) {
+        lwerror("GifTexture::create failed: %s", filename);
+        return nullptr;
+    }
+    auto sprite = Sprite::createWithTexture(texture);
+    return sprite;
+}
+
 GifTexture::GifTexture()
 :_buf(nullptr), _turnRight(false){
     
 }
 
-bool GifTexture::initWithFile(const char *filename, Node* parentNode, bool turnRight)
-{
+bool GifTexture::initWithFile(const char *filename, Node* parentNode, bool turnRight) {
     CCASSERT(filename != NULL, "Invalid filename for sprite");
     _nodeForAction = Node::create();
     _nodeForAction->retain();
@@ -135,7 +144,6 @@ void GifTexture::updateBuf() {
         memset(_buf, 0, _bufLen);
     }
     
-    
     auto *img = _gifFile->SavedImages + _currFrame;
     auto imgDesc = img->ImageDesc;
     auto colorMap = imgDesc.ColorMap;
@@ -148,15 +156,17 @@ void GifTexture::updateBuf() {
     _currFrameDuration = 0;
     bool hasTrans = false;
     unsigned char transIdx = 0;
+    GraphicsControlBlock gcb;
     for (auto i = 0; i < img->ExtensionBlockCount; ++i) {
         auto extBlk = img->ExtensionBlocks + i;
         if (extBlk->Function == GRAPHICS_EXT_FUNC_CODE) {
             auto ext = extBlk->Bytes;
-            _currFrameDuration = (ext[2] << 8 | ext[1]) * 10;
             if( ext[0] & 1 ) {
                 hasTrans = true;
                 transIdx = ext[3];
             }
+            DGifExtensionToGCB(extBlk->ByteCount, extBlk->Bytes, &gcb);
+            _currFrameDuration = gcb.DelayTime * 10;
             break;
         }
     }
@@ -170,6 +180,14 @@ void GifTexture::updateBuf() {
                 unsigned char colorIdx = imgBuf[i];
                 
                 if (hasTrans && colorIdx == transIdx) {
+                    if (gcb.DisposalMode == DISPOSE_BACKGROUND) {
+                        char *p = _buf + (_width2*y+x)*4;
+                        auto bgColor = &(colorMap->Colors[_gifFile->SBackGroundColor]);
+                        p[0] = bgColor->Red;
+                        p[1] = bgColor->Green;
+                        p[2] = bgColor->Blue;
+                        p[3] = 0x00;
+                    }
                     ++i;
                     continue;
                 }
@@ -189,6 +207,14 @@ void GifTexture::updateBuf() {
                 unsigned char colorIdx = imgBuf[i];
                 
                 if (hasTrans && colorIdx == transIdx) {
+                    if (gcb.DisposalMode == DISPOSE_BACKGROUND) {
+                        char *p = _buf + (_width2*y+x)*4;
+                        auto bgColor = &(colorMap->Colors[_gifFile->SBackGroundColor]);
+                        p[0] = bgColor->Red;
+                        p[1] = bgColor->Green;
+                        p[2] = bgColor->Blue;
+                        p[3] = 0x00;
+                    }
                     ++i;
                     continue;
                 }

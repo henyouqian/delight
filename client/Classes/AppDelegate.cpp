@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
 #include "packsListScene.h"
-
+#include "pack.h"
 #include "lw/lwLog.h"
 
 USING_NS_CC;
@@ -33,7 +33,6 @@ namespace {
         
         Size bestFit = resVec[minDiffIdx];
         eglView->setDesignResolutionSize(bestFit.width, bestFit.height, ResolutionPolicy::SHOW_ALL);
-//        Director::getInstance()->setContentScaleFactor(visibleSize.width/bestFit.width);
         Director::getInstance()->setContentScaleFactor(1.f);
         
         lwinfo("designRes: width=%f, height=%f", bestFit.width, bestFit.height);
@@ -61,7 +60,6 @@ namespace {
             resDirOrders.push_back("640X1136");
         }
         FileUtils::getInstance()->setSearchResolutionsOrder(resDirOrders);
-        
     }
 }
 
@@ -89,6 +87,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     // choose resolution
     chooseResolution(eglView);
+    
+    //init
+    makePackDownloadDir();
 
     //auto scene = SliderScene::createScene();
     auto scene = PacksListScene::createScene();
