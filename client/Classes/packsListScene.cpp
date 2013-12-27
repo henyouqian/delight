@@ -2,6 +2,7 @@
 #include "http.h"
 #include "spriteLoader.h"
 #include "gifTexture.h"
+#include "util.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 
@@ -20,17 +21,15 @@ bool PacksListScene::init() {
         return false;
     }
     this->setTouchEnabled(true);
+    this->scheduleUpdate();
+    
+    _sptLoader = SptLoader::create(this, this);
+    _sptLoader->download("http://image.zcool.com.cn/41/0/m_1281182218957.jpg");
     
     //fixme: spriteLoader test
-    //auto *task = SptLoadTask::loadFromUrl("http://image.zcool.com.cn/41/0/m_1281182218957.jpg");
-    SptLoader::getInstance()->load("1.png");
-    SptLoader::getInstance()->load("2.png");
-    SptLoader::getInstance()->load("3.png");
-    SptLoader::getInstance()->load("4.png");
-    
-    _pack = new Pack;
-    _pack->init(4, this);
-    lwinfo("progress: %f", _pack->progress);
+//    _pack = new Pack;
+//    _pack->init(4, this);
+//    lwinfo("progress: %f", _pack->progress);
     //fixend
     
     
@@ -44,6 +43,12 @@ bool PacksListScene::init() {
     //loading texture
     _loadingTexture = GifTexture::create("ui/loading.gif", this, false);
     _loadingTexture->retain();
+    _loadingTexture->setSpeed(2.f);
+    
+    //test
+//    auto spt = Sprite::create("/Users/weili/Library/Application Support/iPhone Simulator/7.0.3/Applications/43409BA6-5B2F-43B4-80AE-FBE08C2E63F7/Documents/images/85131b9e79e1da9c0d88c7c65fee6c79ec261df7");
+//    this->addChild(spt);
+
     return true;
 }
 
@@ -53,6 +58,32 @@ PacksListScene::~PacksListScene() {
     }
     _loadingTexture->release();
     delete _pack;
+    delete _sptLoader;
+}
+
+void PacksListScene::update(float delta) {
+    _sptLoader->mainThreadUpdate();
+    
+//    //check loaded sprite
+//    while(1) {
+//        SptLoader::LoadedSprite ls;
+//        if (!_sptLoader->popLoadedSprite(ls)) {
+//            break;
+//        }
+//        
+//        auto it = _loadingSpts.find(ls.localPath);
+//        if (it == _loadingSpts.end()) {
+//            lwerror("loading error");
+//        } else {
+//            auto loadingSpt = it->second;
+//            loadingSpt->getParent()->addChild(ls.spt);
+//            ls.spt->setPosition(loadingSpt->getPosition());
+//            ls.spt->setScale(.3f);
+//            loadingSpt->removeFromParent();
+//            _loadingSpts.erase(it);
+//        }
+//        lwinfo("spt loaded");
+//    }
 }
 
 namespace {
@@ -67,6 +98,7 @@ namespace {
 }
 
 void PacksListScene::onPackList(HttpClient* client, HttpResponse* response) {
+    lwinfo("onPackList");
     auto v = response->getResponseData();
     std::istringstream is(std::string(v->begin(), v->end()));
     
@@ -114,42 +146,83 @@ void PacksListScene::onPackList(HttpClient* client, HttpResponse* response) {
         
         //loading sprite
         float margin = 10.f;
-        auto spt = Sprite::createWithTexture(_loadingTexture);
-        this->addChild(spt);
+        auto loadingSpt = Sprite::createWithTexture(_loadingTexture);
+        this->addChild(loadingSpt);
         int row = i / 3;
         int col = i % 3;
         float w = (visSize.width-2.f*margin) / 3.f;
         float x = (w+margin)*col + .5f*w;
         float y = visSize.height - ((w+margin)*row+.5f*w);
-        spt->setPosition(Point(x, y));
-        spt->setScale(2.f);
+        loadingSpt->setPosition(Point(x, y));
+        loadingSpt->setScale(2.f);
+        _thumbWidth = w;
         
         //async load
+        std::string localPath;
+        makeLocalImagePath(localPath, packInfo.cover.c_str());
         
+        _loadingSpts.insert(std::make_pair(localPath, loadingSpt));
+        _sptLoader->download(packInfo.cover.c_str());
     }
 }
 
 void PacksListScene::onPackParseComplete() {
     lwinfo("onPackParseComplete");
-    _pack->download();
+    _pack->startDownload();
 }
 
-void PacksListScene::onError() {
-    lwinfo("onError");
+void PacksListScene::onPackError() {
+    lwinfo("onPackError");
 }
 
-void PacksListScene::onImageDownload(){
-    lwinfo("onImageDownload: %f", _pack->progress);
+void PacksListScene::onPackImageDownload(){
+    lwinfo("onPackImageDownload: %f", _pack->progress);
 }
 
-void PacksListScene::onComplete() {
-    lwinfo("onComplete");
+void PacksListScene::onPackDownloadComplete() {
+    lwinfo("onPackDownloadComplete");
+}
+
+void PacksListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite) {
+    lwinfo("onSptLoaderLoad");
+    
+//    auto range = _loadingSpts.equal_range(localPath);
+//    if (range.first == range.second) {
+//        lwerror("no loading sprite to replace");
+//    } else {
+//        for (auto it = range.first; it != range.second; ++it) {
+//            auto loadingSpt = it->second;
+//            loadingSpt->getParent()->addChild(sprite);
+//            sprite->setPosition(loadingSpt->getPosition());
+//            
+//            sprite->setScale(_thumbWidth/sprite->getContentSize().width);
+//            loadingSpt->removeFromParent();
+//        }
+//        _loadingSpts.erase(range.first, range.second);
+//    }
+    auto it = _loadingSpts.find(localPath);
+    if (it == _loadingSpts.end()) {
+        lwerror("no loading sprite to replace");
+    } else {
+        auto loadingSpt = it->second;
+        loadingSpt->getParent()->addChild(sprite);
+        sprite->setPosition(loadingSpt->getPosition());
+        
+        sprite->setScale(_thumbWidth/sprite->getContentSize().width);
+        loadingSpt->removeFromParent();
+        _loadingSpts.erase(it);
+    }
+}
+
+void PacksListScene::onSptLoaderError(const char *localPath) {
+    lwinfo("onSptLoaderError");
+    
+    
 }
 
 void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
-    auto touch = touches[0];
-    
-    SptLoader::getInstance()->load("xxxxxxx.png");
+    //auto touch = touches[0];
+    _sptLoader->download("http://image.zcool.com.cn/41/0/m_1281182218957.jpg");
 }
 
 

@@ -10,9 +10,14 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
                    ../../Classes/HelloWorldScene.cpp \
                    ../../Classes/sliderScene.cpp \
+                   ../../Classes/packsListScene.cpp \
                    ../../Classes/gifTexture.cpp \
                    ../../Classes/packLoader.cpp \
                    ../../Classes/http.cpp \
+                   ../../Classes/pack.cpp \
+                   ../../Classes/spriteLoader.cpp \
+                   ../../Classes/util.cpp \
+                   ../../Classes/gameplay.cpp \
                    ../../external/giflib/dgif_lib.c \
                    ../../external/giflib/gif_err.c \
                    ../../external/giflib/gif_font.c \

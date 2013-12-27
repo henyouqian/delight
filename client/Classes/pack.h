@@ -7,14 +7,12 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-void makePackDownloadDir();
-
 class PackListener {
 public:
     virtual void onPackParseComplete() {};
-    virtual void onError() {};
-    virtual void onImageDownload() {};
-    virtual void onComplete() {};
+    virtual void onPackError() {};
+    virtual void onPackImageDownload() {};
+    virtual void onPackDownloadComplete() {};
 };
 
 struct Pack {
@@ -37,11 +35,9 @@ struct Pack {
     
     void init(unsigned int packId, PackListener *listerner);
     ~Pack();
-    void download();
+    void startDownload();
     
 private:
-    void makeLocalPackPath(std::string &outPath, int packIdx);
-    void makeLocalImagePath(std::string &outPath, const char *url);
     bool parsePack(std::istream &is);
     void onGetContent(HttpClient* client, HttpResponse* response, unsigned int packId);
     void onImageDownload(HttpClient* client, HttpResponse* response, unsigned int imgIdx);

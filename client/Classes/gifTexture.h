@@ -11,12 +11,17 @@ class GifTexture : public Texture2D
 {
 public:
     static GifTexture* create(const char *filename, Node* parentNode, bool turnRight);
+    static GifTexture* create(GifFileType *gifFileType, Node* parentNode, bool turnRight);
     static Sprite* createSprite(const char *filename, Node* parentNode);
+    static bool isGif(const char *path);
+    
     bool initWithFile(const char *filename, Node* parentNode, bool turnRight);
+    bool initWithGifFileType(GifFileType *gifFileType, Node* parentNode, bool turnRight);
     GifTexture();
     virtual ~GifTexture();
     
     void getScreenSize(int &width, int &height);
+    void setSpeed(float speed);
     
     void nextFrame();
     
@@ -30,6 +35,7 @@ private:
     int _currFrameDuration;
     int _width2, _height2;
     int _sWidth, _sHeight;
+    float _speed;
     
     bool _turnRight;
     Node *_nodeForAction;

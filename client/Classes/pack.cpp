@@ -1,28 +1,13 @@
 #include "pack.h"
 #include "http.h"
+#include "util.h"
 #include "jsonxx/jsonxx.h"
 #include "crypto/sha.h"
 #include "lw/lwLog.h"
-#include <sys/stat.h>
 #include <fstream>
 
 USING_NS_CC;
 USING_NS_CC_EXT;
-
-namespace {
-    std::string _imageDir;
-    std::string _packDir;
-}
-
-void makePackDownloadDir() {
-    _imageDir = FileUtils::getInstance()->getWritablePath();
-    _imageDir += "images/";
-    mkdir(_imageDir.c_str(), S_IRWXU);
-    
-    _packDir = FileUtils::getInstance()->getWritablePath();
-    _packDir += "packs/";
-    mkdir(_packDir.c_str(), S_IRWXU);
-}
 
 
 void Pack::init(unsigned int packId, PackListener *listerner) {
@@ -60,28 +45,12 @@ Pack::~Pack() {
     }
 }
 
-void Pack::download() {
+void Pack::startDownload() {
     for (auto it = imgs.begin(); it != imgs.end(); ++it) {
         if (it->_request) {
             HttpClient::getInstance()->send(it->_request);
         }
     }
-}
-
-void Pack::makeLocalPackPath(std::string &outPath, int packIdx) {
-    outPath = _packDir;
-    char buf[64];
-    snprintf(buf, 64, "%d.pack", packIdx);
-    outPath += buf;
-}
-
-void Pack::makeLocalImagePath(std::string &outPath, const char *url) {
-    Sha1 sha1;
-    sha1.write(url, strlen(url));
-    sha1.final();
-    
-    outPath = _imageDir;
-    outPath += sha1.getResult();
 }
 
 bool Pack::parsePack(std::istream &is) {
@@ -125,7 +94,7 @@ bool Pack::parsePack(std::istream &is) {
         if (FileUtils::getInstance()->isFileExist(local)) {
             _localNum++;
             img.isLocal = true;
-            img._request = false;
+            img._request = nullptr;
         } else {
             img.isLocal = false;
             auto request = new HttpRequest();
@@ -146,7 +115,7 @@ bool Pack::parsePack(std::istream &is) {
     
     progress = (float)_localNum / imgs.size();
     if (progress == 1.f && listener) {
-        listener->onComplete();
+        listener->onPackDownloadComplete();
     }
     
     return true;
@@ -155,7 +124,7 @@ bool Pack::parsePack(std::istream &is) {
 void Pack::onGetContent(HttpClient* client, HttpResponse* response, unsigned int packId) {
     if (!response->isSucceed()) {
         if (listener) {
-            listener->onError();
+            listener->onPackError();
         }
         return;
     }
@@ -176,7 +145,7 @@ void Pack::onGetContent(HttpClient* client, HttpResponse* response, unsigned int
         fclose(f);
     } else {
         if (listener) {
-            listener->onError();
+            listener->onPackError();
         }
     }
 }
@@ -186,7 +155,7 @@ void Pack::onImageDownload(HttpClient* client, HttpResponse* response, unsigned 
     if (!response->isSucceed()) {
         lwerror("image download response failed");
         if (listener) {
-            listener->onError();
+            listener->onPackError();
         }
         return;
     }
@@ -202,9 +171,9 @@ void Pack::onImageDownload(HttpClient* client, HttpResponse* response, unsigned 
     progress = (float)_localNum / imgs.size();
     
     if (listener) {
-        listener->onImageDownload();
+        listener->onPackImageDownload();
         if (progress == 1.f) {
-            listener->onComplete();
+            listener->onPackDownloadComplete();
         }
     }
 }

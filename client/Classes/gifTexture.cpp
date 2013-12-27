@@ -1,4 +1,5 @@
 #include "gifTexture.h"
+#include "util.h"
 #include "giflib/gif_lib.h"
 #include "lw/lwLog.h"
 
@@ -25,6 +26,16 @@ GifTexture* GifTexture::create(const char *filename, Node* parentNode, bool turn
     return nullptr;
 }
 
+GifTexture* GifTexture::create(GifFileType *gifFileType, Node* parentNode, bool turnRight) {
+    GifTexture *p = new GifTexture();
+    if (p && p->initWithGifFileType(gifFileType, parentNode, turnRight)) {
+        p->autorelease();
+        return p;
+    }
+    CC_SAFE_DELETE(p);
+    return nullptr;
+}
+
 Sprite* GifTexture::createSprite(const char *filename, Node* parentNode) {
     auto texture = GifTexture::create(filename, parentNode, false);
     if (!texture) {
@@ -33,6 +44,26 @@ Sprite* GifTexture::createSprite(const char *filename, Node* parentNode) {
     }
     auto sprite = Sprite::createWithTexture(texture);
     return sprite;
+}
+
+bool GifTexture::isGif(const char *path) {
+    auto fu = FileUtils::getInstance();
+    std::string fullpath = path;
+    if (!fu->isAbsolutePath(fullpath)) {
+        fullpath = fu->fullPathForFilename(path);
+        if (fullpath.empty()) {
+            return false;
+        }
+    }
+    auto f = fopen(fullpath.c_str(), "rb");
+    char buf[3];
+    fread(buf, 3, 1, f);
+    bool isGif = false;
+    if (buf[0] == 'G' && buf[1] == 'I' && buf[2] == 'F') {
+        isGif = true;
+    }
+    fclose(f);
+    return isGif;
 }
 
 GifTexture::GifTexture()
@@ -46,9 +77,23 @@ bool GifTexture::initWithFile(const char *filename, Node* parentNode, bool turnR
     _nodeForAction->retain();
     parentNode->addChild(_nodeForAction);
     
-    auto path = FileUtils::getInstance()->fullPathForFilename(filename);
+    auto fu = FileUtils::getInstance();
+    auto path = fu->fullPathForFilename(filename);
+    //try load from writeable dir
+    std::string finalPath;
+    makeLocalGifPath(finalPath, path.c_str());
+    if (!fu->isFileExist(finalPath)) {
+        //copy to writeable dir
+        unsigned long size;
+        auto data = fu->getFileData(path.c_str(), "rb", &size);
+        auto f = fopen(finalPath.c_str(), "wb");
+        fwrite(data, size, 1, f);
+        fclose(f);
+        delete [] data;
+    }
+    
     int err = GIF_OK;
-    _gifFile = DGifOpenFileName(path.c_str(), &err);
+    _gifFile = DGifOpenFileName(finalPath.c_str(), &err);
     if (err != GIF_OK) {
         return false;
     }
@@ -58,6 +103,7 @@ bool GifTexture::initWithFile(const char *filename, Node* parentNode, bool turnR
     }
     
     _turnRight = turnRight;
+    _speed = 1.f;
     
     _width2 = _height2 = 0;
     _currFrame = 0;
@@ -71,6 +117,48 @@ bool GifTexture::initWithFile(const char *filename, Node* parentNode, bool turnR
     updateBuf();
     
     this->initWithData(_buf, _bufLen, Texture2D::PixelFormat::RGBA8888, _width2, _height2, Size(_sWidth, _sHeight));
+    _contentSize.setSize(_sWidth, _sHeight);
+    
+    //palyback
+    if (_gifFile->ImageCount > 1) {
+        auto delayTime = DelayTime::create(_currFrameDuration*0.001f);
+        auto cb = CallFunc::create(std::bind(&GifTexture::nextFrame, this));
+        auto seq = Sequence::create(delayTime, cb, NULL);
+        
+        _nodeForAction->runAction(seq);
+    }
+    
+#if CC_ENABLE_CACHE_TEXTURE_DATA
+    VolatileTexture::addDataTexture(this, _buf, _bufLen, Texture2D::PixelFormat::RGBA8888, Size(_width2, _height2));
+#endif
+    
+    return true;
+}
+
+bool GifTexture::initWithGifFileType(GifFileType *gifFile, Node* parentNode, bool turnRight) {
+    _nodeForAction = Node::create();
+    _nodeForAction->retain();
+    parentNode->addChild(_nodeForAction);
+    
+    _gifFile = gifFile;
+    
+    _turnRight = turnRight;
+    _speed = 1.f;
+    
+    _width2 = _height2 = 0;
+    _currFrame = 0;
+    _sWidth = _gifFile->SWidth;
+    _sHeight = _gifFile->SHeight;
+    if (_turnRight) {
+        _sWidth = _gifFile->SHeight;
+        _sHeight = _gifFile->SWidth;
+    }
+    
+    updateBuf();
+    
+    this->initWithData(_buf, _bufLen, Texture2D::PixelFormat::RGBA8888, _width2, _height2, Size(_sWidth, _sHeight));
+    
+    _contentSize.setSize(_sWidth, _sHeight);
     
     //palyback
     if (_gifFile->ImageCount > 1) {
@@ -102,6 +190,10 @@ void GifTexture::getScreenSize(int &width, int &height) {
     height = _sHeight;
 }
 
+void GifTexture::setSpeed(float speed) {
+    _speed = speed;
+}
+
 void GifTexture::nextFrame() {
     _currFrame++;
     if (_currFrame >= _gifFile->ImageCount) {
@@ -119,7 +211,7 @@ void GifTexture::nextFrame() {
     
     //palyback
     if (_gifFile->ImageCount > 1) {
-        auto delayTime = DelayTime::create(_currFrameDuration*0.001f);
+        auto delayTime = DelayTime::create(_currFrameDuration*0.001f/_speed);
         auto cb = CallFunc::create(std::bind(&GifTexture::nextFrame, this));
         auto seq = Sequence::create(delayTime, cb, NULL);
         _nodeForAction->runAction(seq);

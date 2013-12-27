@@ -1,6 +1,5 @@
 #include "HelloWorldScene.h"
 #include "giflib/gif_lib.h"
-#include "gifSprite.h"
 #include "gifTexture.h"
 
 USING_NS_CC;

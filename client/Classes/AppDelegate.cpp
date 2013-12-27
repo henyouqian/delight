@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
 #include "packsListScene.h"
-#include "pack.h"
+#include "util.h"
 #include "lw/lwLog.h"
 
 USING_NS_CC;
@@ -89,7 +89,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     chooseResolution(eglView);
     
     //init
-    makePackDownloadDir();
+    makeLocalDir();
 
     //auto scene = SliderScene::createScene();
     auto scene = PacksListScene::createScene();
