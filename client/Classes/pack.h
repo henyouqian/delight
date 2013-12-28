@@ -9,7 +9,6 @@ USING_NS_CC_EXT;
 
 class PackListener {
 public:
-    virtual void onPackParseComplete() {};
     virtual void onPackError() {};
     virtual void onPackImageDownload() {};
     virtual void onPackDownloadComplete() {};
@@ -18,9 +17,8 @@ public:
 struct Pack {
     PackListener *listener;
     std::string title;
-    std::string test;
+    std::string text;
     float progress;
-    std::string errorStr;
     
     struct Img {
         std::string url;
@@ -33,7 +31,7 @@ struct Pack {
     };
     std::vector<Img> imgs;
     
-    void init(unsigned int packId, PackListener *listerner);
+    void init(const char *title, const char *text, const char *images, PackListener *listerner);
     ~Pack();
     void startDownload();
     

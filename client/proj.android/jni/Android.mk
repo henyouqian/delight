@@ -25,7 +25,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../external/giflib/gifalloc.c \
                    ../../external/giflib/quantize.c \
                    ../../external/jsonxx/jsonxx.cc \
-                   ../../external/crypto/sha.cpp
+                   ../../external/crypto/sha.cpp \
+                   ../../external/sqlite/sqlite3.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
 					$(LOCAL_PATH)/../../external

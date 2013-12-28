@@ -9,28 +9,17 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-
-void Pack::init(unsigned int packId, PackListener *listerner) {
+void Pack::init(const char *title, const char *text, const char *images, PackListener *listerner) {
+    CCASSERT(title && text && images && listerner, "null check");
     this->listener = listerner;
-    progress = 0.f;
+    this->progress = 0.f;
+    this->title = title;
+    this->text = text;
     
-    std::string localPackFile;
-    makeLocalPackPath(localPackFile, packId);
-    
-    //local
-    if (FileUtils::getInstance()->isFileExist(localPackFile)) {
-        std::ifstream is;
-        is.open(localPackFile.c_str());
-        parsePack(is);
-        is.close();
-    }
-    //remote
-    else {
-        std::string url;
-        char buf[256];
-        snprintf(buf, 256, "{\"PackId\": %d}", packId);
-        _packRequest = postHttpRequest("pack/getContent", buf, std::bind(&Pack::onGetContent, this, std::placeholders::_1, std::placeholders::_2, packId));
-        _packRequest->retain();
+    std::istringstream is(images);
+    bool ok = parsePack(is);
+    if (!ok) {
+        listener->onPackError();
     }
 }
 
@@ -54,18 +43,12 @@ void Pack::startDownload() {
 }
 
 bool Pack::parsePack(std::istream &is) {
-    jsonxx::Object o;
-    bool ok = o.parse(is);
+    jsonxx::Array images;
+    bool ok = images.parse(is);
     if (!ok) {
         lwerror("json parse error");
         return false;
     }
-    
-    if (!o.has<jsonxx::Array>("Images")) {
-        lwerror("json parse error: no array: Images");
-        return false;
-    }
-    auto images = o.get<jsonxx::Array>("Images");
     _localNum = 0;
     unsigned int imgIdx = 0;
     for (auto i = 0; i < images.size(); ++i) {
@@ -109,45 +92,12 @@ bool Pack::parsePack(std::istream &is) {
         imgs.push_back(img);
     }
     
-    if (listener) {
-        listener->onPackParseComplete();
-    }
-    
     progress = (float)_localNum / imgs.size();
     if (progress == 1.f && listener) {
         listener->onPackDownloadComplete();
     }
     
     return true;
-}
-
-void Pack::onGetContent(HttpClient* client, HttpResponse* response, unsigned int packId) {
-    if (!response->isSucceed()) {
-        if (listener) {
-            listener->onPackError();
-        }
-        return;
-    }
-    
-    //parse
-    auto v = response->getResponseData();
-    std::istringstream is(std::string(v->begin(), v->end()));
-    bool ok = parsePack(is);
-    
-    if (ok) {
-        //save local
-        std::string localPackPath;
-        makeLocalPackPath(localPackPath, packId);
-        
-        auto f = fopen(localPackPath.c_str(), "wb");
-        auto data = response->getResponseData();
-        fwrite(data->data(), data->size(), 1, f);
-        fclose(f);
-    } else {
-        if (listener) {
-            listener->onPackError();
-        }
-    }
 }
 
 void Pack::onImageDownload(HttpClient* client, HttpResponse* response, unsigned int imgIdx) {

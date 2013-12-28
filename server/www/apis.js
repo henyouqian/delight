@@ -35,7 +35,7 @@ function Controller($scope, $http) {
 				{
 					"name": "list",
 					"method": "POST",
-					"data": {"LastPackId":0, "Limit":10}
+					"data": {"FromId":0, "Limit":10}
 				},
 				{
 					"name": "getContent",

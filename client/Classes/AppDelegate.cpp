@@ -2,6 +2,7 @@
 #include "sliderScene.h"
 #include "packsListScene.h"
 #include "util.h"
+#include "db.h"
 #include "lw/lwLog.h"
 
 USING_NS_CC;
@@ -90,6 +91,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     //init
     makeLocalDir();
+    
+    //
+    dbInit();
 
     //auto scene = SliderScene::createScene();
     auto scene = PacksListScene::createScene();

@@ -73,6 +73,12 @@
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
+		B393ED25186DF3B300E372CC /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B393ED23186DF3B300E372CC /* sqlite3.c */; };
+		B393ED26186DF3B300E372CC /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B393ED23186DF3B300E372CC /* sqlite3.c */; };
+		B393ED36186EE43100E372CC /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B393ED34186EE43100E372CC /* db.cpp */; };
+		B393ED37186EE43100E372CC /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B393ED34186EE43100E372CC /* db.cpp */; };
+		B393ED39186EF38D00E372CC /* db in Resources */ = {isa = PBXBuildFile; fileRef = B393ED38186EF38D00E372CC /* db */; };
+		B393ED3A186EF38D00E372CC /* db in Resources */ = {isa = PBXBuildFile; fileRef = B393ED38186EF38D00E372CC /* db */; };
 		B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638CD185D9A86009ECDF1 /* http.cpp */; };
 		B3A638D0185D9A86009ECDF1 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638CD185D9A86009ECDF1 /* http.cpp */; };
 		B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */ = {isa = PBXBuildFile; fileRef = B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */; };
@@ -290,6 +296,11 @@
 		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
 		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
+		B393ED23186DF3B300E372CC /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		B393ED24186DF3B300E372CC /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		B393ED34186EE43100E372CC /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = db.cpp; path = ../Classes/db.cpp; sourceTree = "<group>"; };
+		B393ED35186EE43100E372CC /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = db.h; path = ../Classes/db.h; sourceTree = "<group>"; };
+		B393ED38186EF38D00E372CC /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; path = db; sourceTree = "<group>"; };
 		B3A638CD185D9A86009ECDF1 /* http.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = http.cpp; path = ../Classes/http.cpp; sourceTree = "<group>"; };
 		B3A638CE185D9A86009ECDF1 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = ../Classes/http.h; sourceTree = "<group>"; };
 		B3A638DF185DA7C7009ECDF1 /* jsonxx.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsonxx.cc; sourceTree = "<group>"; };
@@ -398,6 +409,8 @@
 				B3A638CE185D9A86009ECDF1 /* http.h */,
 				B3AA0783186BEEE200706E4D /* util.cpp */,
 				B3AA0784186BEEE200706E4D /* util.h */,
+				B393ED34186EE43100E372CC /* db.cpp */,
+				B393ED35186EE43100E372CC /* db.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -521,6 +534,7 @@
 		B33DAC61184CC6B8001403BA /* external */ = {
 			isa = PBXGroup;
 			children = (
+				B393ED22186DF3B300E372CC /* sqlite */,
 				B34FDAE2186A198A006D05A3 /* lw */,
 				B3A638E3185DBAE9009ECDF1 /* crypto */,
 				B3A638DE185DA7C7009ECDF1 /* jsonxx */,
@@ -550,6 +564,7 @@
 		B33DAC84184CE490001403BA /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B393ED38186EF38D00E372CC /* db */,
 				B3A638EC1861B11B009ECDF1 /* ui */,
 				B3E841801857774B0004C636 /* audio */,
 				B3DC5D0C1854E24C00F732B7 /* img */,
@@ -565,6 +580,15 @@
 				B34FDAE3186A198A006D05A3 /* lwLog.h */,
 			);
 			path = lw;
+			sourceTree = "<group>";
+		};
+		B393ED22186DF3B300E372CC /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				B393ED23186DF3B300E372CC /* sqlite3.c */,
+				B393ED24186DF3B300E372CC /* sqlite3.h */,
+			);
+			path = sqlite;
 			sourceTree = "<group>";
 		};
 		B3A638DE185DA7C7009ECDF1 /* jsonxx */ = {
@@ -776,6 +800,7 @@
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
+				B393ED39186EF38D00E372CC /* db in Resources */,
 				B3E841811857774B0004C636 /* audio in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
@@ -797,6 +822,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B393ED3A186EF38D00E372CC /* db in Resources */,
 				B3A638EE1861B11B009ECDF1 /* ui in Resources */,
 				B3DC5D0E1854E24C00F732B7 /* img in Resources */,
 				B3DC5D0B1854B4FF00F732B7 /* default in Resources */,
@@ -819,6 +845,7 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				B3AA0785186BEEE200706E4D /* util.cpp in Sources */,
 				B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */,
+				B393ED25186DF3B300E372CC /* sqlite3.c in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
@@ -831,6 +858,7 @@
 				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
 				B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
 				B3A638F318620A3C009ECDF1 /* packsListScene.cpp in Sources */,
+				B393ED36186EE43100E372CC /* db.cpp in Sources */,
 				B33DAC82184CC6B9001403BA /* quantize.c in Sources */,
 				B33DAC7A184CC6B9001403BA /* gifalloc.c in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
@@ -851,9 +879,11 @@
 				B3A638F418620A3C009ECDF1 /* packsListScene.cpp in Sources */,
 				B33DAC77184CC6B9001403BA /* gif_font.c in Sources */,
 				B33DAC79184CC6B9001403BA /* gif_hash.c in Sources */,
+				B393ED26186DF3B300E372CC /* sqlite3.c in Sources */,
 				B303B60D185A402100B5CE01 /* packLoader.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				B33DAC75184CC6B9001403BA /* gif_err.c in Sources */,
+				B393ED37186EE43100E372CC /* db.cpp in Sources */,
 				B3A638E2185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
 				B3A638D0185D9A86009ECDF1 /* http.cpp in Sources */,
 				B3A639061862F842009ECDF1 /* spriteLoader.cpp in Sources */,

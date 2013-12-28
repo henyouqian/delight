@@ -33,34 +33,35 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		LastPackId uint32
-		Limit      uint32
+		FromId uint32
+		Limit  uint32
 	}
 	err := lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
-	if in.LastPackId == 0 {
-		in.LastPackId = math.MaxUint32
+	if in.FromId == 0 {
+		in.FromId = math.MaxUint32
 	}
 	if in.Limit > 16 {
 		in.Limit = 16
 	}
 
 	//query from db
-	rows, err := packDB.Query("SELECT id, date, title, cover, text FROM packs WHERE id<? ORDER BY id DESC LIMIT ?", in.LastPackId, in.Limit)
+	rows, err := packDB.Query("SELECT id, date, title, cover, text, images FROM packs WHERE id<=? ORDER BY id DESC LIMIT ?", in.FromId, in.Limit)
 	lwutil.CheckError(err, "")
 
 	type Pack struct {
-		Id    uint32
-		Date  string
-		Title string
-		Cover string
-		Text  string
+		Id     uint32
+		Date   string
+		Title  string
+		Cover  string
+		Text   string
+		Images string
 	}
 	packs := make([]Pack, 0, in.Limit)
 	for rows.Next() {
 		var pack Pack
-		err = rows.Scan(&pack.Id, &pack.Date, &pack.Title, &pack.Cover, &pack.Text)
+		err = rows.Scan(&pack.Id, &pack.Date, &pack.Title, &pack.Cover, &pack.Text, &pack.Images)
 		lwutil.CheckError(err, "")
 		packs = append(packs, pack)
 	}

@@ -34,7 +34,6 @@ bool SliderScene::init() {
     //reset("img/fiat500.jpg", 8);
     //_gameplay->reset("img/zz", 8);
     
-    
     PackLoader::getInstance()->listener = this;
     PackLoader::getInstance()->load(5);
     

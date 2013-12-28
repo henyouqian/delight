@@ -21,11 +21,10 @@ public:
     
     virtual void update(float delta);
     
-    void onPackList(HttpClient* client, HttpResponse* response);
+    void onPackListDownloaded(HttpClient* client, HttpResponse* response, int fromId);
     void loadPackListLocal();
     
     //PackListener
-    virtual void onPackParseComplete();
     virtual void onPackError();
     virtual void onPackImageDownload();
     virtual void onPackDownloadComplete();
@@ -44,9 +43,10 @@ private:
         std::string title;
         std::string cover;
         std::string text;
+        std::string images;
         Sprite *sprite;
     };
-    std::vector<PackInfo> _packInfos;
+    std::map<int, PackInfo> _packInfos;
     HttpRequest *_packListRequest;
     
     GifTexture *_loadingTexture;
