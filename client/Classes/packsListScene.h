@@ -5,6 +5,7 @@
 #include "spriteLoader.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
+#include <chrono>
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -35,6 +36,9 @@ public:
     
     //touch
     virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *event);
+    virtual void onTouchesMoved(const std::vector<Touch*>& touches, Event *event);
+    virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *event);
+    virtual void onTouchesCancelled(const std::vector<Touch*>&touches, Event *event);
     
 private:
     struct PackInfo {
@@ -56,6 +60,20 @@ private:
 
     SptLoader *_sptLoader;
     float _thumbWidth;
+    
+    //
+    Node *_sptParent;
+    float _parentY;
+    float _parentTouchY;
+    struct DragPointInfo {
+        float y;
+        std::chrono::steady_clock::time_point t;
+    };
+    std::list<DragPointInfo> _dragPointInfos;
+    float _rollSpeed;
+    void updateRoll();
+    
+    long long _ll;
 };
 
 #endif // __PACKS_LIST_SCENE_H__

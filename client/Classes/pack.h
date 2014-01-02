@@ -40,7 +40,6 @@ private:
     void onGetContent(HttpClient* client, HttpResponse* response, unsigned int packId);
     void onImageDownload(HttpClient* client, HttpResponse* response, unsigned int imgIdx);
     
-    HttpRequest *_packRequest;
     unsigned int _localNum;
 };
 

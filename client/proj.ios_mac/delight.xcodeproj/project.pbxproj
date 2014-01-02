@@ -49,8 +49,6 @@
 		B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBE91850E733003746A6 /* gifTexture.cpp */; };
 		B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
 		B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
-		B303B60C185A402100B5CE01 /* packLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B303B60A185A402100B5CE01 /* packLoader.cpp */; };
-		B303B60D185A402100B5CE01 /* packLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B303B60A185A402100B5CE01 /* packLoader.cpp */; };
 		B33DABE018479AC5001403BA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DABDF18479AC5001403BA /* OpenGLES.framework */; };
 		B33DABE218479AD0001403BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DABE118479AD0001403BA /* UIKit.framework */; };
 		B33DAC1F1847A3EA001403BA /* libcocos2dx iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC0C1847A3B6001403BA /* libcocos2dx iOS.a */; };
@@ -276,8 +274,6 @@
 		B302CBEA1850E733003746A6 /* gifTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gifTexture.h; path = ../Classes/gifTexture.h; sourceTree = "<group>"; };
 		B302CBFB18519276003746A6 /* sliderScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sliderScene.cpp; path = ../Classes/sliderScene.cpp; sourceTree = "<group>"; };
 		B302CBFC18519276003746A6 /* sliderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sliderScene.h; path = ../Classes/sliderScene.h; sourceTree = "<group>"; };
-		B303B60A185A402100B5CE01 /* packLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packLoader.cpp; path = ../Classes/packLoader.cpp; sourceTree = "<group>"; };
-		B303B60B185A402100B5CE01 /* packLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packLoader.h; path = ../Classes/packLoader.h; sourceTree = "<group>"; };
 		B33DABDF18479AC5001403BA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		B33DABE118479AD0001403BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		B33DABE318479B82001403BA /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries/libcurl.a"; sourceTree = "<group>"; };
@@ -403,8 +399,6 @@
 				B3A638F218620A3C009ECDF1 /* packsListScene.h */,
 				B302CBE91850E733003746A6 /* gifTexture.cpp */,
 				B302CBEA1850E733003746A6 /* gifTexture.h */,
-				B303B60A185A402100B5CE01 /* packLoader.cpp */,
-				B303B60B185A402100B5CE01 /* packLoader.h */,
 				B3A638CD185D9A86009ECDF1 /* http.cpp */,
 				B3A638CE185D9A86009ECDF1 /* http.h */,
 				B3AA0783186BEEE200706E4D /* util.cpp */,
@@ -853,7 +847,6 @@
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
 				B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */,
-				B303B60C185A402100B5CE01 /* packLoader.cpp in Sources */,
 				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,
 				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
 				B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
@@ -880,7 +873,6 @@
 				B33DAC77184CC6B9001403BA /* gif_font.c in Sources */,
 				B33DAC79184CC6B9001403BA /* gif_hash.c in Sources */,
 				B393ED26186DF3B300E372CC /* sqlite3.c in Sources */,
-				B303B60D185A402100B5CE01 /* packLoader.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				B33DAC75184CC6B9001403BA /* gif_err.c in Sources */,
 				B393ED37186EE43100E372CC /* db.cpp in Sources */,

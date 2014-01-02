@@ -6,9 +6,12 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+static SptLoader *g_currSptLoader = nullptr;
+
 SptLoader* SptLoader::create(SptLoaderListener *listener, Node *gifActionParentNode) {
     auto sptLoader = new SptLoader(listener, gifActionParentNode);
-    sptLoader->_thread = new std::thread(&SptLoader::loadingThreadMain, sptLoader);
+    sptLoader->_thread = new std::thread(&SptLoader::loadingThread, sptLoader);
+    g_currSptLoader = sptLoader;
     return sptLoader;
 }
 
@@ -17,61 +20,79 @@ SptLoader::SptLoader(SptLoaderListener *listener, Node *gifActionParentNode) {
     _gifActionParentNode = gifActionParentNode;
 }
 
+void SptLoader::destroy() {
+    std::lock_guard<std::mutex> lock(_mutex);
+    _done = true;
+    _cv.notify_all();
+    g_currSptLoader = nullptr;
+}
+
 SptLoader::~SptLoader() {
+    std::lock_guard<std::mutex> lock(_mutex);
+    
     if (_thread) {
+        _thread->detach();
         delete _thread;
     }
     for (auto it = _requests.begin(); it != _requests.end(); ++it) {
         (*it)->release();
     }
+    
+    for (auto it = _loadedGifs.begin(); it != _loadedGifs.end(); ++it) {
+        DGifCloseFile(it->gifFile);
+    }
 }
 
 struct AsyncLoader : public Object {
     std::string localPath;
-    SptLoaderListener *listener;
+    SptLoader *loader;
     void onImageLoad(Object *obj);
 };
 
 void AsyncLoader::onImageLoad(Object *obj) {
     this->autorelease();
     auto tex = (Texture2D*)obj;
-    auto spt = Sprite::createWithTexture(tex);
-    listener->onSptLoaderLoad(localPath.c_str(), spt);
+    if (loader == g_currSptLoader) {
+        loader->onTextureCreated(localPath.c_str(), tex);
+    }
 }
 
-void SptLoader::loadingThreadMain() {
-    while(1) {
+void SptLoader::onTextureCreated(const char *localPath, Texture2D *texture) {
+    LoadedTexture lt;
+    lt.localPath = localPath;
+    lt.texture = texture;
+    texture->retain();
+    std::lock_guard<std::mutex> lock(_mutex);
+    _loadedTextures.push_back(lt);
+}
+
+void SptLoader::loadingThread() {
+    _done = false;
+    while(!_done) {
         if (!_localPaths.empty()) {
             _mutex.lock();
             std::string localPath = _localPaths.front();
             _localPaths.pop_front();
             _mutex.unlock();
             
-            //try gif first
-            bool isGif = GifTexture::isGif(localPath.c_str());
-            if (isGif) {
-                int err = GIF_OK;
-                LoadedGif loadedGif;
-                loadedGif.gifFile = DGifOpenFileName(localPath.c_str(), &err);
-                err = DGifSlurp(loadedGif.gifFile);
-                if (err != GIF_OK) {
-                    std::lock_guard<std::mutex> lock(_mutex);
-                    _errorLocalPaths.push_back(localPath);
-                    continue;
-                }
-                loadedGif.localPath = localPath;
-                _loadedGifs.push_back(loadedGif);
-            } else {
-                auto al = new AsyncLoader();
-                al->localPath = localPath;
-                al->listener = _listener;
-                TextureCache::getInstance()->addImageAsync(localPath, al, (SEL_CallFuncO)&AsyncLoader::onImageLoad);
+            int err = GIF_OK;
+            LoadedGif loadedGif;
+            loadedGif.gifFile = DGifOpenFileName(localPath.c_str(), &err);
+            err = DGifSlurp(loadedGif.gifFile);
+            if (err != GIF_OK) {
+                std::lock_guard<std::mutex> lock(_mutex);
+                _errorLocalPaths.push_back(localPath);
+                continue;
             }
+            loadedGif.localPath = localPath;
+            std::lock_guard<std::mutex> lock(_mutex);
+            _loadedGifs.push_back(loadedGif);
         } else {
             std::unique_lock<std::mutex> lock(_mutex);
             _cv.wait(lock);
         }
     }
+    delete this;
 }
 
 void SptLoader::mainThreadUpdate() {
@@ -88,6 +109,18 @@ void SptLoader::mainThreadUpdate() {
         }
         _loadedGifs.clear();
     }
+    if (!_loadedTextures.empty()) {
+        for (auto it = _loadedTextures.begin(); it != _loadedTextures.end(); ++it) {
+            auto sprite = Sprite::createWithTexture(it->texture);
+            if (!sprite) {
+                _errorLocalPaths.push_back(it->localPath);
+            } else {
+                _listener->onSptLoaderLoad(it->localPath.c_str(), sprite);
+            }
+            it->texture->release();
+        }
+        _loadedTextures.clear();
+    }
     if (!_errorLocalPaths.empty()) {
         for (auto it = _errorLocalPaths.begin(); it != _errorLocalPaths.end(); ++it) {
             _listener->onSptLoaderError(it->c_str());
@@ -97,9 +130,17 @@ void SptLoader::mainThreadUpdate() {
 }
 
 void SptLoader::load(const char* localPath) {
-    std::lock_guard<std::mutex> lock(_mutex);
-    _localPaths.push_back(localPath);
-    _cv.notify_all();
+    bool isGif = GifTexture::isGif(localPath);
+    if (isGif) {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _localPaths.push_back(localPath);
+        _cv.notify_all();
+    } else {
+        auto al = new AsyncLoader();
+        al->localPath = localPath;
+        al->loader = this;
+        TextureCache::getInstance()->addImageAsync(localPath, al, (SEL_CallFuncO)&AsyncLoader::onImageLoad);
+    }
 }
 
 //void SptLoader::load(const char* filename) {

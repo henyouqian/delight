@@ -8,10 +8,11 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-Scene* SliderScene::createScene() {
+Scene* SliderScene::createScene(const char *title, const char *text, const char *images) {
     auto scene = Scene::create();
     auto layer = SliderScene::create();
     scene->addChild(layer);
+    layer->initPack(title, text, images);
     return scene;
 }
 
@@ -21,6 +22,7 @@ bool SliderScene::init() {
     if (!Layer::init()) {
         return false;
     }
+    this->scheduleUpdate();
     this->setTouchEnabled(true);
     
     _imgIdx = 0;
@@ -34,8 +36,8 @@ bool SliderScene::init() {
     //reset("img/fiat500.jpg", 8);
     //_gameplay->reset("img/zz", 8);
     
-    PackLoader::getInstance()->listener = this;
-    PackLoader::getInstance()->load(5);
+//    PackLoader::getInstance()->listener = this;
+//    PackLoader::getInstance()->load(5);
     
     //playingMenu
     auto sptPause = Sprite::create("ui/btnPause.png");
@@ -58,10 +60,21 @@ bool SliderScene::init() {
     return true;
 }
 
+void SliderScene::initPack(const char *title, const char *text, const char *images) {
+    _pack = new Pack();
+    _pack->init(title, text, images, this);
+    _pack->startDownload();
+}
+
 SliderScene::~SliderScene() {
     if (_gameplay) {
         delete _gameplay;
     }
+    delete _pack;
+}
+
+void SliderScene::update(float delta) {
+    _gameplay->update();
 }
 
 void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
@@ -72,19 +85,23 @@ void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *even
             if (_imgIdx == -1) {
                 _imgIdx = _imagePaths.size() - 1;
             }
-            reset(_imagePaths[_imgIdx].c_str());
+            reset();
             return;
         } else if (touch->getLocation().x > Director::getInstance()->getVisibleSize().width-60){
             _imgIdx++;
             if (_imgIdx == _imagePaths.size()) {
                 _imgIdx = 0;
             }
-            reset(_imagePaths[_imgIdx].c_str());
+            reset();
             return;
         }
     }
     
     _gameplay->onTouchesBegan(touches);
+    
+    if (touch->getLocation().y < 40 && touch->getLocation().x < 200) {
+        Director::getInstance()->popScene();
+    }
 }
 
 void SliderScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
@@ -97,40 +114,54 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
         _completedMenu->setVisible(true);
         _playingMenu->setVisible(false);
     }
+    
+    auto touch = touches[0];
 }
 
 void SliderScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
     onTouchesEnded(touches, event);
 }
 
-void SliderScene::onError(const char* error) {
-    
-}
+//void SliderScene::reset(const char* filename) {
+//    _gameplay->reset(filename, 10);
+//    _completedMenu->setVisible(false);
+//    _playingMenu->setVisible(true);
+//}
 
-void SliderScene::onPackDownload() {
-    
-}
-
-void SliderScene::onImageReady(const char* path) {
-    if (_imagePaths.empty()) {
-        _gameplay->reset(path, 10);
-        _imgIdx = 0;
+void SliderScene::reset() {
+    auto imgPath = _pack->imgs[_imgIdx].local.c_str();
+    _gameplay->reset(imgPath, 4);
+    if (_imgIdx < _pack->imgs.size()-1) {
+        _gameplay->preload(_pack->imgs[_imgIdx+1].local.c_str());
     }
-    _imagePaths.push_back(path);
-}
-
-void SliderScene::reset(const char* filename) {
-    _gameplay->reset(filename, 10);
     _completedMenu->setVisible(false);
     _playingMenu->setVisible(true);
 }
 
 void SliderScene::onNextImage(Object *obj) {
     _imgIdx++;
-    if (_imgIdx == _imagePaths.size()) {
+    if (_imgIdx == _pack->imgs.size()) {
         _imgIdx = 0;
     }
-    reset(_imagePaths[_imgIdx].c_str());
+    reset();
+}
+
+void SliderScene::onPackError() {
+    lwinfo("onPackError");
+}
+
+void SliderScene::onPackImageDownload() {
+    lwinfo("onPackImageDownload");
+}
+
+void SliderScene::onPackDownloadComplete() {
+    //load first image
+    if (_pack->imgs.empty()) {
+        lwerror("pack empty");
+        return;
+    }
+    _imgIdx = 0;
+    reset();
 }
 
 

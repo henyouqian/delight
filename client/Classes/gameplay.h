@@ -1,6 +1,7 @@
 #ifndef __GAMEPLAY_H__
 #define __GAMEPLAY_H__
 
+#include "spriteLoader.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -14,16 +15,22 @@ struct Slider {
     Touch *touch;
 };
 
-class Gameplay {
+class Gameplay : public SptLoaderListener{
 public:
     Gameplay(Rect &rect, Node *parentNode);
     ~Gameplay();
-    void reset(const char *filename, int sliderNum);
+    void preload(const char *filePath);
+    void reset(const char *filePath, int sliderNum);
+    void update();
     bool isCompleted();
     
     void onTouchesBegan(const std::vector<Touch*>& touches);
     void onTouchesMoved(const std::vector<Touch*>& touches);
     void onTouchesEnded(const std::vector<Touch*>& touches);
+    
+    //SptLoaderListener
+    virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite);
+    virtual void onSptLoaderError(const char *localPath);
     
 private:
     void loadTexture(const char *filename);
@@ -39,6 +46,16 @@ private:
     float _sliderH;
     Node *_parentNode;
     bool _isCompleted;
+    
+    SptLoader *_sptLoader;
+    
+    struct Preload {
+        std::string imgPath;
+        Texture2D *texture;
+    };
+    std::list<Preload> _preloads;
+    std::string _resetImagePath;
+    void resetNow(std::list<Preload>::iterator it);
 };
 
 

@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
 // Under iOS and the Simulator, we can use an alternate Accelerometer interface
 #import "AccelerometerSimulation.h"

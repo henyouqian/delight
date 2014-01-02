@@ -4,12 +4,17 @@
 #include "gifTexture.h"
 #include "util.h"
 #include "db.h"
+#include "HelloWorldScene.h"
+#include "sliderScene.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 #include <limits>
+#include <thread>
 
 USING_NS_CC;
 USING_NS_CC_EXT;
+
+using namespace std::chrono;
 
 namespace {
     int PACK_LIST_LIMIT = 16;
@@ -30,7 +35,6 @@ bool PacksListScene::init() {
     this->scheduleUpdate();
     
     _sptLoader = SptLoader::create(this, this);
-    _sptLoader->download("http://image.zcool.com.cn/41/0/m_1281182218957.jpg");
     
     //get list
     std::string url;
@@ -45,6 +49,9 @@ bool PacksListScene::init() {
     _loadingTexture->retain();
     _loadingTexture->setSpeed(2.f);
 
+    //
+    _sptParent = Node::create();
+    addChild(_sptParent);
 
     return true;
 }
@@ -55,11 +62,12 @@ PacksListScene::~PacksListScene() {
     }
     _loadingTexture->release();
     delete _pack;
-    delete _sptLoader;
+    _sptLoader->destroy();
 }
 
 void PacksListScene::update(float delta) {
     _sptLoader->mainThreadUpdate();
+    updateRoll();
 }
 
 namespace {
@@ -187,7 +195,7 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         //loading sprite
         float margin = 10.f;
         auto loadingSpt = Sprite::createWithTexture(_loadingTexture);
-        this->addChild(loadingSpt);
+        _sptParent->addChild(loadingSpt);
         int row = i / 3;
         int col = i % 3;
         auto visSize = Director::getInstance()->getVisibleSize();
@@ -205,13 +213,6 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         _loadingSpts.insert(std::make_pair(localPath, loadingSpt));
         _sptLoader->download(it->second.cover.c_str());
     }
-    
-    //fixme: test
-    auto it = _packInfos.rbegin();
-    _pack = new Pack;
-    _pack->init(it->second.title.c_str(), it->second.text.c_str(), it->second.images.c_str(), this);
-    lwinfo("progress: %f", _pack->progress);
-    _pack->startDownload();
 }
 
 void PacksListScene::onPackError() {
@@ -248,10 +249,89 @@ void PacksListScene::onSptLoaderError(const char *localPath) {
 }
 
 void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
-    //auto touch = touches[0];
-    _sptLoader->download("http://image.zcool.com.cn/41/0/m_1281182218957.jpg");
+    //
+    _parentTouchY = _sptParent->getPositionY();
+    _dragPointInfos.clear();
+    _rollSpeed = 0.f;
+    
+    //
+    auto touch = touches[0];
+    if (touch->getLocation().y < 60) {
+        if (touch->getLocation().x < 200) {
+            auto pi = _packInfos[5];
+            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+        } else if (touch->getLocation().x > 640-200) {
+            auto pi = _packInfos[3];
+            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+        } else {
+            auto pi = _packInfos[4];
+            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+        }
+    }
 }
 
+void PacksListScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
+    auto touch = touches[0];
+    _sptParent->setPositionY(_parentTouchY+touch->getLocation().y-touch->getStartLocation().y);
+    
+    DragPointInfo dpi;
+    dpi.y = touch->getLocation().y;
+    dpi.t = steady_clock::now();
+    _dragPointInfos.push_back(dpi);
+    if (_dragPointInfos.size() > 5) {
+        _dragPointInfos.pop_front();
+    }
+    
+//    auto now = steady_clock::now();
+//    auto dtn = now.time_since_epoch();
+//    
+//    long long t = dtn.count();
+//    lwinfo("%lld", t-_ll);
+//    _ll = t;
+    
+}
+
+void PacksListScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *event) {
+    auto touch = touches[0];
+    _rollSpeed = 0.f;
+    auto now = steady_clock::now();
+    float minDt = 0.1f;
+    for (auto it = _dragPointInfos.begin(); it != _dragPointInfos.end(); ++it) {
+        auto dt = duration_cast<duration<float>>(now - it->t).count();
+        if (dt < minDt) {
+            _rollSpeed = (touch->getLocation().y - it->y) / dt / 60.f;
+            _rollSpeed = MIN(100.f, MAX(-100.f, _rollSpeed));
+            lwinfo("%f", _rollSpeed);
+            _parentY = _sptParent->getPositionY();
+            break;
+        }
+    }
+}
+
+void PacksListScene::updateRoll() {
+    if (_rollSpeed) {
+        _parentY += _rollSpeed;
+        _sptParent->setPositionY(floor(_parentY));
+        
+        bool neg = _rollSpeed < 0;
+        float v = fabs(_rollSpeed);
+        //v -= 2;
+        float brk = v * .08f;
+        brk = MAX(brk, 0.1f);
+        v -= brk;
+        if (v < 0.01f) {
+            v = 0;
+        }
+        _rollSpeed = v;
+        if (neg) {
+            _rollSpeed = -_rollSpeed;
+        }
+    }
+}
+
+void PacksListScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
+    
+}
 
 
 

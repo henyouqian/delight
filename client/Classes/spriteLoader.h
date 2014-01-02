@@ -22,14 +22,17 @@ public:
     static SptLoader* create(SptLoaderListener *listener, Node *gifActionParentNode);
     
     SptLoader(SptLoaderListener *listener, Node *gifActionParentNode);
-    ~SptLoader();
+    void destroy();
     
     void load(const char *filename);
     void download(const char *url);
     void mainThreadUpdate();
+    
+    void onTextureCreated(const char *localPath, Texture2D *texture);
 
 private:
-    void loadingThreadMain();
+    ~SptLoader();
+    void loadingThread();
     void onImageDownload(HttpClient* client, HttpResponse* response, std::string localPath);
 
     std::thread *_thread;
@@ -44,8 +47,14 @@ private:
         std::string localPath;
         GifFileType *gifFile;
     };
+    struct LoadedTexture {
+        std::string localPath;
+        Texture2D *texture;
+    };
     std::list<LoadedGif> _loadedGifs;
+    std::list<LoadedTexture> _loadedTextures;
     std::list<std::string> _errorLocalPaths;
+    bool _done;
 };
 
 

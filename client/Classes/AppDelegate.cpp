@@ -4,6 +4,7 @@
 #include "util.h"
 #include "db.h"
 #include "lw/lwLog.h"
+#include <thread>
 
 USING_NS_CC;
 
@@ -118,4 +119,7 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+    
+    std::chrono::milliseconds dura(1000);
+    std::this_thread::sleep_for(dura);
 }

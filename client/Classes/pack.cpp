@@ -24,9 +24,6 @@ void Pack::init(const char *title, const char *text, const char *images, PackLis
 }
 
 Pack::~Pack() {
-    if (_packRequest) {
-        _packRequest->release();
-    }
     for (auto it = imgs.begin(); it != imgs.end(); ++it) {
         if (it->_request) {
             it->_request->release();
@@ -73,7 +70,7 @@ bool Pack::parsePack(std::istream &is) {
         makeLocalImagePath(local, img.url.c_str());
         img.local = local;
         
-        //check and download image
+        //check file exist and download image
         if (FileUtils::getInstance()->isFileExist(local)) {
             _localNum++;
             img.isLocal = true;
@@ -84,12 +81,12 @@ bool Pack::parsePack(std::istream &is) {
             request->setUrl(img.url.c_str());
             request->setRequestType(HttpRequest::Type::GET);
             request->setCallback(std::bind(&Pack::onImageDownload, this, std::placeholders::_1, std::placeholders::_2, imgIdx));
-            imgIdx++;
             img._request = request;
         }
         
         //
         imgs.push_back(img);
+        imgIdx++;
     }
     
     progress = (float)_localNum / imgs.size();

@@ -1,6 +1,7 @@
 #include "HelloWorldScene.h"
 #include "giflib/gif_lib.h"
 #include "gifTexture.h"
+#include "packsListScene.h"
 
 USING_NS_CC;
 
@@ -169,14 +170,6 @@ bool HelloWorld::init()
 //    //gifSpt->setAnchorPoint(Point(0, 0));
 //    gifSpt->setPosition(Point(visibleSize.width*.5f, visibleSize.height*.5f));
     
-    //gif texture
-    auto gifTex = GifTexture::create("test.gif", this, false);
-    int width, height;
-    gifTex->getScreenSize(width, height);
-    auto spt = Sprite::createWithTexture(gifTex, Rect(0, 0, width, height));
-    spt->setAnchorPoint(Point(0, 0));
-    spt->setScale(2.4f);
-    this->addChild(spt);
 
 //    for (int i = 0; i < 20; ++i) {
 //        spt = Sprite::createWithTexture(gifTex, Rect(0, height-50, width, 60));
@@ -191,9 +184,6 @@ bool HelloWorld::init()
 
 void HelloWorld::menuCloseCallback(Object* pSender)
 {
-    Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+    Director::getInstance()->replaceScene(CCTransitionFade::create(0.5, PacksListScene::createScene()));
+    //Director::getInstance()->popScene();
 }

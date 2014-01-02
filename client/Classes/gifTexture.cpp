@@ -180,8 +180,8 @@ GifTexture::~GifTexture() {
     if (_buf)
         delete [] _buf;
     _nodeForAction->stopAllActions();
-    _nodeForAction->release();
     _nodeForAction->removeFromParent();
+    _nodeForAction->release();
     DGifCloseFile(_gifFile);
 }
 
