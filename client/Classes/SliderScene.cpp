@@ -130,7 +130,7 @@ void SliderScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *e
 
 void SliderScene::reset() {
     auto imgPath = _pack->imgs[_imgIdx].local.c_str();
-    _gameplay->reset(imgPath, 4);
+    _gameplay->reset(imgPath, 8);
     if (_imgIdx < _pack->imgs.size()-1) {
         _gameplay->preload(_pack->imgs[_imgIdx+1].local.c_str());
     }

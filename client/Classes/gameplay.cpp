@@ -48,6 +48,7 @@ Gameplay::Gameplay(Rect &rect, Node *parentNode) {
     _texW = _texH = 0;
     _texture = nullptr;
     _isCompleted = false;
+    _running = false;
     
     SimpleAudioEngine::getInstance()->preloadEffect("audio/tik.wav");
     SimpleAudioEngine::getInstance()->preloadEffect("audio/success.mp3");
@@ -100,6 +101,7 @@ void Gameplay::update() {
 void Gameplay::reset(const char *filePath, int sliderNum) {
     _resetImagePath = filePath;
     _sliderNum = sliderNum;
+    _running = false;
     
     bool textureLoaded = false;
     auto it = _preloads.begin();
@@ -333,7 +335,7 @@ void Gameplay::onTouchesEnded(const std::vector<Touch*>& touches) {
             complete = false;
         }
     }
-    if (_isCompleted == false && complete == true) {
+    if (_isCompleted == false && complete == true && _running) {
         SimpleAudioEngine::getInstance()->playEffect("audio/success3.mp3");
     }
     _isCompleted = complete;
@@ -472,6 +474,8 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         }
     }
     TextureCache::getInstance()->removeUnusedTextures();
+    
+    _running = true;
 }
 
 void Gameplay::onSptLoaderError(const char *localPath) {

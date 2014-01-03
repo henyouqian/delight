@@ -62,6 +62,9 @@ private:
     float _thumbWidth;
     
     //
+    bool _dragging;
+    float _touchBeginY;
+    PackInfo* _selPackInfo;
     Node *_sptParent;
     float _parentY;
     float _parentTouchY;

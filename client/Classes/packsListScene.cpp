@@ -250,29 +250,52 @@ void PacksListScene::onSptLoaderError(const char *localPath) {
 
 void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
     //
+    _dragging = false;
     _parentTouchY = _sptParent->getPositionY();
     _dragPointInfos.clear();
     _rollSpeed = 0.f;
     
     //
     auto touch = touches[0];
-    if (touch->getLocation().y < 60) {
-        if (touch->getLocation().x < 200) {
-            auto pi = _packInfos[5];
-            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
-        } else if (touch->getLocation().x > 640-200) {
-            auto pi = _packInfos[3];
-            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
-        } else {
-            auto pi = _packInfos[4];
-            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+    auto children = _sptParent->getChildren();
+    auto it = _packInfos.rbegin();
+    _selPackInfo = nullptr;
+    for( int i = 0; i < children->count() && it != _packInfos.rend() ; i++, it++ ){
+        auto node = static_cast<Node*>( children->getObjectAtIndex(i) );
+        auto rect = node->getBoundingBox();
+        rect.origin.y += _sptParent->getPositionY();
+        if (rect.containsPoint(touch->getLocation())) {
+            _selPackInfo = &(it->second);
+            break;
         }
     }
+    
+//    //
+//    if (touch->getLocation().y < 60) {
+//        if (touch->getLocation().x < 200) {
+//            auto pi = _packInfos[5];
+//            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+//        } else if (touch->getLocation().x > 640-200) {
+//            auto pi = _packInfos[3];
+//            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+//        } else {
+//            auto pi = _packInfos[4];
+//            Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(pi.title.c_str(), pi.text.c_str(), pi.images.c_str())));
+//        }
+//    }
 }
 
 void PacksListScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
-    _sptParent->setPositionY(_parentTouchY+touch->getLocation().y-touch->getStartLocation().y);
+    
+    if (_dragging == false && fabs(touch->getLocation().y-touch->getStartLocation().y) > 10) {
+        _dragging = true;
+        _touchBeginY = touch->getLocation().y;
+    }
+    
+    if (_dragging) {
+        _sptParent->setPositionY(_parentTouchY+touch->getLocation().y-_touchBeginY);
+    }
     
     DragPointInfo dpi;
     dpi.y = touch->getLocation().y;
@@ -306,6 +329,12 @@ void PacksListScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
             break;
         }
     }
+    
+    if (!_dragging && _selPackInfo) {
+        Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(_selPackInfo->title.c_str(), _selPackInfo->text.c_str(), _selPackInfo->images.c_str())));
+    }
+    _dragging = false;
+    _selPackInfo = false;
 }
 
 void PacksListScene::updateRoll() {
@@ -330,7 +359,7 @@ void PacksListScene::updateRoll() {
 }
 
 void PacksListScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
-    
+    _dragging = false;
 }
 
 

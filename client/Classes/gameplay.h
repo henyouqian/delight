@@ -56,6 +56,8 @@ private:
     std::list<Preload> _preloads;
     std::string _resetImagePath;
     void resetNow(std::list<Preload>::iterator it);
+    
+    bool _running;
 };
 
 
