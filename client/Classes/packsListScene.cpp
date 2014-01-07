@@ -18,6 +18,8 @@ using namespace std::chrono;
 
 namespace {
     int PACK_LIST_LIMIT = 16;
+    float ICON_MARGIN = 5.f;
+    float HEADER_HEIGHT = 100.f;
 }
 
 cocos2d::Scene* PacksListScene::createScene() {
@@ -51,7 +53,24 @@ bool PacksListScene::init() {
 
     //
     _sptParent = Node::create();
-    addChild(_sptParent);
+    addChild(_sptParent, 1);
+    
+    //header
+    auto visSize = Director::getInstance()->getVisibleSize();
+    auto header = Sprite::create("ui/pt.png");
+    header->setScaleX(visSize.width);
+    header->setScaleY(HEADER_HEIGHT);
+    header->setAnchorPoint(Point(0.f, 1.f));
+    header->setPosition(Point(0.f, visSize.height));
+    addChild(header, 2);
+    
+    auto hLine = Sprite::create("ui/pt.png");
+    hLine->setScaleX(visSize.width);
+    hLine->setAnchorPoint(Point(0.f, 1.f));
+    hLine->setPosition(Point(0.f, visSize.height-HEADER_HEIGHT));
+    hLine->setColor(Color3B(200, 200, 200));
+    addChild(hLine, 2);
+    //
 
     return true;
 }
@@ -193,15 +212,14 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
     int i = 0;
     for (auto it = _packInfos.rbegin(); it != _packInfos.rend(); ++it, ++i) {
         //loading sprite
-        float margin = 10.f;
         auto loadingSpt = Sprite::createWithTexture(_loadingTexture);
         _sptParent->addChild(loadingSpt);
         int row = i / 3;
         int col = i % 3;
         auto visSize = Director::getInstance()->getVisibleSize();
-        float w = (visSize.width-2.f*margin) / 3.f;
-        float x = (w+margin)*col + .5f*w;
-        float y = visSize.height - ((w+margin)*row+.5f*w);
+        float w = (visSize.width-2.f*ICON_MARGIN) / 3.f;
+        float x = (w+ICON_MARGIN)*col + .5f*w;
+        float y = visSize.height - ((w+ICON_MARGIN)*row+.5f*w);
         loadingSpt->setPosition(Point(x, y));
         loadingSpt->setScale(2.f);
         _thumbWidth = w;
@@ -258,6 +276,9 @@ void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
     //
     auto touch = touches[0];
     auto children = _sptParent->getChildren();
+    if (!children) {
+        return;
+    }
     auto it = _packInfos.rbegin();
     _selPackInfo = nullptr;
     for( int i = 0; i < children->count() && it != _packInfos.rend() ; i++, it++ ){

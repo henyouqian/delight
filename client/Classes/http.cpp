@@ -4,7 +4,8 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 namespace {
-    const char *g_host = "http://192.168.2.101:9999/";
+    const char *g_host = "http://192.168.1.43:9999/";
+    //const char *g_host = "http://192.168.2.101:9999/";
     //const char *g_host = "http://localhost:9999/";
 }
 

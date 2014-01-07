@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
 #include "packsListScene.h"
+#include "mainMenuScene.h"
 #include "util.h"
 #include "db.h"
 #include "lw/lwLog.h"
@@ -97,7 +98,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     dbInit();
 
     //auto scene = SliderScene::createScene();
-    auto scene = PacksListScene::createScene();
+    //auto scene = PacksListScene::createScene();
+    auto scene = MainMenuScene::createScene();
     
     // run
     director->runWithScene(scene);

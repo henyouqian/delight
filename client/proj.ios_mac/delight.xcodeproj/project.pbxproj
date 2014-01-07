@@ -49,6 +49,8 @@
 		B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBE91850E733003746A6 /* gifTexture.cpp */; };
 		B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
 		B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
+		B310039A1879B5F40049A6CF /* mainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31003981879B5F40049A6CF /* mainMenuScene.cpp */; };
+		B310039B1879B5F40049A6CF /* mainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31003981879B5F40049A6CF /* mainMenuScene.cpp */; };
 		B33DABE018479AC5001403BA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DABDF18479AC5001403BA /* OpenGLES.framework */; };
 		B33DABE218479AD0001403BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DABE118479AD0001403BA /* UIKit.framework */; };
 		B33DAC1F1847A3EA001403BA /* libcocos2dx iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC0C1847A3B6001403BA /* libcocos2dx iOS.a */; };
@@ -274,6 +276,8 @@
 		B302CBEA1850E733003746A6 /* gifTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gifTexture.h; path = ../Classes/gifTexture.h; sourceTree = "<group>"; };
 		B302CBFB18519276003746A6 /* sliderScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sliderScene.cpp; path = ../Classes/sliderScene.cpp; sourceTree = "<group>"; };
 		B302CBFC18519276003746A6 /* sliderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sliderScene.h; path = ../Classes/sliderScene.h; sourceTree = "<group>"; };
+		B31003981879B5F40049A6CF /* mainMenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mainMenuScene.cpp; path = ../Classes/mainMenuScene.cpp; sourceTree = "<group>"; };
+		B31003991879B5F40049A6CF /* mainMenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mainMenuScene.h; path = ../Classes/mainMenuScene.h; sourceTree = "<group>"; };
 		B33DABDF18479AC5001403BA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		B33DABE118479AD0001403BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		B33DABE318479B82001403BA /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries/libcurl.a"; sourceTree = "<group>"; };
@@ -383,20 +387,20 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
-				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
+				B31003981879B5F40049A6CF /* mainMenuScene.cpp */,
+				B31003991879B5F40049A6CF /* mainMenuScene.h */,
 				1AFAF8B516D35DE700DB1158 /* HelloWorldScene.cpp */,
 				1AFAF8B616D35DE700DB1158 /* HelloWorldScene.h */,
-				B3A638E8185F58B0009ECDF1 /* gameplay.cpp */,
-				B3A638E9185F58B0009ECDF1 /* gameplay.h */,
+				B3A638F118620A3C009ECDF1 /* packsListScene.cpp */,
+				B3A638F218620A3C009ECDF1 /* packsListScene.h */,
 				B302CBFB18519276003746A6 /* sliderScene.cpp */,
 				B302CBFC18519276003746A6 /* sliderScene.h */,
 				B3A639031862F841009ECDF1 /* spriteLoader.cpp */,
 				B3A639041862F841009ECDF1 /* spriteLoader.h */,
+				B3A638E8185F58B0009ECDF1 /* gameplay.cpp */,
+				B3A638E9185F58B0009ECDF1 /* gameplay.h */,
 				B34FDAD1186A10A9006D05A3 /* pack.cpp */,
 				B34FDAD2186A10A9006D05A3 /* pack.h */,
-				B3A638F118620A3C009ECDF1 /* packsListScene.cpp */,
-				B3A638F218620A3C009ECDF1 /* packsListScene.h */,
 				B302CBE91850E733003746A6 /* gifTexture.cpp */,
 				B302CBEA1850E733003746A6 /* gifTexture.h */,
 				B3A638CD185D9A86009ECDF1 /* http.cpp */,
@@ -405,6 +409,8 @@
 				B3AA0784186BEEE200706E4D /* util.h */,
 				B393ED34186EE43100E372CC /* db.cpp */,
 				B393ED35186EE43100E372CC /* db.h */,
+				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
+				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -840,6 +846,7 @@
 				B3AA0785186BEEE200706E4D /* util.cpp in Sources */,
 				B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */,
 				B393ED25186DF3B300E372CC /* sqlite3.c in Sources */,
+				B310039A1879B5F40049A6CF /* mainMenuScene.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
@@ -884,6 +891,7 @@
 				B33DAC83184CC6B9001403BA /* quantize.c in Sources */,
 				B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */,
 				B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */,
+				B310039B1879B5F40049A6CF /* mainMenuScene.cpp in Sources */,
 				B33DAC71184CC6B9001403BA /* dgif_lib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
