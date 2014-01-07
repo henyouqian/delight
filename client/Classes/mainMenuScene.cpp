@@ -1,5 +1,6 @@
 #include "mainMenuScene.h"
 #include "packsListScene.h"
+#include "util.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -18,12 +19,8 @@ bool MainMenuScene::init() {
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     
-    auto label = LabelTTF::create("玩", "GurmukhiMN-Bold", 48);
-    auto spr = Scale9Sprite::create("ui/btnBg.png");
-    spr->setScale(2.f);
-    ControlButton *button = ControlButton::create(label, spr);
+    auto button = createButton("玩", 48, 2.f);
     button->setPosition(Point(visibleSize.width/2, visibleSize.height/2));
-    button->setAdjustBackgroundImage(false);
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterGame), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     

@@ -9,7 +9,13 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-void Pack::init(const char *title, const char *text, const char *images, PackListener *listerner) {
+Pack* Pack::create(int id) {
+    return nullptr;
+}
+
+void Pack::init(const char *date, const char *title, const char *icon,
+                const char *cover, const char *text, const char *images,
+                PackListener *listerner) {
     CCASSERT(title && text && images && listerner, "null check");
     this->listener = listerner;
     this->progress = 0.f;
@@ -123,5 +129,31 @@ void Pack::onImageDownload(HttpClient* client, HttpResponse* response, unsigned 
             listener->onPackDownloadComplete();
         }
     }
+}
+
+static PackManager *g_packManager = nullptr;
+
+PackManager* PackManager::getInstance() {
+    if (!g_packManager) {
+        g_packManager = new PackManager();
+    }
+    return g_packManager;
+}
+
+void PackManager::destroyInstance() {
+    if (g_packManager) {
+        delete g_packManager;
+        g_packManager = nullptr;
+    }
+}
+
+namespace {
+    class PackManagerDestroyer {
+    public:
+        ~PackManagerDestroyer() {
+            PackManager::destroyInstance();
+        }
+    };
+    PackManagerDestroyer _packManagerDestroyer;
 }
 

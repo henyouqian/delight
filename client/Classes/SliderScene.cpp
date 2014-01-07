@@ -62,7 +62,7 @@ bool SliderScene::init() {
 
 void SliderScene::initPack(const char *title, const char *text, const char *images) {
     _pack = new Pack();
-    _pack->init(title, text, images, this);
+    _pack->init(nullptr, title, nullptr, nullptr, text, images, this);
     _pack->startDownload();
 }
 
@@ -100,7 +100,7 @@ void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *even
     _gameplay->onTouchesBegan(touches);
     
     if (touch->getLocation().y < 40 && touch->getLocation().x < 200) {
-        Director::getInstance()->popScene();
+        Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
     }
 }
 

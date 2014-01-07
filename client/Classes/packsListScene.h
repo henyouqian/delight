@@ -40,16 +40,25 @@ public:
     virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *event);
     virtual void onTouchesCancelled(const std::vector<Touch*>&touches, Event *event);
     
-private:
+    //
+    void back(Object *sender, Control::EventType controlEvent);
+    
+public:
+    SptLoader *sptLoader;
+    
     struct PackInfo {
         int id;
         std::string date;
         std::string title;
+        std::string icon;
         std::string cover;
         std::string text;
         std::string images;
-        Sprite *sprite;
+        //Sprite *sprite;
     };
+    PackInfo *selPackInfo;
+    
+private:
     std::map<int, PackInfo> _packInfos;
     HttpRequest *_packListRequest;
     
@@ -58,13 +67,11 @@ private:
     
     std::multimap<std::string, Sprite*> _loadingSpts;
 
-    SptLoader *_sptLoader;
     float _thumbWidth;
     
     //
     bool _dragging;
     float _touchBeginY;
-    PackInfo* _selPackInfo;
     Node *_sptParent;
     float _parentY;
     float _parentTouchY;

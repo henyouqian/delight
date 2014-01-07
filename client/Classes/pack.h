@@ -16,8 +16,13 @@ public:
 
 struct Pack {
     PackListener *listener;
+    int id;
+    std::string date;
     std::string title;
+    std::string icon;
+    std::string cover;
     std::string text;
+    
     float progress;
     
     struct Img {
@@ -31,7 +36,11 @@ struct Pack {
     };
     std::vector<Img> imgs;
     
-    void init(const char *title, const char *text, const char *images, PackListener *listerner);
+public:
+    static Pack* create(int id);
+    void init(const char *date, const char *title, const char *icon,
+              const char *cover, const char *text, const char *images,
+              PackListener *listerner);
     ~Pack();
     void startDownload();
     
@@ -41,6 +50,12 @@ private:
     void onImageDownload(HttpClient* client, HttpResponse* response, unsigned int imgIdx);
     
     unsigned int _localNum;
+};
+
+struct PackManager {
+    static PackManager* getInstance();
+    static void destroyInstance();
+    std::map<int, Pack*> packs;
 };
 
 #endif // __PACK_DOWNLOADER_H__

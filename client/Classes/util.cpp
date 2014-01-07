@@ -49,3 +49,13 @@ void makeLocalGifPath(std::string &outPath, const char *fullPath) {
     outPath = _localGifDir;
     outPath += sha1.getResult();
 }
+
+ControlButton *createButton(const char *text, float fontSize, float bgScale) {
+    auto label = LabelTTF::create(text, "Verdana", fontSize);
+    auto spr = Scale9Sprite::create("ui/btnBg.png");
+    spr->setScale(bgScale);
+    spr->setOpacity(220);
+    auto button = ControlButton::create(label, spr);
+    button->setAdjustBackgroundImage(false);
+    return button;
+}

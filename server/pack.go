@@ -47,12 +47,13 @@ func list(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//query from db
-	rows, err := packDB.Query("SELECT id, date, title, cover, text, images FROM packs WHERE id<=? ORDER BY id DESC LIMIT ?", in.FromId, in.Limit)
+	rows, err := packDB.Query("SELECT id, date, title, icon, cover, text, images FROM packs WHERE id<=? ORDER BY id DESC LIMIT ?", in.FromId, in.Limit)
 	lwutil.CheckError(err, "")
 
 	type Pack struct {
 		Id     uint32
 		Date   string
+		Icon   string
 		Title  string
 		Cover  string
 		Text   string
@@ -61,7 +62,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	packs := make([]Pack, 0, in.Limit)
 	for rows.Next() {
 		var pack Pack
-		err = rows.Scan(&pack.Id, &pack.Date, &pack.Title, &pack.Cover, &pack.Text, &pack.Images)
+		err = rows.Scan(&pack.Id, &pack.Date, &pack.Title, &pack.Icon, &pack.Cover, &pack.Text, &pack.Images)
 		lwutil.CheckError(err, "")
 		packs = append(packs, pack)
 	}

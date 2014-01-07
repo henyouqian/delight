@@ -6,6 +6,7 @@
 #include "db.h"
 #include "HelloWorldScene.h"
 #include "sliderScene.h"
+#include "modeSelectScene.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 #include <limits>
@@ -19,7 +20,6 @@ using namespace std::chrono;
 namespace {
     int PACK_LIST_LIMIT = 16;
     float ICON_MARGIN = 5.f;
-    float HEADER_HEIGHT = 100.f;
 }
 
 cocos2d::Scene* PacksListScene::createScene() {
@@ -36,7 +36,7 @@ bool PacksListScene::init() {
     this->setTouchEnabled(true);
     this->scheduleUpdate();
     
-    _sptLoader = SptLoader::create(this, this);
+    sptLoader = SptLoader::create(this, this);
     
     //get list
     std::string url;
@@ -55,22 +55,11 @@ bool PacksListScene::init() {
     _sptParent = Node::create();
     addChild(_sptParent, 1);
     
-    //header
-    auto visSize = Director::getInstance()->getVisibleSize();
-    auto header = Sprite::create("ui/pt.png");
-    header->setScaleX(visSize.width);
-    header->setScaleY(HEADER_HEIGHT);
-    header->setAnchorPoint(Point(0.f, 1.f));
-    header->setPosition(Point(0.f, visSize.height));
-    addChild(header, 2);
-    
-    auto hLine = Sprite::create("ui/pt.png");
-    hLine->setScaleX(visSize.width);
-    hLine->setAnchorPoint(Point(0.f, 1.f));
-    hLine->setPosition(Point(0.f, visSize.height-HEADER_HEIGHT));
-    hLine->setColor(Color3B(200, 200, 200));
-    addChild(hLine, 2);
-    //
+    //back button
+    auto btnBack = createButton("<", 48, 1.f);
+    btnBack->setPosition(Point(70, 70));
+    btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksListScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(btnBack);
 
     return true;
 }
@@ -81,12 +70,16 @@ PacksListScene::~PacksListScene() {
     }
     _loadingTexture->release();
     delete _pack;
-    _sptLoader->destroy();
+    sptLoader->destroy();
 }
 
 void PacksListScene::update(float delta) {
-    _sptLoader->mainThreadUpdate();
+    sptLoader->mainThreadUpdate();
     updateRoll();
+}
+
+void PacksListScene::back(Object *sender, Control::EventType controlEvent) {
+    Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
 }
 
 namespace {
@@ -110,7 +103,7 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         if (fromId == 0) {
             fromId = std::numeric_limits<int>::max();
         }
-        ss << "SELECT id, date, cover, title, text, images from packs WHERE id<="<<fromId<<" ORDER BY id DESC LIMIT "<<PACK_LIST_LIMIT<<";";
+        ss << "SELECT id, date, icon, cover, title, text, images from packs WHERE id<="<<fromId<<" ORDER BY id DESC LIMIT "<<PACK_LIST_LIMIT<<";";
         auto r = sqlite3_prepare_v2(gSaveDb, ss.str().c_str(), -1, &pStmt, NULL);
         if (r != SQLITE_OK) {
             lwerror("sqlite error: %s", ss.str().c_str());
@@ -122,11 +115,12 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
                 PackInfo packInfo;
                 packInfo.id = sqlite3_column_int(pStmt, 0);
                 packInfo.date = (const char*)sqlite3_column_text(pStmt, 1);
-                packInfo.cover = (const char*)sqlite3_column_text(pStmt, 2);
-                packInfo.title = (const char*)sqlite3_column_text(pStmt, 3);
-                packInfo.text = (const char*)sqlite3_column_text(pStmt, 4);
-                packInfo.images = (const char*)sqlite3_column_text(pStmt, 5);
-                packInfo.sprite = nullptr;
+                packInfo.icon = (const char*)sqlite3_column_text(pStmt, 2);
+                packInfo.cover = (const char*)sqlite3_column_text(pStmt, 3);
+                packInfo.title = (const char*)sqlite3_column_text(pStmt, 4);
+                packInfo.text = (const char*)sqlite3_column_text(pStmt, 5);
+                packInfo.images = (const char*)sqlite3_column_text(pStmt, 6);
+                //packInfo.sprite = nullptr;
                 _packInfos[packInfo.id] = packInfo;
                 
             }else if ( r == SQLITE_DONE ){
@@ -167,6 +161,10 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
                 lwerror("json parse error: no string: Title");
                 return;
             }
+            if (!pack.has<jsonxx::String>("Icon")) {
+                lwerror("json parse error: no string: Icon");
+                return;
+            }
             if (!pack.has<jsonxx::String>("Cover")) {
                 lwerror("json parse error: no string: Cover");
                 return;
@@ -183,18 +181,20 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
             PackInfo packInfo;
             packInfo.id = (int)(pack.get<jsonxx::Number>("Id"));
             packInfo.date = pack.get<jsonxx::String>("Date");
+            packInfo.icon = pack.get<jsonxx::String>("Icon");
             packInfo.cover = pack.get<jsonxx::String>("Cover");
             packInfo.title = pack.get<jsonxx::String>("Title");
             packInfo.text = pack.get<jsonxx::String>("Text");
             packInfo.images = pack.get<jsonxx::String>("Images");
-            packInfo.sprite = nullptr;
+            //packInfo.sprite = nullptr;
             _packInfos[packInfo.id] = packInfo;
             
             //save to sqlite
             PackInfo &pi = packInfo;
-            sql << "REPLACE INTO packs(id, date, cover, title, text, images) VALUES(";
+            sql << "REPLACE INTO packs(id, date, icon, cover, title, text, images) VALUES(";
             sql << pi.id << ",";
             sql << "'" << pi.date.c_str() << "',";
+            sql << "'" << pi.icon.c_str() << "',";
             sql << "'" << pi.cover.c_str() << "',";
             sql << "'" << pi.title.c_str() << "',";
             sql << "'" << pi.text.c_str() << "',";
@@ -224,12 +224,12 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         loadingSpt->setScale(2.f);
         _thumbWidth = w;
         
-        //async load cover
+        //async load icon
         std::string localPath;
-        makeLocalImagePath(localPath, it->second.cover.c_str());
+        makeLocalImagePath(localPath, it->second.icon.c_str());
         
         _loadingSpts.insert(std::make_pair(localPath, loadingSpt));
-        _sptLoader->download(it->second.cover.c_str());
+        sptLoader->download(it->second.icon.c_str());
     }
 }
 
@@ -280,13 +280,13 @@ void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
         return;
     }
     auto it = _packInfos.rbegin();
-    _selPackInfo = nullptr;
+    selPackInfo = nullptr;
     for( int i = 0; i < children->count() && it != _packInfos.rend() ; i++, it++ ){
         auto node = static_cast<Node*>( children->getObjectAtIndex(i) );
         auto rect = node->getBoundingBox();
         rect.origin.y += _sptParent->getPositionY();
         if (rect.containsPoint(touch->getLocation())) {
-            _selPackInfo = &(it->second);
+            selPackInfo = &(it->second);
             break;
         }
     }
@@ -351,11 +351,11 @@ void PacksListScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
         }
     }
     
-    if (!_dragging && _selPackInfo) {
-        Director::getInstance()->pushScene(TransitionFade::create(0.5f, SliderScene::createScene(_selPackInfo->title.c_str(), _selPackInfo->text.c_str(), _selPackInfo->images.c_str())));
+    if (!_dragging && selPackInfo) {
+        auto scene = ModeSelectScene::createScene(this);
+        Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
     }
     _dragging = false;
-    _selPackInfo = false;
 }
 
 void PacksListScene::updateRoll() {
@@ -381,6 +381,7 @@ void PacksListScene::updateRoll() {
 
 void PacksListScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
     _dragging = false;
+    //fixme
 }
 
 

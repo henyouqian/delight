@@ -479,7 +479,8 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
 }
 
 void Gameplay::onSptLoaderError(const char *localPath) {
-    CCASSERT(0, "onSptLoaderError");
-    
+    //CCASSERT(0, "onSptLoaderError");
+    lwerror("image load error: localPath = %s", localPath);
+    //fixme: add error handling
     
 }
