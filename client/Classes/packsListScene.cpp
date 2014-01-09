@@ -4,6 +4,7 @@
 #include "gifTexture.h"
 #include "util.h"
 #include "db.h"
+#include "pack.h"
 #include "HelloWorldScene.h"
 #include "sliderScene.h"
 #include "modeSelectScene.h"
@@ -112,17 +113,15 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         while ( 1 ){
             r = sqlite3_step(pStmt);
             if ( r == SQLITE_ROW ){
-                PackInfo packInfo;
-                packInfo.id = sqlite3_column_int(pStmt, 0);
-                packInfo.date = (const char*)sqlite3_column_text(pStmt, 1);
-                packInfo.icon = (const char*)sqlite3_column_text(pStmt, 2);
-                packInfo.cover = (const char*)sqlite3_column_text(pStmt, 3);
-                packInfo.title = (const char*)sqlite3_column_text(pStmt, 4);
-                packInfo.text = (const char*)sqlite3_column_text(pStmt, 5);
-                packInfo.images = (const char*)sqlite3_column_text(pStmt, 6);
-                //packInfo.sprite = nullptr;
-                _packInfos[packInfo.id] = packInfo;
-                
+                auto id = sqlite3_column_int(pStmt, 0);
+                auto pack = Pack::create(id);
+                pack->id = id;
+                pack->date = (const char*)sqlite3_column_text(pStmt, 1);
+                pack->icon = (const char*)sqlite3_column_text(pStmt, 2);
+                pack->cover = (const char*)sqlite3_column_text(pStmt, 3);
+                pack->title = (const char*)sqlite3_column_text(pStmt, 4);
+                pack->text = (const char*)sqlite3_column_text(pStmt, 5);
+                pack->images = (const char*)sqlite3_column_text(pStmt, 6);
             }else if ( r == SQLITE_DONE ){
                 break;
             }else{
@@ -147,58 +146,56 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         sql << "BEGIN TRANSACTION;";
         
         for (auto i = 0; i < packs.size(); ++i) {
-            auto pack = packs.get<jsonxx::Object>(i);
+            auto packJs = packs.get<jsonxx::Object>(i);
             
-            if (!pack.has<jsonxx::Number>("Id")) {
+            if (!packJs.has<jsonxx::Number>("Id")) {
                 lwerror("json parse error: no number: Id");
                 return;
             }
-            if (!pack.has<jsonxx::String>("Date")) {
+            if (!packJs.has<jsonxx::String>("Date")) {
                 lwerror("json parse error: no string: Date");
                 return;
             }
-            if (!pack.has<jsonxx::String>("Title")) {
+            if (!packJs.has<jsonxx::String>("Title")) {
                 lwerror("json parse error: no string: Title");
                 return;
             }
-            if (!pack.has<jsonxx::String>("Icon")) {
+            if (!packJs.has<jsonxx::String>("Icon")) {
                 lwerror("json parse error: no string: Icon");
                 return;
             }
-            if (!pack.has<jsonxx::String>("Cover")) {
+            if (!packJs.has<jsonxx::String>("Cover")) {
                 lwerror("json parse error: no string: Cover");
                 return;
             }
-            if (!pack.has<jsonxx::String>("Text")) {
+            if (!packJs.has<jsonxx::String>("Text")) {
                 lwerror("json parse error: no string: Text");
                 return;
             }
-            if (!pack.has<jsonxx::String>("Images")) {
+            if (!packJs.has<jsonxx::String>("Images")) {
                 lwerror("json parse error: no string: Images");
                 return;
             }
             
-            PackInfo packInfo;
-            packInfo.id = (int)(pack.get<jsonxx::Number>("Id"));
-            packInfo.date = pack.get<jsonxx::String>("Date");
-            packInfo.icon = pack.get<jsonxx::String>("Icon");
-            packInfo.cover = pack.get<jsonxx::String>("Cover");
-            packInfo.title = pack.get<jsonxx::String>("Title");
-            packInfo.text = pack.get<jsonxx::String>("Text");
-            packInfo.images = pack.get<jsonxx::String>("Images");
-            //packInfo.sprite = nullptr;
-            _packInfos[packInfo.id] = packInfo;
+            auto id = (int)(packJs.get<jsonxx::Number>("Id"));
+            auto pack = Pack::create(id);
+            pack->id = id;
+            pack->date = packJs.get<jsonxx::String>("Date");
+            pack->icon = packJs.get<jsonxx::String>("Icon");
+            pack->cover = packJs.get<jsonxx::String>("Cover");
+            pack->title = packJs.get<jsonxx::String>("Title");
+            pack->text = packJs.get<jsonxx::String>("Text");
+            pack->images = packJs.get<jsonxx::String>("Images");
             
             //save to sqlite
-            PackInfo &pi = packInfo;
             sql << "REPLACE INTO packs(id, date, icon, cover, title, text, images) VALUES(";
-            sql << pi.id << ",";
-            sql << "'" << pi.date.c_str() << "',";
-            sql << "'" << pi.icon.c_str() << "',";
-            sql << "'" << pi.cover.c_str() << "',";
-            sql << "'" << pi.title.c_str() << "',";
-            sql << "'" << pi.text.c_str() << "',";
-            sql << "'" << pi.images.c_str() << "');";
+            sql << pack->id << ",";
+            sql << "'" << pack->date.c_str() << "',";
+            sql << "'" << pack->icon.c_str() << "',";
+            sql << "'" << pack->cover.c_str() << "',";
+            sql << "'" << pack->title.c_str() << "',";
+            sql << "'" << pack->text.c_str() << "',";
+            sql << "'" << pack->images.c_str() << "');";
         }
         
         sql << "COMMIT;";
@@ -210,7 +207,8 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
     }
     
     int i = 0;
-    for (auto it = _packInfos.rbegin(); it != _packInfos.rend(); ++it, ++i) {
+    auto &packs = PackManager::getInstance()->packs;
+    for (auto it = packs.rbegin(); it != packs.rend(); ++it, ++i) {
         //loading sprite
         auto loadingSpt = Sprite::createWithTexture(_loadingTexture);
         _sptParent->addChild(loadingSpt);
@@ -226,10 +224,10 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         
         //async load icon
         std::string localPath;
-        makeLocalImagePath(localPath, it->second.icon.c_str());
+        makeLocalImagePath(localPath, it->second->icon.c_str());
         
         _loadingSpts.insert(std::make_pair(localPath, loadingSpt));
-        sptLoader->download(it->second.icon.c_str());
+        sptLoader->download(it->second->icon.c_str());
     }
 }
 
@@ -279,14 +277,15 @@ void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
     if (!children) {
         return;
     }
-    auto it = _packInfos.rbegin();
-    selPackInfo = nullptr;
-    for( int i = 0; i < children->count() && it != _packInfos.rend() ; i++, it++ ){
+    auto &packs = PackManager::getInstance()->packs;
+    auto it = packs.rbegin();
+    selPack = nullptr;
+    for( int i = 0; i < children->count() && it != packs.rend() ; i++, it++ ){
         auto node = static_cast<Node*>( children->getObjectAtIndex(i) );
         auto rect = node->getBoundingBox();
         rect.origin.y += _sptParent->getPositionY();
         if (rect.containsPoint(touch->getLocation())) {
-            selPackInfo = &(it->second);
+            selPack = it->second;
             break;
         }
     }
@@ -351,7 +350,7 @@ void PacksListScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
         }
     }
     
-    if (!_dragging && selPackInfo) {
+    if (!_dragging && selPack) {
         auto scene = ModeSelectScene::createScene(this);
         Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
     }

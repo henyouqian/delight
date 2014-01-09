@@ -28,9 +28,24 @@ function Controller($scope, $http) {
 			"path":"pack",
 			"apis":[
 				{
-					"name": "listToday",
+					"name": "add",
 					"method": "POST",
-					"data": ""
+					"data": {
+						"icon":"",
+						"cover":"",
+						"images":[
+							{
+								"url":""
+							}
+						]
+					}
+				},
+				{
+					"name": "edit",
+					"method": "POST",
+					"data": {
+						"id":999,
+					}
 				},
 				{
 					"name": "list",
@@ -56,15 +71,9 @@ function Controller($scope, $http) {
 			theme: "elegant",
 		}
 	);
-	var historyCodeMirror = CodeMirror.fromTextArea(historyTextArea, 
-		{
-			theme: "elegant",
-			readOnly: true
-		}
-	);
+
 	sendCodeMirror.setSize("100%", 500)
 	recvCodeMirror.setSize("100%", 500)
-	historyCodeMirror.setSize("100%", 600)
 	sendCodeMirror.addKeyMap({
 		"Ctrl-,": function(cm) {
 			var hisList = inputHistory[$scope.currUrl]
@@ -151,29 +160,17 @@ function Controller($scope, $http) {
 			recvCodeMirror.doc.setValue(replyText)
 
 			//history
-			var hisDoc = historyCodeMirror.getDoc()
-			hisDoc.setCursor({line: 0, ch: 0})
-
-			inputTextTab = "\t"+inputText.replace(/\n/g, "\n\t")
-			replyTextTab = "\t"+replyText.replace(/\n/g, "\n\t")
-
-			var hisText = "=> " + $scope.currUrl + "\n" + inputTextTab + "\n<=\n" + replyTextTab + "\n"
-			hisText += "------------------------\n"
-			if (lastHisText != hisText) {
-				lastHisText = hisText
-				hisDoc.replaceSelection(hisText, "start")
-
-				//input history
-				if (isdef(inputHistory[sendUrl])) {
-					var inHisList = inputHistory[sendUrl]
-					if (inHisList[inHisList.length-1] != sendInput) {
-						inputHistory[sendUrl].push([sendInput, replyText])
-					}
-				} else {
-					inputHistory[sendUrl] = [[sendInput, replyText]]
+			if (isdef(inputHistory[sendUrl])) {
+				var inHisList = inputHistory[sendUrl]
+				if (inHisList[inHisList.length-1] != sendInput) {
+					inputHistory[sendUrl].push([sendInput, replyText])
 				}
-				inputHisIdx = inputHistory[sendUrl].length-1
+			} else {
+				inputHistory[sendUrl] = [[sendInput, replyText]]
 			}
+			inputHisIdx = inputHistory[sendUrl].length-1
+			console.log(inputHistory)
+	
 			sendCodeMirror.focus()
 		}
 
@@ -206,10 +203,6 @@ function Controller($scope, $http) {
 			.fail(onFail)
 		}
 	}
-
-	$('#collapseOne').on('shown.bs.collapse', function () {
-		historyCodeMirror.refresh()
-	})
 }
 
 

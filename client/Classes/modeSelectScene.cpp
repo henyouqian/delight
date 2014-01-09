@@ -27,7 +27,7 @@ bool ModeSelectScene::init(PacksListScene *scene) {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     
     //background
-    auto cover = _packListScene->selPackInfo->cover;
+    auto cover = _packListScene->selPack->cover;
     
     //button
     float btnY = 240.f;
@@ -54,14 +54,14 @@ bool ModeSelectScene::init(PacksListScene *scene) {
 }
 
 void ModeSelectScene::enterCasualMode(Object *sender, Control::EventType controlEvent) {
-    auto selPackInfo = _packListScene->selPackInfo;
-    auto scene = SliderScene::createScene(selPackInfo->title.c_str(), selPackInfo->text.c_str(), selPackInfo->images.c_str());
+    auto selPack = _packListScene->selPack;
+    auto scene = SliderScene::createScene(selPack->title.c_str(), selPack->text.c_str(), selPack->images.c_str());
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
 }
 
 void ModeSelectScene::enterTimeAttackMode(Object *sender, Control::EventType controlEvent) {
-    auto selPackInfo = _packListScene->selPackInfo;
-    auto scene = SliderScene::createScene(selPackInfo->title.c_str(), selPackInfo->text.c_str(), selPackInfo->images.c_str());
+    auto selPack = _packListScene->selPack;
+    auto scene = SliderScene::createScene(selPack->title.c_str(), selPack->text.c_str(), selPack->images.c_str());
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
 }
 

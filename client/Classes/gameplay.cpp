@@ -336,7 +336,7 @@ void Gameplay::onTouchesEnded(const std::vector<Touch*>& touches) {
         }
     }
     if (_isCompleted == false && complete == true && _running) {
-        SimpleAudioEngine::getInstance()->playEffect("audio/success3.mp3");
+        SimpleAudioEngine::getInstance()->playEffect("audio/success.mp3");
     }
     _isCompleted = complete;
 }

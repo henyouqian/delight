@@ -71,6 +71,22 @@ func list(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, packs)
 }
 
+func listPage(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	//in
+	var in struct {
+		Page       uint32
+		NumPerPage uint32
+	}
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+}
+
 func getContent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 

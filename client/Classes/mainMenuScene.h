@@ -14,6 +14,7 @@ public:
     CREATE_FUNC(MainMenuScene);
     
     void enterGame(Object *sender, Control::EventType controlEvent);
+    void enterBook(Object *sender, Control::EventType controlEvent);
 private:
     
 };

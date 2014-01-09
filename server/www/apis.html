@@ -38,35 +38,22 @@
         </div>
       </div>
 
-    <div style="height:20px"></div>
+      <div style="height:20px"></div>
 
-    <button id="btn-send" class="btn btn-primary" ng-click="send()" disabled="disabled">Send</button>
-    <span class="label label-danger" style="font-size: 100%;">{{currUrl}}</span>
-    <span class="label label-default" style="font-size: 100%;">{{queryTick}}ms</span>
-    <div style="height:5px"></div>
-    <table class="table table-bordered">
-      <tbody>
-        <tr>
-          <td><textarea id="sendTextArea"></textarea></td>
-          <td><textarea id="recvTextArea"></textarea></td>
-        </tr>
-      </tbody>
-    </table>
+      <button id="btn-send" class="btn btn-primary" ng-click="send()" disabled="disabled">Send</button>
+      <span class="label label-danger" style="font-size: 100%;">{{currUrl}}</span>
+      <span class="label label-default" style="font-size: 100%;">{{queryTick}}ms</span>
+      <div style="height:5px"></div>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td><textarea id="sendTextArea"></textarea></td>
+            <td><textarea id="recvTextArea"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
 
-    <div class="panel panel-default" id="clpsHistory">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-            History
-          </a>
-        </h4>
-      </div>
-      <div id="collapseOne" class="panel-collapse collapse">
-        <div class="panel-body">
-          <td><textarea id="historyTextArea"></textarea></td>
-        </div>
-      </div>
-    </div>
+
       
     </div> <!-- /container -->
 

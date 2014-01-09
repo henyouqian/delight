@@ -10,7 +10,15 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 Pack* Pack::create(int id) {
-    return nullptr;
+    auto &packs = PackManager::getInstance()->packs;
+    auto it = packs.find(id);
+    if (it == packs.end()) {
+        auto pack = new Pack;
+        packs[id] = pack;
+        return pack;
+    } else {
+        return it->second;
+    }
 }
 
 void Pack::init(const char *date, const char *title, const char *icon,
@@ -144,6 +152,12 @@ void PackManager::destroyInstance() {
     if (g_packManager) {
         delete g_packManager;
         g_packManager = nullptr;
+    }
+}
+
+PackManager::~PackManager() {
+    for (auto it = packs.begin(); it != packs.end(); ++it) {
+        delete it->second;
     }
 }
 

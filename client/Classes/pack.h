@@ -15,15 +15,15 @@ public:
 };
 
 struct Pack {
-    PackListener *listener;
     int id;
     std::string date;
     std::string title;
     std::string icon;
     std::string cover;
     std::string text;
-    
+    std::string images;
     float progress;
+    PackListener *listener;
     
     struct Img {
         std::string url;
@@ -46,7 +46,6 @@ public:
     
 private:
     bool parsePack(std::istream &is);
-    void onGetContent(HttpClient* client, HttpResponse* response, unsigned int packId);
     void onImageDownload(HttpClient* client, HttpResponse* response, unsigned int imgIdx);
     
     unsigned int _localNum;
@@ -55,6 +54,8 @@ private:
 struct PackManager {
     static PackManager* getInstance();
     static void destroyInstance();
+    ~PackManager();
+    
     std::map<int, Pack*> packs;
 };
 

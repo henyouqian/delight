@@ -46,20 +46,9 @@ public:
 public:
     SptLoader *sptLoader;
     
-    struct PackInfo {
-        int id;
-        std::string date;
-        std::string title;
-        std::string icon;
-        std::string cover;
-        std::string text;
-        std::string images;
-        //Sprite *sprite;
-    };
-    PackInfo *selPackInfo;
+    Pack *selPack;
     
 private:
-    std::map<int, PackInfo> _packInfos;
     HttpRequest *_packListRequest;
     
     GifTexture *_loadingTexture;
