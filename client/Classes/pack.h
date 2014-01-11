@@ -1,5 +1,5 @@
-#ifndef __PACK_DOWNLOADER_H__
-#define __PACK_DOWNLOADER_H__
+#ifndef __PACK_H__
+#define __PACK_H__
 
 #include "cocos2d.h"
 #include "cocos-ext.h"
@@ -59,4 +59,4 @@ struct PackManager {
     std::map<int, Pack*> packs;
 };
 
-#endif // __PACK_DOWNLOADER_H__
+#endif // __PACK_H__

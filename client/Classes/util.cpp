@@ -51,10 +51,21 @@ void makeLocalGifPath(std::string &outPath, const char *fullPath) {
 }
 
 ControlButton *createButton(const char *text, float fontSize, float bgScale) {
-    auto label = LabelTTF::create(text, "Verdana", fontSize);
+    auto label = LabelTTF::create(text, "HelveticaNeue", fontSize);
     auto spr = Scale9Sprite::create("ui/btnBg.png");
     spr->setScale(bgScale);
     spr->setOpacity(220);
+    auto button = ControlButton::create(label, spr);
+    button->setAdjustBackgroundImage(false);
+    return button;
+}
+
+ControlButton *createRingButton(const char *text, float fontSize, float bgScale, const Color3B &color) {
+    auto label = LabelTTF::create(text, "HelveticaNeue", fontSize);
+    label->setColor(color);
+    auto spr = Scale9Sprite::create("ui/whiteRing96.png");
+    spr->setScale(bgScale);
+    spr->setColor(color);
     auto button = ControlButton::create(label, spr);
     button->setAdjustBackgroundImage(false);
     return button;

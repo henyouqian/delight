@@ -31,28 +31,64 @@ function Controller($scope, $http) {
 					"name": "add",
 					"method": "POST",
 					"data": {
-						"icon":"",
-						"cover":"",
-						"images":[
+						"Date":"2014-99-99",
+						"Title":"",
+						"Text":"",
+						"Icon":"http://",
+						"Cover":"http://",
+						"Images":[
 							{
-								"url":""
-							}
+								"Url": "http://",
+								"Title": "",
+								"Text": ""
+							},{
+								"Url": "http://",
+								"Title": "",
+								"Text": ""
+							},
 						]
 					}
-				},
-				{
+				},{
 					"name": "edit",
 					"method": "POST",
 					"data": {
-						"id":999,
+						"Id":999,
+						"Date":"2014-99-99",
+						"Title":"",
+						"Text":"",
+						"Icon":"http://",
+						"Cover":"http://",
+						"Images":[
+							{
+								"Url": "http://",
+								"Title": "",
+								"Text": ""
+							},{
+								"Url": "http://",
+								"Title": "",
+								"Text": ""
+							},
+						]
 					}
-				},
-				{
+				},{
+					"name": "del",
+					"method": "POST",
+					"data": {
+						"Id":999,
+					}
+				},{
+					"name": "count",
+					"method": "POST",
+					"data": ""
+				},{
+					"name": "get",
+					"method": "POST",
+					"data": {"Offset":0, "Limit":12}
+				},{
 					"name": "list",
 					"method": "POST",
 					"data": {"FromId":0, "Limit":10}
-				},
-				{
+				},{
 					"name": "getContent",
 					"method": "POST",
 					"data": {"PackId":3}
@@ -169,7 +205,6 @@ function Controller($scope, $http) {
 				inputHistory[sendUrl] = [[sendInput, replyText]]
 			}
 			inputHisIdx = inputHistory[sendUrl].length-1
-			console.log(inputHistory)
 	
 			sendCodeMirror.focus()
 		}

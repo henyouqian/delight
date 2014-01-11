@@ -4,8 +4,8 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 namespace {
-    const char *g_host = "http://192.168.1.43:9999/";
-    //const char *g_host = "http://192.168.2.101:9999/";
+    //const char *g_host = "http://192.168.1.43:9999/";
+    const char *g_host = "http://192.168.2.101:9999/";
     //const char *g_host = "http://localhost:9999/";
 }
 
@@ -19,6 +19,20 @@ HttpRequest* postHttpRequest(const char *path, const char *content,
     request->setRequestType(HttpRequest::Type::POST);
     request->setRequestData(content, strlen(content));
     request->setCallback(callback);
+    HttpClient::getInstance()->send(request);
+    request->release();
+    return request;
+}
+
+HttpRequest* postHttpRequest(const char *path, const char *content, cocos2d::Object *pTarget, SEL_HttpResponse pSelector) {
+    std::string url = g_host;
+    url += path;
+    
+    auto request = new HttpRequest();
+    request->setUrl(url.c_str());
+    request->setRequestType(HttpRequest::Type::POST);
+    request->setRequestData(content, strlen(content));
+    request->setResponseCallback(pTarget, pSelector);
     HttpClient::getInstance()->send(request);
     request->release();
     return request;

@@ -25,7 +25,7 @@ type Session struct {
 
 func newSession(w http.ResponseWriter, userid uint64, username string, appid uint32, rc redis.Conn) (usertoken string, err error) {
 	if rc == nil {
-		rc = redisPool.Get()
+		rc = authRedisPool.Get()
 		defer rc.Close()
 	}
 	usertoken = ""
@@ -78,7 +78,7 @@ func findSession(w http.ResponseWriter, r *http.Request, rc redis.Conn) (*Sessio
 
 	//redis
 	if rc == nil {
-		rc = redisPool.Get()
+		rc = authRedisPool.Get()
 		defer rc.Close()
 	}
 
@@ -137,13 +137,29 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 func authLogin(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
+	rc := authRedisPool.Get()
+	defer rc.Close()
+
+	// logout if already login
+	session, err := findSession(w, r, rc)
+	if err == nil {
+		usertokenCookie, err := r.Cookie("usertoken")
+		if err == nil {
+			usertoken := usertokenCookie.Value
+			rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
+			rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
+			err = rc.Flush()
+			lwutil.CheckError(err, "")
+		}
+	}
+
 	// input
 	var input struct {
 		Username  string
 		Password  string
 		Appsecret string
 	}
-	err := lwutil.DecodeRequestBody(r, &input)
+	err = lwutil.DecodeRequestBody(r, &input)
 	lwutil.CheckError(err, "err_decode_body")
 
 	if input.Username == "" || input.Password == "" {
@@ -169,9 +185,6 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// new session
-	rc := redisPool.Get()
-	defer rc.Close()
-
 	usertoken, err := newSession(w, userid, input.Username, appid, rc)
 	lwutil.CheckError(err, "")
 
@@ -182,7 +195,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 func authLogout(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	rc := redisPool.Get()
+	rc := authRedisPool.Get()
 	defer rc.Close()
 
 	session, err := findSession(w, r, rc)
@@ -194,11 +207,8 @@ func authLogout(w http.ResponseWriter, r *http.Request) {
 
 	rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
 	rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
-	rc.Flush()
-	for i := 0; i < 2; i++ {
-		_, err = rc.Receive()
-		lwutil.CheckError(err, "")
-	}
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
 
 	// reply
 	lwutil.WriteResponse(w, "logout")

@@ -67,6 +67,7 @@ bool PacksListScene::init() {
 
 PacksListScene::~PacksListScene() {
     if (_packListRequest) {
+        _packListRequest->setCallback(nullptr);
         _packListRequest->release();
     }
     _loadingTexture->release();

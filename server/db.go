@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	redisPool *redis.Pool
-	authDB    *sql.DB
-	packDB    *sql.DB
+	redisPool     *redis.Pool
+	authRedisPool *redis.Pool
+	authDB        *sql.DB
+	packDB        *sql.DB
 )
 
 func init() {
@@ -25,6 +26,19 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
+			return c, err
+		},
+	}
+	authRedisPool = &redis.Pool{
+		MaxIdle:     10,
+		MaxActive:   0,
+		IdleTimeout: 240 * time.Second,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", "localhost:6379")
+			if err != nil {
+				return nil, err
+			}
+			c.Do("SELECT", 10)
 			return c, err
 		},
 	}

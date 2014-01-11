@@ -13,5 +13,6 @@ void makeLocalImagePath(std::string &outPath, const char *url);
 void makeLocalGifPath(std::string &outPath, const char *fullPath);
 
 ControlButton *createButton(const char *text, float fontSize, float bgScale);
+ControlButton *createRingButton(const char *text, float fontSize, float bgScale, const Color3B &color);
 
 #endif // __UTIL_H__

@@ -1,35 +1,171 @@
 package main
 
 import (
-	//"github.com/garyburd/redigo/redis"
 	"encoding/json"
+	"fmt"
+	"github.com/garyburd/redigo/redis"
+	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
-	//"github.com/golang/glog"
 	"math"
 	"net/http"
 )
 
-func listToday(w http.ResponseWriter, r *http.Request) {
+const (
+	hkey        = "h_packs"
+	zkey        = "z_packs"
+	autoIncrFld = "autoIncr"
+)
+
+type Image struct {
+	Url   string
+	Title string
+	Text  string
+}
+
+type Pack struct {
+	Id     uint32
+	Date   string
+	Title  string
+	Text   string
+	Icon   string
+	Cover  string
+	Images []Image
+}
+
+func _useGlog() {
+	glog.Info("")
+}
+
+func add(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in Pack
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//save to redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	if in.Id == 0 {
+		ids, err := redis.Values(rc.Do("ZREVRANGE", zkey, 0, 1))
+		lwutil.CheckError(err, "")
+		maxId := 0
+		if len(ids) > 0 {
+			maxId, err = redis.Int(ids[0], nil)
+			lwutil.CheckError(err, "")
+		}
+		in.Id = uint32(maxId + 1)
+	} else {
+		//check exist
+		exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
+		lwutil.CheckError(err, "")
+		if exists {
+			lwutil.SendError("err_already_exists", fmt.Sprintf("pack already exists: id=%d", in.Id))
+		}
+	}
+
+	rc.Send("ZADD", zkey, in.Id, in.Id)
+	value, err := json.Marshal(&in)
+	lwutil.CheckError(err, "")
+	rc.Send("HSET", hkey, in.Id, value)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		Id uint32
+	}{in.Id}
+	lwutil.WriteResponse(w, &out)
+}
+
+func del(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in struct {
+		Id uint32
+	}
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	//check exist
+	exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
+	lwutil.CheckError(err, "")
+	if !exists {
+		lwutil.SendError("err_not_exists", fmt.Sprintf("pack not exists: id=%d", in.Id))
+	}
+
+	//delete
+	rc.Send("ZREM", zkey, in.Id)
+	rc.Send("HDEL", hkey, in.Id)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		Id uint32
+	}{in.Id}
+	lwutil.WriteResponse(w, &out)
+}
+
+func edit(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in Pack
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	//edit
+	exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
+	lwutil.CheckError(err, "")
+	if !exists {
+		lwutil.SendError("err_not_exists", fmt.Sprintf("pack not exists: id=%d", in.Id))
+	}
+	rc.Send("ZADD", zkey, in.Id, in.Id)
+	value, err := json.Marshal(&in)
+	lwutil.CheckError(err, "")
+	rc.Send("HSET", hkey, in.Id, value)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		Id uint32
+	}{in.Id}
+	lwutil.WriteResponse(w, &out)
+}
+
+func count(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	rc := redisPool.Get()
 	defer rc.Close()
 
-	//get time
-	currTime := lwutil.GetRedisTime()
+	packCount, err := redis.Int(rc.Do("ZCARD", zkey))
+	lwutil.CheckError(err, "")
 
 	//out
 	out := struct {
-		Time int64
-	}{currTime.Unix()}
-	lwutil.WriteResponse(w, out)
+		PackCount uint32
+	}{
+		uint32(packCount),
+	}
+	lwutil.WriteResponse(w, &out)
 }
 
 func list(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
-
-	rc := redisPool.Get()
-	defer rc.Close()
 
 	//in
 	var in struct {
@@ -71,7 +207,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, packs)
 }
 
-func listPage(w http.ResponseWriter, r *http.Request) {
+func get(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	rc := redisPool.Get()
@@ -79,19 +215,60 @@ func listPage(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		Page       uint32
-		NumPerPage uint32
+		Offset uint32
+		Limit  uint32
 	}
 	err := lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+	if in.Limit > 30 {
+		in.Limit = 30
+	}
 
+	//
+	_packNum, err := redis.Int(rc.Do("ZCARD", zkey))
+	lwutil.CheckError(err, "")
+	packNum := uint32(_packNum)
+
+	imgStart := in.Offset
+	imgStop := imgStart + in.Limit
+	ids, err := redis.Values(rc.Do("ZRANGE", zkey, imgStart, imgStop))
+	lwutil.CheckError(err, "")
+	if len(ids) == 0 {
+		lwutil.SendError("err_page", "page out of range")
+	}
+
+	args := make([]interface{}, 0, 10)
+	args = append(args, hkey)
+	for _, id := range ids {
+		args = append(args, id)
+	}
+
+	packsJs, err := redis.Values(rc.Do("HMGET", args...))
+	lwutil.CheckError(err, "")
+
+	packs := make([]Pack, 0, 10)
+	for _, js := range packsJs {
+		var pack Pack
+		bjs, err := redis.Bytes(js, nil)
+		lwutil.CheckError(err, "")
+		err = json.Unmarshal(bjs, &pack)
+		lwutil.CheckError(err, "")
+		packs = append(packs, pack)
+	}
+
+	//out
+	out := struct {
+		Packs   []Pack
+		PackNum uint32
+	}{
+		packs,
+		packNum,
+	}
+	lwutil.WriteResponse(w, &out)
 }
 
 func getContent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
-
-	rc := redisPool.Get()
-	defer rc.Close()
 
 	//in
 	var in struct {
@@ -122,7 +299,11 @@ func getContent(w http.ResponseWriter, r *http.Request) {
 }
 
 func regPack() {
-	http.Handle("/pack/listToday", lwutil.ReqHandler(listToday))
+	http.Handle("/pack/add", lwutil.ReqHandler(add))
+	http.Handle("/pack/edit", lwutil.ReqHandler(edit))
+	http.Handle("/pack/del", lwutil.ReqHandler(del))
+	http.Handle("/pack/get", lwutil.ReqHandler(get))
+	http.Handle("/pack/count", lwutil.ReqHandler(count))
 	http.Handle("/pack/list", lwutil.ReqHandler(list))
 	http.Handle("/pack/getContent", lwutil.ReqHandler(getContent))
 }
