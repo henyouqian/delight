@@ -341,7 +341,7 @@ void Gameplay::onTouchesEnded(const std::vector<Touch*>& touches) {
     _isCompleted = complete;
 }
 
-void Gameplay::onSptLoaderLoad(const char *localPath, Sprite* sprite) {
+void Gameplay::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
     auto texture = sprite->getTexture();
     texture->retain();
     
@@ -478,7 +478,7 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     _running = true;
 }
 
-void Gameplay::onSptLoaderError(const char *localPath) {
+void Gameplay::onSptLoaderError(const char *localPath, void *userData) {
     //CCASSERT(0, "onSptLoaderError");
     lwerror("image load error: localPath = %s", localPath);
     //fixme: add error handling

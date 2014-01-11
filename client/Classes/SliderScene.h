@@ -30,6 +30,8 @@ public:
     virtual void onPackImageDownload();
     virtual void onPackDownloadComplete();
     
+    void back(Object *sender, Control::EventType controlEvent);
+    
 private:
     Gameplay *_gameplay;
     std::vector<std::string> _imagePaths;

@@ -29,8 +29,8 @@ public:
     void onTouchesEnded(const std::vector<Touch*>& touches);
     
     //SptLoaderListener
-    virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite);
-    virtual void onSptLoaderError(const char *localPath);
+    virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
+    virtual void onSptLoaderError(const char *localPath, void *userData);
     
 private:
     void loadTexture(const char *filename);

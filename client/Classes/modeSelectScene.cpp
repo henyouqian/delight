@@ -45,7 +45,7 @@ bool ModeSelectScene::init(PacksListScene *scene) {
     this->addChild(button, 1);
     
     //back button
-    auto btnBack = createButton("<", 48, 1.f);
+    auto btnBack = createButton("﹤", 48, 1.f);
     btnBack->setPosition(Point(70, 70));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack);

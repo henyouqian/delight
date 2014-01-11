@@ -54,7 +54,7 @@ ControlButton *createButton(const char *text, float fontSize, float bgScale) {
     auto label = LabelTTF::create(text, "HelveticaNeue", fontSize);
     auto spr = Scale9Sprite::create("ui/btnBg.png");
     spr->setScale(bgScale);
-    spr->setOpacity(220);
+    spr->setOpacity(180);
     auto button = ControlButton::create(label, spr);
     button->setAdjustBackgroundImage(false);
     return button;

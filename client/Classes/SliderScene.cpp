@@ -1,6 +1,7 @@
 #include "SliderScene.h"
 #include "gifTexture.h"
 #include "gameplay.h"
+#include "util.h"
 #include "lw/lwLog.h"
 #include "SimpleAudioEngine.h"
 #include <sys/stat.h>
@@ -57,6 +58,12 @@ bool SliderScene::init() {
     this->addChild(_completedMenu, 2);
     _completedMenu->setVisible(false);
     
+    //back button
+    auto btnBack = createButton("﹤", 48, 1.f);
+    btnBack->setPosition(Point(50, 50));
+    btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(btnBack, 10);
+    
     return true;
 }
 
@@ -75,6 +82,10 @@ SliderScene::~SliderScene() {
 
 void SliderScene::update(float delta) {
     _gameplay->update();
+}
+
+void SliderScene::back(Object *sender, Control::EventType controlEvent) {
+    Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
 }
 
 void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
@@ -98,10 +109,6 @@ void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *even
     }
     
     _gameplay->onTouchesBegan(touches);
-    
-    if (touch->getLocation().y < 40 && touch->getLocation().x < 200) {
-        Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
-    }
 }
 
 void SliderScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {

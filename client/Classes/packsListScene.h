@@ -31,8 +31,8 @@ public:
     virtual void onPackDownloadComplete();
     
     //SptLoaderListener
-    virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite);
-    virtual void onSptLoaderError(const char *localPath);
+    virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
+    virtual void onSptLoaderError(const char *localPath, void *userData);
     
     //touch
     virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *event);
@@ -52,7 +52,6 @@ private:
     HttpRequest *_packListRequest;
     
     GifTexture *_loadingTexture;
-    Pack *_pack;
     
     std::multimap<std::string, Sprite*> _loadingSpts;
 

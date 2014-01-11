@@ -71,7 +71,6 @@ PacksListScene::~PacksListScene() {
         _packListRequest->release();
     }
     _loadingTexture->release();
-    delete _pack;
     sptLoader->destroy();
 }
 
@@ -228,7 +227,7 @@ void PacksListScene::onPackListDownloaded(HttpClient* client, HttpResponse* resp
         makeLocalImagePath(localPath, it->second->icon.c_str());
         
         _loadingSpts.insert(std::make_pair(localPath, loadingSpt));
-        sptLoader->download(it->second->icon.c_str());
+        sptLoader->download(it->second->icon.c_str(), (void*)it->second->id);
     }
 }
 
@@ -237,14 +236,14 @@ void PacksListScene::onPackError() {
 }
 
 void PacksListScene::onPackImageDownload(){
-    lwinfo("onPackImageDownload: %f", _pack->progress);
+    //lwinfo("onPackImageDownload: %f", _pack->progress);
 }
 
 void PacksListScene::onPackDownloadComplete() {
     lwinfo("onPackDownloadComplete");
 }
 
-void PacksListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite) {
+void PacksListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
     lwinfo("onSptLoaderLoad");
 
     auto it = _loadingSpts.find(localPath);
@@ -254,14 +253,14 @@ void PacksListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite) {
         auto loadingSpt = it->second;
         loadingSpt->getParent()->addChild(sprite);
         sprite->setPosition(loadingSpt->getPosition());
-        
         sprite->setScale(_thumbWidth/sprite->getContentSize().width);
+        sprite->setUserData(userData);
         loadingSpt->removeFromParent();
         _loadingSpts.erase(it);
     }
 }
 
-void PacksListScene::onSptLoaderError(const char *localPath) {
+void PacksListScene::onSptLoaderError(const char *localPath, void *userData) {
     lwerror("onSptLoaderError: %s", localPath);
 }
 
@@ -278,18 +277,38 @@ void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
     if (!children) {
         return;
     }
+    
     auto &packs = PackManager::getInstance()->packs;
-    auto it = packs.rbegin();
     selPack = nullptr;
-    for( int i = 0; i < children->count() && it != packs.rend() ; i++, it++ ){
+    for( int i = 0; i < children->count() ; i++){
         auto node = static_cast<Node*>( children->getObjectAtIndex(i) );
         auto rect = node->getBoundingBox();
         rect.origin.y += _sptParent->getPositionY();
         if (rect.containsPoint(touch->getLocation())) {
-            selPack = it->second;
+            void *ud = node->getUserData();
+            if (ud) {
+                int i = (int)ud;
+                auto it = packs.find(i);
+                if (it != packs.end()) {
+                    selPack = it->second;
+                }
+            }
             break;
         }
     }
+//    
+//    auto &packs = PackManager::getInstance()->packs;
+//    auto it = packs.rbegin();
+//    selPack = nullptr;
+//    for( int i = 0; i < children->count() && it != packs.rend() ; i++, it++ ){
+//        auto node = static_cast<Node*>( children->getObjectAtIndex(i) );
+//        auto rect = node->getBoundingBox();
+//        rect.origin.y += _sptParent->getPositionY();
+//        if (rect.containsPoint(touch->getLocation())) {
+//            selPack = it->second;
+//            break;
+//        }
+//    }
     
 //    //
 //    if (touch->getLocation().y < 60) {
