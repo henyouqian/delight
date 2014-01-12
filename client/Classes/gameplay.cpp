@@ -41,7 +41,6 @@ Slider::Slider() {
     touch = nullptr;
 }
 
-
 Gameplay::Gameplay(Rect &rect, Node *parentNode) {
     _rect = rect;
     _parentNode = parentNode;
@@ -53,7 +52,8 @@ Gameplay::Gameplay(Rect &rect, Node *parentNode) {
     SimpleAudioEngine::getInstance()->preloadEffect("audio/tik.wav");
     SimpleAudioEngine::getInstance()->preloadEffect("audio/success.mp3");
     
-    _sptLoader = SptLoader::create(this, _parentNode);
+    _sptLoader = SptLoader::create(this);
+    parentNode->addChild(_sptLoader);
 }
 
 Gameplay::~Gameplay() {
@@ -95,7 +95,7 @@ void Gameplay::preload(const char *filePath) {
 }
 
 void Gameplay::update() {
-    _sptLoader->mainThreadUpdate();
+    //_sptLoader->mainThreadUpdate();
 }
 
 void Gameplay::reset(const char *filePath, int sliderNum) {

@@ -1,6 +1,7 @@
 #ifndef __PACK_BOOK_SCENE_H__
 #define __PACK_BOOK_SCENE_H__
 
+#include "spriteLoader.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -9,7 +10,7 @@ USING_NS_CC_EXT;
 
 class GifTexture;
 
-class PacksBookScene : public LayerColor {
+class PacksBookScene : public LayerColor, public SptLoaderListener{
 public:
     static cocos2d::Scene* createScene();
     CREATE_FUNC(PacksBookScene);
@@ -50,6 +51,8 @@ private:
         std::vector<Image> images;
     };
     std::vector<Pack> _packs;
+    
+    SptLoader *_sptLoader;
 };
 
 

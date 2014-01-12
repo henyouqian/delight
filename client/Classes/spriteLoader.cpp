@@ -8,16 +8,17 @@ USING_NS_CC_EXT;
 
 static SptLoader *g_currSptLoader = nullptr;
 
-SptLoader* SptLoader::create(SptLoaderListener *listener, Node *gifActionParentNode) {
-    auto sptLoader = new SptLoader(listener, gifActionParentNode);
+SptLoader* SptLoader::create(SptLoaderListener *listener) {
+    auto sptLoader = new SptLoader(listener);
+    sptLoader->scheduleUpdate();
     sptLoader->_thread = new std::thread(&SptLoader::loadingThread, sptLoader);
     g_currSptLoader = sptLoader;
     return sptLoader;
 }
 
-SptLoader::SptLoader(SptLoaderListener *listener, Node *gifActionParentNode) {
+SptLoader::SptLoader(SptLoaderListener *listener) {
     _listener = listener;
-    _gifActionParentNode = gifActionParentNode;
+    Node::init();
 }
 
 void SptLoader::destroy() {
@@ -95,14 +96,14 @@ void SptLoader::loadingThread() {
             _cv.wait(lock);
         }
     }
-    delete this;
+    this->release();
 }
 
-void SptLoader::mainThreadUpdate() {
+void SptLoader::update(float delta) {
     std::lock_guard<std::mutex> lock(_mutex);
     if (!_loadedGifs.empty()) {
         for (auto it = _loadedGifs.begin(); it != _loadedGifs.end(); ++it) {
-            auto texture = GifTexture::create(it->gifFile, _gifActionParentNode, false);
+            auto texture = GifTexture::create(it->gifFile, this, false);
             auto sprite = Sprite::createWithTexture(texture);
             if (!sprite) {
                 _errorLocalPaths.push_back(it->localPath);

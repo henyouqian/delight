@@ -37,7 +37,8 @@ bool PacksListScene::init() {
     this->setTouchEnabled(true);
     this->scheduleUpdate();
     
-    sptLoader = SptLoader::create(this, this);
+    sptLoader = SptLoader::create(this);
+    addChild(sptLoader);
     
     //get list
     std::string url;
@@ -57,7 +58,7 @@ bool PacksListScene::init() {
     addChild(_sptParent, 1);
     
     //back button
-    auto btnBack = createButton("<", 48, 1.f);
+    auto btnBack = createButton("﹤", 48, 1.f);
     btnBack->setPosition(Point(70, 70));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksListScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack);
@@ -75,7 +76,7 @@ PacksListScene::~PacksListScene() {
 }
 
 void PacksListScene::update(float delta) {
-    sptLoader->mainThreadUpdate();
+    //sptLoader->mainThreadUpdate();
     updateRoll();
 }
 

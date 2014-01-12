@@ -35,18 +35,20 @@ bool PacksBookScene::init() {
     this->addChild(btnBack);
     
     //older
-    auto label = LabelTTF::create("〈 旧", "HelveticaNeue", 48);
-    label->setAnchorPoint(Point(0.f, 0.f));
-    label->setPosition(Point(0.f, visSize.height-103));
+    auto label = LabelTTF::create("〈", "HelveticaNeue", 56);
     label->setColor(Color3B(0, 122, 255));
-    addChild(label);
+    auto btn = ControlButton::create(label, Scale9Sprite::create());
+    btn->setAnchorPoint(Point(0.f, 0.5f));
+    btn->setPosition(Point(10.f, visSize.height-80));
+    addChild(btn);
     
     //newer
-    label = LabelTTF::create("新 〉", "HelveticaNeue", 48);
-    label->setAnchorPoint(Point(1.f, 0.f));
-    label->setPosition(Point(visSize.width, visSize.height-103));
+    label = LabelTTF::create("〉", "HelveticaNeue", 56);
     label->setColor(Color3B(0, 122, 255));
-    addChild(label);
+    btn = ControlButton::create(label, Scale9Sprite::create());
+    btn->setAnchorPoint(Point(1.f, 0.5f));
+    btn->setPosition(Point(visSize.width-10, visSize.height-80));
+    addChild(btn);
     
     //loading texture
     _loadingTexture = GifTexture::create("ui/loading.gif", this, false);
@@ -58,8 +60,8 @@ bool PacksBookScene::init() {
     
     //page
     _pageLabel = LabelTTF::create("连接中...", "HelveticaNeue", 38);
-    _pageLabel->setAnchorPoint(Point(.5f, 0.f));
-    _pageLabel->setPosition(Point(visSize.width*.5f, visSize.height-100));
+    _pageLabel->setAnchorPoint(Point(.5f, .5f));
+    _pageLabel->setPosition(Point(visSize.width*.5f, visSize.height-80));
     _pageLabel->setColor(Color3B(255, 59, 48));
     addChild(_pageLabel);
     
@@ -68,11 +70,16 @@ bool PacksBookScene::init() {
     _pageCount = 0;
     postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetCount));
     
+    //sptLoader
+    _sptLoader = SptLoader::create(this);
+    addChild(_sptLoader);
+    
     return true;
 }
 
 PacksBookScene::~PacksBookScene() {
     _loadingTexture->release();
+    _sptLoader->destroy();
 }
 
 void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {

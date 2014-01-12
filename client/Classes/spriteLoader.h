@@ -17,16 +17,16 @@ public:
     virtual void onSptLoaderError(const char *localPath, void *userData) {};
 };
 
-class SptLoader {
+class SptLoader : public Node {
 public:
-    static SptLoader* create(SptLoaderListener *listener, Node *gifActionParentNode);
+    static SptLoader* create(SptLoaderListener *listener);
     
-    SptLoader(SptLoaderListener *listener, Node *gifActionParentNode);
+    SptLoader(SptLoaderListener *listener);
     void destroy();
+    virtual void update(float delta);
     
     void load(const char *filename, void *userData = nullptr);
     void download(const char *url, void *userData = nullptr);
-    void mainThreadUpdate();
     
     void onTextureCreated(const char *localPath, Texture2D *texture, void *userData);
 
@@ -46,7 +46,6 @@ private:
     };
     std::list<LoadingGif> _loadingGifs;
     std::set<HttpRequest*> _requests;
-    Node *_gifActionParentNode;
     
     struct LoadedGif {
         std::string localPath;
