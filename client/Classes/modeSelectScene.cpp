@@ -1,15 +1,14 @@
 #include "modeSelectScene.h"
 #include "sliderScene.h"
-#include "packsListScene.h"
 #include "util.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-Scene* ModeSelectScene::createScene(PacksListScene *packListScene) {
+cocos2d::Scene* ModeSelectScene::createScene(PackInfo *packInfo) {
     auto scene = Scene::create();
     auto layer = new ModeSelectScene();
-    bool ok = layer->init(packListScene);
+    bool ok = layer->init(packInfo);
     if (ok) {
         layer->autorelease();
         scene->addChild(layer);
@@ -19,15 +18,12 @@ Scene* ModeSelectScene::createScene(PacksListScene *packListScene) {
     }
 }
 
-bool ModeSelectScene::init(PacksListScene *scene) {
+bool ModeSelectScene::init(PackInfo *packInfo) {
     if ( !Layer::init() ) {
         return false;
     }
-    _packListScene = scene;
+    _packInfo = packInfo;
     Size visibleSize = Director::getInstance()->getVisibleSize();
-    
-    //background
-    auto cover = _packListScene->selPack->cover;
     
     //button
     float btnY = 240.f;
@@ -54,14 +50,12 @@ bool ModeSelectScene::init(PacksListScene *scene) {
 }
 
 void ModeSelectScene::enterCasualMode(Object *sender, Control::EventType controlEvent) {
-    auto selPack = _packListScene->selPack;
-    auto scene = SliderScene::createScene(selPack->title.c_str(), selPack->text.c_str(), selPack->images.c_str());
+    auto scene = SliderScene::createScene(_packInfo);
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
 }
 
 void ModeSelectScene::enterTimeAttackMode(Object *sender, Control::EventType controlEvent) {
-    auto selPack = _packListScene->selPack;
-    auto scene = SliderScene::createScene(selPack->title.c_str(), selPack->text.c_str(), selPack->images.c_str());
+    auto scene = SliderScene::createScene(_packInfo);
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
 }
 

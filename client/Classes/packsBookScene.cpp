@@ -1,4 +1,5 @@
 #include "packsBookScene.h"
+#include "modeSelectScene.h"
 #include "util.h"
 #include "http.h"
 #include "gifTexture.h"
@@ -34,12 +35,15 @@ bool PacksBookScene::init() {
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksBookScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack);
     
+    //
+    float y = visSize.height-60;
+    
     //older
     auto label = LabelTTF::create("〈", "HelveticaNeue", 56);
     label->setColor(Color3B(0, 122, 255));
     auto btn = ControlButton::create(label, Scale9Sprite::create());
     btn->setAnchorPoint(Point(0.f, 0.5f));
-    btn->setPosition(Point(10.f, visSize.height-80));
+    btn->setPosition(Point(10.f, y));
     addChild(btn);
     
     //newer
@@ -47,23 +51,20 @@ bool PacksBookScene::init() {
     label->setColor(Color3B(0, 122, 255));
     btn = ControlButton::create(label, Scale9Sprite::create());
     btn->setAnchorPoint(Point(1.f, 0.5f));
-    btn->setPosition(Point(visSize.width-10, visSize.height-80));
+    btn->setPosition(Point(visSize.width-10, y));
     addChild(btn);
+    
+    //page
+    _pageLabel = LabelTTF::create("连接中...", "HelveticaNeue", 38);
+    _pageLabel->setAnchorPoint(Point(.5f, .5f));
+    _pageLabel->setPosition(Point(visSize.width*.5f, y));
+    _pageLabel->setColor(Color3B(255, 59, 48));
+    addChild(_pageLabel);
     
     //loading texture
     _loadingTexture = GifTexture::create("ui/loading.gif", this, false);
     _loadingTexture->retain();
     _loadingTexture->setSpeed(2.f);
-    
-    _loadingSprParent = Node::create();
-    addChild(_loadingSprParent);
-    
-    //page
-    _pageLabel = LabelTTF::create("连接中...", "HelveticaNeue", 38);
-    _pageLabel->setAnchorPoint(Point(.5f, .5f));
-    _pageLabel->setPosition(Point(visSize.width*.5f, visSize.height-80));
-    _pageLabel->setColor(Color3B(255, 59, 48));
-    addChild(_pageLabel);
     
     //get pack count
     _packCount = 0;
@@ -73,6 +74,10 @@ bool PacksBookScene::init() {
     //sptLoader
     _sptLoader = SptLoader::create(this);
     addChild(_sptLoader);
+    
+    //iconsParent
+    _iconsParent = Node::create();
+    addChild(_iconsParent);
     
     return true;
 }
@@ -134,8 +139,6 @@ void PacksBookScene::loadPage(int page) {
     postHttpRequest("pack/get", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetPack));
     
     //setup loading sprite
-    _loadingSprParent->removeAllChildren();
-    
     int packNum = PACKS_PER_PAGE;
     if (_currPage == _pageCount-1) {
         packNum = _packCount % PACKS_PER_PAGE;
@@ -143,7 +146,9 @@ void PacksBookScene::loadPage(int page) {
     
     for (auto i = 0; i < packNum; ++i) {
         auto loadingSpr = Sprite::createWithTexture(_loadingTexture);
-        _loadingSprParent->addChild(loadingSpr);
+        _iconsParent->addChild(loadingSpr);
+        loadingSpr->setUserData((void*)i);
+        _icons.push_back(loadingSpr);
         int row = i / 3;
         int col = i % 3;
         auto visSize = Director::getInstance()->getVisibleSize();
@@ -211,7 +216,7 @@ void PacksBookScene::onHttpGetPack(HttpClient* client, HttpResponse* response) {
             return;
         }
         
-        Pack pack;
+        PackInfo pack;
         pack.id = (int)(packJs.get<jsonxx::Number>("Id"));
         pack.date = packJs.get<jsonxx::String>("Date");
         pack.icon = packJs.get<jsonxx::String>("Icon");
@@ -234,7 +239,7 @@ void PacksBookScene::onHttpGetPack(HttpClient* client, HttpResponse* response) {
                 lwerror("json parse error: no Text");
                 return;
             }
-            Pack::Image image;
+            PackInfo::Image image;
             image.url = imageJs.get<jsonxx::String>("Url");
             image.title = imageJs.get<jsonxx::String>("Title");
             image.text = imageJs.get<jsonxx::String>("Text");
@@ -243,10 +248,66 @@ void PacksBookScene::onHttpGetPack(HttpClient* client, HttpResponse* response) {
         _packs.push_back(pack);
     }
     
-    for (auto pack = _packs.begin(); pack != _packs.end(); ++pack) {
-        
+    for (auto i = 0; i < _packs.size(); i++) {
+        auto &pack = _packs[i];
+        _sptLoader->download(pack.icon.c_str(), (void*)i);
     }
 }
 
+void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
+    int idx = (int)userData;
+    if (idx >= 0 && idx < _icons.size()) {
+        _iconsParent->addChild(sprite);
+        sprite->setPosition(_icons[idx]->getPosition());
+        sprite->setScale(_iconWidth/sprite->getContentSize().width);
+        sprite->setUserData((void*)idx);
+        _icons[idx]->removeFromParent();
+        _icons[idx] = sprite;
+    } else {
+        lwerror("no loading sprite to replace");
+    }
+}
 
+void PacksBookScene::onSptLoaderError(const char *localPath, void *userData) {
+    lwerror("sprite load error");
+    //fixme:
+}
+
+void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
+    auto touch = touches[0];
+    
+    _touchedIcons = nullptr;
+    _touchedPack = nullptr;
+    for( int i = 0; i < _icons.size(); i++){
+        auto icon = _icons[i];
+        auto rect = icon->getBoundingBox();
+        //rect.origin.y += _sptParent->getPositionY();
+        if (rect.containsPoint(touch->getLocation())) {
+            if (i < _packs.size()) {
+                _touchedIcons = icon;
+                _touchedPack = &(_packs[i]);
+            }
+            break;
+        }
+    }
+}
+
+void PacksBookScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
+    
+}
+
+void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *event) {
+    auto touch = touches[0];
+    if (_touchedIcons && _touchedPack) {
+        auto rect = _touchedIcons->getBoundingBox();
+        if (rect.containsPoint(touch->getLocation())) {
+            auto scene = ModeSelectScene::createScene(_touchedPack);
+            Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
+        }
+    }
+}
+
+void PacksBookScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
+    //fixme
+}
 

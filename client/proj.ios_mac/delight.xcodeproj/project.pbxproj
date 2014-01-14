@@ -89,8 +89,6 @@
 		B3A638EB185F58B0009ECDF1 /* gameplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638E8185F58B0009ECDF1 /* gameplay.cpp */; };
 		B3A638ED1861B11B009ECDF1 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3A638EC1861B11B009ECDF1 /* ui */; };
 		B3A638EE1861B11B009ECDF1 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3A638EC1861B11B009ECDF1 /* ui */; };
-		B3A638F318620A3C009ECDF1 /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638F118620A3C009ECDF1 /* packsListScene.cpp */; };
-		B3A638F418620A3C009ECDF1 /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A638F118620A3C009ECDF1 /* packsListScene.cpp */; };
 		B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A639031862F841009ECDF1 /* spriteLoader.cpp */; };
 		B3A639061862F842009ECDF1 /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A639031862F841009ECDF1 /* spriteLoader.cpp */; };
 		B3AA0785186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
@@ -312,8 +310,6 @@
 		B3A638E8185F58B0009ECDF1 /* gameplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gameplay.cpp; path = ../Classes/gameplay.cpp; sourceTree = "<group>"; };
 		B3A638E9185F58B0009ECDF1 /* gameplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gameplay.h; path = ../Classes/gameplay.h; sourceTree = "<group>"; };
 		B3A638EC1861B11B009ECDF1 /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
-		B3A638F118620A3C009ECDF1 /* packsListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packsListScene.cpp; path = ../Classes/packsListScene.cpp; sourceTree = "<group>"; };
-		B3A638F218620A3C009ECDF1 /* packsListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsListScene.h; path = ../Classes/packsListScene.h; sourceTree = "<group>"; };
 		B3A639031862F841009ECDF1 /* spriteLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spriteLoader.cpp; path = ../Classes/spriteLoader.cpp; sourceTree = "<group>"; };
 		B3A639041862F841009ECDF1 /* spriteLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spriteLoader.h; path = ../Classes/spriteLoader.h; sourceTree = "<group>"; };
 		B3AA0783186BEEE200706E4D /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../Classes/util.cpp; sourceTree = "<group>"; };
@@ -395,8 +391,6 @@
 				B31003991879B5F40049A6CF /* mainMenuScene.h */,
 				B3F01AEF187E87900000B33E /* packsBookScene.cpp */,
 				B3F01AF0187E87900000B33E /* packsBookScene.h */,
-				B3A638F118620A3C009ECDF1 /* packsListScene.cpp */,
-				B3A638F218620A3C009ECDF1 /* packsListScene.h */,
 				B310039E187C067A0049A6CF /* modeSelectScene.cpp */,
 				B310039F187C067A0049A6CF /* modeSelectScene.h */,
 				B302CBFB18519276003746A6 /* sliderScene.cpp */,
@@ -864,7 +858,6 @@
 				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,
 				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
 				B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
-				B3A638F318620A3C009ECDF1 /* packsListScene.cpp in Sources */,
 				B393ED36186EE43100E372CC /* db.cpp in Sources */,
 				B33DAC82184CC6B9001403BA /* quantize.c in Sources */,
 				B33DAC7A184CC6B9001403BA /* gifalloc.c in Sources */,
@@ -883,7 +876,6 @@
 				B3F01AF2187E87900000B33E /* packsBookScene.cpp in Sources */,
 				B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */,
 				B3A638E7185DBAE9009ECDF1 /* sha.cpp in Sources */,
-				B3A638F418620A3C009ECDF1 /* packsListScene.cpp in Sources */,
 				B31003A1187C067A0049A6CF /* modeSelectScene.cpp in Sources */,
 				B33DAC77184CC6B9001403BA /* gif_font.c in Sources */,
 				B33DAC79184CC6B9001403BA /* gif_hash.c in Sources */,

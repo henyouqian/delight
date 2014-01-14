@@ -1,6 +1,5 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
-#include "packsListScene.h"
 #include "mainMenuScene.h"
 #include "util.h"
 #include "db.h"

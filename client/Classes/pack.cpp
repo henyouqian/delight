@@ -37,6 +37,49 @@ void Pack::init(const char *date, const char *title, const char *icon,
     }
 }
 
+void Pack::init(PackInfo *packInfo, PackListener *listerner) {
+    this->listener = listerner;
+    this->progress = 0.f;
+    this->title = packInfo->title;
+    this->text = packInfo->text;
+    
+    _localNum = 0;
+    unsigned int imgIdx = 0;
+    for (auto i = 0; i < packInfo->images.size(); ++i) {
+        auto &image = packInfo->images[i];
+        Img img;
+        img.url = image.url;
+        img.title = image.title;
+        img.text = image.text;
+        std::string local;
+        makeLocalImagePath(local, img.url.c_str());
+        img.local = local;
+        
+        //check file exist and download image
+        if (FileUtils::getInstance()->isFileExist(local)) {
+            _localNum++;
+            img.isLocal = true;
+            img._request = nullptr;
+        } else {
+            img.isLocal = false;
+            auto request = new HttpRequest();
+            request->setUrl(img.url.c_str());
+            request->setRequestType(HttpRequest::Type::GET);
+            request->setCallback(std::bind(&Pack::onImageDownload, this, std::placeholders::_1, std::placeholders::_2, imgIdx));
+            img._request = request;
+        }
+        
+        //
+        imgs.push_back(img);
+        imgIdx++;
+    }
+    
+    progress = (float)_localNum / imgs.size();
+    if (progress == 1.f && listener) {
+        listener->onPackDownloadComplete();
+    }
+}
+
 Pack::~Pack() {
     for (auto it = imgs.begin(); it != imgs.end(); ++it) {
         if (it->_request) {

@@ -13,8 +13,13 @@ class Pack;
 
 class SliderScene : public cocos2d::Layer, public PackListener {
 public:
-    static cocos2d::Scene* createScene(const char *title, const char *text, const char *images);
-    virtual bool init();
+    static Scene* createScene(PackInfo *packInfo);
+    static SliderScene* create(PackInfo *packInfo);
+    bool init(PackInfo *packInfo);
+    
+    
+    static Scene* createScene(const char *title, const char *text, const char *images);
+    bool init();
     CREATE_FUNC(SliderScene);
     virtual ~SliderScene();
     

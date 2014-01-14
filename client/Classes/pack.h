@@ -7,6 +7,22 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+struct PackInfo {
+    int id;
+    std::string date;
+    std::string title;
+    std::string text;
+    std::string icon;
+    std::string cover;
+    
+    struct Image {
+        std::string url;
+        std::string title;
+        std::string text;
+    };
+    std::vector<Image> images;
+};
+
 class PackListener {
 public:
     virtual void onPackError() {};
@@ -41,6 +57,7 @@ public:
     void init(const char *date, const char *title, const char *icon,
               const char *cover, const char *text, const char *images,
               PackListener *listerner);
+    void init(PackInfo *packInfo, PackListener *listerner);
     ~Pack();
     void startDownload();
     

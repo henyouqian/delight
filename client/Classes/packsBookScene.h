@@ -2,6 +2,7 @@
 #define __PACK_BOOK_SCENE_H__
 
 #include "spriteLoader.h"
+#include "pack.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -21,6 +22,16 @@ public:
     void onHttpGetCount(HttpClient* client, HttpResponse* response);
     void onHttpGetPack(HttpClient* client, HttpResponse* response);
     
+    //SptLoaderListener
+    virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
+    virtual void onSptLoaderError(const char *localPath, void *userData);
+    
+    //touch
+    virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *event);
+    virtual void onTouchesMoved(const std::vector<Touch*>& touches, Event *event);
+    virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *event);
+    virtual void onTouchesCancelled(const std::vector<Touch*>&touches, Event *event);
+    
 private:
     //page: zero based
     void loadPage(int page);
@@ -31,26 +42,13 @@ private:
     int _currPage;
     
     GifTexture *_loadingTexture;
-    std::multimap<std::string, Sprite*> _localMapLoadingSpr;
-    Node *_loadingSprParent;
+    std::vector<Sprite*> _icons;
+    Node* _touchedIcons;
+    PackInfo *_touchedPack;
     float _iconWidth;
+    Node *_iconsParent;
     
-    struct Pack {
-        int id;
-        std::string date;
-        std::string title;
-        std::string text;
-        std::string icon;
-        std::string cover;
-        
-        struct Image {
-            std::string url;
-            std::string title;
-            std::string text;
-        };
-        std::vector<Image> images;
-    };
-    std::vector<Pack> _packs;
+    std::vector<PackInfo> _packs;
     
     SptLoader *_sptLoader;
 };
