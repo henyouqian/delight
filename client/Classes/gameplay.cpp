@@ -316,6 +316,9 @@ void Gameplay::onTouchesMoved(const std::vector<Touch*>& touches) {
 }
 
 void Gameplay::onTouchesEnded(const std::vector<Touch*>& touches) {
+    if (_sliders.empty()) {
+        return;
+    }
     auto touch = touches[0];
     int i = 0;
     bool complete = true;

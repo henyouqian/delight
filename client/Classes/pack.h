@@ -1,6 +1,7 @@
 #ifndef __PACK_H__
 #define __PACK_H__
 
+#include "jsonxx/jsonxx.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -21,6 +22,8 @@ struct PackInfo {
         std::string text;
     };
     std::vector<Image> images;
+    
+    void init(jsonxx::Object& packJs);
 };
 
 class PackListener {
@@ -66,6 +69,20 @@ private:
     void onImageDownload(HttpClient* client, HttpResponse* response, unsigned int imgIdx);
     
     unsigned int _localNum;
+};
+
+struct PackDownloader : cocos2d::Object{
+    PackInfo *pack;
+    float progress;
+    PackListener *listener;
+    std::map<HttpRequest*, std::string> requestMapLocal;
+    int downloadedNum;
+    
+    void init(PackInfo *pack, PackListener *listener);
+    void destroy();
+    virtual ~PackDownloader();
+    void startDownload();
+    void onImageDownload(HttpClient* client, HttpResponse* response);
 };
 
 struct PackManager {

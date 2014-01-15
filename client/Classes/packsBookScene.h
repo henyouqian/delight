@@ -20,7 +20,7 @@ public:
     
     void back(Object *sender, Control::EventType controlEvent);
     void onHttpGetCount(HttpClient* client, HttpResponse* response);
-    void onHttpGetPack(HttpClient* client, HttpResponse* response);
+    void onHttpGetPage(HttpClient* client, HttpResponse* response);
     
     //SptLoaderListener
     virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
@@ -40,6 +40,7 @@ private:
     int _packCount;
     int _pageCount;
     int _currPage;
+    bool _isOffline;
     
     GifTexture *_loadingTexture;
     std::vector<Sprite*> _icons;

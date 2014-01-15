@@ -10,17 +10,25 @@ USING_NS_CC_EXT;
 
 class PacksListScene;
 
-class ModeSelectScene : public cocos2d::Layer {
+class ModeSelectScene : public LayerColor, public PackListener {
 public:
     static cocos2d::Scene* createScene(PackInfo *packInfo);
     bool init(PackInfo *packInfo);
+    ~ModeSelectScene();
     
     void enterCasualMode(Object *sender, Control::EventType controlEvent);
     void enterTimeAttackMode(Object *sender, Control::EventType controlEvent);
     void back(Object *sender, Control::EventType controlEvent);
     
+    //PackListener
+    virtual void onPackError();
+    virtual void onPackImageDownload();
+    virtual void onPackDownloadComplete();
+    
 private:
     PackInfo *_packInfo;
+    PackDownloader *_packDownloader;
+    LabelTTF *_progressLabel;
 };
 
 #endif // __MODE_SELECT_SCENE_H__

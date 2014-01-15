@@ -2,6 +2,7 @@
 #include "modeSelectScene.h"
 #include "util.h"
 #include "http.h"
+#include "db.h"
 #include "gifTexture.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
@@ -92,26 +93,56 @@ void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
 }
 
 void PacksBookScene::onHttpGetCount(HttpClient* client, HttpResponse* response) {
+    _packCount = 0;
+    
     if (!response->isSucceed()) {
-        _pageLabel->setString("连接失败");
-        return;
+        _isOffline = true;
+        
+        //get pack count local
+        sqlite3_stmt* pStmt = NULL;
+        
+        std::stringstream sql;
+        sql << "SELECT value from kvs WHERE key='packCount';";
+        auto r = sqlite3_prepare_v2(gSaveDb, sql.str().c_str(), -1, &pStmt, NULL);
+        if (r != SQLITE_OK) {
+            lwerror("sqlite error: %s", sql.str().c_str());
+            return;
+        }
+        r = sqlite3_step(pStmt);
+        if ( r == SQLITE_ROW ){
+            const char * countString = (const char *)sqlite3_column_text(pStmt, 0);
+            _packCount = atoi(countString);
+        }
+        sqlite3_finalize(pStmt);
+    } else {
+        _isOffline = false;
+        
+        //get pack count
+        auto vData = response->getResponseData();
+        std::istringstream is(std::string(vData->begin(), vData->end()));
+        
+        jsonxx::Object root;
+        bool ok = root.parse(is);
+        if (!ok) {
+            lwerror("json parse error");
+            return;
+        }
+        if (!root.has<jsonxx::Number>("PackCount")) {
+            lwerror("json parse error: no number: Id");
+            return;
+        }
+        _packCount = root.get<jsonxx::Number>("PackCount");
+        
+        //save to sqlite
+        std::stringstream sql;
+        sql << "REPLACE INTO kvs(key, value) VALUES('packCount',";
+        sql << "'" << _packCount << "');";
+        char *err;
+        auto r = sqlite3_exec(gSaveDb, sql.str().c_str(), NULL, NULL, &err);
+        if(r != SQLITE_OK) {
+            lwerror("sqlite error: %s\nsql=%s", err, sql.str().c_str());
+        }
     }
-    
-    //get pack count
-    auto vData = response->getResponseData();
-    std::istringstream is(std::string(vData->begin(), vData->end()));
-    
-    jsonxx::Object root;
-    bool ok = root.parse(is);
-    if (!ok) {
-        lwerror("json parse error");
-        return;
-    }
-    if (!root.has<jsonxx::Number>("PackCount")) {
-        lwerror("json parse error: no number: Id");
-        return;
-    }
-    _packCount = root.get<jsonxx::Number>("PackCount");
     
     _pageCount = (_packCount-1) / PACKS_PER_PAGE + 1;
     _pageCount = MAX(_pageCount, 1);
@@ -136,7 +167,7 @@ void PacksBookScene::loadPage(int page) {
     msg << "Offset" << offset;
     msg << "Limit" << limit;
     
-    postHttpRequest("pack/get", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetPack));
+    postHttpRequest("pack/get", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetPage));
     
     //setup loading sprite
     int packNum = PACKS_PER_PAGE;
@@ -163,94 +194,72 @@ void PacksBookScene::loadPage(int page) {
     //
 }
 
-void PacksBookScene::onHttpGetPack(HttpClient* client, HttpResponse* response) {
+static int makePageKey(int pageIdx) {
+    return pageIdx*100+PACKS_PER_PAGE;
+}
+
+void PacksBookScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
+    int pageKey = makePageKey(_currPage);
+    std::string pageJs;
+    
     if (!response->isSucceed()) {
-        lwerror("onHttpGetPack failed");
-        return;
+        //load local
+        sqlite3_stmt* pStmt = NULL;
+        std::stringstream sql;
+        sql << "SELECT value FROM pages WHERE key=" << pageKey << ";";
+        auto r = sqlite3_prepare_v2(gSaveDb, sql.str().c_str(), -1, &pStmt, NULL);
+        if (r != SQLITE_OK) {
+            lwerror("sqlite error: %s", sql.str().c_str());
+            return;
+        }
+        r = sqlite3_step(pStmt);
+        if ( r == SQLITE_ROW ){
+            const char* value = (const char*)sqlite3_column_text(pStmt, 0);
+            pageJs = value;
+        }
+        sqlite3_finalize(pStmt);
+    } else {
+        auto vData = response->getResponseData();
+        pageJs = std::string(vData->begin(), vData->end());
+        
+        //sqlite
+        std::stringstream sql;
+        sql << "REPLACE INTO pages(key, value) VALUES(";
+        sql << pageKey << ",";
+        sql << "'" << pageJs << "');";
+        char *err;
+        auto r = sqlite3_exec(gSaveDb, sql.str().c_str(), NULL, NULL, &err);
+        if(r != SQLITE_OK) {
+            lwerror("sqlite error: %s\nsql=%s", err, sql.str().c_str());
+        }
     }
     
-    //parse json
-    auto vData = response->getResponseData();
-    std::istringstream is(std::string(vData->begin(), vData->end()));
+    _packs.clear();
     
-    jsonxx::Object msg;
-    bool ok = msg.parse(is);
-    if (!ok) {
-        lwerror("json parse error");
-        return;
-    }
-    
-    if (!msg.has<jsonxx::Array>("Packs")) {
-        lwerror("json parse error: no Packs");
-        return;
-    }
-    auto packsJs = msg.get<jsonxx::Array>("Packs");
-    for (auto i = 0; i < packsJs.size(); ++i) {
-        auto packJs = packsJs.get<jsonxx::Object>(i);
-        if (!packJs.has<jsonxx::Number>("Id")) {
-            lwerror("json parse error: no Id");
-            return;
-        }
-        if (!packJs.has<jsonxx::String>("Date")) {
-            lwerror("json parse error: no Date");
-            return;
-        }
-        if (!packJs.has<jsonxx::String>("Title")) {
-            lwerror("json parse error: no Title");
-            return;
-        }
-        if (!packJs.has<jsonxx::String>("Text")) {
-            lwerror("json parse error: no string: Text");
-            return;
-        }
-        if (!packJs.has<jsonxx::String>("Icon")) {
-            lwerror("json parse error: no Icon");
-            return;
-        }
-        if (!packJs.has<jsonxx::String>("Cover")) {
-            lwerror("json parse error: no Cover");
-            return;
-        }
-        if (!packJs.has<jsonxx::Array>("Images")) {
-            lwerror("json parse error: no Images");
+    if (!pageJs.empty()) {
+        //parse json
+        std::istringstream is(pageJs);
+        
+        jsonxx::Object msg;
+        bool ok = msg.parse(is);
+        if (!ok) {
+            lwerror("json parse error");
             return;
         }
         
-        PackInfo pack;
-        pack.id = (int)(packJs.get<jsonxx::Number>("Id"));
-        pack.date = packJs.get<jsonxx::String>("Date");
-        pack.icon = packJs.get<jsonxx::String>("Icon");
-        pack.cover = packJs.get<jsonxx::String>("Cover");
-        pack.title = packJs.get<jsonxx::String>("Title");
-        pack.text = packJs.get<jsonxx::String>("Text");
-        
-        auto imagesJs = packJs.get<jsonxx::Array>("Images");
-        for (auto j = 0; j < imagesJs.size(); ++j) {
-            auto imageJs = imagesJs.get<jsonxx::Object>(j);
-            if (!imageJs.has<jsonxx::String>("Url")) {
-                lwerror("json parse error: no Url");
-                return;
-            }
-            if (!imageJs.has<jsonxx::String>("Title")) {
-                lwerror("json parse error: no Title");
-                return;
-            }
-            if (!imageJs.has<jsonxx::String>("Text")) {
-                lwerror("json parse error: no Text");
-                return;
-            }
-            PackInfo::Image image;
-            image.url = imageJs.get<jsonxx::String>("Url");
-            image.title = imageJs.get<jsonxx::String>("Title");
-            image.text = imageJs.get<jsonxx::String>("Text");
-            pack.images.push_back(image);
+        if (!msg.has<jsonxx::Array>("Packs")) {
+            lwerror("json parse error: no Packs");
+            return;
         }
-        _packs.push_back(pack);
-    }
-    
-    for (auto i = 0; i < _packs.size(); i++) {
-        auto &pack = _packs[i];
-        _sptLoader->download(pack.icon.c_str(), (void*)i);
+        auto packsJs = msg.get<jsonxx::Array>("Packs");
+        for (auto i = 0; i < packsJs.size(); ++i) {
+            auto packJs = packsJs.get<jsonxx::Object>(i);
+            PackInfo pack;
+            pack.init(packJs);
+            _packs.push_back(pack);
+            
+            _sptLoader->download(pack.icon.c_str(), (void*)i);
+        }
     }
 }
 
