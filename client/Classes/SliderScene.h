@@ -10,30 +10,22 @@ USING_NS_CC_EXT;
 
 class Gameplay;
 class Pack;
+struct PackInfo;
 
-class SliderScene : public cocos2d::Layer, public PackListener {
+class SliderScene : public cocos2d::Layer {
 public:
     static Scene* createScene(PackInfo *packInfo);
     static SliderScene* create(PackInfo *packInfo);
     bool init(PackInfo *packInfo);
     
-    
-    static Scene* createScene(const char *title, const char *text, const char *images);
-    bool init();
-    CREATE_FUNC(SliderScene);
     virtual ~SliderScene();
     
-    void initPack(const char *title, const char *text, const char *images);
     virtual void update(float delta);
     
     virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *event);
     virtual void onTouchesMoved(const std::vector<Touch*>& touches, Event *event);
     virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *event);
     virtual void onTouchesCancelled(const std::vector<Touch*>&touches, Event *event);
-    
-    virtual void onPackError();
-    virtual void onPackImageDownload();
-    virtual void onPackDownloadComplete();
     
     void back(Object *sender, Control::EventType controlEvent);
     
@@ -46,10 +38,10 @@ private:
     Menu *_playingMenu;
     
 //    void reset(const char* filename);
-    void reset();
+    void reset(int imgIdx);
     void onNextImage(Object *obj);
     
-    Pack *_pack;
+    PackInfo *_packInfo;
 };
 
 

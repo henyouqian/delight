@@ -1,6 +1,7 @@
 #include "mainMenuScene.h"
 #include "packsBookScene.h"
 #include "util.h"
+#include "lang.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -20,7 +21,7 @@ bool MainMenuScene::init() {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     
     //
-    auto button = createButton("Book", 48, 2.f);
+    auto button = createButton(lang("Play"), 48, 2.f);
     button->setPosition(Point(visibleSize.width/2, visibleSize.height/3));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterBook), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);

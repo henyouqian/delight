@@ -93,6 +93,10 @@
 		B3A639061862F842009ECDF1 /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A639031862F841009ECDF1 /* spriteLoader.cpp */; };
 		B3AA0785186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
 		B3AA0786186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
+		B3CA1F41188810A0005637A0 /* lang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CA1F3F188810A0005637A0 /* lang.cpp */; };
+		B3CA1F42188810A0005637A0 /* lang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CA1F3F188810A0005637A0 /* lang.cpp */; };
+		B3CA1F4418881826005637A0 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = B3CA1F4318881825005637A0 /* lang */; };
+		B3CA1F4518881826005637A0 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = B3CA1F4318881825005637A0 /* lang */; };
 		B3DC5D0A1854B4FF00F732B7 /* default in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D091854B4FF00F732B7 /* default */; };
 		B3DC5D0B1854B4FF00F732B7 /* default in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D091854B4FF00F732B7 /* default */; };
 		B3DC5D0D1854E24C00F732B7 /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D0C1854E24C00F732B7 /* img */; };
@@ -314,6 +318,9 @@
 		B3A639041862F841009ECDF1 /* spriteLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spriteLoader.h; path = ../Classes/spriteLoader.h; sourceTree = "<group>"; };
 		B3AA0783186BEEE200706E4D /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../Classes/util.cpp; sourceTree = "<group>"; };
 		B3AA0784186BEEE200706E4D /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../Classes/util.h; sourceTree = "<group>"; };
+		B3CA1F3F188810A0005637A0 /* lang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lang.cpp; path = ../Classes/lang.cpp; sourceTree = "<group>"; };
+		B3CA1F40188810A0005637A0 /* lang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lang.h; path = ../Classes/lang.h; sourceTree = "<group>"; };
+		B3CA1F4318881825005637A0 /* lang */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lang; sourceTree = "<group>"; };
 		B3DC5D091854B4FF00F732B7 /* default */ = {isa = PBXFileReference; lastKnownFileType = folder; path = default; sourceTree = "<group>"; };
 		B3DC5D0C1854E24C00F732B7 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = "<group>"; };
 		B3E841801857774B0004C636 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
@@ -409,6 +416,8 @@
 				B3AA0784186BEEE200706E4D /* util.h */,
 				B393ED34186EE43100E372CC /* db.cpp */,
 				B393ED35186EE43100E372CC /* db.h */,
+				B3CA1F3F188810A0005637A0 /* lang.cpp */,
+				B3CA1F40188810A0005637A0 /* lang.h */,
 				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 			);
@@ -564,6 +573,7 @@
 		B33DAC84184CE490001403BA /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B3CA1F4318881825005637A0 /* lang */,
 				B393ED38186EF38D00E372CC /* db */,
 				B3A638EC1861B11B009ECDF1 /* ui */,
 				B3E841801857774B0004C636 /* audio */,
@@ -802,6 +812,7 @@
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				B393ED39186EF38D00E372CC /* db in Resources */,
 				B3E841811857774B0004C636 /* audio in Resources */,
+				B3CA1F4418881826005637A0 /* lang in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
@@ -825,6 +836,7 @@
 				B393ED3A186EF38D00E372CC /* db in Resources */,
 				B3A638EE1861B11B009ECDF1 /* ui in Resources */,
 				B3DC5D0E1854E24C00F732B7 /* img in Resources */,
+				B3CA1F4518881826005637A0 /* lang in Resources */,
 				B3DC5D0B1854B4FF00F732B7 /* default in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				B3E841821857774B0004C636 /* audio in Resources */,
@@ -847,6 +859,7 @@
 				B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */,
 				B393ED25186DF3B300E372CC /* sqlite3.c in Sources */,
 				B310039A1879B5F40049A6CF /* mainMenuScene.cpp in Sources */,
+				B3CA1F41188810A0005637A0 /* lang.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
@@ -881,6 +894,7 @@
 				B33DAC79184CC6B9001403BA /* gif_hash.c in Sources */,
 				B393ED26186DF3B300E372CC /* sqlite3.c in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
+				B3CA1F42188810A0005637A0 /* lang.cpp in Sources */,
 				B33DAC75184CC6B9001403BA /* gif_err.c in Sources */,
 				B393ED37186EE43100E372CC /* db.cpp in Sources */,
 				B3A638E2185DA7C7009ECDF1 /* jsonxx.cc in Sources */,

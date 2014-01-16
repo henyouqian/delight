@@ -3,6 +3,7 @@
 #include "mainMenuScene.h"
 #include "util.h"
 #include "db.h"
+#include "lang.h"
 #include "lw/lwLog.h"
 #include <thread>
 
@@ -92,9 +93,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     //init
     makeLocalDir();
-    
-    //
     dbInit();
+    setLang("lang/zh-s.lang");
 
     //auto scene = SliderScene::createScene();
     //auto scene = PacksListScene::createScene();

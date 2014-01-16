@@ -3,6 +3,7 @@
 #include "util.h"
 #include "http.h"
 #include "db.h"
+#include "lang.h"
 #include "gifTexture.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
@@ -56,7 +57,7 @@ bool PacksBookScene::init() {
     addChild(btn);
     
     //page
-    _pageLabel = LabelTTF::create("连接中...", "HelveticaNeue", 38);
+    _pageLabel = LabelTTF::create(lang("Connecting..."), "HelveticaNeue", 38);
     _pageLabel->setAnchorPoint(Point(.5f, .5f));
     _pageLabel->setPosition(Point(visSize.width*.5f, y));
     _pageLabel->setColor(Color3B(255, 59, 48));
