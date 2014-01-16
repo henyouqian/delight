@@ -88,7 +88,7 @@ SliderScene::~SliderScene() {
 }
 
 void SliderScene::update(float delta) {
-    _gameplay->update();
+    
 }
 
 void SliderScene::back(Object *sender, Control::EventType controlEvent) {

@@ -44,7 +44,7 @@ private:
     
     GifTexture *_loadingTexture;
     std::vector<Sprite*> _icons;
-    Node* _touchedIcons;
+    Rect _touchedRect;
     PackInfo *_touchedPack;
     float _iconWidth;
     Node *_iconsParent;

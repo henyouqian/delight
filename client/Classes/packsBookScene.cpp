@@ -153,6 +153,8 @@ void PacksBookScene::onHttpGetCount(HttpClient* client, HttpResponse* response) 
 }
 
 void PacksBookScene::loadPage(int page) {
+    TextureCache::getInstance()->removeUnusedTextures();
+    
     _currPage = page;
     char buf[64];
     snprintf(buf, 64, "%d/%d", page+1, _pageCount);
@@ -286,7 +288,7 @@ void PacksBookScene::onSptLoaderError(const char *localPath, void *userData) {
 void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
     
-    _touchedIcons = nullptr;
+    _touchedRect = Rect::ZERO;
     _touchedPack = nullptr;
     for( int i = 0; i < _icons.size(); i++){
         auto icon = _icons[i];
@@ -294,7 +296,7 @@ void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
         //rect.origin.y += _sptParent->getPositionY();
         if (rect.containsPoint(touch->getLocation())) {
             if (i < _packs.size()) {
-                _touchedIcons = icon;
+                _touchedRect = rect;
                 _touchedPack = &(_packs[i]);
             }
             break;
@@ -308,9 +310,8 @@ void PacksBookScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *e
 
 void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
-    if (_touchedIcons && _touchedPack) {
-        auto rect = _touchedIcons->getBoundingBox();
-        if (rect.containsPoint(touch->getLocation())) {
+    if (_touchedPack) {
+        if (_touchedRect.containsPoint(touch->getLocation())) {
             auto scene = ModeSelectScene::createScene(_touchedPack);
             Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
         }

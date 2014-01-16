@@ -94,10 +94,6 @@ void Gameplay::preload(const char *filePath) {
     _sptLoader->load(filePath);
 }
 
-void Gameplay::update() {
-    //_sptLoader->mainThreadUpdate();
-}
-
 void Gameplay::reset(const char *filePath, int sliderNum) {
     _resetImagePath = filePath;
     _sliderNum = sliderNum;

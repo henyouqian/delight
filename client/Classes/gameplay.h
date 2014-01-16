@@ -21,7 +21,6 @@ public:
     ~Gameplay();
     void preload(const char *filePath);
     void reset(const char *filePath, int sliderNum);
-    void update();
     bool isCompleted();
     
     void onTouchesBegan(const std::vector<Touch*>& touches);

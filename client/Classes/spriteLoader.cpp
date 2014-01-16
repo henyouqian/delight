@@ -22,6 +22,7 @@ SptLoader::SptLoader(SptLoaderListener *listener) {
 }
 
 void SptLoader::destroy() {
+    _listener = nullptr;
     std::lock_guard<std::mutex> lock(_mutex);
     _done = true;
     _cv.notify_all();
