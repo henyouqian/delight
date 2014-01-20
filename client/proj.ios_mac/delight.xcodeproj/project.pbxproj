@@ -71,6 +71,7 @@
 		B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6B184CC6B9001403BA /* gifalloc.c */; };
 		B33DAC82184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
+		B33F4FA9188BAD02000A5AD6 /* timeAttackScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B393ED25186DF3B300E372CC /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B393ED23186DF3B300E372CC /* sqlite3.c */; };
@@ -297,6 +298,31 @@
 		B33DAC6A184CC6B9001403BA /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
 		B33DAC6B184CC6B9001403BA /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
 		B33DAC6F184CC6B9001403BA /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timeAttackScene.cpp; path = ../Classes/timeAttackScene.cpp; sourceTree = "<group>"; };
+		B33F4FA8188BAD02000A5AD6 /* timeAttackScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timeAttackScene.h; path = ../Classes/timeAttackScene.h; sourceTree = "<group>"; };
+		B33F4FCB188BF742000A5AD6 /* sha.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sha.cpp; sourceTree = "<group>"; };
+		B33F4FCC188BF742000A5AD6 /* sha.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sha.h; sourceTree = "<group>"; };
+		B33F4FCE188BF742000A5AD6 /* dgif_lib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dgif_lib.c; sourceTree = "<group>"; };
+		B33F4FCF188BF742000A5AD6 /* egif_lib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = egif_lib.c; sourceTree = "<group>"; };
+		B33F4FD0188BF742000A5AD6 /* gif_err.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gif_err.c; sourceTree = "<group>"; };
+		B33F4FD1188BF742000A5AD6 /* gif_font.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gif_font.c; sourceTree = "<group>"; };
+		B33F4FD2188BF742000A5AD6 /* gif_hash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gif_hash.c; sourceTree = "<group>"; };
+		B33F4FD3188BF742000A5AD6 /* gif_hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gif_hash.h; sourceTree = "<group>"; };
+		B33F4FD4188BF742000A5AD6 /* gif_lib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gif_lib.h; sourceTree = "<group>"; };
+		B33F4FD5188BF742000A5AD6 /* gif_lib_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
+		B33F4FD6188BF742000A5AD6 /* gifalloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
+		B33F4FD7188BF742000A5AD6 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		B33F4FD8188BF742000A5AD6 /* Makefile.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		B33F4FD9188BF742000A5AD6 /* Makefile.unx */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.unx; sourceTree = "<group>"; };
+		B33F4FDA188BF742000A5AD6 /* quantize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		B33F4FDC188BF742000A5AD6 /* jsonxx.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jsonxx.cc; sourceTree = "<group>"; };
+		B33F4FDD188BF742000A5AD6 /* jsonxx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jsonxx.h; sourceTree = "<group>"; };
+		B33F4FDF188BF742000A5AD6 /* lwLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
+		B33F4FE1188BF742000A5AD6 /* sqlite3.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		B33F4FE2188BF742000A5AD6 /* sqlite3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		B33F4FE4188BF742000A5AD6 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
+		B33F4FE5188BF742000A5AD6 /* WXApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
+		B33F4FE6188BF742000A5AD6 /* WXApiObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
 		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
@@ -402,6 +428,8 @@
 				B310039F187C067A0049A6CF /* modeSelectScene.h */,
 				B302CBFB18519276003746A6 /* sliderScene.cpp */,
 				B302CBFC18519276003746A6 /* sliderScene.h */,
+				B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */,
+				B33F4FA8188BAD02000A5AD6 /* timeAttackScene.h */,
 				B3A639031862F841009ECDF1 /* spriteLoader.cpp */,
 				B3A639041862F841009ECDF1 /* spriteLoader.h */,
 				B3A638E8185F58B0009ECDF1 /* gameplay.cpp */,
@@ -452,6 +480,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B33F4FC9188BF742000A5AD6 /* external */,
 				B33DAC221847A412001403BA /* libcurl.a */,
 				B33DABE318479B82001403BA /* libcurl.a */,
 				B33DABE118479AD0001403BA /* UIKit.framework */,
@@ -582,6 +611,85 @@
 			);
 			name = res;
 			path = ../res;
+			sourceTree = "<group>";
+		};
+		B33F4FC9188BF742000A5AD6 /* external */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FCA188BF742000A5AD6 /* crypto */,
+				B33F4FCD188BF742000A5AD6 /* giflib */,
+				B33F4FDB188BF742000A5AD6 /* jsonxx */,
+				B33F4FDE188BF742000A5AD6 /* lw */,
+				B33F4FE0188BF742000A5AD6 /* sqlite */,
+				B33F4FE3188BF742000A5AD6 /* weChatSDK */,
+			);
+			name = external;
+			path = ../external;
+			sourceTree = "<group>";
+		};
+		B33F4FCA188BF742000A5AD6 /* crypto */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FCB188BF742000A5AD6 /* sha.cpp */,
+				B33F4FCC188BF742000A5AD6 /* sha.h */,
+			);
+			path = crypto;
+			sourceTree = "<group>";
+		};
+		B33F4FCD188BF742000A5AD6 /* giflib */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FCE188BF742000A5AD6 /* dgif_lib.c */,
+				B33F4FCF188BF742000A5AD6 /* egif_lib.c */,
+				B33F4FD0188BF742000A5AD6 /* gif_err.c */,
+				B33F4FD1188BF742000A5AD6 /* gif_font.c */,
+				B33F4FD2188BF742000A5AD6 /* gif_hash.c */,
+				B33F4FD3188BF742000A5AD6 /* gif_hash.h */,
+				B33F4FD4188BF742000A5AD6 /* gif_lib.h */,
+				B33F4FD5188BF742000A5AD6 /* gif_lib_private.h */,
+				B33F4FD6188BF742000A5AD6 /* gifalloc.c */,
+				B33F4FD7188BF742000A5AD6 /* Makefile.am */,
+				B33F4FD8188BF742000A5AD6 /* Makefile.in */,
+				B33F4FD9188BF742000A5AD6 /* Makefile.unx */,
+				B33F4FDA188BF742000A5AD6 /* quantize.c */,
+			);
+			path = giflib;
+			sourceTree = "<group>";
+		};
+		B33F4FDB188BF742000A5AD6 /* jsonxx */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FDC188BF742000A5AD6 /* jsonxx.cc */,
+				B33F4FDD188BF742000A5AD6 /* jsonxx.h */,
+			);
+			path = jsonxx;
+			sourceTree = "<group>";
+		};
+		B33F4FDE188BF742000A5AD6 /* lw */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FDF188BF742000A5AD6 /* lwLog.h */,
+			);
+			path = lw;
+			sourceTree = "<group>";
+		};
+		B33F4FE0188BF742000A5AD6 /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FE1188BF742000A5AD6 /* sqlite3.c */,
+				B33F4FE2188BF742000A5AD6 /* sqlite3.h */,
+			);
+			path = sqlite;
+			sourceTree = "<group>";
+		};
+		B33F4FE3188BF742000A5AD6 /* weChatSDK */ = {
+			isa = PBXGroup;
+			children = (
+				B33F4FE4188BF742000A5AD6 /* libWeChatSDK.a */,
+				B33F4FE5188BF742000A5AD6 /* WXApi.h */,
+				B33F4FE6188BF742000A5AD6 /* WXApiObject.h */,
+			);
+			path = weChatSDK;
 			sourceTree = "<group>";
 		};
 		B34FDAE2186A198A006D05A3 /* lw */ = {
@@ -867,6 +975,7 @@
 				B33DAC70184CC6B9001403BA /* dgif_lib.c in Sources */,
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
+				B33F4FA9188BAD02000A5AD6 /* timeAttackScene.cpp in Sources */,
 				B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */,
 				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,
 				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
@@ -971,6 +1080,8 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
 					"../../../cocos2d-x-3.0alpha0/external/libwebsockets/ios/lib",
 					"/Users/weili/Documents/projects/2014/cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
+					/Users/weili/Documents/projects/2014/delight/client/external/WeChatSDK_1.4.2.1,
+					/Users/weili/Documents/projects/2014/delight/client/external/weChatSDK,
 				);
 				PRODUCT_NAME = "delight iOS";
 				PROVISIONING_PROFILE = "";
@@ -1018,6 +1129,8 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
 					"../../../cocos2d-x-3.0alpha0/external/libwebsockets/ios/lib",
 					"/Users/weili/Documents/projects/2014/cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
+					/Users/weili/Documents/projects/2014/delight/client/external/WeChatSDK_1.4.2.1,
+					/Users/weili/Documents/projects/2014/delight/client/external/weChatSDK,
 				);
 				PRODUCT_NAME = "delight iOS";
 				PROVISIONING_PROFILE = "";

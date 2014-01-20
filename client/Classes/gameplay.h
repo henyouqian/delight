@@ -15,9 +15,15 @@ struct Slider {
     Touch *touch;
 };
 
-class Gameplay : public SptLoaderListener{
+class GameplayListener {
 public:
-    Gameplay(Rect &rect, Node *parentNode);
+    virtual ~GameplayListener(){};
+    virtual void onImageRotate(float rotate){}
+};
+
+class Gameplay : public Node, public SptLoaderListener{
+public:
+    Gameplay(Rect &rect, GameplayListener *listener);
     ~Gameplay();
     void preload(const char *filePath);
     void reset(const char *filePath, int sliderNum);
@@ -33,7 +39,9 @@ public:
     
 private:
     void loadTexture(const char *filename);
+    void onChangeImage();
     
+    GameplayListener *_listener;
     Rect _rect;
     int _sliderNum;
     std::list<Slider> _sliders;
@@ -43,7 +51,6 @@ private:
     float _sliderX0;
     float _sliderY0;
     float _sliderH;
-    Node *_parentNode;
     bool _isCompleted;
     
     SptLoader *_sptLoader;
@@ -55,6 +62,10 @@ private:
     std::list<Preload> _preloads;
     std::string _resetImagePath;
     void resetNow(std::list<Preload>::iterator it);
+    
+    Node *_currSliderGrp;
+    Node *_newSliderGrp;
+    bool _rotRight;
     
     bool _running;
 };

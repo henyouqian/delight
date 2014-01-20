@@ -41,19 +41,22 @@ Slider::Slider() {
     touch = nullptr;
 }
 
-Gameplay::Gameplay(Rect &rect, Node *parentNode) {
+Gameplay::Gameplay(Rect &rect, GameplayListener *listener) {
+    Node::init();
+    _listener = listener;
     _rect = rect;
-    _parentNode = parentNode;
     _texW = _texH = 0;
     _texture = nullptr;
     _isCompleted = false;
     _running = false;
+    _currSliderGrp = nullptr;
+    _newSliderGrp = nullptr;
     
     SimpleAudioEngine::getInstance()->preloadEffect("audio/tik.wav");
     SimpleAudioEngine::getInstance()->preloadEffect("audio/success.mp3");
     
     _sptLoader = SptLoader::create(this);
-    parentNode->addChild(_sptLoader);
+    this->addChild(_sptLoader);
 }
 
 Gameplay::~Gameplay() {
@@ -126,7 +129,7 @@ void Gameplay::loadTexture(const char *filePath) {
     }
     
     //try gif first
-    auto gifTex = GifTexture::create(filePath, _parentNode, false);
+    auto gifTex = GifTexture::create(filePath, this, false);
     if (gifTex) {
         _texture = gifTex;
         gifTex->getScreenSize(_texW, _texH);
@@ -142,105 +145,6 @@ void Gameplay::loadTexture(const char *filePath) {
     _texH -= 1;//-1 edge problem
 }
 
-//void Gameplay::reset(const char *filePath, int sliderNum) {
-//    //filename = "img/aa.gif";
-//    
-//    for (auto it = _sliders.begin(); it != _sliders.end(); ++it) {
-//        it->sprite->removeFromParent();
-//    }
-//    _isCompleted = false;
-//    _sliders.clear();
-//    _sliderNum = sliderNum;
-//    
-//    loadTexture(filePath);
-//    
-//    //create sliders
-//    float fTexW = _texW;
-//    float fTexH = _texH;
-//    auto origin = _rect.origin;
-//    auto size = _rect.size;
-//    
-//    //scale
-//    float scaleW = size.width / _texW;
-//    float scaleH = size.height/ _texH;
-//    if (_texW > _texH) {
-//        scaleW = size.width / _texH;
-//        scaleH = size.height/ _texW;
-//    }
-//    float scale = MAX(scaleW, scaleH);
-//    
-//    //shuffle idx
-//    std::vector<int> idxVec;
-//    shuffle(idxVec, sliderNum);
-//    
-//    //slider
-//    float uvW = 0;
-//    float uvH = 0;
-//    float uvX = 0;
-//    float uvY = 0;
-//    if (fTexW <= fTexH) {
-//        if (fTexW/fTexH <= size.width/size.height) { //slim
-//            uvW = fTexW;
-//            uvH = uvW * (size.height/size.width);
-//            uvY = (fTexH - uvH) * .5f;
-//        } else {    //fat
-//            uvH = fTexH;
-//            uvW = uvH * (size.width/size.height);
-//            uvX = (fTexW - uvW) * .5f;
-//        }
-//        float uvy = uvY;
-//        float uvh = uvH / sliderNum;
-//        _sliderH = size.height / sliderNum;
-//        _sliderX0 = origin.x + size.width * .5f;
-//        _sliderY0 = origin.y + size.height - _sliderH * .5f;
-//        
-//        for (auto i = 0; i < sliderNum; ++i) {
-//            uvy = uvY+uvh*idxVec[i];
-//            auto spt = Sprite::createWithTexture(_texture, Rect(uvX, uvy, uvW, uvh));
-//            
-//            float y = _sliderY0 - i * _sliderH;
-//            spt->setPosition(Point(_sliderX0, y));
-//            
-//            spt->setScale(scale);
-//            _parentNode->addChild(spt);
-//            Slider slider;
-//            slider.sprite = spt;
-//            slider.idx = idxVec[i];
-//            _sliders.push_back(slider);
-//        }
-//    } else {
-//        if (fTexW/fTexH <= size.height/size.width) { //slim
-//            uvW = fTexW;
-//            uvH = uvW * (size.width/size.height);
-//            uvY = (fTexH - uvH) * .5f;
-//        } else { //fat
-//            uvH = fTexH;
-//            uvW = uvH * (size.height/size.width);
-//            uvX = (fTexW - uvW) * .5f;
-//        }
-//        float uvx = uvX;
-//        float uvw = uvW / sliderNum;
-//        _sliderH = size.height / sliderNum;
-//        _sliderX0 = origin.x + size.width * .5f;
-//        _sliderY0 = origin.y + size.height - _sliderH * .5f;
-//        for (auto i = 0; i < sliderNum; ++i) {
-//            uvx = uvX+uvw*idxVec[i];
-//            auto spt = Sprite::createWithTexture(_texture, Rect(uvx, uvY, uvw, uvH));
-//            
-//            float y = _sliderY0 - i * _sliderH;
-//            spt->setPosition(Point(_sliderX0, y));
-//            spt->setRotation(90.f);
-//            
-//            spt->setScale(scale);
-//            _parentNode->addChild(spt);
-//            
-//            Slider slider;
-//            slider.sprite = spt;
-//            slider.idx = idxVec[i];
-//            _sliders.push_back(slider);
-//        }
-//    }
-//}
 
 bool Gameplay::isCompleted() {
     return _isCompleted;
@@ -248,17 +152,6 @@ bool Gameplay::isCompleted() {
 
 void Gameplay::onTouchesBegan(const std::vector<Touch*>& touches) {
     auto touch = touches[0];
-//    if (touch->getLocation().y > 900) {
-//        if (touch->getLocation().x < 160) {
-//            SimpleAudioEngine::getInstance()->playEffect("audio/success1.mp3");
-//        } else if (touch->getLocation().x < 320) {
-//            SimpleAudioEngine::getInstance()->playEffect("audio/success2.mp3");
-//        } else if (touch->getLocation().x < 480) {
-//            SimpleAudioEngine::getInstance()->playEffect("audio/success3.mp3");
-//        } else {
-//            SimpleAudioEngine::getInstance()->playEffect("audio/success4.wav");
-//        }
-//    }
     
     if (_isCompleted) {
         return;
@@ -366,9 +259,9 @@ void Gameplay::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *user
 }
 
 void Gameplay::resetNow(std::list<Preload>::iterator it) {
-    for (auto it = _sliders.begin(); it != _sliders.end(); ++it) {
-        it->sprite->removeFromParent();
-    }
+//    for (auto it = _sliders.begin(); it != _sliders.end(); ++it) {
+//        it->sprite->removeFromParent();
+//    }
     
     if (_texture) {
         _texture->release();
@@ -405,12 +298,21 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     std::vector<int> idxVec;
     shuffle(idxVec, _sliderNum);
     
+    //
+    if (_newSliderGrp) {
+        _newSliderGrp->removeFromParent();
+    }
+    _newSliderGrp = Node::create();
+    addChild(_newSliderGrp);
+    bool rotRight = false;
+    
     //slider
     float uvW = 0;
     float uvH = 0;
     float uvX = 0;
     float uvY = 0;
     if (fTexW <= fTexH) {
+        _listener->onImageRotate(0.f);
         if (fTexW/fTexH <= size.width/size.height) { //slim
             uvW = fTexW;
             uvH = uvW * (size.height/size.width);
@@ -434,13 +336,15 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
             spt->setPosition(Point(_sliderX0, y));
             
             spt->setScale(scale);
-            _parentNode->addChild(spt);
+            _newSliderGrp->addChild(spt);
             Slider slider;
             slider.sprite = spt;
             slider.idx = idxVec[i];
             _sliders.push_back(slider);
         }
     } else {
+        rotRight = true;
+        _listener->onImageRotate(90.f);
         if (fTexW/fTexH <= size.height/size.width) { //slim
             uvW = fTexW;
             uvH = uvW * (size.width/size.height);
@@ -464,7 +368,7 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
             spt->setRotation(90.f);
             
             spt->setScale(scale);
-            _parentNode->addChild(spt);
+            _newSliderGrp->addChild(spt);
             
             Slider slider;
             slider.sprite = spt;
@@ -472,9 +376,34 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
             _sliders.push_back(slider);
         }
     }
+    
+    if (!_currSliderGrp) {
+        _currSliderGrp = _newSliderGrp;
+        _newSliderGrp = false;
+    } else {
+        if (_rotRight) {
+            _newSliderGrp->setPositionY(-size.height);
+        } else {
+            _newSliderGrp->setPositionX(size.width);
+        }
+        _rotRight = rotRight;
+        
+        auto moveTo = MoveTo::create(.3f, Point(0.f, 0.f));
+        auto ease = EaseSineOut::create(moveTo);
+        auto cb = CallFunc::create(std::bind(&Gameplay::onChangeImage, this));
+        auto seq = Sequence::create(ease, cb, nullptr);
+        _newSliderGrp->runAction(seq);
+    }
+    
     TextureCache::getInstance()->removeUnusedTextures();
     
     _running = true;
+}
+
+void Gameplay::onChangeImage() {
+    _currSliderGrp->removeFromParent();
+    _currSliderGrp = _newSliderGrp;
+    _newSliderGrp = nullptr;
 }
 
 void Gameplay::onSptLoaderError(const char *localPath, void *userData) {

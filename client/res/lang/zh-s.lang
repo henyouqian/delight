@@ -3,5 +3,10 @@
 	"Connecting...": "连接中...",
 	"Casual": "休闲",
 	"Time attack": "计时",
-	"Downloading": "下载中"
+	"Downloading": "下载中",
+	"Pause": "停",
+	"Next": "﹥",
+	"Back": "返",
+	"Yes": "是",
+	"No": "否",
 }

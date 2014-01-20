@@ -70,3 +70,15 @@ ControlButton *createRingButton(const char *text, float fontSize, float bgScale,
     button->setAdjustBackgroundImage(false);
     return button;
 }
+
+ControlButton *createColorButton(const char *text, float fontSize, float bgScale, const Color3B &labelColor, const Color3B &bgColor, GLubyte bgOpacity) {
+    auto label = LabelTTF::create(text, "HelveticaNeue", fontSize);
+    label->setColor(labelColor);
+    auto spr = Scale9Sprite::create("ui/btnBgWhite.png");
+    spr->setScale(bgScale);
+    spr->setColor(bgColor);
+    spr->setOpacity(bgOpacity);
+    auto button = ControlButton::create(label, spr);
+    button->setAdjustBackgroundImage(false);
+    return button;
+}

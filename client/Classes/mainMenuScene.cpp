@@ -18,6 +18,8 @@ bool MainMenuScene::init() {
         return false;
     }
     
+    srand(time(nullptr));
+    
     Size visibleSize = Director::getInstance()->getVisibleSize();
     
     //

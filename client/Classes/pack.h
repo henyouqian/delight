@@ -22,8 +22,10 @@ struct PackInfo {
         std::string text;
     };
     std::vector<Image> images;
+    std::vector<int> imageIndices;
     
     void init(jsonxx::Object& packJs);
+    void shuffleImageIndices();
 };
 
 class PackListener {

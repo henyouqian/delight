@@ -68,6 +68,13 @@ void PackInfo::init(jsonxx::Object& packJs) {
     }
 }
 
+void PackInfo::shuffleImageIndices() {
+    imageIndices.clear();
+    for (auto i = 0; i < images.size(); ++i) {
+        imageIndices.push_back(i);
+    }
+    std::random_shuffle(imageIndices.begin(), imageIndices.end());
+}
 
 void PackDownloader::init(PackInfo *pack, PackListener *listener) {
     this->pack = pack;
