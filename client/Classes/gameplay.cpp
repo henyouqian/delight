@@ -118,32 +118,32 @@ void Gameplay::reset(const char *filePath, int sliderNum) {
     }
 }
 
-void Gameplay::loadTexture(const char *filePath) {
-    if (_currFileName.compare(filePath) == 0) {
-        return;
-    }
-    
-    if (_texture) {
-        _texture->release();
-        _texture = nullptr;
-    }
-    
-    //try gif first
-    auto gifTex = GifTexture::create(filePath, this, false);
-    if (gifTex) {
-        _texture = gifTex;
-        gifTex->getScreenSize(_texW, _texH);
-    } else {
-        _texture = TextureCache::getInstance()->addImage(filePath);
-        _texW = _texture->getPixelsWide();
-        _texH = _texture->getPixelsHigh();
-    }
-    
-    _currFileName = filePath;
-    _texture->retain();
-    _texW -= 1;//-1 edge problem
-    _texH -= 1;//-1 edge problem
-}
+//void Gameplay::loadTexture(const char *filePath) {
+//    if (_currFileName.compare(filePath) == 0) {
+//        return;
+//    }
+//    
+//    if (_texture) {
+//        _texture->release();
+//        _texture = nullptr;
+//    }
+//    
+//    //try gif first
+//    auto gifTex = GifTexture::create(filePath, this, false);
+//    if (gifTex) {
+//        _texture = gifTex;
+//        gifTex->getScreenSize(_texW, _texH);
+//    } else {
+//        _texture = TextureCache::getInstance()->addImage(filePath);
+//        _texW = _texture->getPixelsWide();
+//        _texH = _texture->getPixelsHigh();
+//    }
+//    
+//    _currFileName = filePath;
+//    _texture->retain();
+//    _texW -= 1;//-1 edge problem
+//    _texH -= 1;//-1 edge problem
+//}
 
 
 bool Gameplay::isCompleted() {
@@ -302,7 +302,10 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     if (_newSliderGrp) {
         _newSliderGrp->removeFromParent();
     }
-    _newSliderGrp = Node::create();
+    _newSliderGrp = new NodeRGBA;
+    _newSliderGrp->init();
+    _newSliderGrp->autorelease();
+    _newSliderGrp->setCascadeOpacityEnabled(true);
     addChild(_newSliderGrp);
     bool rotRight = false;
     
@@ -382,19 +385,22 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         _newSliderGrp = false;
     } else {
         if (_rotRight) {
-            _newSliderGrp->setPositionY(-size.height);
+            _newSliderGrp->setPositionY(-size.width);
         } else {
             _newSliderGrp->setPositionX(size.width);
         }
-        _rotRight = rotRight;
-        
         auto moveTo = MoveTo::create(.3f, Point(0.f, 0.f));
         auto ease = EaseSineOut::create(moveTo);
+        auto fadeIn = FadeIn::create(.3f);
+        auto easeFadeIn = EaseSineOut::create(fadeIn);
+        auto spawn = Spawn::create(ease, easeFadeIn, NULL);
         auto cb = CallFunc::create(std::bind(&Gameplay::onChangeImage, this));
-        auto seq = Sequence::create(ease, cb, nullptr);
+        auto seq = Sequence::create(spawn, cb, nullptr);
+        _newSliderGrp->setOpacity(0);
         _newSliderGrp->runAction(seq);
     }
     
+    _rotRight = rotRight;
     TextureCache::getInstance()->removeUnusedTextures();
     
     _running = true;

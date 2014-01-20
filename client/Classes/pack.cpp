@@ -4,6 +4,8 @@
 #include "crypto/sha.h"
 #include "lw/lwLog.h"
 #include <fstream>
+#include <random>
+#include <chrono>
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -68,12 +70,18 @@ void PackInfo::init(jsonxx::Object& packJs) {
     }
 }
 
+int myrandom (int i) {
+    return std::rand()%i;
+}
+
 void PackInfo::shuffleImageIndices() {
     imageIndices.clear();
     for (auto i = 0; i < images.size(); ++i) {
         imageIndices.push_back(i);
     }
-    std::random_shuffle(imageIndices.begin(), imageIndices.end());
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(imageIndices.begin(), imageIndices.end(), std::default_random_engine(seed));
 }
 
 void PackDownloader::init(PackInfo *pack, PackListener *listener) {

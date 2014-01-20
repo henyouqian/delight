@@ -38,7 +38,7 @@ public:
     virtual void onSptLoaderError(const char *localPath, void *userData);
     
 private:
-    void loadTexture(const char *filename);
+    //void loadTexture(const char *filename);
     void onChangeImage();
     
     GameplayListener *_listener;
@@ -63,8 +63,8 @@ private:
     std::string _resetImagePath;
     void resetNow(std::list<Preload>::iterator it);
     
-    Node *_currSliderGrp;
-    Node *_newSliderGrp;
+    NodeRGBA *_currSliderGrp;
+    NodeRGBA *_newSliderGrp;
     bool _rotRight;
     
     bool _running;
