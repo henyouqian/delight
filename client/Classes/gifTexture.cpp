@@ -67,7 +67,7 @@ bool GifTexture::isGif(const char *path) {
 }
 
 GifTexture::GifTexture()
-:_buf(nullptr), _turnRight(false){
+:_buf(nullptr), _turnRight(false), _paused(false){
     
 }
 
@@ -194,20 +194,29 @@ void GifTexture::setSpeed(float speed) {
     _speed = speed;
 }
 
-void GifTexture::nextFrame() {
-    _currFrame++;
-    if (_currFrame >= _gifFile->ImageCount) {
-        _currFrame = 0;
-    }
-    
-    updateBuf();
-    
-    auto glid = this->getName();
-    GL::bindTexture2D(glid);
-    
-    const Texture2D::PixelFormatInfo& info = Texture2D::getPixelFormatInfoMap().at(this->getPixelFormat());
-    glTexImage2D(GL_TEXTURE_2D, 0, info.internalFormat, (GLsizei)_width2, (GLsizei)_height2, 0, info.format, info.type, _buf);
+void GifTexture::pause() {
+    _paused = true;
+}
 
+void GifTexture::resume() {
+    _paused = false;
+}
+
+void GifTexture::nextFrame() {
+    if (!_paused || !_buf) {
+        _currFrame++;
+        if (_currFrame >= _gifFile->ImageCount) {
+            _currFrame = 0;
+        }
+        
+        updateBuf();
+        
+        auto glid = this->getName();
+        GL::bindTexture2D(glid);
+        
+        const Texture2D::PixelFormatInfo& info = Texture2D::getPixelFormatInfoMap().at(this->getPixelFormat());
+        glTexImage2D(GL_TEXTURE_2D, 0, info.internalFormat, (GLsizei)_width2, (GLsizei)_height2, 0, info.format, info.type, _buf);
+    }
     
     //palyback
     if (_gifFile->ImageCount > 1) {

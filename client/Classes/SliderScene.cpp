@@ -11,6 +11,7 @@ USING_NS_CC_EXT;
 
 static const GLubyte BTN_BG_OPACITY = 160;
 static const float BTN_EASE_DUR = .2f;
+static const GLubyte TRANS_DOT_OPACITY = 80;
 
 static void btnFadeOut(ControlButton *button) {
     auto fadeout = FadeOut::create(BTN_EASE_DUR);
@@ -106,6 +107,31 @@ bool SliderScene::init(PackInfo *packInfo) {
     _btnNo->setEnabled(false);
     this->addChild(_btnNo, 10);
     
+    //finish button
+    _btnFinish = createColorButton(lang("Finish"), 36, 1.f, Color3B::WHITE, Color3B(255, 59, 48), BTN_BG_OPACITY);
+    _btnFinish->setPosition(Point(size.width-50, 50));
+    _btnFinish->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    _btnFinish->setOpacity(0);
+    _btnFinish->setEnabled(false);
+    label = (LabelTTF*)_btnFinish->getTitleLabelForState(Control::State::NORMAL);
+    label->setOpacity(0);
+    this->addChild(_btnFinish, 10);
+    
+    //dots
+    _dotBatch = SpriteBatchNode::create("ui/dot24.png");
+    this->addChild(_dotBatch, 10);
+    auto imgNum = _packInfo->images.size();
+    float dx = 20.f;
+    float x = (size.width - (imgNum-1)*dx) * .5f;
+    float y = size.height-30.f;
+    for (auto i = 0; i < imgNum; ++i) {
+        auto dot = Sprite::create("ui/dot24.png");
+        dot->setPosition(Point(x, y));
+        dot->setOpacity(TRANS_DOT_OPACITY);
+        _dotBatch->addChild(dot);
+        x += dx;
+    }
+    
     //shuffle image order
     _packInfo->shuffleImageIndices();
     
@@ -132,6 +158,7 @@ void SliderScene::onImageRotate(float rotate) {
     _btnBack->runAction(ease->clone());
     _btnYes->runAction(ease->clone());
     _btnNo->runAction(ease->clone());
+    _btnFinish->runAction(ease->clone());
 }
 
 void SliderScene::ShowBackConfirm(Object *sender, Control::EventType controlEvent) {
@@ -220,7 +247,11 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
     auto isComp = _gameplay->isCompleted();
     _gameplay->onTouchesEnded(touches);
     if (!isComp && _gameplay->isCompleted()) {
-        btnFadeIn(_btnNext);
+        if (_imgIdx == _packInfo->images.size()-1) {
+            btnFadeIn(_btnFinish);
+        } else {
+            btnFadeIn(_btnNext);
+        }
     }
 }
 
@@ -244,6 +275,18 @@ void SliderScene::reset(int imgIdx) {
     
     //
     btnFadeOut(_btnNext);
+    
+    //
+    Sprite *dot = (Sprite*)(_dotBatch->getChildren()->getObjectAtIndex(imgIdx));
+    auto fadeTo = FadeTo::create(.3f, 255);
+    auto ease = EaseSineOut::create(fadeTo);
+    dot->runAction(ease);
+    if (imgIdx > 0) {
+        Sprite *prevDot = (Sprite*)(_dotBatch->getChildren()->getObjectAtIndex(imgIdx-1));
+        auto fadeTo = FadeTo::create(.3f, TRANS_DOT_OPACITY);
+        auto ease = EaseSineOut::create(fadeTo);
+        prevDot->runAction(ease);
+    }
 }
 
 

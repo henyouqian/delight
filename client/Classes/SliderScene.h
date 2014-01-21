@@ -43,11 +43,16 @@ private:
     ControlButton *_btnYes;
     ControlButton *_btnNo;
     
+    ControlButton *_btnFinish;
+    
 //    void reset(const char* filename);
     void reset(int imgIdx);
     
     PackInfo *_packInfo;
     std::string _randomImagePaths;
+    
+    SpriteBatchNode *_dotBatch;
+    std::vector<Sprite*> _dots;
 };
 
 

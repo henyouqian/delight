@@ -23,6 +23,8 @@ public:
     void getScreenSize(int &width, int &height);
     void setSpeed(float speed);
     
+    void pause();
+    void resume();
     void nextFrame();
     
 private:
@@ -39,6 +41,7 @@ private:
     
     bool _turnRight;
     Node *_nodeForAction;
+    bool _paused;
 };
 
 #endif // __GIF_TEXTURE_H__

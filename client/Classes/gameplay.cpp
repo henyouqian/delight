@@ -237,6 +237,11 @@ void Gameplay::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *user
     auto texture = sprite->getTexture();
     texture->retain();
     
+    auto gifTexture = dynamic_cast<GifTexture*>(texture);
+    if (gifTexture) {
+        gifTexture->pause();
+    }
+    
     bool found = false;
     for (auto it = _preloads.begin(); it != _preloads.end(); ++it) {
         if (it->imgPath.compare(localPath) == 0) {
@@ -267,9 +272,15 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         _texture->release();
     }
     _texture = it->texture;
-    
     _preloads.erase(it);
     
+    //
+    auto gifTexture = dynamic_cast<GifTexture*>(_texture);
+    if (gifTexture) {
+        gifTexture->resume();
+    }
+    
+    //
     auto sz = _texture->getContentSize();
     _texW = sz.width;
     _texH = sz.height;
@@ -394,7 +405,7 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         auto fadeIn = FadeIn::create(.3f);
         auto easeFadeIn = EaseSineOut::create(fadeIn);
         auto spawn = Spawn::create(ease, easeFadeIn, NULL);
-        auto cb = CallFunc::create(std::bind(&Gameplay::onChangeImage, this));
+        auto cb = CallFunc::create(std::bind(&Gameplay::onImageChanged, this));
         auto seq = Sequence::create(spawn, cb, nullptr);
         _newSliderGrp->setOpacity(0);
         _newSliderGrp->runAction(seq);
@@ -406,7 +417,7 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     _running = true;
 }
 
-void Gameplay::onChangeImage() {
+void Gameplay::onImageChanged() {
     _currSliderGrp->removeFromParent();
     _currSliderGrp = _newSliderGrp;
     _newSliderGrp = nullptr;

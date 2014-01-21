@@ -31,6 +31,10 @@ bool MainMenuScene::init() {
     return true;
 }
 
+void MainMenuScene::onEnterTransitionDidFinish() {
+    TextureCache::getInstance()->removeUnusedTextures();
+}
+
 void MainMenuScene::enterBook(Object *sender, Control::EventType controlEvent) {
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, PacksBookScene::createScene()));
 }

@@ -13,6 +13,8 @@ public:
     virtual bool init();
     CREATE_FUNC(MainMenuScene);
     
+    virtual void onEnterTransitionDidFinish();
+    
     void enterBook(Object *sender, Control::EventType controlEvent);
 private:
     

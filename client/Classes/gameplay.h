@@ -39,7 +39,7 @@ public:
     
 private:
     //void loadTexture(const char *filename);
-    void onChangeImage();
+    void onImageChanged();
     
     GameplayListener *_listener;
     Rect _rect;
