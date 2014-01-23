@@ -52,6 +52,8 @@ private:
     std::vector<PackInfo> _packs;
     
     SptLoader *_sptLoader;
+    
+    SpriteBatchNode *_starBatch;
 };
 
 

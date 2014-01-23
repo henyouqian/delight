@@ -13,7 +13,7 @@ USING_NS_CC_EXT;
 
 static const int PACKS_PER_PAGE = 12;
 static const float ICON_MARGIN = 5.f;
-static const float ICON_Y0 = 120.f;
+static const float ICON_Y0 = 130.f;
 
 Scene* PacksBookScene::createScene() {
     auto scene = Scene::create();
@@ -38,10 +38,10 @@ bool PacksBookScene::init() {
     this->addChild(btnBack);
     
     //
-    float y = visSize.height-60;
+    float y = visSize.height-70;
     
     //older
-    auto label = LabelTTF::create("〈", "HelveticaNeue", 56);
+    auto label = LabelTTF::create("〈", "HelveticaNeue", 64);
     label->setColor(Color3B(0, 122, 255));
     auto btn = ControlButton::create(label, Scale9Sprite::create());
     btn->setAnchorPoint(Point(0.f, 0.5f));
@@ -49,7 +49,7 @@ bool PacksBookScene::init() {
     addChild(btn);
     
     //newer
-    label = LabelTTF::create("〉", "HelveticaNeue", 56);
+    label = LabelTTF::create("〉", "HelveticaNeue", 64);
     label->setColor(Color3B(0, 122, 255));
     btn = ControlButton::create(label, Scale9Sprite::create());
     btn->setAnchorPoint(Point(1.f, 0.5f));
@@ -57,16 +57,32 @@ bool PacksBookScene::init() {
     addChild(btn);
     
     //page
-    _pageLabel = LabelTTF::create(lang("Connecting..."), "HelveticaNeue", 38);
+    _pageLabel = LabelTTF::create(lang("Connecting..."), "HelveticaNeue", 44);
     _pageLabel->setAnchorPoint(Point(.5f, .5f));
     _pageLabel->setPosition(Point(visSize.width*.5f, y));
     _pageLabel->setColor(Color3B(255, 59, 48));
     addChild(_pageLabel);
     
+    //line
+    auto line = Sprite::create("ui/pt.png");
+    line->setScaleX(visSize.width);
+    line->setAnchorPoint(Point(0.f, 0.f));
+    line->setPosition(Point(0.f, visSize.height - ICON_Y0+5));
+    line->setColor(Color3B(168, 168, 168));
+    addChild(line, 1);
+    
+    line = Sprite::create("ui/pt.png");
+    line->setScaleX(visSize.width);
+    line->setAnchorPoint(Point(0.f, 1.f));
+    _iconWidth = (visSize.width-2.f*ICON_MARGIN) / 3.f;
+    line->setPosition(Point(0.f, visSize.height - ICON_Y0 - 4*_iconWidth - 3*ICON_MARGIN-5));
+    line->setColor(Color3B(168, 168, 168));
+    addChild(line, 1);
+    
     //loading texture
     _loadingTexture = GifTexture::create("ui/loading.gif", this, false);
     _loadingTexture->retain();
-    _loadingTexture->setSpeed(2.f);
+    //_loadingTexture->setSpeed(2.f);
     
     //get pack count
     _packCount = 0;
@@ -80,6 +96,11 @@ bool PacksBookScene::init() {
     //iconsParent
     _iconsParent = Node::create();
     addChild(_iconsParent);
+    
+    //stars
+    _starBatch = SpriteBatchNode::create("ui/star36.png");
+    this->addChild(_starBatch, 10);
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui/star36.plist");
     
     return true;
 }
@@ -186,12 +207,30 @@ void PacksBookScene::loadPage(int page) {
         int row = i / 3;
         int col = i % 3;
         auto visSize = Director::getInstance()->getVisibleSize();
-        float w = (visSize.width-2.f*ICON_MARGIN) / 3.f;
+        float w = _iconWidth;
         float x = (w+ICON_MARGIN)*col + .5f*w;
         float y = visSize.height - ((w+ICON_MARGIN)*row+.5f*w) - ICON_Y0;
         loadingSpr->setPosition(Point(x, y));
         loadingSpr->setScale(2.f);
-        _iconWidth = w;
+        
+        //stars
+        auto starNum = rand()%4;
+        float dx = 35.f;
+        x -= dx;
+        y -= 80.f;
+        for (auto iStar = 0; iStar < 3; ++iStar) {
+            Sprite *sprStar;
+            if (iStar < starNum) {
+                sprStar = Sprite::createWithSpriteFrameName("star36Gold.png");
+            } else {
+                sprStar = Sprite::createWithSpriteFrameName("star36White.png");
+                sprStar->setOpacity(128);
+            }
+            sprStar->setPosition(Point(x, y));
+            _starBatch->addChild(sprStar);
+            x += dx;
+        }
+        
     }
     
     //

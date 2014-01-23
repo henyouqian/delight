@@ -326,7 +326,6 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     float uvX = 0;
     float uvY = 0;
     if (fTexW <= fTexH) {
-        _listener->onImageRotate(0.f);
         if (fTexW/fTexH <= size.width/size.height) { //slim
             uvW = fTexW;
             uvH = uvW * (size.height/size.width);
@@ -358,7 +357,6 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         }
     } else {
         rotRight = true;
-        _listener->onImageRotate(90.f);
         if (fTexW/fTexH <= size.height/size.width) { //slim
             uvW = fTexW;
             uvH = uvW * (size.width/size.height);
@@ -413,6 +411,12 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     
     _rotRight = rotRight;
     TextureCache::getInstance()->removeUnusedTextures();
+    
+    if (rotRight) {
+        _listener->onReset(90.f);
+    } else {
+        _listener->onReset(0.f);
+    }
     
     _running = true;
 }

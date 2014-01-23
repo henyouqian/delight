@@ -13,6 +13,117 @@ static const GLubyte BTN_BG_OPACITY = 160;
 static const float BTN_EASE_DUR = .2f;
 static const GLubyte TRANS_DOT_OPACITY = 80;
 
+static const Color3B GREEN = Color3B(76, 217, 100);
+static const Color3B YELLOW = Color3B(255, 204, 0);
+static const Color3B RED = Color3B(255, 59, 48);
+
+TimeBar* TimeBar::create(float dur1, float dur2, float dur3) {
+    auto timeBar = new TimeBar();
+    if (timeBar->init(dur1, dur2, dur3)) {
+        timeBar->autorelease();
+        return timeBar;
+    } else {
+        delete timeBar;
+        return nullptr;
+    }
+}
+
+bool TimeBar::init(float dur1, float dur2, float dur3) {
+    if (!SpriteBatchNode::initWithFile("ui/pt.png", 16)) {
+        return false;
+    }
+    _dur1 = dur1;
+    _dur2 = dur2;
+    _dur3 = dur3;
+    
+    auto size = Director::getInstance()->getVisibleSize();
+    
+    //spr
+    _durSum = dur1 + dur2 + dur3;
+    float x = 0;
+    float y = size.height;
+    float w = dur1/_durSum * size.width;
+    float h = 5.f;
+    GLubyte opacity = 60;
+    auto spr = Sprite::create("ui/pt.png");
+    spr->setAnchorPoint(Point(0.f, 1.f));
+    spr->setScaleX(w);
+    spr->setScaleY(h);
+    spr->setPosition(Point(x, y));
+    spr->setColor(GREEN);
+    spr->setOpacity(opacity);
+    this->addChild(spr);
+    
+    x += w;
+    w = dur2/_durSum * size.width;
+    spr = Sprite::create("ui/pt.png");
+    spr->setAnchorPoint(Point(0.f, 1.f));
+    spr->setScaleX(w);
+    spr->setScaleY(h);
+    spr->setPosition(Point(x, y));
+    spr->setColor(YELLOW);
+    spr->setOpacity(opacity);
+    this->addChild(spr);
+    
+    x += w;
+    w = dur3/_durSum * size.width;
+    spr = Sprite::create("ui/pt.png");
+    spr->setAnchorPoint(Point(0.f, 1.f));
+    spr->setScaleX(w);
+    spr->setScaleY(h);
+    spr->setPosition(Point(x, y));
+    spr->setColor(RED);
+    spr->setOpacity(opacity);
+    this->addChild(spr);
+    
+    _bar = Sprite::create("ui/pt.png");
+    _bar->setAnchorPoint(Point(0.f, 1.f));
+    _bar->setScaleX(0);
+    _bar->setScaleY(h);
+    _bar->setPosition(Point(0, y));
+    _bar->setColor(GREEN);
+    this->addChild(_bar);
+    _colorIdx = 0;
+    
+    return true;
+}
+
+void TimeBar::run() {
+    scheduleUpdate();
+    _startTimePoint = std::chrono::system_clock::now();
+}
+
+void TimeBar::stop() {
+    unscheduleUpdate();
+}
+
+void TimeBar::update(float dt) {
+    auto now = std::chrono::system_clock::now();
+    auto dur = now - _startTimePoint;
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds> (dur);
+    float t = ms.count()*.001f;
+    auto size = Director::getInstance()->getVisibleSize();
+    float scaleX = MIN(t/_durSum*size.width, size.width);
+    _bar->setScaleX(scaleX);
+    
+    int colorIdx = 0;
+    auto color = GREEN;
+    if (t >= _dur1 + _dur2) {
+        colorIdx = 2;
+        color = RED;
+    } else if ( t >= _dur1) {
+        colorIdx = 1;
+        color = YELLOW;
+    }
+    
+    if (colorIdx != _colorIdx) {
+        _colorIdx = colorIdx;
+        
+        auto tintTo = TintTo::create(.3f, color.r, color.g, color.b);
+        _bar->runAction(tintTo);
+    }
+}
+
 static void btnFadeOut(ControlButton *button) {
     auto fadeout = FadeOut::create(BTN_EASE_DUR);
     auto easeFadeout = EaseSineOut::create(fadeout);
@@ -61,7 +172,6 @@ bool SliderScene::init(PackInfo *packInfo) {
     if (!Layer::init()) {
         return false;
     }
-    this->scheduleUpdate();
     this->setTouchEnabled(true);
     
     _imgIdx = 0;
@@ -73,7 +183,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     addChild(_gameplay);
 
     //next button
-    _btnNext = createColorButton(lang("Next"), 36, 1.f, Color3B::WHITE, Color3B(76, 217, 100), BTN_BG_OPACITY);
+    _btnNext = createColorButton(lang("Next"), 36, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
     _btnNext->setPosition(Point(size.width-50, 50));
     _btnNext->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::next), Control::EventType::TOUCH_UP_INSIDE);
     _btnNext->setOpacity(0);
@@ -121,9 +231,10 @@ bool SliderScene::init(PackInfo *packInfo) {
     _dotBatch = SpriteBatchNode::create("ui/dot24.png");
     this->addChild(_dotBatch, 10);
     auto imgNum = _packInfo->images.size();
-    float dx = 20.f;
+    //float dx = 20.f;
+    float dx = (size.width - 20.f) / (imgNum);
     float x = (size.width - (imgNum-1)*dx) * .5f;
-    float y = size.height-30.f;
+    float y = size.height-20.f;
     for (auto i = 0; i < imgNum; ++i) {
         auto dot = Sprite::create("ui/dot24.png");
         dot->setPosition(Point(x, y));
@@ -131,6 +242,10 @@ bool SliderScene::init(PackInfo *packInfo) {
         _dotBatch->addChild(dot);
         x += dx;
     }
+    
+    //timeBar
+    _timeBar = TimeBar::create(60, 10, 10);
+    this->addChild(_timeBar, 1);
     
     //shuffle image order
     _packInfo->shuffleImageIndices();
@@ -147,11 +262,7 @@ SliderScene::~SliderScene() {
     }
 }
 
-void SliderScene::update(float delta) {
-    
-}
-
-void SliderScene::onImageRotate(float rotate) {
+void SliderScene::onReset(float rotate) {
     auto rot = RotateTo::create(.3f, rotate);
     auto ease = EaseSineInOut::create(rot);
     _btnNext->runAction(ease->clone());
@@ -159,6 +270,10 @@ void SliderScene::onImageRotate(float rotate) {
     _btnYes->runAction(ease->clone());
     _btnNo->runAction(ease->clone());
     _btnFinish->runAction(ease->clone());
+    
+    if (_imgIdx == 0) {
+        _timeBar->run();
+    }
 }
 
 void SliderScene::ShowBackConfirm(Object *sender, Control::EventType controlEvent) {
@@ -248,7 +363,9 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
     _gameplay->onTouchesEnded(touches);
     if (!isComp && _gameplay->isCompleted()) {
         if (_imgIdx == _packInfo->images.size()-1) {
+            //complete
             btnFadeIn(_btnFinish);
+            _timeBar->stop();
         } else {
             btnFadeIn(_btnNext);
         }

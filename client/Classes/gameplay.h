@@ -18,7 +18,7 @@ struct Slider {
 class GameplayListener {
 public:
     virtual ~GameplayListener(){};
-    virtual void onImageRotate(float rotate){}
+    virtual void onReset(float rotate){}
 };
 
 class Gameplay : public Node, public SptLoaderListener{
