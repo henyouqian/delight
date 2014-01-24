@@ -6,6 +6,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
 	//"github.com/henyouqian/lwutil"
+	"./ssdb"
 	"time"
 )
 
@@ -14,6 +15,7 @@ var (
 	authRedisPool *redis.Pool
 	authDB        *sql.DB
 	packDB        *sql.DB
+	ssdbPool      *ssdb.Pool
 )
 
 func init() {
@@ -48,6 +50,12 @@ func init() {
 
 	packDB = opendb("pack_db")
 	packDB.SetMaxIdleConns(10)
+
+	ssdbPool = ssdb.NewPool("localhost", 9876, 10, 60)
+	c, _ := ssdbPool.Get()
+	defer c.Close()
+	val, _ := c.Get("a")
+	fmt.Printf("%s\n", val)
 }
 
 func opendb(dbname string) *sql.DB {
