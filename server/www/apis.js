@@ -20,6 +20,10 @@ function Controller($scope, $http) {
 					"name": "register",
 					"method": "POST",
 					"data": {"Username":"?", "Password":"?"}
+				},{
+					"name": "ssdbTest",
+					"method": "POST",
+					"data": ""
 				},
 			] 
 		},
@@ -85,13 +89,9 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"Offset":0, "Limit":12}
 				},{
-					"name": "list",
+					"name": "setStar",
 					"method": "POST",
-					"data": {"FromId":0, "Limit":10}
-				},{
-					"name": "getContent",
-					"method": "POST",
-					"data": {"PackId":3}
+					"data": {"PackId":1, "Star":1}
 				},
 			] 
 		},

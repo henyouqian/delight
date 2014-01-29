@@ -1,12 +1,13 @@
 package main
 
 import (
+	"./ssdb"
 	"database/sql"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
-	//"github.com/henyouqian/lwutil"
-	"./ssdb"
+	"github.com/henyouqian/lwutil"
+	"strconv"
 	"time"
 )
 
@@ -14,7 +15,6 @@ var (
 	redisPool     *redis.Pool
 	authRedisPool *redis.Pool
 	authDB        *sql.DB
-	packDB        *sql.DB
 	ssdbPool      *ssdb.Pool
 )
 
@@ -48,14 +48,7 @@ func init() {
 	authDB = opendb("auth_db")
 	authDB.SetMaxIdleConns(10)
 
-	packDB = opendb("pack_db")
-	packDB.SetMaxIdleConns(10)
-
 	ssdbPool = ssdb.NewPool("localhost", 9876, 10, 60)
-	c, _ := ssdbPool.Get()
-	defer c.Close()
-	val, _ := c.Get("a")
-	fmt.Printf("%s\n", val)
 }
 
 func opendb(dbname string) *sql.DB {
@@ -64,4 +57,20 @@ func opendb(dbname string) *sql.DB {
 		panic(err)
 	}
 	return db
+}
+
+func GenSerial(ssdb *ssdb.Client, key string) (uint64, error) {
+	rId, err := ssdb.Do("hincr", "hSerial", key, 1)
+	if err != nil {
+		return 0, lwutil.NewErr(err)
+	}
+	if rId[0] != "ok" {
+		return 0, lwutil.NewErrStr("ssdb error")
+	}
+
+	out, err := strconv.ParseUint(rId[1], 10, 64)
+	if err != nil {
+		return 0, lwutil.NewErr(err)
+	}
+	return out, nil
 }

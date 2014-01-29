@@ -2,6 +2,9 @@
 #include "packsBookScene.h"
 #include "util.h"
 #include "lang.h"
+#include "http.h"
+#include "jsonxx/jsonxx.h"
+#include "lw/lwLog.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -13,10 +16,23 @@ Scene* MainMenuScene::createScene() {
     return scene;
 }
 
+void MainMenuScene::onLogin(HttpClient *c, HttpResponse *r) {
+    auto vData = r->getResponseData();
+    std::istringstream is(std::string(vData->begin(), vData->end()));
+    lwinfo("%s", is.str().c_str());
+}
+
+void MainMenuScene::onInfo(HttpClient *c, HttpResponse *r) {
+    auto vData = r->getResponseData();
+    std::istringstream is(std::string(vData->begin(), vData->end()));
+    lwinfo("%s", is.str().c_str());
+}
+
 bool MainMenuScene::init() {
     if ( !Layer::init() ) {
         return false;
     }
+    HttpClient::getInstance()->enableCookies(nullptr);
     
     srand(time(nullptr));
     
@@ -28,6 +44,13 @@ bool MainMenuScene::init() {
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterBook), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
+    //login test
+    jsonxx::Object loginMsg;
+    loginMsg << "Username" << "aa";
+	loginMsg << "Password" << "aa";
+    postHttpRequest("auth/login", loginMsg.json().c_str(), this, (SEL_HttpResponse)&MainMenuScene::onLogin);
+    
+    postHttpRequest("auth/info", "\"aa\"", this, (SEL_HttpResponse)&MainMenuScene::onInfo);
     return true;
 }
 

@@ -16,6 +16,9 @@ public:
     virtual void onEnterTransitionDidFinish();
     
     void enterBook(Object *sender, Control::EventType controlEvent);
+    
+    void onLogin(HttpClient *, HttpResponse *);
+    void onInfo(HttpClient *, HttpResponse *);
 private:
     
 };

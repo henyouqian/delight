@@ -391,7 +391,11 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     
     if (!_currSliderGrp) {
         _currSliderGrp = _newSliderGrp;
-        _newSliderGrp = false;
+        _newSliderGrp = nullptr;
+        auto fadeIn = FadeIn::create(.3f);
+        auto easeFadeIn = EaseSineOut::create(fadeIn);
+        _currSliderGrp->setOpacity(0);
+        _currSliderGrp->runAction(easeFadeIn);
     } else {
         if (_rotRight) {
             _newSliderGrp->setPositionY(-size.width);

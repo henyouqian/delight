@@ -4,16 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
-	"github.com/golang/glog"
+	// "github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
-	"math"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 const (
-	hkey        = "h_packs"
-	zkey        = "z_packs"
-	autoIncrFld = "autoIncr"
+	hkey            = "h_packs"
+	zkey            = "z_packs"
+	hPlayerPackStar = "h_palyerPackStar"
 )
 
 type Image struct {
@@ -32,11 +33,7 @@ type Pack struct {
 	Images []Image
 }
 
-func _useGlog() {
-	glog.Info("")
-}
-
-func add(w http.ResponseWriter, r *http.Request) {
+func addPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//in
@@ -80,7 +77,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
-func del(w http.ResponseWriter, r *http.Request) {
+func delPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//in
@@ -114,7 +111,7 @@ func del(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
-func edit(w http.ResponseWriter, r *http.Request) {
+func editPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//in
@@ -146,7 +143,7 @@ func edit(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
-func count(w http.ResponseWriter, r *http.Request) {
+func countPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	rc := redisPool.Get()
@@ -164,67 +161,34 @@ func count(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
-func list(w http.ResponseWriter, r *http.Request) {
+func getPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	//in
-	var in struct {
-		FromId uint32
-		Limit  uint32
-	}
-	err := lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	if in.FromId == 0 {
-		in.FromId = math.MaxUint32
-	}
-	if in.Limit > 16 {
-		in.Limit = 16
-	}
-
-	//query from db
-	rows, err := packDB.Query("SELECT id, date, title, icon, cover, text, images FROM packs WHERE id<=? ORDER BY id DESC LIMIT ?", in.FromId, in.Limit)
-	lwutil.CheckError(err, "")
-
-	type Pack struct {
-		Id     uint32
-		Date   string
-		Icon   string
-		Title  string
-		Cover  string
-		Text   string
-		Images string
-	}
-	packs := make([]Pack, 0, in.Limit)
-	for rows.Next() {
-		var pack Pack
-		err = rows.Scan(&pack.Id, &pack.Date, &pack.Title, &pack.Icon, &pack.Cover, &pack.Text, &pack.Images)
-		lwutil.CheckError(err, "")
-		packs = append(packs, pack)
-	}
-
-	//out
-	lwutil.WriteResponse(w, packs)
-}
-
-func get(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
+	//redis
 	rc := redisPool.Get()
 	defer rc.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
 
 	//in
 	var in struct {
 		Offset uint32
 		Limit  uint32
 	}
-	err := lwutil.DecodeRequestBody(r, &in)
+	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 	if in.Limit > 30 {
 		in.Limit = 30
 	}
 
-	//
+	//pack info
 	_packNum, err := redis.Int(rc.Do("ZCARD", zkey))
 	lwutil.CheckError(err, "")
 	packNum := uint32(_packNum)
@@ -246,64 +210,88 @@ func get(w http.ResponseWriter, r *http.Request) {
 	packsJs, err := redis.Values(rc.Do("HMGET", args...))
 	lwutil.CheckError(err, "")
 
-	packs := make([]Pack, 0, 10)
-	for _, js := range packsJs {
-		var pack Pack
+	type _Pack struct {
+		Pack
+		Star uint8
+	}
+
+	packs := make([]_Pack, 0, 10)
+	starMap := make(map[uint32]int) //packId => index of packs
+	for i, js := range packsJs {
+		var pack _Pack
 		bjs, err := redis.Bytes(js, nil)
 		lwutil.CheckError(err, "")
 		err = json.Unmarshal(bjs, &pack)
 		lwutil.CheckError(err, "")
 		packs = append(packs, pack)
+		starMap[pack.Id] = i
+	}
+
+	//player star
+	starMsg := make([]interface{}, 0, 10)
+	starMsg = append(starMsg, "multi_hget", hPlayerPackStar)
+	for _, packId := range ids {
+		key := fmt.Sprintf("%d/%s", session.Userid, packId)
+		starMsg = append(starMsg, key)
+	}
+	resp, err := ssdb.Do(starMsg...)
+	lwutil.CheckSsdbError(resp, err)
+	for i := 1; i < len(resp); i += 2 {
+		strs := strings.Split(resp[i], "/")
+		starNum, err := strconv.ParseUint(resp[i+1], 10, 8)
+		lwutil.CheckError(err, "")
+
+		packId, err := strconv.ParseUint(strs[1], 10, 32)
+		lwutil.CheckError(err, "")
+		if idx, ok := starMap[uint32(packId)]; ok {
+			packs[idx].Star = uint8(starNum)
+		}
 	}
 
 	//out
-	out := struct {
-		Packs   []Pack
-		PackNum uint32
-	}{
-		packs,
-		packNum,
+	out := map[string]interface{}{
+		"Packs":   packs,
+		"PackNum": packNum,
 	}
 	lwutil.WriteResponse(w, &out)
 }
 
-func getContent(w http.ResponseWriter, r *http.Request) {
+func setPackStar(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
 
 	//in
 	var in struct {
 		PackId uint32
+		Star   uint8
 	}
-	err := lwutil.DecodeRequestBody(r, &in)
+	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-
-	//query from db
-	row := packDB.QueryRow("SELECT images FROM packs WHERE id=?", in.PackId)
-	var strImg []byte
-	err = row.Scan(&strImg)
-	lwutil.CheckError(err, "")
-
-	type Image struct {
-		Url   string
-		Title string
-		Text  string
+	if in.Star > 3 {
+		lwutil.SendError("err_star_num", "star must between (0, 3)")
 	}
-	var images []Image
-	json.Unmarshal(strImg, &images)
 
-	//out
-	out := struct {
-		Images []Image
-	}{images}
-	lwutil.WriteResponse(w, out)
+	//ssdb
+	key := fmt.Sprintf("%d/%d", session.Userid, in.PackId)
+	resp, err := ssdb.Do("hset", hPlayerPackStar, key, in.Star)
+	lwutil.CheckSsdbError(resp, err)
+
+	lwutil.WriteResponse(w, "ok")
 }
 
 func regPack() {
-	http.Handle("/pack/add", lwutil.ReqHandler(add))
-	http.Handle("/pack/edit", lwutil.ReqHandler(edit))
-	http.Handle("/pack/del", lwutil.ReqHandler(del))
-	http.Handle("/pack/get", lwutil.ReqHandler(get))
-	http.Handle("/pack/count", lwutil.ReqHandler(count))
-	http.Handle("/pack/list", lwutil.ReqHandler(list))
-	http.Handle("/pack/getContent", lwutil.ReqHandler(getContent))
+	http.Handle("/pack/add", lwutil.ReqHandler(addPack))
+	http.Handle("/pack/edit", lwutil.ReqHandler(editPack))
+	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
+	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
+	http.Handle("/pack/count", lwutil.ReqHandler(countPack))
+	http.Handle("/pack/setStar", lwutil.ReqHandler(setPackStar))
 }

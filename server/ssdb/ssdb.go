@@ -190,11 +190,11 @@ func (c *Client) send(args []interface{}) (rErr error) {
 			s = arg
 		case []byte:
 			s = string(arg)
-		case int:
+		case int, int8, int16, int32, int64:
 			s = fmt.Sprintf("%d", arg)
-		case int64:
+		case uint, uint8, uint16, uint32, uint64:
 			s = fmt.Sprintf("%d", arg)
-		case float64:
+		case float32, float64:
 			s = fmt.Sprintf("%f", arg)
 		case bool:
 			if arg {

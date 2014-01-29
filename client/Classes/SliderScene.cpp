@@ -273,6 +273,7 @@ void SliderScene::onReset(float rotate) {
     
     if (_imgIdx == 0) {
         _timeBar->run();
+        
     }
 }
 

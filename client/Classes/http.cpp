@@ -9,6 +9,7 @@ namespace {
     //const char *g_host = "http://localhost:9999/";
 }
 
+
 HttpRequest* postHttpRequest(const char *path, const char *content,
                      const std::function<void(HttpClient*, HttpResponse*)> &callback) {
     std::string url = g_host;

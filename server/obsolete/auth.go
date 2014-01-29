@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
-	// "github.com/golang/glog"
+	//"github.com/golang/glog"
 	//"./ssdb"
 	"github.com/henyouqian/lwutil"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -111,13 +110,9 @@ type Account struct {
 func authRegister(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
-
 	// in
 	var in Account
-	err = lwutil.DecodeRequestBody(r, &in)
+	err := lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
 	if in.Username == "" || in.Password == "" {
@@ -125,6 +120,10 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	in.Password = lwutil.Sha224(in.Password + passwordSalt)
+
+	// insert into ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
 
 	//check exist
 	rName, err := ssdb.Do("hexists", "hNameAccount", in.Username)
@@ -134,7 +133,9 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//add account
-	id, err := GenSerial(ssdb, "account")
+	rId, err := ssdb.Do("hincr", "hSerial", "account", 1)
+	lwutil.CheckError(err, "")
+	id, err := strconv.Atoi(rId[1])
 	lwutil.CheckError(err, "")
 	js, err := json.Marshal(in)
 	lwutil.CheckError(err, "")
@@ -146,12 +147,47 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 
 	// reply
 	reply := struct {
-		Userid uint64
+		Userid int
 	}{id}
 	lwutil.WriteResponse(w, reply)
 }
 
-func _authLogin(w http.ResponseWriter, r *http.Request) {
+func _authRegister(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	// in
+	var in struct {
+		Username      string
+		Password      string
+		CountryAlpha2 string
+		SignCode      uint32
+	}
+
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	if in.Username == "" || in.Password == "" {
+		lwutil.SendError("err_input", "")
+	}
+
+	pwsha := lwutil.Sha224(in.Password + passwordSalt)
+
+	// insert into db
+	res, err := authDB.Exec("INSERT INTO user_accounts (username, password, countryAlpha2, signCode) VALUES (?, ?, ?, ?)",
+		in.Username, pwsha, in.CountryAlpha2, in.SignCode)
+	lwutil.CheckError(err, "err_account_exists")
+
+	id, err := res.LastInsertId()
+	lwutil.CheckError(err, "")
+
+	// reply
+	reply := struct {
+		Userid int64
+	}{id}
+	lwutil.WriteResponse(w, reply)
+}
+
+func authLogin(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	rc := authRedisPool.Get()
@@ -209,82 +245,6 @@ func _authLogin(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, usertoken)
 }
 
-func authLogin(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	rc := authRedisPool.Get()
-	defer rc.Close()
-
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
-
-	// logout if already login
-	session, err := findSession(w, r, rc)
-	if err == nil {
-		usertokenCookie, err := r.Cookie("usertoken")
-		if err == nil {
-			usertoken := usertokenCookie.Value
-			rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
-			rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
-			err = rc.Flush()
-			lwutil.CheckError(err, "")
-		}
-	}
-
-	// input
-	var in struct {
-		Username  string
-		Password  string
-		Appsecret string
-	}
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	if in.Username == "" || in.Password == "" {
-		lwutil.SendError("err_input", "")
-	}
-
-	pwsha := lwutil.Sha224(in.Password + passwordSalt)
-
-	// get userid
-	rUserId, err := ssdb.Do("hget", "hNameAccount", in.Username)
-	lwutil.CheckError(err, "")
-	if rUserId[0] != "ok" {
-		lwutil.SendError("err_not_match", "name and password not match")
-	}
-	userId, err := strconv.ParseUint(rUserId[1], 10, 32)
-	lwutil.CheckError(err, "")
-
-	rAccount, err := ssdb.Do("hget", "hAccount", userId)
-	lwutil.CheckError(err, "")
-	if rUserId[0] != "ok" {
-		lwutil.SendError("err_internal", "account not exist")
-	}
-	var account Account
-	err = json.Unmarshal([]byte(rAccount[1]), &account)
-	lwutil.CheckError(err, "")
-
-	if account.Password != pwsha {
-		lwutil.SendError("err_not_match", "name and password not match")
-	}
-
-	// get appid
-	appid := uint32(0)
-	// if in.Appsecret != "" {
-	// 	row = authDB.QueryRow("SELECT id FROM apps WHERE secret=?", in.Appsecret)
-	// 	err = row.Scan(&appid)
-	// 	lwutil.CheckError(err, "err_app_secret")
-	// }
-
-	// new session
-	usertoken, err := newSession(w, userId, in.Username, appid, rc)
-	lwutil.CheckError(err, "")
-
-	// reply
-	lwutil.WriteResponse(w, usertoken)
-}
-
 func authLogout(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
@@ -305,25 +265,6 @@ func authLogout(w http.ResponseWriter, r *http.Request) {
 
 	// reply
 	lwutil.WriteResponse(w, "logout")
-}
-
-func authLoginInfo(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	session, err := findSession(w, r, nil)
-	lwutil.CheckError(err, "err_auth")
-
-	//
-	usertokenCookie, err := r.Cookie("usertoken")
-	usertoken := usertokenCookie.Value
-
-	//
-	reply := struct {
-		Session   *Session
-		UserToken string
-	}{session, usertoken}
-
-	lwutil.WriteResponse(w, reply)
 }
 
 func authNewApp(w http.ResponseWriter, r *http.Request) {
@@ -387,28 +328,23 @@ func authListApp(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, apps)
 }
 
-func ssdbTest(w http.ResponseWriter, r *http.Request) {
+func authLoginInfo(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
 
-	var in string
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
+	//
+	usertokenCookie, err := r.Cookie("usertoken")
+	usertoken := usertokenCookie.Value
 
-	strs := strings.Split(in, " ")
+	//
+	reply := struct {
+		Session   *Session
+		UserToken string
+	}{session, usertoken}
 
-	intfs := make([]interface{}, len(strs))
-	for i, v := range strs {
-		intfs[i] = interface{}(v)
-	}
-	res, err := ssdb.Do(intfs...)
-	// lwutil.CheckError(err, "")
-	lwutil.CheckSsdbError(res, err)
-
-	lwutil.WriteResponse(w, res)
+	lwutil.WriteResponse(w, reply)
 }
 
 func regAuth() {
@@ -416,5 +352,4 @@ func regAuth() {
 	http.Handle("/auth/logout", lwutil.ReqHandler(authLogout))
 	http.Handle("/auth/register", lwutil.ReqHandler(authRegister))
 	http.Handle("/auth/info", lwutil.ReqHandler(authLoginInfo))
-	http.Handle("/auth/ssdbTest", lwutil.ReqHandler(ssdbTest))
 }
