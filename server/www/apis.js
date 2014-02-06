@@ -40,6 +40,9 @@ function Controller($scope, $http) {
 						"Text":"",
 						"Icon":"http://",
 						"Cover":"http://",
+						"StarTime1":120,
+						"StarTime2":30,
+						"StarTime3":30,
 						"Images":[
 							{
 								"Url": "http://",
@@ -62,6 +65,9 @@ function Controller($scope, $http) {
 						"Text":"",
 						"Icon":"http://",
 						"Cover":"http://",
+						"StarTime1":120,
+						"StarTime2":30,
+						"StarTime3":30,
 						"Images":[
 							{
 								"Url": "http://",

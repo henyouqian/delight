@@ -5,6 +5,7 @@
 #include "http.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
+#include "ELCPicker.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -59,5 +60,6 @@ void MainMenuScene::onEnterTransitionDidFinish() {
 }
 
 void MainMenuScene::enterBook(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, PacksBookScene::createScene()));
+    showElcPickerView();
+    //Director::getInstance()->pushScene(TransitionFade::create(0.5f, PacksBookScene::createScene()));
 }

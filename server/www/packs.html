@@ -36,7 +36,7 @@
       <div class="row">
         <div class="col-xs-6 col-md-2" ng-repeat="pack in packs">
           <a href="#" class="thumbnail" ng-click="editPackDlg(pack)">
-            <img src={{pack.icon}} alt="...">
+            <img src={{pack.Icon}} alt="..." height="128" width="128">
           </a>
         </div>
       </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary">Edit</button>
+              <button type="button" class="btn btn-primary" ng-click="editPack()">Edit</button>
             </div>
           </div>
         </div>

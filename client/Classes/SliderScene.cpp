@@ -244,7 +244,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     }
     
     //timeBar
-    _timeBar = TimeBar::create(60, 10, 10);
+    _timeBar = TimeBar::create(_packInfo->starTime1, _packInfo->starTime2, _packInfo->starTime3);
     this->addChild(_timeBar, 1);
     
     //shuffle image order

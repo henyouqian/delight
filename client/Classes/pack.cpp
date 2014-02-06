@@ -39,13 +39,33 @@ void PackInfo::init(jsonxx::Object& packJs) {
         lwerror("json parse error: no Images");
         return;
     }
+    if (!packJs.has<jsonxx::Number>("Star")) {
+        lwerror("json parse error: no Star");
+        return;
+    }
+    if (!packJs.has<jsonxx::Number>("StarTime1")) {
+        lwerror("json parse error: no StarTime1");
+        return;
+    }
+    if (!packJs.has<jsonxx::Number>("StarTime2")) {
+        lwerror("json parse error: no StarTime2");
+        return;
+    }
+    if (!packJs.has<jsonxx::Number>("StarTime3")) {
+        lwerror("json parse error: no StarTime3");
+        return;
+    }
     
-    this->id = (int)(packJs.get<jsonxx::Number>("Id"));
+    this->id = (uint32_t)(packJs.get<jsonxx::Number>("Id"));
     this->date = packJs.get<jsonxx::String>("Date");
     this->icon = packJs.get<jsonxx::String>("Icon");
     this->cover = packJs.get<jsonxx::String>("Cover");
     this->title = packJs.get<jsonxx::String>("Title");
     this->text = packJs.get<jsonxx::String>("Text");
+    this->star = (uint32_t)packJs.get<jsonxx::Number>("Star");
+    this->starTime1 = (uint32_t)packJs.get<jsonxx::Number>("StarTime1");
+    this->starTime2 = (uint32_t)packJs.get<jsonxx::Number>("StarTime2");
+    this->starTime3 = (uint32_t)packJs.get<jsonxx::Number>("StarTime3");
     
     auto imagesJs = packJs.get<jsonxx::Array>("Images");
     for (auto j = 0; j < imagesJs.size(); ++j) {

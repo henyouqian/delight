@@ -24,13 +24,16 @@ type Image struct {
 }
 
 type Pack struct {
-	Id     uint32
-	Date   string
-	Title  string
-	Text   string
-	Icon   string
-	Cover  string
-	Images []Image
+	Id        uint32
+	Date      string
+	Title     string
+	Text      string
+	Icon      string
+	Cover     string
+	StarTime1 uint32
+	StarTime2 uint32
+	StarTime3 uint32
+	Images    []Image
 }
 
 func addPack(w http.ResponseWriter, r *http.Request) {
@@ -212,7 +215,7 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 
 	type _Pack struct {
 		Pack
-		Star uint8
+		Star uint32
 	}
 
 	packs := make([]_Pack, 0, 10)
@@ -238,13 +241,13 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 	for i := 1; i < len(resp); i += 2 {
 		strs := strings.Split(resp[i], "/")
-		starNum, err := strconv.ParseUint(resp[i+1], 10, 8)
+		starNum, err := strconv.ParseUint(resp[i+1], 10, 32)
 		lwutil.CheckError(err, "")
 
 		packId, err := strconv.ParseUint(strs[1], 10, 32)
 		lwutil.CheckError(err, "")
 		if idx, ok := starMap[uint32(packId)]; ok {
-			packs[idx].Star = uint8(starNum)
+			packs[idx].Star = uint32(starNum)
 		}
 	}
 
@@ -271,7 +274,7 @@ func setPackStar(w http.ResponseWriter, r *http.Request) {
 	//in
 	var in struct {
 		PackId uint32
-		Star   uint8
+		Star   uint32
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
