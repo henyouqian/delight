@@ -5,5 +5,6 @@
 
 }
 - (BOOL) prefersStatusBarHidden;
+- (void) showElcPickerView;
 
 @end
