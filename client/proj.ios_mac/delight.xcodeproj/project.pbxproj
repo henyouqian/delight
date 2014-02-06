@@ -74,18 +74,6 @@
 		B33F4FA9188BAD02000A5AD6 /* timeAttackScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
-		B3628941189FE7E60041F7E1 /* ELCAlbumPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3628930189FE7E60041F7E1 /* ELCAlbumPickerController.m */; };
-		B3628942189FE7E60041F7E1 /* ELCAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = B3628932189FE7E60041F7E1 /* ELCAsset.m */; };
-		B3628943189FE7E60041F7E1 /* ELCAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B3628934189FE7E60041F7E1 /* ELCAssetCell.m */; };
-		B3628944189FE7E60041F7E1 /* ELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = B3628938189FE7E60041F7E1 /* ELCAssetTablePicker.m */; };
-		B3628945189FE7E60041F7E1 /* ELCImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = B362893A189FE7E60041F7E1 /* ELCImagePickerController.m */; };
-		B3628946189FE7E60041F7E1 /* ELCAlbumPickerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B362893C189FE7E60041F7E1 /* ELCAlbumPickerController.xib */; };
-		B3628947189FE7E60041F7E1 /* ELCAssetPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = B362893D189FE7E60041F7E1 /* ELCAssetPicker.xib */; };
-		B3628948189FE7E60041F7E1 /* ELCAssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = B362893E189FE7E60041F7E1 /* ELCAssetTablePicker.xib */; };
-		B3628949189FE7E60041F7E1 /* Overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = B362893F189FE7E60041F7E1 /* Overlay.png */; };
-		B362894A189FE7E60041F7E1 /* Overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3628940189FE7E60041F7E1 /* Overlay@2x.png */; };
-		B3628959189FEA980041F7E1 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3628958189FEA980041F7E1 /* AssetsLibrary.framework */; };
-		B362895F18A097720041F7E1 /* ELCPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = B362895E18A097720041F7E1 /* ELCPicker.mm */; };
 		B393ED25186DF3B300E372CC /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B393ED23186DF3B300E372CC /* sqlite3.c */; };
 		B393ED26186DF3B300E372CC /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B393ED23186DF3B300E372CC /* sqlite3.c */; };
 		B393ED36186EE43100E372CC /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B393ED34186EE43100E372CC /* db.cpp */; };
@@ -339,26 +327,6 @@
 		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
 		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
-		B362892F189FE7E60041F7E1 /* ELCAlbumPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCAlbumPickerController.h; sourceTree = "<group>"; };
-		B3628930189FE7E60041F7E1 /* ELCAlbumPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELCAlbumPickerController.m; sourceTree = "<group>"; };
-		B3628931189FE7E60041F7E1 /* ELCAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCAsset.h; sourceTree = "<group>"; };
-		B3628932189FE7E60041F7E1 /* ELCAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELCAsset.m; sourceTree = "<group>"; };
-		B3628933189FE7E60041F7E1 /* ELCAssetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCAssetCell.h; sourceTree = "<group>"; };
-		B3628934189FE7E60041F7E1 /* ELCAssetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELCAssetCell.m; sourceTree = "<group>"; };
-		B3628935189FE7E60041F7E1 /* ELCAssetPickerFilterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCAssetPickerFilterDelegate.h; sourceTree = "<group>"; };
-		B3628936189FE7E60041F7E1 /* ELCAssetSelectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCAssetSelectionDelegate.h; sourceTree = "<group>"; };
-		B3628937189FE7E60041F7E1 /* ELCAssetTablePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCAssetTablePicker.h; sourceTree = "<group>"; };
-		B3628938189FE7E60041F7E1 /* ELCAssetTablePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELCAssetTablePicker.m; sourceTree = "<group>"; };
-		B3628939189FE7E60041F7E1 /* ELCImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELCImagePickerController.h; sourceTree = "<group>"; };
-		B362893A189FE7E60041F7E1 /* ELCImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELCImagePickerController.m; sourceTree = "<group>"; };
-		B362893C189FE7E60041F7E1 /* ELCAlbumPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ELCAlbumPickerController.xib; sourceTree = "<group>"; };
-		B362893D189FE7E60041F7E1 /* ELCAssetPicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ELCAssetPicker.xib; sourceTree = "<group>"; };
-		B362893E189FE7E60041F7E1 /* ELCAssetTablePicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ELCAssetTablePicker.xib; sourceTree = "<group>"; };
-		B362893F189FE7E60041F7E1 /* Overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Overlay.png; sourceTree = "<group>"; };
-		B3628940189FE7E60041F7E1 /* Overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Overlay@2x.png"; sourceTree = "<group>"; };
-		B3628958189FEA980041F7E1 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/AssetsLibrary.framework; sourceTree = DEVELOPER_DIR; };
-		B362895D18A097720041F7E1 /* ELCPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELCPicker.h; path = ../Classes/ELCPicker.h; sourceTree = "<group>"; };
-		B362895E18A097720041F7E1 /* ELCPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ELCPicker.mm; path = ../Classes/ELCPicker.mm; sourceTree = "<group>"; };
 		B393ED23186DF3B300E372CC /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 		B393ED24186DF3B300E372CC /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		B393ED34186EE43100E372CC /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = db.cpp; path = ../Classes/db.cpp; sourceTree = "<group>"; };
@@ -400,7 +368,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3628959189FEA980041F7E1 /* AssetsLibrary.framework in Frameworks */,
 				B33DAC231847A412001403BA /* libcurl.a in Frameworks */,
 				B33DAC1F1847A3EA001403BA /* libcocos2dx iOS.a in Frameworks */,
 				B33DAC201847A3EA001403BA /* libcocos2dx-extensions iOS.a in Frameworks */,
@@ -484,8 +451,6 @@
 				B393ED35186EE43100E372CC /* db.h */,
 				B3CA1F3F188810A0005637A0 /* lang.cpp */,
 				B3CA1F40188810A0005637A0 /* lang.h */,
-				B362895D18A097720041F7E1 /* ELCPicker.h */,
-				B362895E18A097720041F7E1 /* ELCPicker.mm */,
 				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 			);
@@ -520,7 +485,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B3628958189FEA980041F7E1 /* AssetsLibrary.framework */,
 				B33F4FC9188BF742000A5AD6 /* external */,
 				B33DAC221847A412001403BA /* libcurl.a */,
 				B33DABE318479B82001403BA /* libcurl.a */,
@@ -613,7 +577,6 @@
 		B33DAC61184CC6B8001403BA /* external */ = {
 			isa = PBXGroup;
 			children = (
-				B362892E189FE7E60041F7E1 /* ELCImagePicker */,
 				B393ED22186DF3B300E372CC /* sqlite */,
 				B34FDAE2186A198A006D05A3 /* lw */,
 				B3A638E3185DBAE9009ECDF1 /* crypto */,
@@ -740,38 +703,6 @@
 				B34FDAE3186A198A006D05A3 /* lwLog.h */,
 			);
 			path = lw;
-			sourceTree = "<group>";
-		};
-		B362892E189FE7E60041F7E1 /* ELCImagePicker */ = {
-			isa = PBXGroup;
-			children = (
-				B362892F189FE7E60041F7E1 /* ELCAlbumPickerController.h */,
-				B3628930189FE7E60041F7E1 /* ELCAlbumPickerController.m */,
-				B3628931189FE7E60041F7E1 /* ELCAsset.h */,
-				B3628932189FE7E60041F7E1 /* ELCAsset.m */,
-				B3628933189FE7E60041F7E1 /* ELCAssetCell.h */,
-				B3628934189FE7E60041F7E1 /* ELCAssetCell.m */,
-				B3628935189FE7E60041F7E1 /* ELCAssetPickerFilterDelegate.h */,
-				B3628936189FE7E60041F7E1 /* ELCAssetSelectionDelegate.h */,
-				B3628937189FE7E60041F7E1 /* ELCAssetTablePicker.h */,
-				B3628938189FE7E60041F7E1 /* ELCAssetTablePicker.m */,
-				B3628939189FE7E60041F7E1 /* ELCImagePickerController.h */,
-				B362893A189FE7E60041F7E1 /* ELCImagePickerController.m */,
-				B362893B189FE7E60041F7E1 /* Resources */,
-			);
-			path = ELCImagePicker;
-			sourceTree = "<group>";
-		};
-		B362893B189FE7E60041F7E1 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B362893C189FE7E60041F7E1 /* ELCAlbumPickerController.xib */,
-				B362893D189FE7E60041F7E1 /* ELCAssetPicker.xib */,
-				B362893E189FE7E60041F7E1 /* ELCAssetTablePicker.xib */,
-				B362893F189FE7E60041F7E1 /* Overlay.png */,
-				B3628940189FE7E60041F7E1 /* Overlay@2x.png */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		B393ED22186DF3B300E372CC /* sqlite */ = {
@@ -996,21 +927,16 @@
 				B3E841811857774B0004C636 /* audio in Resources */,
 				B3CA1F4418881826005637A0 /* lang in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
-				B3628949189FE7E60041F7E1 /* Overlay.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
-				B3628948189FE7E60041F7E1 /* ELCAssetTablePicker.xib in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
-				B3628946189FE7E60041F7E1 /* ELCAlbumPickerController.xib in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
-				B362894A189FE7E60041F7E1 /* Overlay@2x.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				B3DC5D0D1854E24C00F732B7 /* img in Resources */,
-				B3628947189FE7E60041F7E1 /* ELCAssetPicker.xib in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
 			);
@@ -1037,24 +963,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B362895F18A097720041F7E1 /* ELCPicker.mm in Sources */,
 				B302CBEB1850E733003746A6 /* gifTexture.cpp in Sources */,
 				B33DAC76184CC6B9001403BA /* gif_font.c in Sources */,
 				B33DAC74184CC6B9001403BA /* gif_err.c in Sources */,
 				B3BCF356188E7E6D00A1DD08 /* loginScene.cpp in Sources */,
 				B33DAC78184CC6B9001403BA /* gif_hash.c in Sources */,
-				B3628945189FE7E60041F7E1 /* ELCImagePickerController.m in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
-				B3628941189FE7E60041F7E1 /* ELCAlbumPickerController.m in Sources */,
 				B3AA0785186BEEE200706E4D /* util.cpp in Sources */,
-				B3628943189FE7E60041F7E1 /* ELCAssetCell.m in Sources */,
 				B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */,
-				B3628944189FE7E60041F7E1 /* ELCAssetTablePicker.m in Sources */,
 				B393ED25186DF3B300E372CC /* sqlite3.c in Sources */,
 				B310039A1879B5F40049A6CF /* mainMenuScene.cpp in Sources */,
 				B3CA1F41188810A0005637A0 /* lang.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
-				B3628942189FE7E60041F7E1 /* ELCAsset.m in Sources */,
 				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				B3F01AF1187E87900000B33E /* packsBookScene.cpp in Sources */,
@@ -1130,7 +1050,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
@@ -1182,7 +1101,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;

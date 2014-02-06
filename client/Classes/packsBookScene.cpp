@@ -212,6 +212,25 @@ void PacksBookScene::loadPage(int page) {
         float y = visSize.height - ((w+ICON_MARGIN)*row+.5f*w) - ICON_Y0;
         loadingSpr->setPosition(Point(x, y));
         loadingSpr->setScale(2.f);
+        
+        //stars
+        auto starNum = rand()%4;
+        float dx = 35.f;
+        x -= dx;
+        y -= 80.f;
+        for (auto iStar = 0; iStar < 3; ++iStar) {
+            Sprite *sprStar;
+            if (iStar < starNum) {
+                sprStar = Sprite::createWithSpriteFrameName("star36Gold.png");
+            } else {
+                sprStar = Sprite::createWithSpriteFrameName("star36White.png");
+                sprStar->setOpacity(128);
+            }
+            sprStar->setPosition(Point(x, y));
+            _starBatch->addChild(sprStar);
+            x += dx;
+        }
+        
     }
     
     //
@@ -282,27 +301,6 @@ void PacksBookScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
             _packs.push_back(pack);
             
             _sptLoader->download(pack.icon.c_str(), (void*)i);
-            
-            //stars
-            auto icon = _icons[i];
-            float x = icon->getPositionX();
-            float y = icon->getPositionY();
-            
-            float dx = 35.f;
-            x -= dx;
-            y -= 80.f;
-            for (auto iStar = 0; iStar < 3; ++iStar) {
-                Sprite *sprStar;
-                if (iStar < pack.star) {
-                    sprStar = Sprite::createWithSpriteFrameName("star36Gold.png");
-                } else {
-                    sprStar = Sprite::createWithSpriteFrameName("star36White.png");
-                    sprStar->setOpacity(128);
-                }
-                sprStar->setPosition(Point(x, y));
-                _starBatch->addChild(sprStar);
-                x += dx;
-            }
         }
     }
 }
@@ -312,12 +310,7 @@ void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void
     if (idx >= 0 && idx < _icons.size()) {
         _iconsParent->addChild(sprite);
         sprite->setPosition(_icons[idx]->getPosition());
-        auto size = sprite->getContentSize();
-        auto len = MIN(size.width, size.height);
-        auto u = (size.width - len) * .5f;
-        auto v = (size.height - len) * .5f;
-        sprite->setScale(_iconWidth/len);
-        sprite->setTextureRect(Rect(u, v, len, len));
+        sprite->setScale(_iconWidth/sprite->getContentSize().width);
         sprite->setUserData((void*)idx);
         _icons[idx]->removeFromParent();
         _icons[idx] = sprite;

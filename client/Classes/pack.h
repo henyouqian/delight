@@ -9,16 +9,12 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 struct PackInfo {
-    uint32_t id;
+    int id;
     std::string date;
     std::string title;
     std::string text;
     std::string icon;
     std::string cover;
-    uint32_t star;
-    uint32_t starTime1;
-    uint32_t starTime2;
-    uint32_t starTime3;
     
     struct Image {
         std::string url;

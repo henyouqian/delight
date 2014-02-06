@@ -64,33 +64,8 @@
 
 
 - (void)dealloc {
-//    [super dealloc];
+    [super dealloc];
 }
 
-- (void) showElcPickerView {
-    ELCImagePickerController *elcPicker = [[ELCImagePickerController alloc] initImagePicker];
-    elcPicker.maximumImagesCount = 4; //Set the maximum number of images to select, defaults to 4
-    elcPicker.returnsOriginalImage = NO; //Only return the fullScreenImage, not the fullResolutionImage
-    elcPicker.imagePickerDelegate = self;
-    
-    //Present modally
-    [self presentViewController:elcPicker animated:YES completion:nil];
-}
-
-- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-    for (NSDictionary *dict in info) {
-        UIImage *image = [dict objectForKey:UIImagePickerControllerOriginalImage];
-        NSData *data = UIImageJPEGRepresentation (image, .9f);
-        
-	}
-}
-
-- (void)elcImagePickerControllerDidCancel:(ELCImagePickerController *)picker
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 @end

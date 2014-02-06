@@ -98,7 +98,6 @@ void Gameplay::preload(const char *filePath) {
 }
 
 void Gameplay::reset(const char *filePath, int sliderNum) {
-    lwinfo("reset: %s", filePath);
     _resetImagePath = filePath;
     _sliderNum = sliderNum;
     _running = false;
