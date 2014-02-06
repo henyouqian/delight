@@ -32,6 +32,7 @@ var SliderLayer = cc.Layer.extend({
     _texUrl:"",
     _sliders:[],
     _isCompleted:false,
+    _touch:null,
     MOVE_DURATION:0.1,
     init:function () {
         //////////////////////////////
@@ -144,10 +145,15 @@ var SliderLayer = cc.Layer.extend({
         }
     },
     onTouchesBegan:function (touches, event) {
-        var touch = touches[0];
-    
+        if (this._touch) {
+            return
+        }
+
+        var touch = touches[0]
+        this._touch = touch
+
         if (this._isCompleted) {
-            return;
+            return
         }
         for (var i = 0; i < this._sliders.length; i++) {
             var slider = this._sliders[i]
@@ -197,6 +203,10 @@ var SliderLayer = cc.Layer.extend({
             return;
         }
         var touch = touches[0];
+        if (this._touch != touch) {
+            return
+        }
+        this._touch = null
         var complete = true;
         for (var i = 0; i < this._sliders.length; i++) {
             var slider = this._sliders[i]

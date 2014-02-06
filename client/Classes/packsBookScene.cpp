@@ -197,6 +197,9 @@ void PacksBookScene::loadPage(int page) {
     int packNum = PACKS_PER_PAGE;
     if (_currPage == _pageCount-1) {
         packNum = _packCount % PACKS_PER_PAGE;
+        if (packNum == 0) {
+            packNum = PACKS_PER_PAGE;
+        }
     }
     
     for (auto i = 0; i < packNum; ++i) {
@@ -310,10 +313,16 @@ void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void
     if (idx >= 0 && idx < _icons.size()) {
         _iconsParent->addChild(sprite);
         sprite->setPosition(_icons[idx]->getPosition());
-        sprite->setScale(_iconWidth/sprite->getContentSize().width);
+        //sprite->setScale(_iconWidth/sprite->getContentSize().width);
         sprite->setUserData((void*)idx);
         _icons[idx]->removeFromParent();
         _icons[idx] = sprite;
+        
+        auto size = sprite->getContentSize();
+        auto shortEdge = MIN(size.width, size.height);
+        sprite->setScale(_iconWidth/shortEdge);
+        sprite->setTextureRect(Rect((size.width-shortEdge)*.5f, (size.height-shortEdge)*.5f, shortEdge, shortEdge));
+        
     } else {
         lwerror("no loading sprite to replace");
     }
