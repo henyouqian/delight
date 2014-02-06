@@ -23,9 +23,14 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
 
 var SliderLayer = cc.Layer.extend({
-    _sliderNum:8,
+    _imgIdx:0,
+    _sliderNum:6,
     _sliderH:0.0,
     _sliderX0:0,
     _sliderY0:0,
@@ -33,15 +38,36 @@ var SliderLayer = cc.Layer.extend({
     _sliders:[],
     _isCompleted:false,
     _touch:null,
+    _imgShuffleIdxs:[],
     MOVE_DURATION:0.1,
     init:function () {
         //////////////////////////////
         // 1. super init first
-        this._super();
-        //this._texUrl = "res/CloseSelected.png"
-        //this._texUrl = "http://slider.qiniudn.com/71B4B2E1F31E1ED0CB8C59E63B0E137B_B1280_1280_680_800.jpeg"
-        this._texUrl = "http://slider.qiniudn.com/%E6%A8%8B%E5%8F%A3%E5%8F%AF%E5%8D%97%E5%AD%90/img140.JPG"
-        var sprite = cc.Sprite.create(this._texUrl);
+        this._super()
+        
+        //shuffle image idx
+        for (var i = 0; i < g_imageUrls.length; i++) {
+            this._imgShuffleIdxs.push(i)
+        }
+        this._imgShuffleIdxs = shuffle(this._imgShuffleIdxs)
+
+        this.reset(0)
+        //
+        this.setTouchEnabled(true)
+        return true;
+    },
+    reset:function(imgIdx) {
+        this._imgIdx = imgIdx
+
+        //clean
+        this._isCompleted = false
+        this._sliders = []
+        this._touch = null
+        this.removeAllChildren()
+
+        //setup
+        this._texUrl = g_imageUrls[this._imgShuffleIdxs[imgIdx]]
+        var sprite = cc.Sprite.create(this._texUrl)
         if (sprite.textureLoaded()) {
             this.resetNow(sprite)
         } else {
@@ -50,10 +76,6 @@ var SliderLayer = cc.Layer.extend({
                 target.resetNow(spt)
             }, 0)
         }
-
-        //
-        this.setTouchEnabled(true);
-        return true;
     },
     resetNow:function(sprite) {
         var winSize = cc.Director.getInstance().getWinSize();
@@ -61,7 +83,6 @@ var SliderLayer = cc.Layer.extend({
         // this.addChild(sprite, 0);  
 
         var texSize = sprite.getContentSize();
-        cc.log(sprite)
 
         //scale
         var scaleW = winSize.width / texSize.width;
@@ -72,8 +93,24 @@ var SliderLayer = cc.Layer.extend({
         }
         var scale = Math.max(scaleW, scaleH);
 
+        
+        //shuffle
+        var idxVec = []
+        for (var i = 0; i < this._sliderNum; i++) {
+            idxVec.push(i)
+        }
+        idxVec = shuffle(idxVec)
+        for (var i = 0; i < this._sliderNum; i++) {
+            if (i != this._sliderNum - 1) {
+                if (idxVec[i] + 1 == idxVec[i+1]) {
+                    var tmp = idxVec[i]
+                    idxVec[i] = idxVec[i+1]
+                    idxVec[i+1] = tmp
+                }
+            }
+        }
+
         //sliders
-        var idxVec = [4, 7, 3, 5, 2, 1, 6, 0]
         var uvW = 0;
         var uvH = 0;
         var uvX = 0;
@@ -153,6 +190,9 @@ var SliderLayer = cc.Layer.extend({
         this._touch = touch
 
         if (this._isCompleted) {
+            if (this._imgIdx < g_imageUrls.length-1) {
+                this.reset(this._imgIdx + 1)
+            }
             return
         }
         for (var i = 0; i < this._sliders.length; i++) {
@@ -219,7 +259,6 @@ var SliderLayer = cc.Layer.extend({
                 var easeOut = cc.EaseSineInOut.create(moveTo);
                 slider.sprite.stopAllActions();
                 slider.sprite.runAction(easeOut);
-                //break;
             }
             if (slider.idx != i) {
                 complete = false;
@@ -227,6 +266,10 @@ var SliderLayer = cc.Layer.extend({
         }
         if (this._isCompleted == false && complete == true) {
             //SimpleAudioEngine::getInstance()->playEffect("audio/success.mp3");
+            // if (this._imgIdx < g_imageUrls.length-1) {
+            //     this.reset(this._imgIdx + 1)
+            //     return
+            // }
         }
         this._isCompleted = complete;
     },

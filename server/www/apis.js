@@ -85,9 +85,13 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": ""
 				},{
-					"name": "get",
+					"name": "list",
 					"method": "POST",
 					"data": {"Offset":0, "Limit":12}
+				},{
+					"name": "get",
+					"method": "POST",
+					"data": {"Id":1}
 				},{
 					"name": "setStar",
 					"method": "POST",

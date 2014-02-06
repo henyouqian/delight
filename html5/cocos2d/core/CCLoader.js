@@ -30,7 +30,7 @@
  * @type Object
  */
 cc.RESOURCE_TYPE = {
-    "IMAGE": ["png", "jpg", "bmp","jpeg","gif"],
+    "IMAGE": ["png", "jpg", "bmp","jpeg","gif", "JPG"],
     "SOUND": ["mp3", "ogg", "wav", "mp4", "m4a"],
     "XML": ["plist", "xml", "fnt", "tmx", "tsx"],
     "BINARY": ["ccbi"],

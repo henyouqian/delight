@@ -161,7 +161,7 @@ func countPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
-func getPack(w http.ResponseWriter, r *http.Request) {
+func listPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//redis
@@ -256,6 +256,33 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
+func getPack(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	//in
+	var in struct {
+		Id uint32
+	}
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	packJs, err := redis.Bytes(rc.Do("HGET", hkey, in.Id))
+	lwutil.CheckError(err, "")
+
+	var pack Pack
+	bjs, err := redis.Bytes(packJs, nil)
+	lwutil.CheckError(err, "")
+	err = json.Unmarshal(bjs, &pack)
+	lwutil.CheckError(err, "")
+
+	//out
+	lwutil.WriteResponse(w, &pack)
+}
+
 func setPackStar(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
@@ -291,6 +318,7 @@ func regPack() {
 	http.Handle("/pack/add", lwutil.ReqHandler(addPack))
 	http.Handle("/pack/edit", lwutil.ReqHandler(editPack))
 	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
+	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
 	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
 	http.Handle("/pack/count", lwutil.ReqHandler(countPack))
 	http.Handle("/pack/setStar", lwutil.ReqHandler(setPackStar))

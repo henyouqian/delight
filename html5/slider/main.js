@@ -55,10 +55,27 @@ var cocos2dApp = cc.Application.extend({
         //
         cc.AudioEngine.getInstance().init("mp3,ogg,wav");
 
-        //load resources
-        cc.LoaderScene.preload(g_resources, function () {
-            director.replaceScene(new this.startScene());
-        }, this);
+        //load packs
+        var data = {
+            "Id": 12
+        }
+        var app = this
+        $.post('/pack/get', JSON.stringify(data), function(resp){
+            var reses = []
+            g_imageUrls = []
+            for (var i in resp.Images) {
+                var image = resp.Images[i]
+                reses.push({src:image.Url})
+                g_imageUrls.push(image.Url)
+            }
+
+            cc.LoaderScene.preload(reses, function () {
+                director.replaceScene(new app.startScene());
+            }, app);
+
+        }, "json")
+
+        
 
         return true;
     }
