@@ -12,15 +12,16 @@ namespace {
 }
 
 void makeLocalDir() {
-    _imageDir = FileUtils::getInstance()->getWritablePath();
+    auto wpath = FileUtils::getInstance()->getWritablePath();
+    _imageDir = wpath;
     _imageDir += "images/";
     mkdir(_imageDir.c_str(), S_IRWXU);
     
-    _packDir = FileUtils::getInstance()->getWritablePath();
+    _packDir = wpath;
     _packDir += "packs/";
     mkdir(_packDir.c_str(), S_IRWXU);
     
-    _localGifDir = FileUtils::getInstance()->getWritablePath();
+    _localGifDir = wpath;
     _localGifDir += "localGif/";
     mkdir(_localGifDir.c_str(), S_IRWXU);
 }

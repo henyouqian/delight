@@ -1,5 +1,6 @@
 #import "RootViewController.h"
-
+#import "ELCPicker.h"
+#include <vector>
 
 @implementation RootViewController
 
@@ -68,7 +69,39 @@
 }
 
 - (void) showElcPickerView {
+    elcPicker = [[ELCImagePickerController alloc] initImagePicker];
+    elcPicker.maximumImagesCount = 14;
+    elcPicker.returnsOriginalImage = NO; //Only return the fullScreenImage, not the fullResolutionImage
+	elcPicker.imagePickerDelegate = self;
     
+    [self presentViewController:elcPicker animated:YES completion:nil];
+}
+
+- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    std::vector<ElcListener::JpgData> jpgDatas;
+	for (NSDictionary *dict in info) {
+        UIImage *image = [dict objectForKey:UIImagePickerControllerOriginalImage];
+        NSData *data = UIImageJPEGRepresentation (image, 0.8);
+        ElcListener::JpgData jpgData = {data.bytes, data.length};
+        jpgDatas.push_back(jpgData);
+	}
+    
+    auto listener = getElcListener();
+    if (listener) {
+        listener->onElcLoad(jpgDatas);
+    }
+}
+
+- (void)elcImagePickerControllerDidCancel:(ELCImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    auto listener = getElcListener();
+    if (listener) {
+        listener->onElcCancel();
+    }
 }
 
 @end

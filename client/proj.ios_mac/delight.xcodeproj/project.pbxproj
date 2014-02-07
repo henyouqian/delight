@@ -76,6 +76,7 @@
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B364904918A4E6E900B93930 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904718A4E6E900B93930 /* libcrypto.a */; };
 		B364904A18A4E6E900B93930 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904818A4E6E900B93930 /* libssl.a */; };
+		B364905A18A51DA300B93930 /* userPackScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B364905818A51DA300B93930 /* userPackScene.cpp */; };
 		B383F8DE18A4CBA700FA5700 /* b64.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8C118A4CBA700FA5700 /* b64.c */; };
 		B383F8DF18A4CBA700FA5700 /* urlsafe_b64.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8C318A4CBA700FA5700 /* urlsafe_b64.c */; };
 		B383F8E118A4CBA700FA5700 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8C718A4CBA700FA5700 /* cJSON.c */; };
@@ -355,6 +356,8 @@
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
 		B364904718A4E6E900B93930 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../external/openssl/lib/libcrypto.a; sourceTree = "<group>"; };
 		B364904818A4E6E900B93930 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../external/openssl/lib/libssl.a; sourceTree = "<group>"; };
+		B364905818A51DA300B93930 /* userPackScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = userPackScene.cpp; path = ../Classes/userPackScene.cpp; sourceTree = "<group>"; };
+		B364905918A51DA300B93930 /* userPackScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = userPackScene.h; path = ../Classes/userPackScene.h; sourceTree = "<group>"; };
 		B383F8C118A4CBA700FA5700 /* b64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = b64.c; sourceTree = "<group>"; };
 		B383F8C218A4CBA700FA5700 /* b64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b64.h; sourceTree = "<group>"; };
 		B383F8C318A4CBA700FA5700 /* urlsafe_b64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = urlsafe_b64.c; sourceTree = "<group>"; };
@@ -497,6 +500,8 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B364905818A51DA300B93930 /* userPackScene.cpp */,
+				B364905918A51DA300B93930 /* userPackScene.h */,
 				B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */,
 				B3BCF355188E7E6D00A1DD08 /* loginScene.h */,
 				B31003981879B5F40049A6CF /* mainMenuScene.cpp */,
@@ -1180,6 +1185,7 @@
 				B3CC388318A3930B00056424 /* ELCAssetCell.m in Sources */,
 				B31003A0187C067A0049A6CF /* modeSelectScene.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				B364905A18A51DA300B93930 /* userPackScene.cpp in Sources */,
 				B383F8E118A4CBA700FA5700 /* cJSON.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1269,6 +1275,7 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/ios/Simulation",
 					../external,
 					../external/openssl/include,
+					../external/qiniu,
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1319,6 +1326,7 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/ios/Simulation",
 					../external,
 					../external/openssl/include,
+					../external/qiniu,
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;

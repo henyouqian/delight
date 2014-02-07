@@ -1,5 +1,6 @@
 #include "mainMenuScene.h"
 #include "packsBookScene.h"
+#include "userPackScene.h"
 #include "util.h"
 #include "lang.h"
 #include "http.h"
@@ -38,10 +39,15 @@ bool MainMenuScene::init() {
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     
-    //
+    //buttons
     auto button = createButton(lang("Play"), 48, 2.f);
-    button->setPosition(Point(visibleSize.width/2, visibleSize.height/3));
+    button->setPosition(Point(visibleSize.width/2, visibleSize.height/2));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterBook), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(button, 1);
+    
+    button = createButton(lang("包"), 48, 2.f);
+    button->setPosition(Point(visibleSize.width/2, visibleSize.height/3));
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterUserPack), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
     //login test
@@ -60,4 +66,8 @@ void MainMenuScene::onEnterTransitionDidFinish() {
 
 void MainMenuScene::enterBook(Object *sender, Control::EventType controlEvent) {
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, PacksBookScene::createScene()));
+}
+
+void MainMenuScene::enterUserPack(Object *sender, Control::EventType controlEvent) {
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, UserPackScene::createScene()));
 }
