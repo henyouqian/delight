@@ -9,6 +9,8 @@ namespace {
     std::string _imageDir;
     std::string _packDir;
     std::string _localGifDir;
+    std::string _uploadPack;
+    Qiniu_Client _qiniuClient;
 }
 
 void makeLocalDir() {
@@ -24,6 +26,14 @@ void makeLocalDir() {
     _localGifDir = wpath;
     _localGifDir += "localGif/";
     mkdir(_localGifDir.c_str(), S_IRWXU);
+    
+    _uploadPack = wpath;
+    _uploadPack += "uploadPack/";
+    mkdir(_uploadPack.c_str(), S_IRWXU);
+}
+
+const char* getUploadPackDir() {
+    return _uploadPack.c_str();
 }
 
 void makeLocalPackPath(std::string &outPath, int packIdx) {
@@ -83,3 +93,18 @@ ControlButton *createColorButton(const char *text, float fontSize, float bgScale
     button->setAdjustBackgroundImage(false);
     return button;
 }
+
+void qiniuInit() {
+    Qiniu_Global_Init(-1);
+    Qiniu_Client_InitNoAuth(&_qiniuClient, 1024);
+}
+
+void qiniuQuit() {
+    Qiniu_Client_Cleanup(&_qiniuClient);
+    Qiniu_Global_Cleanup();
+}
+
+Qiniu_Client& qiniuGetClient() {
+    return _qiniuClient;
+}
+

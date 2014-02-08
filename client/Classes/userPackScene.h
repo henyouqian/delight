@@ -20,8 +20,10 @@ public:
     virtual void onElcLoad(std::vector<JpgData>& jpgs);
     virtual void onElcCancel();
     
-private:
+    void onGetUploadToken(HttpClient *c, HttpResponse *r);
     
+private:
+    std::vector<std::string> _jpgFileNames;
 };
 
 

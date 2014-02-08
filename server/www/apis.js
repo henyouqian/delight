@@ -98,6 +98,16 @@ function Controller($scope, $http) {
 					"data": {"PackId":1, "Star":1}
 				},
 			] 
+		},{
+			"tab":"userPack",
+			"path":"userPack",
+			"apis":[
+				{
+					"name": "getUploadToken",
+					"method": "POST",
+					"data": ["test1.jpg", "test2.jpg"]
+				},
+			] 
 		},
 	]
 

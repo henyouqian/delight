@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
+#include "qiniu/http.h"
+
 USING_NS_CC;
 USING_NS_CC_EXT;
 
@@ -15,5 +17,13 @@ void makeLocalGifPath(std::string &outPath, const char *fullPath);
 ControlButton *createButton(const char *text, float fontSize, float bgScale);
 ControlButton *createRingButton(const char *text, float fontSize, float bgScale, const Color3B &color);
 ControlButton *createColorButton(const char *text, float fontSize, float bgScale, const Color3B &labelColor, const Color3B &bgColor, GLubyte bgOpacity);
+
+const char* getUploadPackDir();
+
+//qiniu
+void qiniuInit();
+void qiniuQuit();
+Qiniu_Client& qiniuGetClient();
+
 
 #endif // __UTIL_H__

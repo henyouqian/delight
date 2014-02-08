@@ -13,10 +13,13 @@ public:
     void write(const char *data, size_t len);
     void final();
     const char* getResult();
+    const char* getBase64();
     
 private:
-    std::string _result;
     sha1nfo *_info;
+    uint8_t *_resbuf;
+    std::string _result;
+    std::string _base64;
 };
 
 #endif /* SHA_H */

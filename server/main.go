@@ -28,6 +28,7 @@ func main() {
 	http.HandleFunc("/html5/", html5)
 	regAuth()
 	regPack()
+	regUserPack()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 

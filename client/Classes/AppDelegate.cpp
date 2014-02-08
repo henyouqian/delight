@@ -4,7 +4,6 @@
 #include "util.h"
 #include "db.h"
 #include "lang.h"
-#include "qiniu/http.h"
 #include "lw/lwLog.h"
 #include <thread>
 
@@ -74,6 +73,7 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
+    qiniuQuit();
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -96,16 +96,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     makeLocalDir();
     dbInit();
     setLang("lang/zh-s.lang");
+    qiniuInit();
 
     //auto scene = SliderScene::createScene();
     //auto scene = PacksListScene::createScene();
     auto scene = MainMenuScene::createScene();
-    
-    //qiniu
-    Qiniu_Client client;
-    
-    Qiniu_Global_Init(-1);
-    Qiniu_Client_InitNoAuth(&client, 1024);
     
     // run
     director->runWithScene(scene);
