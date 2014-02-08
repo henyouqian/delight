@@ -1,6 +1,5 @@
 #include "userPackScene.h"
 #include "packsBookScene.h"
-#include "util.h"
 #include "lang.h"
 #include "http.h"
 #include "jsonxx/jsonxx.h"
@@ -32,7 +31,14 @@ bool UserPackScene::init() {
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(UserPackScene::showImagePicker), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
+    //test
+    _uploader = new QiniuUploader(this);
+    
     return true;
+}
+
+UserPackScene::~UserPackScene() {
+    _uploader->destroy();
 }
 
 void UserPackScene::showImagePicker(Object *sender, Control::EventType controlEvent) {
@@ -91,10 +97,35 @@ void UserPackScene::onElcLoad(std::vector<JpgData>& jpgs) {
     postHttpRequest("userPack/getUploadToken", jsMsg.json().c_str(), this, (SEL_HttpResponse)&UserPackScene::onGetUploadToken);
 }
 
+void UserPackScene::onQiniuUploadSuccess() {
+    
+}
+
+void UserPackScene::onQiniuUploadError() {
+    
+}
+
 void UserPackScene::onGetUploadToken(HttpClient *c, HttpResponse *r) {
     auto vData = r->getResponseData();
     std::istringstream is(std::string(vData->begin(), vData->end()));
     lwinfo("%s", is.str().c_str());
+    
+    jsonxx::Array jsMsg;
+    bool ok = jsMsg.parse(is);
+    if (!ok) {
+        lwerror("json parse error");
+        return;
+    }
+    
+    for (auto i = 0; i < jsMsg.size(); ++i) {
+        auto elem = jsMsg.get<jsonxx::Object>(i);
+        auto key = elem.get<jsonxx::String>("Key");
+        auto token = elem.get<jsonxx::String>("Token");
+        
+        std::string path = getUploadPackDir();
+        path += key;
+        _uploader->addFile(token.c_str(), key.c_str(), path.c_str());
+    }
 }
 
 void UserPackScene::onElcCancel() {

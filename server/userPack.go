@@ -27,13 +27,20 @@ func getUploadToken(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "err_decode_body")
 
 	inLen := len(in)
-	out := make([]string, inLen, inLen)
+	type outElem struct {
+		Key   string
+		Token string
+	}
+	out := make([]outElem, inLen, inLen)
 	for i, v := range in {
 		scope := fmt.Sprintf("slideruserpack:%s", v)
 		putPolicy := rs.PutPolicy{
 			Scope: scope,
 		}
-		out[i] = putPolicy.Token(nil)
+		out[i] = outElem{
+			in[i],
+			putPolicy.Token(nil),
+		}
 	}
 
 	//out
