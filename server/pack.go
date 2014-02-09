@@ -24,7 +24,7 @@ type Image struct {
 }
 
 type Pack struct {
-	Id     uint32
+	Id     uint64
 	Date   string
 	Title  string
 	Text   string
@@ -48,12 +48,12 @@ func addPack(w http.ResponseWriter, r *http.Request) {
 	if in.Id == 0 {
 		ids, err := redis.Values(rc.Do("ZREVRANGE", zkey, 0, 1))
 		lwutil.CheckError(err, "")
-		maxId := 0
+		maxId := int64(0)
 		if len(ids) > 0 {
-			maxId, err = redis.Int(ids[0], nil)
+			maxId, err = redis.Int64(ids[0], nil)
 			lwutil.CheckError(err, "")
 		}
-		in.Id = uint32(maxId + 1)
+		in.Id = uint64(maxId + 1)
 	} else {
 		//check exist
 		exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
@@ -72,7 +72,7 @@ func addPack(w http.ResponseWriter, r *http.Request) {
 
 	//out
 	out := struct {
-		Id uint32
+		Id uint64
 	}{in.Id}
 	lwutil.WriteResponse(w, &out)
 }
@@ -82,7 +82,7 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		Id uint32
+		Id uint64
 	}
 	err := lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
@@ -106,7 +106,7 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 
 	//out
 	out := struct {
-		Id uint32
+		Id uint64
 	}{in.Id}
 	lwutil.WriteResponse(w, &out)
 }
@@ -138,7 +138,7 @@ func editPack(w http.ResponseWriter, r *http.Request) {
 
 	//out
 	out := struct {
-		Id uint32
+		Id uint64
 	}{in.Id}
 	lwutil.WriteResponse(w, &out)
 }
@@ -216,7 +216,7 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 	}
 
 	packs := make([]_Pack, 0, 10)
-	starMap := make(map[uint32]int) //packId => index of packs
+	starMap := make(map[uint64]int) //packId => index of packs
 	for i, js := range packsJs {
 		var pack _Pack
 		bjs, err := redis.Bytes(js, nil)
@@ -241,9 +241,9 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 		starNum, err := strconv.ParseUint(resp[i+1], 10, 8)
 		lwutil.CheckError(err, "")
 
-		packId, err := strconv.ParseUint(strs[1], 10, 32)
+		packId, err := strconv.ParseUint(strs[1], 10, 64)
 		lwutil.CheckError(err, "")
-		if idx, ok := starMap[uint32(packId)]; ok {
+		if idx, ok := starMap[uint64(packId)]; ok {
 			packs[idx].Star = uint8(starNum)
 		}
 	}
@@ -265,7 +265,7 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		Id uint32
+		Id uint64
 	}
 	err := lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")

@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+const (
+	H_SERIAL = "hSerial"
+)
+
 var (
 	redisPool     *redis.Pool
 	authRedisPool *redis.Pool

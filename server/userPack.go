@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "encoding/json"
+	"encoding/json"
 	"fmt"
 	// "github.com/garyburd/redigo/redis"
 	// "github.com/golang/glog"
@@ -9,8 +9,13 @@ import (
 	. "github.com/qiniu/api/conf"
 	"github.com/qiniu/api/rs"
 	"net/http"
-	// "strconv"
+	"strconv"
 	// "strings"
+)
+
+const (
+	USER_PACK_BUCKET = "slideruserpack"
+	H_USERPACK       = "hUserPack"
 )
 
 func init() {
@@ -33,7 +38,7 @@ func getUploadToken(w http.ResponseWriter, r *http.Request) {
 	}
 	out := make([]outElem, inLen, inLen)
 	for i, v := range in {
-		scope := fmt.Sprintf("slideruserpack:%s", v)
+		scope := fmt.Sprintf("%s:%s", USER_PACK_BUCKET, v)
 		putPolicy := rs.PutPolicy{
 			Scope: scope,
 		}
@@ -47,6 +52,67 @@ func getUploadToken(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
+func newUserPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	// _, err := findSession(w, r, nil)
+	// lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in Pack
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//gen packid
+	resp, err := ssdb.Do("hincr", H_SERIAL, "userPack", 1)
+	lwutil.CheckSsdbError(resp, err)
+	in.Id, _ = strconv.ParseUint(resp[1], 10, 32)
+
+	//save to ssdb
+	jsPack, _ := json.Marshal(&in)
+	resp, err = ssdb.Do("hset", in.Id, H_USERPACK, jsPack)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, &in)
+}
+
+func getUserPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in struct {
+		Id uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	resp, err := ssdb.Do("hget", in.Id, H_USERPACK, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+
+	//out
+	lwutil.WriteResponse(w, &pack)
+}
+
 func regUserPack() {
 	http.Handle("/userPack/getUploadToken", lwutil.ReqHandler(getUploadToken))
+	http.Handle("/userPack/newPack", lwutil.ReqHandler(newUserPack))
+	http.Handle("/userPack/get", lwutil.ReqHandler(getUserPack))
 }

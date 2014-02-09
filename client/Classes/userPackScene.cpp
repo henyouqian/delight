@@ -2,6 +2,7 @@
 #include "packsBookScene.h"
 #include "lang.h"
 #include "http.h"
+#include "util.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 #include "crypto/sha.h"
@@ -97,8 +98,38 @@ void UserPackScene::onElcLoad(std::vector<JpgData>& jpgs) {
     postHttpRequest("userPack/getUploadToken", jsMsg.json().c_str(), this, (SEL_HttpResponse)&UserPackScene::onGetUploadToken);
 }
 
-void UserPackScene::onQiniuUploadSuccess() {
+void UserPackScene::onQiniuUploadSuccess(const char* key) {
+    --_uploadingNum;
+    if (_uploadingNum == 0) {
+        jsonxx::Object msg;
+        jsonxx::Array images;
+        for (auto it = _jpgFileNames.begin(); it != _jpgFileNames.end(); ++it) {
+            jsonxx::Object image;
+            std::string url = "http://slideruserpack.qiniudn.com/";
+            url += it->c_str();
+            image << "Url" << url;
+            images << image;
+        }
+        msg << "Images" << images;
+        
+        lwinfo("%s", msg.json().c_str());
+        
+        postHttpRequest("userPack/newPack", msg.json().c_str(), this, (SEL_HttpResponse)&UserPackScene::onNewPack);
+    }
+}
+
+void UserPackScene::onNewPack(HttpClient *c, HttpResponse *r) {
+    auto vData = r->getResponseData();
+    std::istringstream is(std::string(vData->begin(), vData->end()));
     
+    jsonxx::Object msg;
+    bool ok = msg.parse(is);
+    if (!ok) {
+        lwerror("json parse error");
+        return;
+    }
+    
+    lwinfo("packId: %d", (int)msg.get<jsonxx::Number>("Id"));
 }
 
 void UserPackScene::onQiniuUploadError() {
@@ -108,7 +139,6 @@ void UserPackScene::onQiniuUploadError() {
 void UserPackScene::onGetUploadToken(HttpClient *c, HttpResponse *r) {
     auto vData = r->getResponseData();
     std::istringstream is(std::string(vData->begin(), vData->end()));
-    lwinfo("%s", is.str().c_str());
     
     jsonxx::Array jsMsg;
     bool ok = jsMsg.parse(is);
@@ -117,6 +147,7 @@ void UserPackScene::onGetUploadToken(HttpClient *c, HttpResponse *r) {
         return;
     }
     
+    _uploadingNum = jsMsg.size();
     for (auto i = 0; i < jsMsg.size(); ++i) {
         auto elem = jsMsg.get<jsonxx::Object>(i);
         auto key = elem.get<jsonxx::String>("Key");

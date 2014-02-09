@@ -2,6 +2,7 @@
 #include "sliderScene.h"
 #include "mainMenuScene.h"
 #include "util.h"
+#include "qiniu.h"
 #include "db.h"
 #include "lang.h"
 #include "lw/lwLog.h"

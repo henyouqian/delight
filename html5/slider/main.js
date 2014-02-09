@@ -56,11 +56,16 @@ var cocos2dApp = cc.Application.extend({
         cc.AudioEngine.getInstance().init("mp3,ogg,wav");
 
         //load packs
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
+            if (reg.test(location.href)) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
+        };
+        var id = parseInt(getUrlParam("id")) 
         var data = {
-            "Id": 12
+            "Id": id
         }
         var app = this
-        $.post('/pack/get', JSON.stringify(data), function(resp){
+        $.post('/userPack/get', JSON.stringify(data), function(resp){
             var reses = []
             g_imageUrls = []
             for (var i in resp.Images) {

@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "ELCPicker.h"
-#include "util.h"
+#include "qiniu.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -23,14 +23,16 @@ public:
     virtual void onElcCancel();
     
     //QiniuUploaderListener
-    virtual void onQiniuUploadSuccess();
+    virtual void onQiniuUploadSuccess(const char* key);
     virtual void onQiniuUploadError();
     
     void onGetUploadToken(HttpClient *c, HttpResponse *r);
+    void onNewPack(HttpClient *c, HttpResponse *r);
     
 private:
     std::vector<std::string> _jpgFileNames;
     QiniuUploader *_uploader;
+    int _uploadingNum;
 };
 
 

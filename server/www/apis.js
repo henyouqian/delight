@@ -106,7 +106,31 @@ function Controller($scope, $http) {
 					"name": "getUploadToken",
 					"method": "POST",
 					"data": ["test1.jpg", "test2.jpg"]
-				},
+				},{
+					"name": "newPack",
+					"method": "POST",
+					"data": {
+						"Title":"",
+						"Text":"",
+						"Icon":"http://",
+						"Cover":"http://",
+						"Images":[
+							{
+								"Url": "http://",
+								"Title": "",
+								"Text": ""
+							},{
+								"Url": "http://",
+								"Title": "",
+								"Text": ""
+							},
+						]
+					}
+				},{
+					"name": "get",
+					"method": "POST",
+					"data": {"Id": 1}
+				}
 			] 
 		},
 	]
