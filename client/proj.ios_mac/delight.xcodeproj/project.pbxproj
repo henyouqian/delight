@@ -71,7 +71,6 @@
 		B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6B184CC6B9001403BA /* gifalloc.c */; };
 		B33DAC82184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
-		B33F4FA9188BAD02000A5AD6 /* timeAttackScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B364904918A4E6E900B93930 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904718A4E6E900B93930 /* libcrypto.a */; };
@@ -327,8 +326,6 @@
 		B33DAC6A184CC6B9001403BA /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
 		B33DAC6B184CC6B9001403BA /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
 		B33DAC6F184CC6B9001403BA /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
-		B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timeAttackScene.cpp; path = ../Classes/timeAttackScene.cpp; sourceTree = "<group>"; };
-		B33F4FA8188BAD02000A5AD6 /* timeAttackScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timeAttackScene.h; path = ../Classes/timeAttackScene.h; sourceTree = "<group>"; };
 		B33F4FCB188BF742000A5AD6 /* sha.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sha.cpp; sourceTree = "<group>"; };
 		B33F4FCC188BF742000A5AD6 /* sha.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sha.h; sourceTree = "<group>"; };
 		B33F4FCE188BF742000A5AD6 /* dgif_lib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dgif_lib.c; sourceTree = "<group>"; };
@@ -515,8 +512,6 @@
 				B310039F187C067A0049A6CF /* modeSelectScene.h */,
 				B302CBFB18519276003746A6 /* sliderScene.cpp */,
 				B302CBFC18519276003746A6 /* sliderScene.h */,
-				B33F4FA7188BAD02000A5AD6 /* timeAttackScene.cpp */,
-				B33F4FA8188BAD02000A5AD6 /* timeAttackScene.h */,
 				B3A639031862F841009ECDF1 /* spriteLoader.cpp */,
 				B3A639041862F841009ECDF1 /* spriteLoader.h */,
 				B3A638E8185F58B0009ECDF1 /* gameplay.cpp */,
@@ -1174,7 +1169,6 @@
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
 				B383F8E718A4CBA700FA5700 /* io.c in Sources */,
-				B33F4FA9188BAD02000A5AD6 /* timeAttackScene.cpp in Sources */,
 				B3CC388118A3930B00056424 /* ELCAlbumPickerController.m in Sources */,
 				B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */,
 				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,

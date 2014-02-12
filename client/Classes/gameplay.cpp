@@ -41,10 +41,9 @@ Slider::Slider() {
     touch = nullptr;
 }
 
-Gameplay::Gameplay(Rect &rect, GameplayListener *listener) {
+Gameplay::Gameplay(GameplayListener *listener) {
     Node::init();
     _listener = listener;
-    _rect = rect;
     _texW = _texH = 0;
     _texture = nullptr;
     _isCompleted = false;
@@ -57,6 +56,25 @@ Gameplay::Gameplay(Rect &rect, GameplayListener *listener) {
     
     _sptLoader = SptLoader::create(this);
     this->addChild(_sptLoader);
+    
+    auto visSize = Director::getInstance()->getVisibleSize();
+    
+    //bg
+    auto bgBatch = SpriteBatchNode::create("ui/stripedBg.png");
+    this->addChild(bgBatch);
+    auto bg = Sprite::create("ui/stripedBg.png");
+    float y = 0;
+    while (y < visSize.height) {
+        float x = 0;
+        while (x < visSize.width) {
+            auto bg = Sprite::create("ui/stripedBg.png");
+            bg->setAnchorPoint(Point(0, 0));
+            bg->setPosition(Point(x, y));
+            bgBatch->addChild(bg);
+            x += bg->getContentSize().width;
+        }
+        y += bg->getContentSize().height;
+    }
 }
 
 Gameplay::~Gameplay() {
@@ -293,8 +311,36 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
     //create sliders
     float fTexW = _texW;
     float fTexH = _texH;
-    auto origin = _rect.origin;
-    auto size = _rect.size;
+    auto visSize = Director::getInstance()->getVisibleSize();
+    auto size = visSize;
+    
+    //calc target ratio
+    float texRatio = fTexW/fTexH;
+    if (fTexW > fTexH) {
+        texRatio = fTexH/fTexW;
+    }
+    float visRatio = visSize.width/visSize.height;
+    texRatio += 0.001;
+    float refRatios[] = {
+        9.f/16.f,
+        2.f/3.f,
+        3.f/4.f,
+    };
+    float targetRatio = visRatio;
+    //float minDiff = fabs(visRatio-texRatio);
+    for (auto i = 0; i < sizeof(refRatios)/sizeof(refRatios[0]); ++i) {
+        if (refRatios[i] > visRatio) {
+            //float diff = fabs(refRatios[i]-texRatio);
+//            if (diff < minDiff) {
+//                minDiff = diff;
+//                targetRatio = refRatios[i];
+//            }
+            if (texRatio >= refRatios[i]) {
+                targetRatio = refRatios[i];
+            }
+        }
+    }
+    size.height = size.width/targetRatio;// 640*4.f/3.f;
     
     //scale
     float scaleW = size.width / _texW;
@@ -338,8 +384,8 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         float uvy = uvY;
         float uvh = uvH / _sliderNum;
         _sliderH = size.height / _sliderNum;
-        _sliderX0 = origin.x + size.width * .5f;
-        _sliderY0 = origin.y + size.height - _sliderH * .5f;
+        _sliderX0 = size.width * .5f;
+        _sliderY0 = (size.height + visSize.height)*.5f - _sliderH * .5f;
         
         for (auto i = 0; i < _sliderNum; ++i) {
             uvy = uvY+uvh*idxVec[i];
@@ -369,8 +415,8 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         float uvx = uvX;
         float uvw = uvW / _sliderNum;
         _sliderH = size.height / _sliderNum;
-        _sliderX0 = origin.x + size.width * .5f;
-        _sliderY0 = origin.y + size.height - _sliderH * .5f;
+        _sliderX0 = size.width * .5f;
+        _sliderY0 = (size.height + visSize.height)*.5f - _sliderH * .5f;
         for (auto i = 0; i < _sliderNum; ++i) {
             uvx = uvX+uvw*idxVec[i];
             auto spt = Sprite::createWithTexture(_texture, Rect(uvx, uvY, uvw, uvH));
@@ -407,14 +453,19 @@ void Gameplay::resetNow(std::list<Preload>::iterator it) {
         auto fadeIn = FadeIn::create(.3f);
         auto easeFadeIn = EaseSineOut::create(fadeIn);
         auto spawn = Spawn::create(ease, easeFadeIn, NULL);
-        auto cb = CallFunc::create(std::bind(&Gameplay::onImageChanged, this));
-        auto seq = Sequence::create(spawn, cb, nullptr);
+        
         _newSliderGrp->setOpacity(0);
-        _newSliderGrp->runAction(seq);
+        _newSliderGrp->runAction(spawn);
+        
+        auto delay = DelayTime::create(.3f);
+        auto fadeOut = FadeOut::create(.3f);
+        auto easeFadeOut = EaseSineOut::create(fadeOut);
+        auto cb = CallFunc::create(std::bind(&Gameplay::onImageChanged, this));
+        auto seq = Sequence::create(delay, easeFadeOut, cb, nullptr);
+        _currSliderGrp->runAction(seq);
     }
     
     _rotRight = rotRight;
-    TextureCache::getInstance()->removeUnusedTextures();
     
     if (rotRight) {
         _listener->onReset(90.f);
@@ -429,6 +480,8 @@ void Gameplay::onImageChanged() {
     _currSliderGrp->removeFromParent();
     _currSliderGrp = _newSliderGrp;
     _newSliderGrp = nullptr;
+    
+     TextureCache::getInstance()->removeUnusedTextures();
 }
 
 void Gameplay::onSptLoaderError(const char *localPath, void *userData) {

@@ -23,7 +23,7 @@ public:
 
 class Gameplay : public Node, public SptLoaderListener{
 public:
-    Gameplay(Rect &rect, GameplayListener *listener);
+    Gameplay(GameplayListener *listener);
     ~Gameplay();
     void preload(const char *filePath);
     void reset(const char *filePath, int sliderNum);
@@ -42,7 +42,6 @@ private:
     void onImageChanged();
     
     GameplayListener *_listener;
-    Rect _rect;
     int _sliderNum;
     std::list<Slider> _sliders;
     Texture2D *_texture;

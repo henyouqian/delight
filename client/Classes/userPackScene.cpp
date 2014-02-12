@@ -114,11 +114,15 @@ void UserPackScene::onQiniuUploadSuccess(const char* key) {
         
         lwinfo("%s", msg.json().c_str());
         
-        postHttpRequest("userPack/newPack", msg.json().c_str(), this, (SEL_HttpResponse)&UserPackScene::onNewPack);
+        postHttpRequest("userPack/new", msg.json().c_str(), this, (SEL_HttpResponse)&UserPackScene::onNewPack);
     }
 }
 
 void UserPackScene::onNewPack(HttpClient *c, HttpResponse *r) {
+    if (!r->isSucceed()) {
+        lwerror("HttpResponse failed: code=%d", r->getResponseCode());
+        return;
+    }
     auto vData = r->getResponseData();
     std::istringstream is(std::string(vData->begin(), vData->end()));
     

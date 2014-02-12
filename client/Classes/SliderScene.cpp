@@ -17,6 +17,8 @@ static const Color3B GREEN = Color3B(76, 217, 100);
 static const Color3B YELLOW = Color3B(255, 204, 0);
 static const Color3B RED = Color3B(255, 59, 48);
 
+static const int SLIDER_NUM = 6;
+
 TimeBar* TimeBar::create(float dur1, float dur2, float dur3) {
     auto timeBar = new TimeBar();
     if (timeBar->init(dur1, dur2, dur3)) {
@@ -174,12 +176,12 @@ bool SliderScene::init(PackInfo *packInfo) {
     }
     this->setTouchEnabled(true);
     
+    _isFinish = false;
     _imgIdx = 0;
     
-    auto ori = Director::getInstance()->getVisibleOrigin();
     auto size = Director::getInstance()->getVisibleSize();
-    auto rect = Rect(ori.x, ori.y, size.width, size.height);
-    _gameplay = new Gameplay(rect, this);
+    
+    _gameplay = new Gameplay(this);
     addChild(_gameplay);
 
     //next button
@@ -273,7 +275,6 @@ void SliderScene::onReset(float rotate) {
     
     if (_imgIdx == 0) {
         _timeBar->run();
-        
     }
 }
 
@@ -281,7 +282,7 @@ void SliderScene::ShowBackConfirm(Object *sender, Control::EventType controlEven
     //yes button
     auto fadeto = FadeTo::create(BTN_EASE_DUR, BTN_BG_OPACITY);
     auto easeFadeto = EaseSineOut::create(fadeto);
-    auto moveTo = MoveTo::create(BTN_EASE_DUR, Point(50.f, 150.f));
+    auto moveTo = MoveTo::create(BTN_EASE_DUR, Point(150.f, 50.f));
     auto easeMoveTo = EaseSineOut::create(moveTo);
     auto spawn = Spawn::create(easeFadeto, easeMoveTo, NULL);
     _btnYes->setVisible(true);
@@ -353,6 +354,9 @@ void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *even
     if (_btnYes->getOpacity() != 0) {
         HideBackConfirm(nullptr, Control::EventType::TOUCH_DOWN);
     }
+    if (!_isFinish && _gameplay->isCompleted()) {
+        next(nullptr, Control::EventType::TOUCH_DOWN);
+    }
 }
 
 void SliderScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
@@ -367,6 +371,7 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
             //complete
             btnFadeIn(_btnFinish);
             _timeBar->stop();
+            _isFinish = true;
         } else {
             btnFadeIn(_btnNext);
         }
@@ -382,7 +387,7 @@ void SliderScene::reset(int imgIdx) {
     std::string local;
     auto idx = _packInfo->imageIndices[_imgIdx];
     makeLocalImagePath(local, _packInfo->images[idx].url.c_str());
-    _gameplay->reset(local.c_str(), 8);
+    _gameplay->reset(local.c_str(), SLIDER_NUM);
     auto nextIdx = _imgIdx + 1;
     if (nextIdx >= _packInfo->images.size()) {
         nextIdx = 0;

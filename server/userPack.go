@@ -15,7 +15,8 @@ import (
 
 const (
 	USER_PACK_BUCKET = "slideruserpack"
-	H_USERPACK       = "hUserPack"
+	H_USERPACK       = "hUserPack"    //key:packid, value:packData
+	H_USEROWNPACK    = "hUserOwnPack" //key:userid, value:[]packid
 )
 
 func init() {
@@ -57,13 +58,14 @@ func newUserPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//session
-	// _, err := findSession(w, r, nil)
-	// lwutil.CheckError(err, "err_auth")
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
 
 	//in
 	var in Pack
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+	in.AuthorId = session.Userid
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
@@ -75,9 +77,22 @@ func newUserPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 	in.Id, _ = strconv.ParseUint(resp[1], 10, 32)
 
+	//update user own pack
+	packIds := make([]uint64, 0, 0)
+	resp, err = ssdb.Do("hget", H_USEROWNPACK, session.Userid)
+	lwutil.CheckError(err, "")
+	if resp[0] == "ok" {
+		err = json.Unmarshal([]byte(resp[1]), &packIds)
+		lwutil.CheckError(err, "")
+	}
+	packIds = append(packIds, in.Id)
+	jsPackIds, _ := json.Marshal(&packIds)
+	resp, err = ssdb.Do("hset", H_USEROWNPACK, session.Userid, jsPackIds)
+	lwutil.CheckSsdbError(resp, err)
+
 	//save to ssdb
 	jsPack, _ := json.Marshal(&in)
-	resp, err = ssdb.Do("hset", in.Id, H_USERPACK, jsPack)
+	resp, err = ssdb.Do("hset", H_USERPACK, in.Id, jsPack)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
@@ -100,7 +115,7 @@ func getUserPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	resp, err := ssdb.Do("hget", in.Id, H_USERPACK, in.Id)
+	resp, err := ssdb.Do("hget", H_USERPACK, in.Id)
 	lwutil.CheckSsdbError(resp, err)
 
 	var pack Pack
@@ -111,8 +126,42 @@ func getUserPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &pack)
 }
 
+func getUserOwnPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		UserId uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+	if in.UserId == 0 {
+		in.UserId = session.Userid
+	}
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//get own
+	resp, err := ssdb.Do("hget", H_USEROWNPACK, in.UserId)
+	lwutil.CheckError(err, "")
+	if resp[0] == "ok" {
+		w.Write([]byte(resp[1]))
+	} else {
+		w.Write([]byte("[]"))
+	}
+}
+
 func regUserPack() {
 	http.Handle("/userPack/getUploadToken", lwutil.ReqHandler(getUploadToken))
-	http.Handle("/userPack/newPack", lwutil.ReqHandler(newUserPack))
+	http.Handle("/userPack/new", lwutil.ReqHandler(newUserPack))
 	http.Handle("/userPack/get", lwutil.ReqHandler(getUserPack))
+	http.Handle("/userPack/own", lwutil.ReqHandler(getUserOwnPack))
 }

@@ -107,7 +107,7 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": ["test1.jpg", "test2.jpg"]
 				},{
-					"name": "newPack",
+					"name": "new",
 					"method": "POST",
 					"data": {
 						"Title":"",
@@ -130,8 +130,12 @@ function Controller($scope, $http) {
 					"name": "get",
 					"method": "POST",
 					"data": {"Id": 1}
+				},{
+					"name": "own",
+					"method": "POST",
+					"data": {"UserId": 1}
 				}
-			] 
+			]
 		},
 	]
 

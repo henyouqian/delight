@@ -75,6 +75,7 @@ private:
     std::vector<Sprite*> _dots;
     
     TimeBar *_timeBar;
+    bool _isFinish;
 };
 
 

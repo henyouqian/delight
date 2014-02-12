@@ -45,7 +45,7 @@ bool MainMenuScene::init() {
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterBook), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
-    button = createButton(lang("包"), 48, 2.f);
+    button = createButton(lang("我的"), 48, 2.f);
     button->setPosition(Point(visibleSize.width/2, visibleSize.height/3));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterUserPack), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);

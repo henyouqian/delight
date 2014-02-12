@@ -24,13 +24,14 @@ type Image struct {
 }
 
 type Pack struct {
-	Id     uint64
-	Date   string
-	Title  string
-	Text   string
-	Icon   string
-	Cover  string
-	Images []Image
+	Id       uint64
+	AuthorId uint64
+	Date     string
+	Title    string
+	Text     string
+	Icon     string
+	Cover    string
+	Images   []Image
 }
 
 func addPack(w http.ResponseWriter, r *http.Request) {
