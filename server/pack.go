@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	// "github.com/garyburd/redigo/redis"
-	"github.com/golang/glog"
+	// "github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	. "github.com/qiniu/api/conf"
 	"github.com/qiniu/api/rs"
 	"net/http"
 	"strconv"
-	// "strings"
 )
 
 const (
@@ -107,7 +106,7 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//out
-	lwutil.WriteResponse(w, &pack)
+	lwutil.WriteResponse(w, pack)
 }
 
 func listPack(w http.ResponseWriter, r *http.Request) {
@@ -152,7 +151,6 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 			args[i] = resp[i-1]
 		}
 	}
-	glog.Info(args)
 	resp, err = ssdb.Do(args...)
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]

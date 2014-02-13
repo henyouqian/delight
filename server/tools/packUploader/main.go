@@ -57,7 +57,7 @@ func newPack() {
 	var err error
 
 	var f *os.File
-	if f, err = os.Open("pack.js"); err != nil {
+	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
 		glog.Errorf("Open pack.js error: err=%s", err.Error())
 		return
 	}
@@ -72,6 +72,7 @@ func newPack() {
 		Text  string
 	}
 	pack := struct {
+		Id     uint64
 		Title  string
 		Text   string
 		Cover  string
@@ -80,6 +81,16 @@ func newPack() {
 	}{}
 	if err = decoder.Decode(&pack); err != nil {
 		glog.Errorf("pack.js decode failed: err=%s", err.Error())
+		return
+	}
+
+	if pack.Id != 0 {
+		glog.Errorf("pack exist: id=%d", pack.Id)
+		return
+	}
+
+	if pack.Title == "" {
+		glog.Errorln("need title")
 		return
 	}
 
@@ -208,12 +219,12 @@ func newPack() {
 
 	//add new pack to server
 	url = SERVER_HOST + "pack/new"
-	body, err = json.Marshal(pack)
+	packjs, err := json.Marshal(pack)
 	if err != nil {
 		panic(err)
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewReader(body))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(packjs))
 	req.AddCookie(&http.Cookie{Name: "usertoken", Value: string(tk)})
 	resp, err = client.Do(req)
 	if err != nil {
@@ -224,6 +235,19 @@ func newPack() {
 		glog.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
 		return
 	}
+
+	//update pack.js
+	packjsBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	f.Seek(0, os.SEEK_SET)
+	f.Truncate(0)
+	buf := bytes.NewBuffer([]byte(""))
+	json.Indent(buf, packjsBytes, "", "\t")
+	f.Write(buf.Bytes())
+
 	glog.Infoln("add pack succeed")
 }
 
