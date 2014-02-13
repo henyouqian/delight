@@ -3,22 +3,26 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/garyburd/redigo/redis"
-	// "github.com/golang/glog"
+	// "github.com/garyburd/redigo/redis"
+	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
+	. "github.com/qiniu/api/conf"
+	"github.com/qiniu/api/rs"
 	"net/http"
 	"strconv"
-	"strings"
+	// "strings"
 )
 
 const (
-	hkey            = "h_packs"
-	zkey            = "z_packs"
-	hPlayerPackStar = "h_palyerPackStar"
+	ADMIN_USERID     = 1
+	USER_PACK_BUCKET = "sliderpack"
+	H_PACK           = "hPack"     //key:packId, value:packData
+	Z_USER_PACK_PRE  = "zUserPack" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
 )
 
 type Image struct {
-	Url   string
+	File  string
+	Key   string
 	Title string
 	Text  string
 }
@@ -26,7 +30,7 @@ type Image struct {
 type Pack struct {
 	Id       uint64
 	AuthorId uint64
-	Date     string
+	Time     string
 	Title    string
 	Text     string
 	Icon     string
@@ -34,293 +38,138 @@ type Pack struct {
 	Images   []Image
 }
 
-func addPack(w http.ResponseWriter, r *http.Request) {
+func init() {
+	ACCESS_KEY = "XLlx3EjYfZJ-kYDAmNZhnH109oadlGjrGsb4plVy"
+	SECRET_KEY = "FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ"
+}
+
+func getUptoken(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//in
-	var in Pack
+	var in []string
 	err := lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
-	//save to redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	if in.Id == 0 {
-		ids, err := redis.Values(rc.Do("ZREVRANGE", zkey, 0, 1))
-		lwutil.CheckError(err, "")
-		maxId := int64(0)
-		if len(ids) > 0 {
-			maxId, err = redis.Int64(ids[0], nil)
-			lwutil.CheckError(err, "")
+	inLen := len(in)
+	type outElem struct {
+		Key   string
+		Token string
+	}
+	out := make([]outElem, inLen, inLen)
+	for i, v := range in {
+		scope := fmt.Sprintf("%s:%s", USER_PACK_BUCKET, v)
+		putPolicy := rs.PutPolicy{
+			Scope: scope,
 		}
-		in.Id = uint64(maxId + 1)
-	} else {
-		//check exist
-		exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
-		lwutil.CheckError(err, "")
-		if exists {
-			lwutil.SendError("err_already_exists", fmt.Sprintf("pack already exists: id=%d", in.Id))
+		out[i] = outElem{
+			in[i],
+			putPolicy.Token(nil),
 		}
 	}
 
-	rc.Send("ZADD", zkey, in.Id, in.Id)
-	value, err := json.Marshal(&in)
-	lwutil.CheckError(err, "")
-	rc.Send("HSET", hkey, in.Id, value)
-	err = rc.Flush()
-	lwutil.CheckError(err, "")
-
 	//out
-	out := struct {
-		Id uint64
-	}{in.Id}
 	lwutil.WriteResponse(w, &out)
 }
 
-func delPack(w http.ResponseWriter, r *http.Request) {
+func newPack(w http.ResponseWriter, r *http.Request) {
+	var err error
 	lwutil.CheckMathod(r, "POST")
-
-	//in
-	var in struct {
-		Id uint64
-	}
-	err := lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	//check exist
-	exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
-	lwutil.CheckError(err, "")
-	if !exists {
-		lwutil.SendError("err_not_exists", fmt.Sprintf("pack not exists: id=%d", in.Id))
-	}
-
-	//delete
-	rc.Send("ZREM", zkey, in.Id)
-	rc.Send("HDEL", hkey, in.Id)
-	err = rc.Flush()
-	lwutil.CheckError(err, "")
-
-	//out
-	out := struct {
-		Id uint64
-	}{in.Id}
-	lwutil.WriteResponse(w, &out)
-}
-
-func editPack(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	//in
-	var in Pack
-	err := lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	//edit
-	exists, err := redis.Bool(rc.Do("HEXISTS", hkey, in.Id))
-	lwutil.CheckError(err, "")
-	if !exists {
-		lwutil.SendError("err_not_exists", fmt.Sprintf("pack not exists: id=%d", in.Id))
-	}
-	rc.Send("ZADD", zkey, in.Id, in.Id)
-	value, err := json.Marshal(&in)
-	lwutil.CheckError(err, "")
-	rc.Send("HSET", hkey, in.Id, value)
-	err = rc.Flush()
-	lwutil.CheckError(err, "")
-
-	//out
-	out := struct {
-		Id uint64
-	}{in.Id}
-	lwutil.WriteResponse(w, &out)
-}
-
-func countPack(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	packCount, err := redis.Int(rc.Do("ZCARD", zkey))
-	lwutil.CheckError(err, "")
-
-	//out
-	out := struct {
-		PackCount uint32
-	}{
-		uint32(packCount),
-	}
-	lwutil.WriteResponse(w, &out)
-}
-
-func listPack(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
 
 	//session
 	session, err := findSession(w, r, nil)
 	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var pack Pack
+	err = lwutil.DecodeRequestBody(r, &pack)
+	lwutil.CheckError(err, "err_decode_body")
+	pack.AuthorId = session.Userid
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//in
-	var in struct {
-		Offset uint32
-		Limit  uint32
-	}
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-	if in.Limit > 30 {
-		in.Limit = 30
-	}
-
-	//pack info
-	_packNum, err := redis.Int(rc.Do("ZCARD", zkey))
-	lwutil.CheckError(err, "")
-	packNum := uint32(_packNum)
-
-	imgStart := in.Offset
-	imgStop := imgStart + in.Limit
-	ids, err := redis.Values(rc.Do("ZRANGE", zkey, imgStart, imgStop))
-	lwutil.CheckError(err, "")
-	if len(ids) == 0 {
-		lwutil.SendError("err_page", "page out of range")
-	}
-
-	args := make([]interface{}, 0, 10)
-	args = append(args, hkey)
-	for _, id := range ids {
-		args = append(args, id)
-	}
-
-	packsJs, err := redis.Values(rc.Do("HMGET", args...))
-	lwutil.CheckError(err, "")
-
-	type _Pack struct {
-		Pack
-		Star uint8
-	}
-
-	packs := make([]_Pack, 0, 10)
-	starMap := make(map[uint64]int) //packId => index of packs
-	for i, js := range packsJs {
-		var pack _Pack
-		bjs, err := redis.Bytes(js, nil)
-		lwutil.CheckError(err, "")
-		err = json.Unmarshal(bjs, &pack)
-		lwutil.CheckError(err, "")
-		packs = append(packs, pack)
-		starMap[pack.Id] = i
-	}
-
-	//player star
-	starMsg := make([]interface{}, 0, 10)
-	starMsg = append(starMsg, "multi_hget", hPlayerPackStar)
-	for _, packId := range ids {
-		key := fmt.Sprintf("%d/%s", session.Userid, packId)
-		starMsg = append(starMsg, key)
-	}
-	resp, err := ssdb.Do(starMsg...)
+	//gen packid
+	resp, err := ssdb.Do("hincr", H_SERIAL, "userPack", 1)
 	lwutil.CheckSsdbError(resp, err)
-	for i := 1; i < len(resp); i += 2 {
-		strs := strings.Split(resp[i], "/")
-		starNum, err := strconv.ParseUint(resp[i+1], 10, 8)
-		lwutil.CheckError(err, "")
+	pack.Id, _ = strconv.ParseUint(resp[1], 10, 32)
 
-		packId, err := strconv.ParseUint(strs[1], 10, 64)
-		lwutil.CheckError(err, "")
-		if idx, ok := starMap[uint64(packId)]; ok {
-			packs[idx].Star = uint8(starNum)
-		}
-	}
+	//add to hash
+	jsPack, _ := json.Marshal(&pack)
+	resp, err = ssdb.Do("hset", H_PACK, pack.Id, jsPack)
+	lwutil.CheckSsdbError(resp, err)
 
-	//out
-	out := map[string]interface{}{
-		"Packs":   packs,
-		"PackNum": packNum,
-	}
-	lwutil.WriteResponse(w, &out)
-}
-
-func getPack(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	//in
-	var in struct {
-		Id uint64
-	}
-	err := lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	packJs, err := redis.Bytes(rc.Do("HGET", hkey, in.Id))
-	lwutil.CheckError(err, "")
-
-	var pack Pack
-	bjs, err := redis.Bytes(packJs, nil)
-	lwutil.CheckError(err, "")
-	err = json.Unmarshal(bjs, &pack)
+	//add to user pack zset
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
+	resp, err = ssdb.Do("zset", name, pack.Id, pack.Id)
 	lwutil.CheckError(err, "")
 
 	//out
 	lwutil.WriteResponse(w, &pack)
 }
 
-func setPackStar(w http.ResponseWriter, r *http.Request) {
+func listPack(w http.ResponseWriter, r *http.Request) {
+	var err error
 	lwutil.CheckMathod(r, "POST")
 
-	//session
-	session, err := findSession(w, r, nil)
-	lwutil.CheckError(err, "err_auth")
+	//in
+	var in struct {
+		UserId  uint64
+		StartId uint32
+		Limit   uint32
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+	if in.UserId == 0 {
+		in.UserId = ADMIN_USERID
+	}
+	if in.UserId > 60 {
+		in.UserId = 60
+	}
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//in
-	var in struct {
-		PackId uint32
-		Star   uint8
-	}
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-	if in.Star > 3 {
-		lwutil.SendError("err_star_num", "star must between (0, 3)")
-	}
-
-	//ssdb
-	key := fmt.Sprintf("%d/%d", session.Userid, in.PackId)
-	resp, err := ssdb.Do("hset", hPlayerPackStar, key, in.Star)
+	//get keys
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, in.UserId)
+	resp, err := ssdb.Do("zkeys", name, in.StartId, in.StartId, "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 
-	lwutil.WriteResponse(w, "ok")
+	if len(resp) == 1 {
+		lwutil.SendError("err_not_found", "")
+	}
+
+	//get packs
+	args := make([]interface{}, len(resp)+1)
+	args[0] = "multi_hget"
+	args[1] = H_PACK
+	for i, _ := range args {
+		if i >= 2 {
+			args[i] = resp[i-1]
+		}
+	}
+	glog.Info(args)
+	resp, err = ssdb.Do(args...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	packs := make([]Pack, len(resp)/2)
+	for i, _ := range packs {
+		packjs := resp[i*2+1]
+		err = json.Unmarshal([]byte(packjs), &packs[i])
+		lwutil.CheckError(err, "")
+	}
+
+	//out
+	lwutil.WriteResponse(w, &packs)
 }
 
 func regPack() {
-	http.Handle("/pack/add", lwutil.ReqHandler(addPack))
-	http.Handle("/pack/edit", lwutil.ReqHandler(editPack))
-	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
+	http.Handle("/pack/getUptoken", lwutil.ReqHandler(getUptoken))
+	http.Handle("/pack/new", lwutil.ReqHandler(newPack))
 	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
-	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
-	http.Handle("/pack/count", lwutil.ReqHandler(countPack))
-	http.Handle("/pack/setStar", lwutil.ReqHandler(setPackStar))
 }

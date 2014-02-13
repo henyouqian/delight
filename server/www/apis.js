@@ -26,84 +26,12 @@ function Controller($scope, $http) {
 					"data": ""
 				},
 			] 
-		},
-		{
+		},{
 			"tab":"pack",
 			"path":"pack",
 			"apis":[
 				{
-					"name": "add",
-					"method": "POST",
-					"data": {
-						"Date":"2014-99-99",
-						"Title":"",
-						"Text":"",
-						"Icon":"http://",
-						"Cover":"http://",
-						"Images":[
-							{
-								"Url": "http://",
-								"Title": "",
-								"Text": ""
-							},{
-								"Url": "http://",
-								"Title": "",
-								"Text": ""
-							},
-						]
-					}
-				},{
-					"name": "edit",
-					"method": "POST",
-					"data": {
-						"Id":999,
-						"Date":"2014-99-99",
-						"Title":"",
-						"Text":"",
-						"Icon":"http://",
-						"Cover":"http://",
-						"Images":[
-							{
-								"Url": "http://",
-								"Title": "",
-								"Text": ""
-							},{
-								"Url": "http://",
-								"Title": "",
-								"Text": ""
-							},
-						]
-					}
-				},{
-					"name": "del",
-					"method": "POST",
-					"data": {
-						"Id":999,
-					}
-				},{
-					"name": "count",
-					"method": "POST",
-					"data": ""
-				},{
-					"name": "list",
-					"method": "POST",
-					"data": {"Offset":0, "Limit":12}
-				},{
-					"name": "get",
-					"method": "POST",
-					"data": {"Id":1}
-				},{
-					"name": "setStar",
-					"method": "POST",
-					"data": {"PackId":1, "Star":1}
-				},
-			] 
-		},{
-			"tab":"userPack",
-			"path":"userPack",
-			"apis":[
-				{
-					"name": "getUploadToken",
+					"name": "getUptoken",
 					"method": "POST",
 					"data": ["test1.jpg", "test2.jpg"]
 				},{
@@ -112,28 +40,21 @@ function Controller($scope, $http) {
 					"data": {
 						"Title":"",
 						"Text":"",
-						"Icon":"http://",
-						"Cover":"http://",
+						"Icon":"qiniuIcon=.jpg",
+						"Cover":"qiniuImage=.jpg",
 						"Images":[
 							{
-								"Url": "http://",
+								"File": "aaa.jpg",
+								"Key": "qiniuImage=.jpg",
 								"Title": "",
 								"Text": ""
-							},{
-								"Url": "http://",
-								"Title": "",
-								"Text": ""
-							},
+							}
 						]
 					}
 				},{
-					"name": "get",
+					"name": "list",
 					"method": "POST",
-					"data": {"Id": 1}
-				},{
-					"name": "own",
-					"method": "POST",
-					"data": {"UserId": 1}
+					"data": {"UserId": 0, "StartId": 0, "Limit":12}
 				}
 			]
 		},

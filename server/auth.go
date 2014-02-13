@@ -398,7 +398,7 @@ func ssdbTest(w http.ResponseWriter, r *http.Request) {
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
-	strs := strings.Split(in, " ")
+	strs := strings.Split(in, ",")
 
 	intfs := make([]interface{}, len(strs))
 	for i, v := range strs {

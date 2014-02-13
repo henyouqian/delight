@@ -186,7 +186,7 @@ bool SliderScene::init(PackInfo *packInfo) {
 
     //next button
     _btnNext = createColorButton(lang("Next"), 36, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
-    _btnNext->setPosition(Point(size.width-50, 50));
+    _btnNext->setPosition(Point(size.width-70, 70));
     _btnNext->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::next), Control::EventType::TOUCH_UP_INSIDE);
     _btnNext->setOpacity(0);
     auto label = (LabelTTF*)_btnNext->getTitleLabelForState(Control::State::NORMAL);
@@ -195,13 +195,13 @@ bool SliderScene::init(PackInfo *packInfo) {
     
     //back button
     _btnBack = createButton(lang("Back"), 36, 1.f);
-    _btnBack->setPosition(Point(50, 50));
+    _btnBack->setPosition(Point(70, 70));
     _btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::ShowBackConfirm), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(_btnBack, 10);
     
     //yes button
     _btnYes = createColorButton(lang("Yes"), 36, 1.f, Color3B::WHITE, Color3B(255, 59, 48), BTN_BG_OPACITY);
-    _btnYes->setPosition(Point(50, 50));
+    _btnYes->setPosition(Point(70, 70));
     _btnYes->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
     _btnYes->setOpacity(0);
     label = (LabelTTF*)_btnYes->getTitleLabelForState(Control::State::NORMAL);
@@ -211,7 +211,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     
     //no button
     _btnNo = createButton(lang("No"), 36, 1.f);
-    _btnNo->setPosition(Point(50, 50));
+    _btnNo->setPosition(Point(70, 70));
     _btnNo->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::HideBackConfirm), Control::EventType::TOUCH_UP_INSIDE);
     _btnNo->setOpacity(0);
     label = (LabelTTF*)_btnNo->getTitleLabelForState(Control::State::NORMAL);
@@ -221,7 +221,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     
     //finish button
     _btnFinish = createColorButton(lang("Finish"), 36, 1.f, Color3B::WHITE, Color3B(255, 59, 48), BTN_BG_OPACITY);
-    _btnFinish->setPosition(Point(size.width-50, 50));
+    _btnFinish->setPosition(Point(size.width-70, 70));
     _btnFinish->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
     _btnFinish->setOpacity(0);
     _btnFinish->setEnabled(false);
@@ -282,7 +282,7 @@ void SliderScene::ShowBackConfirm(Object *sender, Control::EventType controlEven
     //yes button
     auto fadeto = FadeTo::create(BTN_EASE_DUR, BTN_BG_OPACITY);
     auto easeFadeto = EaseSineOut::create(fadeto);
-    auto moveTo = MoveTo::create(BTN_EASE_DUR, Point(150.f, 50.f));
+    auto moveTo = MoveTo::create(BTN_EASE_DUR, Point(170.f, 70.f));
     auto easeMoveTo = EaseSineOut::create(moveTo);
     auto spawn = Spawn::create(easeFadeto, easeMoveTo, NULL);
     _btnYes->setVisible(true);
@@ -307,7 +307,7 @@ void SliderScene::HideBackConfirm(Object *sender, Control::EventType controlEven
     //yes button
     auto fadeTo = FadeTo::create(BTN_EASE_DUR, 0);
     auto easeFadeout = EaseSineOut::create(fadeTo);
-    auto moveTo = MoveTo::create(BTN_EASE_DUR, Point(50.f, 50.f));
+    auto moveTo = MoveTo::create(BTN_EASE_DUR, Point(70.f, 70.f));
     auto easeMoveTo = EaseSineOut::create(moveTo);
     auto spawn = Spawn::create(easeFadeout, easeMoveTo, NULL);
     
