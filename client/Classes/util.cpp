@@ -12,6 +12,8 @@ namespace {
     std::string _uploadPack;
 }
 
+static const char *g_res = "http://sliderpack.qiniudn.com/";
+
 void makeLocalDir() {
     auto wpath = FileUtils::getInstance()->getWritablePath();
     _imageDir = wpath;
@@ -42,13 +44,9 @@ void makeLocalPackPath(std::string &outPath, int packIdx) {
     outPath += buf;
 }
 
-void makeLocalImagePath(std::string &outPath, const char *url) {
-    Sha1 sha1;
-    sha1.write(url, strlen(url));
-    sha1.final();
-    
+void makeLocalImagePath(std::string &outPath, const char *key) {
     outPath = _imageDir;
-    outPath += sha1.getResult();
+    outPath += key;
 }
 
 void makeLocalGifPath(std::string &outPath, const char *fullPath) {
@@ -58,6 +56,11 @@ void makeLocalGifPath(std::string &outPath, const char *fullPath) {
     
     outPath = _localGifDir;
     outPath += sha1.getResult();
+}
+
+void makeUrl(std::string &url, const char *key) {
+    url = g_res;
+    url += key;
 }
 
 ControlButton *createButton(const char *text, float fontSize, float bgScale) {

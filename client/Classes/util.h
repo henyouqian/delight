@@ -9,8 +9,9 @@ USING_NS_CC_EXT;
 
 void makeLocalDir();
 void makeLocalPackPath(std::string &outPath, int packIdx);
-void makeLocalImagePath(std::string &outPath, const char *url);
+void makeLocalImagePath(std::string &outPath, const char *key);
 void makeLocalGifPath(std::string &outPath, const char *fullPath);
+void makeUrl(std::string &url, const char *key);
 
 ControlButton *createButton(const char *text, float fontSize, float bgScale);
 ControlButton *createRingButton(const char *text, float fontSize, float bgScale, const Color3B &color);

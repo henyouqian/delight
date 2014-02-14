@@ -55,6 +55,10 @@ function Controller($scope, $http) {
 					"name": "list",
 					"method": "POST",
 					"data": {"UserId": 0, "StartId": 0, "Limit":12}
+				},{
+					"name": "del",
+					"method": "POST",
+					"data": {"PackId": 0}
 				}
 			]
 		},

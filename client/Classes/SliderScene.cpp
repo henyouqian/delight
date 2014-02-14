@@ -386,14 +386,14 @@ void SliderScene::reset(int imgIdx) {
     _imgIdx = imgIdx;
     std::string local;
     auto idx = _packInfo->imageIndices[_imgIdx];
-    makeLocalImagePath(local, _packInfo->images[idx].url.c_str());
+    makeLocalImagePath(local, _packInfo->images[idx].key.c_str());
     _gameplay->reset(local.c_str(), SLIDER_NUM);
     auto nextIdx = _imgIdx + 1;
     if (nextIdx >= _packInfo->images.size()) {
         nextIdx = 0;
     }
     idx = _packInfo->imageIndices[nextIdx];
-    makeLocalImagePath(local, _packInfo->images[idx].url.c_str());
+    makeLocalImagePath(local, _packInfo->images[idx].key.c_str());
     _gameplay->preload(local.c_str());
     
     //

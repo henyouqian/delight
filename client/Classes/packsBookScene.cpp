@@ -84,11 +84,6 @@ bool PacksBookScene::init() {
     _loadingTexture->retain();
     //_loadingTexture->setSpeed(2.f);
     
-    //get pack count
-    _packCount = 0;
-    _pageCount = 0;
-    postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetCount));
-    
     //sptLoader
     _sptLoader = SptLoader::create(this);
     addChild(_sptLoader);
@@ -101,6 +96,13 @@ bool PacksBookScene::init() {
     _starBatch = SpriteBatchNode::create("ui/star36.png");
     this->addChild(_starBatch, 10);
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui/star36.plist");
+    
+//    //get pack count
+//    _packCount = 0;
+//    _pageCount = 0;
+//    postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetCount));
+    
+    loadPage(0);
     
     return true;
 }
@@ -185,13 +187,13 @@ void PacksBookScene::loadPage(int page) {
     _packs.clear();
     
     //query packs info
-    int offset = page * PACKS_PER_PAGE;
-    int limit = PACKS_PER_PAGE;
+    int limit = PACKS_PER_PAGE*5;
     jsonxx::Object msg;
-    msg << "Offset" << offset;
+    msg << "UserId" << 0;
+    msg << "StartId" << 0;
     msg << "Limit" << limit;
     
-    postHttpRequest("pack/get", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetPage));
+    postHttpRequest("pack/list", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetPage));
     
     //setup loading sprite
     int packNum = PACKS_PER_PAGE;
@@ -285,20 +287,15 @@ void PacksBookScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
         //parse json
         std::istringstream is(pageJs);
         
-        jsonxx::Object msg;
+        jsonxx::Array msg;
         bool ok = msg.parse(is);
         if (!ok) {
             lwerror("json parse error");
             return;
         }
         
-        if (!msg.has<jsonxx::Array>("Packs")) {
-            lwerror("json parse error: no Packs");
-            return;
-        }
-        auto packsJs = msg.get<jsonxx::Array>("Packs");
-        for (auto i = 0; i < packsJs.size(); ++i) {
-            auto packJs = packsJs.get<jsonxx::Object>(i);
+        for (auto i = 0; i < msg.size(); ++i) {
+            auto packJs = msg.get<jsonxx::Object>(i);
             PackInfo pack;
             pack.init(packJs);
             _packs.push_back(pack);

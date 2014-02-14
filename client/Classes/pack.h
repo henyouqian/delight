@@ -10,14 +10,14 @@ USING_NS_CC_EXT;
 
 struct PackInfo {
     int id;
-    std::string date;
+    std::string time;
     std::string title;
     std::string text;
     std::string icon;
     std::string cover;
     
     struct Image {
-        std::string url;
+        std::string key;
         std::string title;
         std::string text;
     };

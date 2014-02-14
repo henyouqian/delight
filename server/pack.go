@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	ADMIN_USERID     = 1
+	ADMIN_USERID     = uint64(1)
 	USER_PACK_BUCKET = "sliderpack"
 	H_PACK           = "hPack"     //key:packId, value:packData
 	Z_USER_PACK_PRE  = "zUserPack" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
@@ -103,7 +103,7 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	//add to user pack zset
 	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
 	resp, err = ssdb.Do("zset", name, pack.Id, pack.Id)
-	lwutil.CheckError(err, "")
+	lwutil.CheckSsdbError(resp, err)
 
 	//out
 	lwutil.WriteResponse(w, pack)
@@ -166,8 +166,45 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
+func delPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		PackId uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//check owner
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
+	resp, err := ssdb.Do("zexists", name, in.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] == "0" {
+		lwutil.SendError("err_not_exist", "not own the pack")
+	}
+	resp, err = ssdb.Do("zdel", name, in.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	resp, err = ssdb.Do("hdel", H_PACK, in.PackId)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, in)
+}
+
 func regPack() {
 	http.Handle("/pack/getUptoken", lwutil.ReqHandler(getUptoken))
 	http.Handle("/pack/new", lwutil.ReqHandler(newPack))
 	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
+	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
 }

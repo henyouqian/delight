@@ -15,8 +15,8 @@ void PackInfo::init(jsonxx::Object& packJs) {
         lwerror("json parse error: no Id");
         return;
     }
-    if (!packJs.has<jsonxx::String>("Date")) {
-        lwerror("json parse error: no Date");
+    if (!packJs.has<jsonxx::String>("Time")) {
+        lwerror("json parse error: no Time");
         return;
     }
     if (!packJs.has<jsonxx::String>("Title")) {
@@ -41,7 +41,7 @@ void PackInfo::init(jsonxx::Object& packJs) {
     }
     
     this->id = (int)(packJs.get<jsonxx::Number>("Id"));
-    this->date = packJs.get<jsonxx::String>("Date");
+    this->time = packJs.get<jsonxx::String>("Time");
     this->icon = packJs.get<jsonxx::String>("Icon");
     this->cover = packJs.get<jsonxx::String>("Cover");
     this->title = packJs.get<jsonxx::String>("Title");
@@ -50,8 +50,8 @@ void PackInfo::init(jsonxx::Object& packJs) {
     auto imagesJs = packJs.get<jsonxx::Array>("Images");
     for (auto j = 0; j < imagesJs.size(); ++j) {
         auto imageJs = imagesJs.get<jsonxx::Object>(j);
-        if (!imageJs.has<jsonxx::String>("Url")) {
-            lwerror("json parse error: no Url");
+        if (!imageJs.has<jsonxx::String>("Key")) {
+            lwerror("json parse error: no Key");
             return;
         }
         if (!imageJs.has<jsonxx::String>("Title")) {
@@ -63,7 +63,7 @@ void PackInfo::init(jsonxx::Object& packJs) {
             return;
         }
         PackInfo::Image image;
-        image.url = imageJs.get<jsonxx::String>("Url");
+        image.key = imageJs.get<jsonxx::String>("Key");
         image.title = imageJs.get<jsonxx::String>("Title");
         image.text = imageJs.get<jsonxx::String>("Text");
         this->images.push_back(image);
@@ -94,14 +94,16 @@ void PackDownloader::init(PackInfo *pack, PackListener *listener) {
     for (auto i = 0; i < pack->images.size(); ++i) {
         auto &image = pack->images[i];
         std::string local;
-        makeLocalImagePath(local, image.url.c_str());
+        makeLocalImagePath(local, image.key.c_str());
         
         //check file exist and download image
         if (FileUtils::getInstance()->isFileExist(local)) {
             downloadedNum++;
         } else {
             auto request = new HttpRequest();
-            request->setUrl(image.url.c_str());
+            std::string url;
+            makeUrl(url, image.key.c_str());
+            request->setUrl(url.c_str());
             request->setRequestType(HttpRequest::Type::GET);
             request->setResponseCallback(this, (SEL_HttpResponse)(&PackDownloader::onImageDownload));
             requestMapLocal[request] = local;

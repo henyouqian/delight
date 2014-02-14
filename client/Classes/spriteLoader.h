@@ -26,7 +26,7 @@ public:
     virtual void update(float delta);
     
     void load(const char *filename, void *userData = nullptr);
-    void download(const char *url, void *userData = nullptr);
+    void download(const char *key, void *userData = nullptr);
     
     void onTextureCreated(const char *localPath, Texture2D *texture, void *userData);
 

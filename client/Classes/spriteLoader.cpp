@@ -158,16 +158,18 @@ void SptLoader::load(const char* localPath, void *userData) {
 //    TextureCache::getInstance()->addImageAsync(filename, al, (SEL_CallFuncO)&AsyncLoader::onImageLoad);
 //}
 
-void SptLoader::download(const char *url, void *userData) {
+void SptLoader::download(const char *key, void *userData) {
     std::string localPath;
-    makeLocalImagePath(localPath, url);
+    makeLocalImagePath(localPath, key);
     
     //check and download image
     if (FileUtils::getInstance()->isFileExist(localPath)) {
         load(localPath.c_str(), userData);
     } else {
         auto request = new HttpRequest();
-        request->setUrl(url);
+        std::string url;
+        makeUrl(url, key);
+        request->setUrl(url.c_str());
         request->setRequestType(HttpRequest::Type::GET);
         request->setCallback(std::bind(&SptLoader::onImageDownload, this, std::placeholders::_1, std::placeholders::_2, localPath));
         request->setUserData(userData);

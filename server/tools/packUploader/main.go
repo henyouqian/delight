@@ -71,18 +71,20 @@ func newPack() {
 		Title string
 		Text  string
 	}
-	pack := struct {
+	type Pack struct {
 		Id     uint64
 		Title  string
 		Text   string
 		Cover  string
 		Icon   string
 		Images []Image
-	}{}
+	}
+	pack := Pack{}
 	if err = decoder.Decode(&pack); err != nil {
 		glog.Errorf("pack.js decode failed: err=%s", err.Error())
 		return
 	}
+	packRaw := pack
 
 	if pack.Id != 0 {
 		glog.Errorf("pack exist: id=%d", pack.Id)
@@ -142,18 +144,31 @@ func newPack() {
 		return
 	}
 
-	//gen icon name
+	//gen icon key
 	iconKey := genImageKey(pack.Icon)
+
+	//check cover
+	if pack.Cover == "" {
+		glog.Errorln("Need cover")
+		return
+	}
 
 	//upload to qiniu
 	glog.Info("upload begin")
 
 	///check file exists
+	uploadImgs := pack.Images
+	iconImg := Image{
+		File: pack.Icon,
+		Key:  iconKey,
+	}
+	uploadImgs = append(uploadImgs, iconImg)
+
 	rsCli := qiniurs.New(nil)
-	imgNum := len(pack.Images)
+	imgNum := len(uploadImgs)
 	entryPathes := make([]qiniurs.EntryPath, imgNum)
 	imgExists := make([]bool, imgNum)
-	for i, img := range pack.Images {
+	for i, img := range uploadImgs {
 		entryPathes[i].Bucket = BUCKET
 		entryPathes[i].Key = img.Key
 		imgExists[i] = false
@@ -173,15 +188,15 @@ func newPack() {
 	}
 	token := putPolicy.Token(nil)
 
-	///upload icon
-	var ret qiniuio.PutRet
-	if err = qiniuio.PutFile(nil, &ret, token, iconKey, pack.Icon, nil); err != nil {
-		panic(err)
-	}
-	glog.Infof("upload icon ok: %s", pack.Icon)
+	// ///upload icon
+	// var ret qiniuio.PutRet
+	// if err = qiniuio.PutFile(nil, &ret, token, iconKey, pack.Icon, nil); err != nil {
+	// 	panic(err)
+	// }
+	// glog.Infof("upload icon ok: %s", pack.Icon)
 
 	///upload images
-	for i, img := range pack.Images {
+	for i, img := range uploadImgs {
 		if imgExists[i] {
 			glog.Infof("image exist: %s", img.File)
 			continue
@@ -216,8 +231,12 @@ func newPack() {
 	if err != nil {
 		panic(err)
 	}
+	tk = tk[1 : len(tk)-2]
 
 	//add new pack to server
+	pack.Icon = iconKey
+	pack.Cover = genImageKey(pack.Cover)
+
 	url = SERVER_HOST + "pack/new"
 	packjs, err := json.Marshal(pack)
 	if err != nil {
@@ -237,7 +256,20 @@ func newPack() {
 	}
 
 	//update pack.js
-	packjsBytes, err := ioutil.ReadAll(resp.Body)
+	packBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	var dwpack Pack
+	err = json.Unmarshal(packBytes, &dwpack)
+	if err != nil {
+		panic(err)
+	}
+
+	packRaw.Id = dwpack.Id
+
+	packjs, err = json.Marshal(packRaw)
 	if err != nil {
 		panic(err)
 	}
@@ -245,7 +277,7 @@ func newPack() {
 	f.Seek(0, os.SEEK_SET)
 	f.Truncate(0)
 	buf := bytes.NewBuffer([]byte(""))
-	json.Indent(buf, packjsBytes, "", "\t")
+	json.Indent(buf, packjs, "", "\t")
 	f.Write(buf.Bytes())
 
 	glog.Infoln("add pack succeed")

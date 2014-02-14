@@ -9,6 +9,9 @@ USING_NS_CC_EXT;
 
 using namespace CocosDenshion;
 
+static const char *SND_TINK = "audio/tink.wav";
+static const char *SND_SUCCESS = "audio/success.aiff";
+
 namespace {
     void shuffle(std::vector<int> &vec, int num) {
         vec.clear();
@@ -51,8 +54,8 @@ Gameplay::Gameplay(GameplayListener *listener) {
     _currSliderGrp = nullptr;
     _newSliderGrp = nullptr;
     
-    SimpleAudioEngine::getInstance()->preloadEffect("audio/tik.wav");
-    SimpleAudioEngine::getInstance()->preloadEffect("audio/success.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect(SND_TINK);
+    SimpleAudioEngine::getInstance()->preloadEffect(SND_SUCCESS);
     
     _sptLoader = SptLoader::create(this);
     this->addChild(_sptLoader);
@@ -208,7 +211,7 @@ void Gameplay::onTouchesMoved(const std::vector<Touch*>& touches) {
         }
     }
     if (resort) {
-        SimpleAudioEngine::getInstance()->playEffect("audio/tik.wav");
+        SimpleAudioEngine::getInstance()->playEffect(SND_TINK);
         int i = 0;
         for (auto it = _sliders.begin(); it != _sliders.end(); ++it, ++i) {
             float y = _sliderY0 - i * _sliderH;
@@ -246,7 +249,7 @@ void Gameplay::onTouchesEnded(const std::vector<Touch*>& touches) {
         }
     }
     if (_isCompleted == false && complete == true && _running) {
-        SimpleAudioEngine::getInstance()->playEffect("audio/success.mp3");
+        SimpleAudioEngine::getInstance()->playEffect(SND_SUCCESS);
     }
     _isCompleted = complete;
 }
