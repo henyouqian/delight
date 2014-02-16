@@ -23,6 +23,7 @@ Scene* PacksBookScene::createScene() {
 }
 
 bool PacksBookScene::init() {
+    showStatusBar(true);
     auto visSize = Director::getInstance()->getVisibleSize();
     
     if (!LayerColor::initWithColor(Color4B(255, 255, 255, 255)))  {

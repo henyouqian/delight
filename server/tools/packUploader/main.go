@@ -5,7 +5,9 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"flag"
+	"fmt"
 	"github.com/golang/glog"
 	qiniuconf "github.com/qiniu/api/conf"
 	qiniuio "github.com/qiniu/api/io"
@@ -19,9 +21,15 @@ import (
 )
 
 const (
-	USEAGE      = "Useage: packUploader new|update uploadDir"
-	BUCKET      = "sliderpack"
-	SERVER_HOST = "http://localhost:9999/"
+	USEAGE         = "Useage: packUploader new|del|update uploadDir"
+	BUCKET         = "sliderpack"
+	SERVER_HOST    = "http://localhost:9999/"
+	ADMIN_NAME     = "aa"
+	ADMIN_PASSWORD = "aa"
+)
+
+var (
+	_userToken = ""
 )
 
 func init() {
@@ -46,6 +54,8 @@ func main() {
 	switch flag.Arg(0) {
 	case "new":
 		newPack()
+	case "del":
+		delPack()
 	case "update":
 		updatePack()
 	default:
@@ -53,43 +63,31 @@ func main() {
 	}
 }
 
+type Image struct {
+	File  string
+	Key   string
+	Title string
+	Text  string
+}
+type Pack struct {
+	Id     uint64
+	Title  string
+	Text   string
+	Cover  string
+	Icon   string
+	Images []Image
+}
+
 func newPack() {
 	var err error
 
-	var f *os.File
-	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
-		glog.Errorf("Open pack.js error: err=%s", err.Error())
-		return
-	}
-	defer f.Close()
-
-	//json decode
-	decoder := json.NewDecoder(f)
-	type Image struct {
-		File  string
-		Key   string
-		Title string
-		Text  string
-	}
-	type Pack struct {
-		Id     uint64
-		Title  string
-		Text   string
-		Cover  string
-		Icon   string
-		Images []Image
-	}
 	pack := Pack{}
-	if err = decoder.Decode(&pack); err != nil {
-		glog.Errorf("pack.js decode failed: err=%s", err.Error())
+	err = loadPack(&pack)
+	if err != nil {
+		glog.Errorf("loadPack failed: err=%s", err.Error())
 		return
 	}
 	packRaw := pack
-
-	if pack.Id != 0 {
-		glog.Errorf("pack exist: id=%d", pack.Id)
-		return
-	}
 
 	if pack.Title == "" {
 		glog.Errorln("need title")
@@ -210,57 +208,21 @@ func newPack() {
 
 	glog.Info("upload complete")
 
-	//login to server
-	client := &http.Client{}
-
-	url := SERVER_HOST + "auth/login"
-	body := []byte(`{
-	    "Username": "aa",
-	    "Password": "aa"
-	}`)
-	resp, err := client.Post(url, "application/json", bytes.NewReader(body))
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		glog.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
-		return
-	}
-	tk, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-	tk = tk[1 : len(tk)-2]
+	//login
+	login()
 
 	//add new pack to server
 	pack.Icon = iconKey
 	pack.Cover = genImageKey(pack.Cover)
 
-	url = SERVER_HOST + "pack/new"
 	packjs, err := json.Marshal(pack)
 	if err != nil {
 		panic(err)
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewReader(packjs))
-	req.AddCookie(&http.Cookie{Name: "usertoken", Value: string(tk)})
-	resp, err = client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		glog.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
-		return
-	}
+	packBytes := postReq("pack/new", packjs)
 
 	//update pack.js
-	packBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-
 	var dwpack Pack
 	err = json.Unmarshal(packBytes, &dwpack)
 	if err != nil {
@@ -274,6 +236,13 @@ func newPack() {
 		panic(err)
 	}
 
+	var f *os.File
+	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open pack.js error: err=%s", err.Error())
+		return
+	}
+	defer f.Close()
+
 	f.Seek(0, os.SEEK_SET)
 	f.Truncate(0)
 	buf := bytes.NewBuffer([]byte(""))
@@ -283,8 +252,93 @@ func newPack() {
 	glog.Infoln("add pack succeed")
 }
 
+func delPack() {
+	var err error
+
+	pack := Pack{}
+	err = loadPack(&pack)
+	if err != nil {
+		glog.Errorf("loadPack failed: err=%s", err.Error())
+		return
+	}
+
+	login()
+
+	//send msg to server
+	body := fmt.Sprintf(`{
+		"PackId": %d
+	}`, pack.Id)
+	postReq("pack/del", []byte(body))
+
+	glog.Infoln("del ok")
+}
+
 func updatePack() {
 
+}
+
+func loadPack(pack *Pack) (err error) {
+	var f *os.File
+	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open pack.js error: err=%s", err.Error())
+		return err
+	}
+	defer f.Close()
+
+	//json decode
+	decoder := json.NewDecoder(f)
+	if err = decoder.Decode(&pack); err != nil {
+		glog.Errorf("pack.js decode failed: err=%s", err.Error())
+		return err
+	}
+	return nil
+}
+
+func login() {
+	client := &http.Client{}
+
+	url := SERVER_HOST + "auth/login"
+	body := fmt.Sprintf(`{
+	    "Username": "%s",
+	    "Password": "%s"
+	}`, ADMIN_NAME, ADMIN_PASSWORD)
+
+	resp, err := client.Post(url, "application/json", bytes.NewReader([]byte(body)))
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		glog.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
+		panic(errors.New("login error"))
+	}
+	tk, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	_userToken = string(tk)
+	_userToken = _userToken[1 : len(_userToken)-2]
+}
+
+func postReq(partialUrl string, body []byte) (respBytes []byte) {
+	url := SERVER_HOST + partialUrl
+
+	req, err := http.NewRequest("POST", url, bytes.NewReader(body))
+	req.AddCookie(&http.Cookie{Name: "usertoken", Value: _userToken})
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	respBytes, _ = ioutil.ReadAll(resp.Body)
+	if resp.StatusCode != 200 {
+		glog.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
+		glog.Errorf("resp = %s", string(respBytes))
+		os.Exit(1)
+	}
+	return respBytes
 }
 
 func genImageKey(inFileName string) (outFileName string) {

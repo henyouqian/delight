@@ -90,14 +90,23 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//gen packid
-	resp, err := ssdb.Do("hincr", H_SERIAL, "userPack", 1)
-	lwutil.CheckSsdbError(resp, err)
-	pack.Id, _ = strconv.ParseUint(resp[1], 10, 32)
+	//check pack exist if provide packId
+	if pack.Id != 0 {
+		resp, err := ssdb.Do("hexists", H_PACK, pack.Id)
+		lwutil.CheckSsdbError(resp, err)
+		if resp[1] == "1" {
+			lwutil.SendError("err_exist", "pack already exist")
+		}
+	} else {
+		//gen packid
+		resp, err := ssdb.Do("hincr", H_SERIAL, "userPack", 1)
+		lwutil.CheckSsdbError(resp, err)
+		pack.Id, _ = strconv.ParseUint(resp[1], 10, 32)
+	}
 
 	//add to hash
 	jsPack, _ := json.Marshal(&pack)
-	resp, err = ssdb.Do("hset", H_PACK, pack.Id, jsPack)
+	resp, err := ssdb.Do("hset", H_PACK, pack.Id, jsPack)
 	lwutil.CheckSsdbError(resp, err)
 
 	//add to user pack zset

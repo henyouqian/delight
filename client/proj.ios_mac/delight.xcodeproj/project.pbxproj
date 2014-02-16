@@ -110,6 +110,7 @@
 		B3A639061862F842009ECDF1 /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A639031862F841009ECDF1 /* spriteLoader.cpp */; };
 		B3AA0785186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
 		B3AA0786186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
+		B3AE35CF18B00CA1007BD96D /* util.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3AE35CE18B00CA1007BD96D /* util.mm */; };
 		B3BCF356188E7E6D00A1DD08 /* loginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */; };
 		B3CA1F41188810A0005637A0 /* lang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CA1F3F188810A0005637A0 /* lang.cpp */; };
 		B3CA1F42188810A0005637A0 /* lang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CA1F3F188810A0005637A0 /* lang.cpp */; };
@@ -397,6 +398,7 @@
 		B3A639041862F841009ECDF1 /* spriteLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spriteLoader.h; path = ../Classes/spriteLoader.h; sourceTree = "<group>"; };
 		B3AA0783186BEEE200706E4D /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../Classes/util.cpp; sourceTree = "<group>"; };
 		B3AA0784186BEEE200706E4D /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../Classes/util.h; sourceTree = "<group>"; };
+		B3AE35CE18B00CA1007BD96D /* util.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = util.mm; path = ../Classes/util.mm; sourceTree = "<group>"; };
 		B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = loginScene.cpp; path = ../Classes/loginScene.cpp; sourceTree = "<group>"; };
 		B3BCF355188E7E6D00A1DD08 /* loginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginScene.h; path = ../Classes/loginScene.h; sourceTree = "<group>"; };
 		B3CA1F3F188810A0005637A0 /* lang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lang.cpp; path = ../Classes/lang.cpp; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 				B3CC385E18A392F800056424 /* ELCPicker.h */,
 				B3CC385F18A392F800056424 /* ELCPicker.mm */,
+				B3AE35CE18B00CA1007BD96D /* util.mm */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -1183,6 +1186,7 @@
 				B33DAC7A184CC6B9001403BA /* gifalloc.c in Sources */,
 				B3CC388318A3930B00056424 /* ELCAssetCell.m in Sources */,
 				B3FB833D18A78CF90037DFB4 /* qiniu.cpp in Sources */,
+				B3AE35CF18B00CA1007BD96D /* util.mm in Sources */,
 				B31003A0187C067A0049A6CF /* modeSelectScene.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				B364905A18A51DA300B93930 /* userPackScene.cpp in Sources */,
