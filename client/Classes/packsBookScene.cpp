@@ -26,7 +26,7 @@ bool PacksBookScene::init() {
     showStatusBar(true);
     auto visSize = Director::getInstance()->getVisibleSize();
     
-    if (!LayerColor::initWithColor(Color4B(255, 255, 255, 255)))  {
+    if (!LayerColor::initWithColor(Color4B(10, 10, 10, 255)))  {
         return false;
     }
     this->setTouchEnabled(true);
@@ -38,47 +38,36 @@ bool PacksBookScene::init() {
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksBookScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack);
     
+    //header
+    auto headerBg = Sprite::create("ui/pt.png");
+    headerBg->setScaleX(visSize.width);
+    headerBg->setScaleY(116);
+    headerBg->setAnchorPoint(Point(0.f, 1.f));
+    headerBg->setPosition(Point(0.f, visSize.height));
+    headerBg->setColor(Color3B(27, 27, 27));
+    addChild(headerBg);
+    
     //
     float y = visSize.height-70;
     
     //older
     auto label = LabelTTF::create("〈", "HelveticaNeue", 64);
-    label->setColor(Color3B(0, 122, 255));
+    label->setColor(Color3B(240, 240, 240));
     auto btn = ControlButton::create(label, Scale9Sprite::create());
     btn->setAnchorPoint(Point(0.f, 0.5f));
     btn->setPosition(Point(10.f, y));
     addChild(btn);
     
-    //newer
-    label = LabelTTF::create("〉", "HelveticaNeue", 64);
-    label->setColor(Color3B(0, 122, 255));
-    btn = ControlButton::create(label, Scale9Sprite::create());
-    btn->setAnchorPoint(Point(1.f, 0.5f));
-    btn->setPosition(Point(visSize.width-10, y));
-    addChild(btn);
+    //label
+    auto title = LabelTTF::create(lang("Packs"), "HelveticaNeue", 44);
+    title->setAnchorPoint(Point(.5f, .5f));
+    title->setPosition(Point(visSize.width*.5f, y));
+    title->setColor(Color3B(240, 240, 240));
+    addChild(title);
     
-    //page
-    _pageLabel = LabelTTF::create(lang("Connecting..."), "HelveticaNeue", 44);
-    _pageLabel->setAnchorPoint(Point(.5f, .5f));
-    _pageLabel->setPosition(Point(visSize.width*.5f, y));
-    _pageLabel->setColor(Color3B(255, 59, 48));
-    addChild(_pageLabel);
     
-    //line
-    auto line = Sprite::create("ui/pt.png");
-    line->setScaleX(visSize.width);
-    line->setAnchorPoint(Point(0.f, 0.f));
-    line->setPosition(Point(0.f, visSize.height - ICON_Y0+5));
-    line->setColor(Color3B(168, 168, 168));
-    addChild(line, 1);
-    
-    line = Sprite::create("ui/pt.png");
-    line->setScaleX(visSize.width);
-    line->setAnchorPoint(Point(0.f, 1.f));
     _iconWidth = (visSize.width-2.f*ICON_MARGIN) / 3.f;
-    line->setPosition(Point(0.f, visSize.height - ICON_Y0 - 4*_iconWidth - 3*ICON_MARGIN-5));
-    line->setColor(Color3B(168, 168, 168));
-    addChild(line, 1);
+    _iconHeight = _iconWidth * 1.414f;
     
     //loading texture
     _loadingTexture = GifTexture::create("ui/loading.gif", this, false);
@@ -180,9 +169,6 @@ void PacksBookScene::loadPage(int page) {
     TextureCache::getInstance()->removeUnusedTextures();
     
     _currPage = page;
-    char buf[64];
-    snprintf(buf, 64, "%d/%d", page+1, _pageCount);
-    _pageLabel->setString(buf);
     
     //
     _packs.clear();
@@ -215,7 +201,7 @@ void PacksBookScene::loadPage(int page) {
         auto visSize = Director::getInstance()->getVisibleSize();
         float w = _iconWidth;
         float x = (w+ICON_MARGIN)*col + .5f*w;
-        float y = visSize.height - ((w+ICON_MARGIN)*row+.5f*w) - ICON_Y0;
+        float y = visSize.height - ((_iconHeight+ICON_MARGIN)*row+.5f*_iconHeight) - ICON_Y0;
         loadingSpr->setPosition(Point(x, y));
         loadingSpr->setScale(2.f);
         
@@ -316,10 +302,24 @@ void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void
         _icons[idx]->removeFromParent();
         _icons[idx] = sprite;
         
+//        auto size = sprite->getContentSize();
+//        auto shortEdge = MIN(size.width, size.height);
+//        sprite->setScale(_iconWidth/shortEdge);
+//        sprite->setTextureRect(Rect((size.width-shortEdge)*.5f, (size.height-shortEdge)*.5f, shortEdge, shortEdge));
+        
         auto size = sprite->getContentSize();
-        auto shortEdge = MIN(size.width, size.height);
-        sprite->setScale(_iconWidth/shortEdge);
-        sprite->setTextureRect(Rect((size.width-shortEdge)*.5f, (size.height-shortEdge)*.5f, shortEdge, shortEdge));
+        auto scaleW = _iconWidth/size.width;
+        auto scaleH = _iconHeight/size.height;
+        auto scale = MAX(scaleW, scaleH);
+        float uvw = size.width;
+        float uvh = size.height;
+        if (scaleW <= scaleH) {
+            uvw = size.height * _iconWidth/_iconHeight;
+        } else {
+            uvh = size.width * _iconHeight/_iconWidth;
+        }
+        sprite->setScale(scale);
+        sprite->setTextureRect(Rect((size.width-uvw)*.5f, (size.height-uvh)*.5f, uvw, uvh));
         
     } else {
         lwerror("no loading sprite to replace");

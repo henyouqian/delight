@@ -36,7 +36,6 @@ private:
     //page: zero based
     void loadPage(int page);
     
-    LabelTTF *_pageLabel;
     int _packCount;
     int _pageCount;
     int _currPage;
@@ -47,6 +46,7 @@ private:
     Rect _touchedRect;
     PackInfo *_touchedPack;
     float _iconWidth;
+    float _iconHeight;
     Node *_iconsParent;
     
     std::vector<PackInfo> _packs;
