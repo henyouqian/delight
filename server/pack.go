@@ -32,7 +32,7 @@ type Pack struct {
 	Time     string
 	Title    string
 	Text     string
-	Icon     string
+	Thumb    string
 	Cover    string
 	Images   []Image
 }
@@ -200,7 +200,7 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 	resp, err := ssdb.Do("zexists", name, in.PackId)
 	lwutil.CheckSsdbError(resp, err)
 	if resp[1] == "0" {
-		lwutil.SendError("err_not_exist", "not own the pack")
+		lwutil.SendError("err_not_exist", fmt.Sprintf("not own the pack: userId=%d, packId=%d", session.Userid, in.PackId))
 	}
 	resp, err = ssdb.Do("zdel", name, in.PackId)
 	lwutil.CheckSsdbError(resp, err)

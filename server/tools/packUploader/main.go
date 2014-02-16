@@ -24,8 +24,8 @@ const (
 	USEAGE         = "Useage: packUploader new|del|update uploadDir"
 	BUCKET         = "sliderpack"
 	SERVER_HOST    = "http://localhost:9999/"
-	ADMIN_NAME     = "aa"
-	ADMIN_PASSWORD = "aa"
+	ADMIN_NAME     = "admin"
+	ADMIN_PASSWORD = "admin"
 )
 
 var (
@@ -74,7 +74,7 @@ type Pack struct {
 	Title  string
 	Text   string
 	Cover  string
-	Icon   string
+	Thumb  string
 	Images []Image
 }
 
@@ -110,8 +110,10 @@ func newPack() {
 			ext := parts[len(parts)-1]
 			lower := strings.ToLower(ext)
 			if lower == "jpg" || lower == "jpeg" || lower == "gif" || lower == "png" {
-				if parts[0] == "icon" {
-					pack.Icon = path
+				if parts[0] == "thumb" {
+					pack.Thumb = path
+				} else if parts[0] == "cover" {
+					pack.Cover = path
 				} else {
 					key := genImageKey(path)
 
@@ -136,14 +138,14 @@ func newPack() {
 		return nil
 	})
 
-	//check icon
-	if pack.Icon == "" {
-		glog.Errorln("Need icon")
+	//check thumb
+	if pack.Thumb == "" {
+		glog.Errorln("Need thumb")
 		return
 	}
 
-	//gen icon key
-	iconKey := genImageKey(pack.Icon)
+	//gen thumb key
+	thumbKey := genImageKey(pack.Thumb)
 
 	//check cover
 	if pack.Cover == "" {
@@ -156,11 +158,11 @@ func newPack() {
 
 	///check file exists
 	uploadImgs := pack.Images
-	iconImg := Image{
-		File: pack.Icon,
-		Key:  iconKey,
+	thumbImg := Image{
+		File: pack.Thumb,
+		Key:  thumbKey,
 	}
-	uploadImgs = append(uploadImgs, iconImg)
+	uploadImgs = append(uploadImgs, thumbImg)
 
 	rsCli := qiniurs.New(nil)
 	imgNum := len(uploadImgs)
@@ -186,13 +188,6 @@ func newPack() {
 	}
 	token := putPolicy.Token(nil)
 
-	// ///upload icon
-	// var ret qiniuio.PutRet
-	// if err = qiniuio.PutFile(nil, &ret, token, iconKey, pack.Icon, nil); err != nil {
-	// 	panic(err)
-	// }
-	// glog.Infof("upload icon ok: %s", pack.Icon)
-
 	///upload images
 	for i, img := range uploadImgs {
 		if imgExists[i] {
@@ -212,7 +207,7 @@ func newPack() {
 	login()
 
 	//add new pack to server
-	pack.Icon = iconKey
+	pack.Thumb = thumbKey
 	pack.Cover = genImageKey(pack.Cover)
 
 	packjs, err := json.Marshal(pack)
@@ -258,8 +253,11 @@ func delPack() {
 	pack := Pack{}
 	err = loadPack(&pack)
 	if err != nil {
-		glog.Errorf("loadPack failed: err=%s", err.Error())
-		return
+		glog.Fatalf("loadPack failed: err=%s", err.Error())
+	}
+
+	if pack.Id == 0 {
+		glog.Fatalln("need pack id")
 	}
 
 	login()

@@ -1288,7 +1288,6 @@
 					"../../../cocos2d-x-3.0alpha0/external/libwebsockets/ios/lib",
 					"/Users/weili/Documents/projects/2014/cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
 					/Users/weili/Documents/projects/2014/delight/client/external/WeChatSDK_1.4.2.1,
-					/Users/weili/Documents/projects/2014/delight/client/external/weChatSDK,
 					/Users/weili/Documents/projects/2014/delight/client/external/openssl/lib,
 				);
 				PRODUCT_NAME = "delight iOS";
@@ -1339,7 +1338,6 @@
 					"../../../cocos2d-x-3.0alpha0/external/libwebsockets/ios/lib",
 					"/Users/weili/Documents/projects/2014/cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
 					/Users/weili/Documents/projects/2014/delight/client/external/WeChatSDK_1.4.2.1,
-					/Users/weili/Documents/projects/2014/delight/client/external/weChatSDK,
 					/Users/weili/Documents/projects/2014/delight/client/external/openssl/lib,
 				);
 				PRODUCT_NAME = "delight iOS";

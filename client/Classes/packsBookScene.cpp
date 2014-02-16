@@ -12,8 +12,8 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 static const int PACKS_PER_PAGE = 12;
-static const float ICON_MARGIN = 5.f;
-static const float ICON_Y0 = 130.f;
+static const float THUMB_MARGIN = 5.f;
+static const float THUMB_Y0 = 130.f;
 
 Scene* PacksBookScene::createScene() {
     auto scene = Scene::create();
@@ -41,7 +41,7 @@ bool PacksBookScene::init() {
     //header
     auto headerBg = Sprite::create("ui/pt.png");
     headerBg->setScaleX(visSize.width);
-    headerBg->setScaleY(116);
+    headerBg->setScaleY(128);
     headerBg->setAnchorPoint(Point(0.f, 1.f));
     headerBg->setPosition(Point(0.f, visSize.height));
     headerBg->setColor(Color3B(27, 27, 27));
@@ -65,22 +65,16 @@ bool PacksBookScene::init() {
     title->setColor(Color3B(240, 240, 240));
     addChild(title);
     
-    
-    _iconWidth = (visSize.width-2.f*ICON_MARGIN) / 3.f;
-    _iconHeight = _iconWidth * 1.414f;
-    
-    //loading texture
-    _loadingTexture = GifTexture::create("ui/loading.gif", this, false);
-    _loadingTexture->retain();
-    //_loadingTexture->setSpeed(2.f);
+    _thumbWidth = (visSize.width-2.f*THUMB_MARGIN) / 3.f;
+    _thumbHeight = _thumbWidth * 1.414f;
     
     //sptLoader
     _sptLoader = SptLoader::create(this);
     addChild(_sptLoader);
     
     //iconsParent
-    _iconsParent = Node::create();
-    addChild(_iconsParent);
+    _thumbsParent = Node::create();
+    addChild(_thumbsParent);
     
     //stars
     _starBatch = SpriteBatchNode::create("ui/star36.png");
@@ -98,7 +92,6 @@ bool PacksBookScene::init() {
 }
 
 PacksBookScene::~PacksBookScene() {
-    _loadingTexture->release();
     _sptLoader->destroy();
 }
 
@@ -191,25 +184,28 @@ void PacksBookScene::loadPage(int page) {
         }
     }
     
+    auto batch = SpriteBatchNode::create("ui/loading.png");
+    _thumbsParent->addChild(batch);
+    
     for (auto i = 0; i < packNum; ++i) {
-        auto loadingSpr = Sprite::createWithTexture(_loadingTexture);
-        _iconsParent->addChild(loadingSpr);
+        auto loadingSpr = Sprite::create("ui/loading.png");
+        batch->addChild(loadingSpr);
         loadingSpr->setUserData((void*)i);
-        _icons.push_back(loadingSpr);
+        _thumbs.push_back(loadingSpr);
         int row = i / 3;
         int col = i % 3;
         auto visSize = Director::getInstance()->getVisibleSize();
-        float w = _iconWidth;
-        float x = (w+ICON_MARGIN)*col + .5f*w;
-        float y = visSize.height - ((_iconHeight+ICON_MARGIN)*row+.5f*_iconHeight) - ICON_Y0;
+        float w = _thumbWidth;
+        float x = (w+THUMB_MARGIN)*col + .5f*w;
+        float y = visSize.height - ((_thumbHeight+THUMB_MARGIN)*row+.5f*_thumbHeight) - THUMB_Y0;
         loadingSpr->setPosition(Point(x, y));
-        loadingSpr->setScale(2.f);
+        loadingSpr->setScale(_thumbWidth/loadingSpr->getContentSize().width);
         
         //stars
         auto starNum = rand()%4;
         float dx = 35.f;
         x -= dx;
-        y -= 80.f;
+        y -= 120.f;
         for (auto iStar = 0; iStar < 3; ++iStar) {
             Sprite *sprStar;
             if (iStar < starNum) {
@@ -287,20 +283,20 @@ void PacksBookScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
             pack.init(packJs);
             _packs.push_back(pack);
             
-            _sptLoader->download(pack.icon.c_str(), (void*)i);
+            _sptLoader->download(pack.thumb.c_str(), (void*)i);
         }
     }
 }
 
 void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
     int idx = (int)userData;
-    if (idx >= 0 && idx < _icons.size()) {
-        _iconsParent->addChild(sprite);
-        sprite->setPosition(_icons[idx]->getPosition());
+    if (idx >= 0 && idx < _thumbs.size()) {
+        _thumbsParent->addChild(sprite);
+        sprite->setPosition(_thumbs[idx]->getPosition());
         //sprite->setScale(_iconWidth/sprite->getContentSize().width);
         sprite->setUserData((void*)idx);
-        _icons[idx]->removeFromParent();
-        _icons[idx] = sprite;
+        _thumbs[idx]->removeFromParent();
+        _thumbs[idx] = sprite;
         
 //        auto size = sprite->getContentSize();
 //        auto shortEdge = MIN(size.width, size.height);
@@ -308,15 +304,15 @@ void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void
 //        sprite->setTextureRect(Rect((size.width-shortEdge)*.5f, (size.height-shortEdge)*.5f, shortEdge, shortEdge));
         
         auto size = sprite->getContentSize();
-        auto scaleW = _iconWidth/size.width;
-        auto scaleH = _iconHeight/size.height;
+        auto scaleW = _thumbWidth/size.width;
+        auto scaleH = _thumbHeight/size.height;
         auto scale = MAX(scaleW, scaleH);
         float uvw = size.width;
         float uvh = size.height;
         if (scaleW <= scaleH) {
-            uvw = size.height * _iconWidth/_iconHeight;
+            uvw = size.height * _thumbWidth/_thumbHeight;
         } else {
-            uvh = size.width * _iconHeight/_iconWidth;
+            uvh = size.width * _thumbHeight/_thumbWidth;
         }
         sprite->setScale(scale);
         sprite->setTextureRect(Rect((size.width-uvw)*.5f, (size.height-uvh)*.5f, uvw, uvh));
@@ -336,9 +332,9 @@ void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
     
     _touchedRect = Rect::ZERO;
     _touchedPack = nullptr;
-    for( int i = 0; i < _icons.size(); i++){
-        auto icon = _icons[i];
-        auto rect = icon->getBoundingBox();
+    for( int i = 0; i < _thumbs.size(); i++){
+        auto thumb = _thumbs[i];
+        auto rect = thumb->getBoundingBox();
         //rect.origin.y += _sptParent->getPositionY();
         if (rect.containsPoint(touch->getLocation())) {
             if (i < _packs.size()) {

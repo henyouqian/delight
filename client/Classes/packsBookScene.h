@@ -41,13 +41,12 @@ private:
     int _currPage;
     bool _isOffline;
     
-    GifTexture *_loadingTexture;
-    std::vector<Sprite*> _icons;
+    std::vector<Sprite*> _thumbs;
     Rect _touchedRect;
     PackInfo *_touchedPack;
-    float _iconWidth;
-    float _iconHeight;
-    Node *_iconsParent;
+    float _thumbWidth;
+    float _thumbHeight;
+    Node *_thumbsParent;
     
     std::vector<PackInfo> _packs;
     

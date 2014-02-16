@@ -13,7 +13,7 @@ struct PackInfo {
     std::string time;
     std::string title;
     std::string text;
-    std::string icon;
+    std::string thumb;
     std::string cover;
     
     struct Image {

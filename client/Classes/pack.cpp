@@ -27,8 +27,8 @@ void PackInfo::init(jsonxx::Object& packJs) {
         lwerror("json parse error: no string: Text");
         return;
     }
-    if (!packJs.has<jsonxx::String>("Icon")) {
-        lwerror("json parse error: no Icon");
+    if (!packJs.has<jsonxx::String>("Thumb")) {
+        lwerror("json parse error: no Thumb");
         return;
     }
     if (!packJs.has<jsonxx::String>("Cover")) {
@@ -42,7 +42,7 @@ void PackInfo::init(jsonxx::Object& packJs) {
     
     this->id = (int)(packJs.get<jsonxx::Number>("Id"));
     this->time = packJs.get<jsonxx::String>("Time");
-    this->icon = packJs.get<jsonxx::String>("Icon");
+    this->thumb = packJs.get<jsonxx::String>("Thumb");
     this->cover = packJs.get<jsonxx::String>("Cover");
     this->title = packJs.get<jsonxx::String>("Title");
     this->text = packJs.get<jsonxx::String>("Text");
