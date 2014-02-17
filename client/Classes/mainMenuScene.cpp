@@ -52,11 +52,11 @@ bool MainMenuScene::init() {
     
     //login test
     jsonxx::Object loginMsg;
-    loginMsg << "Username" << "aa";
-	loginMsg << "Password" << "aa";
+    loginMsg << "Username" << "admin";
+	loginMsg << "Password" << "admin";
     postHttpRequest("auth/login", loginMsg.json().c_str(), this, (SEL_HttpResponse)&MainMenuScene::onLogin);
     
-    postHttpRequest("auth/info", "\"aa\"", this, (SEL_HttpResponse)&MainMenuScene::onInfo);
+    postHttpRequest("auth/info", "\"admin\"", this, (SEL_HttpResponse)&MainMenuScene::onInfo);
     return true;
 }
 

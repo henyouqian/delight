@@ -5,6 +5,7 @@
 #include "db.h"
 #include "lang.h"
 #include "gifTexture.h"
+#include "dragView.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 
@@ -23,7 +24,6 @@ Scene* PacksBookScene::createScene() {
 }
 
 bool PacksBookScene::init() {
-    showStatusBar(true);
     auto visSize = Director::getInstance()->getVisibleSize();
     
     if (!LayerColor::initWithColor(Color4B(10, 10, 10, 255)))  {
@@ -32,38 +32,38 @@ bool PacksBookScene::init() {
     this->setTouchEnabled(true);
     this->scheduleUpdate();
     
-    //back button
-    auto btnBack = createRingButton("﹤", 48, 1.f, Color3B(0, 122, 255));
-    btnBack->setPosition(Point(70, 70));
-    btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksBookScene::back), Control::EventType::TOUCH_UP_INSIDE);
-    this->addChild(btnBack);
-    
     //header
     auto headerBg = Sprite::create("ui/pt.png");
     headerBg->setScaleX(visSize.width);
-    headerBg->setScaleY(128);
+    headerBg->setScaleY(THUMB_Y0);
     headerBg->setAnchorPoint(Point(0.f, 1.f));
     headerBg->setPosition(Point(0.f, visSize.height));
     headerBg->setColor(Color3B(27, 27, 27));
-    addChild(headerBg);
+    addChild(headerBg, 10);
+    
+    auto headerLine = Sprite::create("ui/pt.png");
+    headerLine->setScaleX(visSize.width);
+    headerLine->setScaleY(2);
+    headerLine->setAnchorPoint(Point(0.f, 0.f));
+    headerLine->setPosition(Point(0.f, visSize.height-THUMB_Y0));
+    headerLine->setColor(Color3B(10, 10, 10));
+    addChild(headerLine, 10);
     
     //
     float y = visSize.height-70;
     
-    //older
-    auto label = LabelTTF::create("〈", "HelveticaNeue", 64);
-    label->setColor(Color3B(240, 240, 240));
-    auto btn = ControlButton::create(label, Scale9Sprite::create());
-    btn->setAnchorPoint(Point(0.f, 0.5f));
-    btn->setPosition(Point(10.f, y));
-    addChild(btn);
+    //back button
+    auto btnBack = createColorButton("<", 64, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    btnBack->setPosition(Point(70, y));
+    btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksBookScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(btnBack, 10);
     
     //label
     auto title = LabelTTF::create(lang("Packs"), "HelveticaNeue", 44);
     title->setAnchorPoint(Point(.5f, .5f));
     title->setPosition(Point(visSize.width*.5f, y));
     title->setColor(Color3B(240, 240, 240));
-    addChild(title);
+    addChild(title, 10);
     
     _thumbWidth = (visSize.width-2.f*THUMB_MARGIN) / 3.f;
     _thumbHeight = _thumbWidth * 1.414f;
@@ -72,13 +72,15 @@ bool PacksBookScene::init() {
     _sptLoader = SptLoader::create(this);
     addChild(_sptLoader);
     
-    //iconsParent
-    _thumbsParent = Node::create();
-    addChild(_thumbsParent);
+    //drag view
+    _dragView = DragView::create();
+    addChild(_dragView);
+    float dragViewHeight = visSize.height - THUMB_Y0;
+    _dragView->setWindowRect(Rect(0, 0, visSize.width, dragViewHeight));
     
     //stars
     _starBatch = SpriteBatchNode::create("ui/star36.png");
-    this->addChild(_starBatch, 10);
+    _dragView->addChild(_starBatch, 1);
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui/star36.plist");
     
 //    //get pack count
@@ -87,6 +89,9 @@ bool PacksBookScene::init() {
 //    postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetCount));
     
     loadPage(0);
+    
+    //
+    _touch = nullptr;
     
     return true;
 }
@@ -185,7 +190,7 @@ void PacksBookScene::loadPage(int page) {
     }
     
     auto batch = SpriteBatchNode::create("ui/loading.png");
-    _thumbsParent->addChild(batch);
+    _dragView->addChild(batch);
     
     for (auto i = 0; i < packNum; ++i) {
         auto loadingSpr = Sprite::create("ui/loading.png");
@@ -194,10 +199,9 @@ void PacksBookScene::loadPage(int page) {
         _thumbs.push_back(loadingSpr);
         int row = i / 3;
         int col = i % 3;
-        auto visSize = Director::getInstance()->getVisibleSize();
         float w = _thumbWidth;
         float x = (w+THUMB_MARGIN)*col + .5f*w;
-        float y = visSize.height - ((_thumbHeight+THUMB_MARGIN)*row+.5f*_thumbHeight) - THUMB_Y0;
+        float y = - ((_thumbHeight+THUMB_MARGIN)*row+.5f*_thumbHeight);
         loadingSpr->setPosition(Point(x, y));
         loadingSpr->setScale(_thumbWidth/loadingSpr->getContentSize().width);
         
@@ -291,7 +295,7 @@ void PacksBookScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
 void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
     int idx = (int)userData;
     if (idx >= 0 && idx < _thumbs.size()) {
-        _thumbsParent->addChild(sprite);
+        _dragView->addChild(sprite);
         sprite->setPosition(_thumbs[idx]->getPosition());
         //sprite->setScale(_iconWidth/sprite->getContentSize().width);
         sprite->setUserData((void*)idx);
@@ -328,14 +332,20 @@ void PacksBookScene::onSptLoaderError(const char *localPath, void *userData) {
 }
 
 void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
+    if (_touch){
+        return;
+    }
     auto touch = touches[0];
+    _touch = touch;
+    
+    _dragView->onTouchesBegan(touch);
     
     _touchedRect = Rect::ZERO;
     _touchedPack = nullptr;
     for( int i = 0; i < _thumbs.size(); i++){
         auto thumb = _thumbs[i];
         auto rect = thumb->getBoundingBox();
-        //rect.origin.y += _sptParent->getPositionY();
+        rect.origin.y += _dragView->getPositionY();
         if (rect.containsPoint(touch->getLocation())) {
             if (i < _packs.size()) {
                 _touchedRect = rect;
@@ -347,20 +357,31 @@ void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
 }
 
 void PacksBookScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
-    
+    auto touch = touches[0];
+    if (touch != _touch) {
+        return;
+    }
+    _dragView->onTouchesMoved(touch);
 }
 
 void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
-    if (_touchedPack) {
+    if (touch != _touch) {
+        return;
+    }
+    
+    if (_touchedPack && !_dragView->isDragging() && _dragView->getWindowRect().containsPoint(touch->getLocation())) {
         if (_touchedRect.containsPoint(touch->getLocation())) {
             auto scene = ModeSelectScene::createScene(_touchedPack);
             Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
         }
     }
+    _touch = nullptr;
+    
+    _dragView->onTouchesEnded(touch);
 }
 
 void PacksBookScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
-    //fixme
+    onTouchesEnded(touches, event);
 }
 

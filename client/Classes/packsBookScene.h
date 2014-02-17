@@ -10,6 +10,7 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 class GifTexture;
+class DragView;
 
 class PacksBookScene : public LayerColor, public SptLoaderListener{
 public:
@@ -46,13 +47,15 @@ private:
     PackInfo *_touchedPack;
     float _thumbWidth;
     float _thumbHeight;
-    Node *_thumbsParent;
+    DragView *_dragView;
     
     std::vector<PackInfo> _packs;
     
     SptLoader *_sptLoader;
     
     SpriteBatchNode *_starBatch;
+    
+    Touch* _touch;
 };
 
 

@@ -97,6 +97,14 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 		if resp[1] == "1" {
 			lwutil.SendError("err_exist", "pack already exist")
 		}
+
+		resp, err = ssdb.Do("hget", H_SERIAL, "userPack")
+		lwutil.CheckSsdbError(resp, err)
+		maxId, err := strconv.ParseUint(resp[1], 10, 64)
+		lwutil.CheckError(err, "")
+		if pack.Id > maxId {
+			lwutil.SendError("err_packid", "packId > maxId, del or mod pack id from pack.js")
+		}
 	} else {
 		//gen packid
 		resp, err := ssdb.Do("hincr", H_SERIAL, "userPack", 1)
