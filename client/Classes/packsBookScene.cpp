@@ -77,6 +77,7 @@ bool PacksBookScene::init() {
     addChild(_dragView);
     float dragViewHeight = visSize.height - THUMB_Y0;
     _dragView->setWindowRect(Rect(0, 0, visSize.width, dragViewHeight));
+    _dragView->setContentHeight(1800.f);
     
     //stars
     _starBatch = SpriteBatchNode::create("ui/star36.png");

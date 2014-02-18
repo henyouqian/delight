@@ -21,6 +21,9 @@ bool DragView::init() {
 void DragView::setWindowRect(const Rect &rect) {
     _windowRect = rect;
     setPositionY(rect.size.height);
+    if (rect.size.height > _contentHeight) {
+        _contentHeight = rect.size.height;
+    }
 }
 
 const Rect& DragView::getWindowRect() {
@@ -28,7 +31,7 @@ const Rect& DragView::getWindowRect() {
 }
 
 void DragView::setContentHeight(float height) {
-    _contentHeight = height;
+    _contentHeight = MAX(height, _contentHeight);
 }
 
 bool DragView::isDragging() {
@@ -36,7 +39,7 @@ bool DragView::isDragging() {
 }
 
 void DragView::onTouchesBegan(const Touch* touch) {
-    if (_windowRect.containsPoint(touch->getLocation()) && !_bouncing) {
+    if (_windowRect.containsPoint(touch->getLocation()) /*&& !_bouncing*/) {
         _trackTouch = true;
         _dragPointInfos.clear();
         _rollSpeed = 0.f;
@@ -57,9 +60,16 @@ void DragView::onTouchesMoved(const Touch* touch) {
     if (_dragging) {
         auto pos = this->getPosition();
         
-        float top = _windowRect.origin.y+_windowRect.size.height;
-        if (pos.y < top) {
+        if (beyondTop()) {
+            float top = _windowRect.origin.y+_windowRect.size.height;
             float dt = top - pos.y;
+            float maxDist = 300.f;
+            if (dt < maxDist) {
+                pos.y += touch->getDelta().y * (cos((dt/maxDist)*M_PI_2+M_PI_2)+1.f);
+            }
+        } else if (beyondBottom()) {
+            float bottom = getPosition().y - _contentHeight;
+            float dt = bottom - _windowRect.origin.y;
             float maxDist = 300.f;
             if (dt < maxDist) {
                 pos.y += touch->getDelta().y * (cos((dt/maxDist)*M_PI_2+M_PI_2)+1.f);
@@ -86,8 +96,16 @@ void DragView::onTouchesEnded(const Touch* touch) {
     _dragging = false;
     
     if (beyondTop()) {
-        float top = _windowRect.origin.y+_windowRect.size.height;
-        auto moveTo = MoveTo::create(.2f, Point(0.f, top));
+        float y = _windowRect.origin.y+_windowRect.size.height;
+        auto moveTo = MoveTo::create(.2f, Point(0.f, y));
+        auto ease = EaseSineOut::create(moveTo);
+        auto callback = CallFunc::create(CC_CALLBACK_0(DragView::bounceEnd, this));
+        auto seq = Sequence::create(ease, callback, nullptr);
+        this->runAction(seq);
+        _bouncing = true;
+    } else if (beyondBottom()) {
+        float y = _windowRect.origin.y+_contentHeight;
+        auto moveTo = MoveTo::create(.2f, Point(0.f, y));
         auto ease = EaseSineOut::create(moveTo);
         auto callback = CallFunc::create(CC_CALLBACK_0(DragView::bounceEnd, this));
         auto seq = Sequence::create(ease, callback, nullptr);
@@ -110,8 +128,8 @@ void DragView::onTouchesEnded(const Touch* touch) {
 }
 
 void DragView::update(float delta) {
-    if (_rollSpeed) {
-        if (beyondTop() && !_bouncing) {
+    if (_rollSpeed && !_bouncing) {
+        if (beyondTop()) {
             bool neg = _rollSpeed < 0;
             float v = fabs(_rollSpeed);
             float brk = 8.f;
@@ -119,8 +137,8 @@ void DragView::update(float delta) {
             v -= brk;
             if (v < 0.01f) {
                 v = 0;
-                float top = _windowRect.origin.y+_windowRect.size.height;
-                auto moveTo = MoveTo::create(.2f, Point(0.f, top));
+                float y = _windowRect.origin.y+_windowRect.size.height;
+                auto moveTo = MoveTo::create(.2f, Point(0.f, y));
                 auto ease = EaseSineOut::create(moveTo);
                 auto callback = CallFunc::create(CC_CALLBACK_0(DragView::bounceEnd, this));
                 auto seq = Sequence::create(ease, callback, nullptr);
@@ -135,61 +153,50 @@ void DragView::update(float delta) {
             auto pos = this->getPosition();
             pos.y += _rollSpeed;
             this->setPositionY(floor(pos.y));
+        } else if (beyondBottom()) {
+            bool neg = _rollSpeed < 0;
+            float v = fabs(_rollSpeed);
+            float brk = 8.f;
+            v = MIN(v, 40.f);
+            v -= brk;
+            if (v < 0.01f) {
+                v = 0;
+                float y = _windowRect.origin.y+_contentHeight;
+                auto moveTo = MoveTo::create(.2f, Point(0.f, y));
+                auto ease = EaseSineOut::create(moveTo);
+                auto callback = CallFunc::create(CC_CALLBACK_0(DragView::bounceEnd, this));
+                auto seq = Sequence::create(ease, callback, nullptr);
+                this->runAction(seq);
+                _bouncing = true;
+            }
+            _rollSpeed = v;
+            if (neg) {
+                _rollSpeed = -_rollSpeed;
+            }
             
-//            float top = _windowRect.origin.y+_windowRect.size.height;
-//            float t = fabs(_rollSpeed*0.003f);
-//            lwinfo("%f", t);
-//            float s = 1800.f*t*t;
-//            auto moveTo1 = MoveTo::create(t, Point(0.f, top-s));
-//            auto ease1 = EaseOut::create(moveTo1, 1.f);
-//            auto moveTo2 = MoveTo::create(t, Point(0.f, top));
-//            auto ease2 = EaseIn::create(moveTo2, 1.f);
-//            auto callback = CallFunc::create(CC_CALLBACK_0(DragView::bounceEnd, this));
-//            auto seq = Sequence::create(ease1, ease2, callback, nullptr);
-//            this->runAction(seq);
-//            _rollSpeed = 0;
-            return;
+            auto pos = this->getPosition();
+            pos.y += _rollSpeed;
+            this->setPositionY(floor(pos.y));
+        } else {
+            auto pos = this->getPosition();
+            pos.y += _rollSpeed;
+            this->setPositionY(floor(pos.y));
+            
+            bool neg = _rollSpeed < 0;
+            float v = fabs(_rollSpeed);
+            //v -= 2;
+            float brk = v * .06f;
+            brk = MAX(brk, 0.1f);
+            v -= brk;
+            if (v < 0.01f) {
+                v = 0;
+            }
+            _rollSpeed = v;
+            if (neg) {
+                _rollSpeed = -_rollSpeed;
+            }
         }
         
-        auto pos = this->getPosition();
-        pos.y += _rollSpeed;
-        this->setPositionY(floor(pos.y));
-        
-        bool neg = _rollSpeed < 0;
-        float v = fabs(_rollSpeed);
-        //v -= 2;
-        float brk = v * .08f;
-        brk = MAX(brk, 0.1f);
-        v -= brk;
-        if (v < 0.01f) {
-            v = 0;
-        }
-        _rollSpeed = v;
-        if (neg) {
-            _rollSpeed = -_rollSpeed;
-        }
-        
-//        float top = _windowRect.origin.y+_windowRect.size.height;
-//        if (pos.y < top) {
-//            if (_rollSpeed != 0) {
-//                bool neg = _rollSpeed < 0;
-//                float brk = v*.2f;
-//                float v = fabs(_rollSpeed);
-//                v -= brk;
-//                if (v < 0.01f) {
-//                    v = 0;
-//                }
-//                _rollSpeed = v;
-//                if (neg) {
-//                    _rollSpeed = -_rollSpeed;
-//                }
-//            }
-//            if (_rollSpeed == 0) {
-//                auto moveTo = MoveTo::create(.2f, Point(0.f, top));
-//                auto ease = EaseSineOut::create(moveTo);
-//                this->runAction(ease);
-//            }
-//        }
     }
 }
 
@@ -205,7 +212,7 @@ bool DragView::beyondTop() {
     return false;
 }
 bool DragView::beyondBottom() {
-    float bottom = getPosition().y + _contentHeight;
+    float bottom = getPosition().y - _contentHeight;
     if (bottom > _windowRect.origin.y) {
         return true;
     }
