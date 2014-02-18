@@ -193,7 +193,7 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		PackId uint64
+		Id uint64
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
@@ -205,14 +205,14 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 
 	//check owner
 	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
-	resp, err := ssdb.Do("zexists", name, in.PackId)
+	resp, err := ssdb.Do("zexists", name, in.Id)
 	lwutil.CheckSsdbError(resp, err)
 	if resp[1] == "0" {
-		lwutil.SendError("err_not_exist", fmt.Sprintf("not own the pack: userId=%d, packId=%d", session.Userid, in.PackId))
+		lwutil.SendError("err_not_exist", fmt.Sprintf("not own the pack: userId=%d, packId=%d", session.Userid, in.Id))
 	}
-	resp, err = ssdb.Do("zdel", name, in.PackId)
+	resp, err = ssdb.Do("zdel", name, in.Id)
 	lwutil.CheckSsdbError(resp, err)
-	resp, err = ssdb.Do("hdel", H_PACK, in.PackId)
+	resp, err = ssdb.Do("hdel", H_PACK, in.Id)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out

@@ -14,7 +14,7 @@ USING_NS_CC_EXT;
 
 static const int PACKS_PER_PAGE = 12;
 static const float THUMB_MARGIN = 5.f;
-static const float THUMB_Y0 = 130.f;
+static const float HEADER_HEIGHT = 130.f;
 
 Scene* PacksBookScene::createScene() {
     auto scene = Scene::create();
@@ -35,7 +35,7 @@ bool PacksBookScene::init() {
     //header
     auto headerBg = Sprite::create("ui/pt.png");
     headerBg->setScaleX(visSize.width);
-    headerBg->setScaleY(THUMB_Y0);
+    headerBg->setScaleY(HEADER_HEIGHT);
     headerBg->setAnchorPoint(Point(0.f, 1.f));
     headerBg->setPosition(Point(0.f, visSize.height));
     headerBg->setColor(Color3B(27, 27, 27));
@@ -45,7 +45,7 @@ bool PacksBookScene::init() {
     headerLine->setScaleX(visSize.width);
     headerLine->setScaleY(2);
     headerLine->setAnchorPoint(Point(0.f, 0.f));
-    headerLine->setPosition(Point(0.f, visSize.height-THUMB_Y0));
+    headerLine->setPosition(Point(0.f, visSize.height-HEADER_HEIGHT));
     headerLine->setColor(Color3B(10, 10, 10));
     addChild(headerLine, 10);
     
@@ -75,7 +75,7 @@ bool PacksBookScene::init() {
     //drag view
     _dragView = DragView::create();
     addChild(_dragView);
-    float dragViewHeight = visSize.height - THUMB_Y0;
+    float dragViewHeight = visSize.height - HEADER_HEIGHT;
     _dragView->setWindowRect(Rect(0, 0, visSize.width, dragViewHeight));
     _dragView->setContentHeight(1800.f);
     

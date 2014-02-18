@@ -19,6 +19,5 @@ ControlButton *createColorButton(const char *text, float fontSize, float bgScale
 
 const char* getUploadPackDir();
 
-void showStatusBar(bool vis);
 
 #endif // __UTIL_H__

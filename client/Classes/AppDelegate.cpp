@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
 #include "mainMenuScene.h"
+#include "collectionListScene.h"
 #include "util.h"
 #include "qiniu.h"
 #include "db.h"
@@ -100,8 +101,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     qiniuInit();
 
     //auto scene = SliderScene::createScene();
-    //auto scene = PacksListScene::createScene();
-    auto scene = MainMenuScene::createScene();
+    auto scene = CollectionListScene::createScene();
+    //auto scene = MainMenuScene::createScene();
     
     // run
     director->runWithScene(scene);

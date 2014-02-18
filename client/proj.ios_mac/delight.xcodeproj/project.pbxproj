@@ -111,7 +111,6 @@
 		B3AA0785186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
 		B3AA0786186BEEE200706E4D /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AA0783186BEEE200706E4D /* util.cpp */; };
 		B3ACE2DF18B227B20005830A /* dragView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3ACE2DD18B227B20005830A /* dragView.cpp */; };
-		B3AE35CF18B00CA1007BD96D /* util.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3AE35CE18B00CA1007BD96D /* util.mm */; };
 		B3BCF356188E7E6D00A1DD08 /* loginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */; };
 		B3CA1F41188810A0005637A0 /* lang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CA1F3F188810A0005637A0 /* lang.cpp */; };
 		B3CA1F42188810A0005637A0 /* lang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CA1F3F188810A0005637A0 /* lang.cpp */; };
@@ -133,6 +132,7 @@
 		B3DC5D0B1854B4FF00F732B7 /* default in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D091854B4FF00F732B7 /* default */; };
 		B3DC5D0D1854E24C00F732B7 /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D0C1854E24C00F732B7 /* img */; };
 		B3DC5D0E1854E24C00F732B7 /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3DC5D0C1854E24C00F732B7 /* img */; };
+		B3E53B4A18B3B3630029D6BD /* collectionListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */; };
 		B3E841811857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
 		B3E841821857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
 		B3F01AF1187E87900000B33E /* packsBookScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsBookScene.cpp */; };
@@ -401,7 +401,6 @@
 		B3AA0784186BEEE200706E4D /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../Classes/util.h; sourceTree = "<group>"; };
 		B3ACE2DD18B227B20005830A /* dragView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dragView.cpp; path = ../Classes/dragView.cpp; sourceTree = "<group>"; };
 		B3ACE2DE18B227B20005830A /* dragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dragView.h; path = ../Classes/dragView.h; sourceTree = "<group>"; };
-		B3AE35CE18B00CA1007BD96D /* util.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = util.mm; path = ../Classes/util.mm; sourceTree = "<group>"; };
 		B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = loginScene.cpp; path = ../Classes/loginScene.cpp; sourceTree = "<group>"; };
 		B3BCF355188E7E6D00A1DD08 /* loginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginScene.h; path = ../Classes/loginScene.h; sourceTree = "<group>"; };
 		B3CA1F3F188810A0005637A0 /* lang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lang.cpp; path = ../Classes/lang.cpp; sourceTree = "<group>"; };
@@ -429,6 +428,8 @@
 		B3CC388B18A3944700056424 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/AssetsLibrary.framework; sourceTree = DEVELOPER_DIR; };
 		B3DC5D091854B4FF00F732B7 /* default */ = {isa = PBXFileReference; lastKnownFileType = folder; path = default; sourceTree = "<group>"; };
 		B3DC5D0C1854E24C00F732B7 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = "<group>"; };
+		B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = collectionListScene.cpp; path = ../Classes/collectionListScene.cpp; sourceTree = "<group>"; };
+		B3E53B4918B3B3630029D6BD /* collectionListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = collectionListScene.h; path = ../Classes/collectionListScene.h; sourceTree = "<group>"; };
 		B3E841801857774B0004C636 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
 		B3F01AEF187E87900000B33E /* packsBookScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packsBookScene.cpp; path = ../Classes/packsBookScene.cpp; sourceTree = "<group>"; };
 		B3F01AF0187E87900000B33E /* packsBookScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsBookScene.h; path = ../Classes/packsBookScene.h; sourceTree = "<group>"; };
@@ -505,6 +506,8 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */,
+				B3E53B4918B3B3630029D6BD /* collectionListScene.h */,
 				B364905818A51DA300B93930 /* userPackScene.cpp */,
 				B364905918A51DA300B93930 /* userPackScene.h */,
 				B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */,
@@ -541,7 +544,6 @@
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 				B3CC385E18A392F800056424 /* ELCPicker.h */,
 				B3CC385F18A392F800056424 /* ELCPicker.mm */,
-				B3AE35CE18B00CA1007BD96D /* util.mm */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -1162,6 +1164,7 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				B3AA0785186BEEE200706E4D /* util.cpp in Sources */,
 				B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */,
+				B3E53B4A18B3B3630029D6BD /* collectionListScene.cpp in Sources */,
 				B383F8E618A4CBA700FA5700 /* http.c in Sources */,
 				B393ED25186DF3B300E372CC /* sqlite3.c in Sources */,
 				B383F8E418A4CBA700FA5700 /* base_io.c in Sources */,
@@ -1192,7 +1195,6 @@
 				B33DAC7A184CC6B9001403BA /* gifalloc.c in Sources */,
 				B3CC388318A3930B00056424 /* ELCAssetCell.m in Sources */,
 				B3FB833D18A78CF90037DFB4 /* qiniu.cpp in Sources */,
-				B3AE35CF18B00CA1007BD96D /* util.mm in Sources */,
 				B31003A0187C067A0049A6CF /* modeSelectScene.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				B364905A18A51DA300B93930 /* userPackScene.cpp in Sources */,

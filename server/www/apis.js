@@ -58,10 +58,33 @@ function Controller($scope, $http) {
 				},{
 					"name": "del",
 					"method": "POST",
-					"data": {"PackId": 0}
+					"data": {"Id": 0}
 				}
 			]
-		},
+		},{
+			"tab":"collection",
+			"path":"collection",
+			"apis":[
+				{
+					"name": "new",
+					"method": "POST",
+					"data": {
+						"Title":"",
+						"Text":"",
+						"Thumb":"qiniuThumb=.jpg",
+						"Packs":[1, 2, 3]
+					}
+				},{
+					"name": "del",
+					"method": "POST",
+					"data": {"Id": 0}
+				},{
+					"name": "list",
+					"method": "POST",
+					"data": {"UserId": 0, "StartId": 0, "Limit":12}
+				}
+			]
+		}
 	]
 
 	var sendCodeMirror = CodeMirror.fromTextArea(sendTextArea, 

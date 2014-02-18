@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	USEAGE         = "Useage: packUploader new|del|update uploadDir"
+	USEAGE         = "Useage: \n\tpackUploader new|del|update <uploadDir>\n\tpackUploader image <imagePath>"
 	BUCKET         = "sliderpack"
 	SERVER_HOST    = "http://localhost:9999/"
 	ADMIN_NAME     = "admin"
@@ -58,6 +58,8 @@ func main() {
 		delPack()
 	case "update":
 		updatePack()
+	case "image":
+		uploadImage()
 	default:
 		glog.Errorln(USEAGE)
 	}
@@ -264,7 +266,7 @@ func delPack() {
 
 	//send msg to server
 	body := fmt.Sprintf(`{
-		"PackId": %d
+		"Id": %d
 	}`, pack.Id)
 	postReq("pack/del", []byte(body))
 
@@ -272,7 +274,7 @@ func delPack() {
 }
 
 func updatePack() {
-
+	glog.Fatalln("not implement")
 }
 
 func loadPack(pack *Pack) (err error) {
@@ -290,6 +292,26 @@ func loadPack(pack *Pack) (err error) {
 		return err
 	}
 	return nil
+}
+
+func uploadImage() {
+	path := flag.Arg(1)
+	key := genImageKey(path)
+
+	glog.Infof("key=%s", key)
+
+	//gen token
+	putPolicy := qiniurs.PutPolicy{
+		Scope: BUCKET,
+	}
+	token := putPolicy.Token(nil)
+
+	//upload
+	var ret qiniuio.PutRet
+	if err := qiniuio.PutFile(nil, &ret, token, key, path, nil); err != nil {
+		glog.Fatalln(err.Error())
+	}
+	glog.Infof("upload image ok: path=%s", path)
 }
 
 func login() {
@@ -342,7 +364,7 @@ func postReq(partialUrl string, body []byte) (respBytes []byte) {
 func genImageKey(inFileName string) (outFileName string) {
 	data, err := ioutil.ReadFile(inFileName)
 	if err != nil {
-		panic(err)
+		glog.Fatalln(err.Error())
 	}
 	h := sha1.New()
 	h.Write(data)
