@@ -1,6 +1,6 @@
 #include "mainMenuScene.h"
-#include "packsBookScene.h"
 #include "userPackScene.h"
+#include "collectionListScene.h"
 #include "util.h"
 #include "lang.h"
 #include "http.h"
@@ -42,7 +42,7 @@ bool MainMenuScene::init() {
     //buttons
     auto button = createButton(lang("Play"), 48, 2.f);
     button->setPosition(Point(visibleSize.width/2, visibleSize.height/2));
-    button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterBook), Control::EventType::TOUCH_UP_INSIDE);
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterCollectionList), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
     button = createButton(lang("我的"), 48, 2.f);
@@ -64,8 +64,9 @@ void MainMenuScene::onEnterTransitionDidFinish() {
     TextureCache::getInstance()->removeUnusedTextures();
 }
 
-void MainMenuScene::enterBook(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, PacksBookScene::createScene()));
+void MainMenuScene::enterCollectionList(Object *sender, Control::EventType controlEvent) {
+    auto layer = CollectionListScene::createScene();
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, layer->scene));
 }
 
 void MainMenuScene::enterUserPack(Object *sender, Control::EventType controlEvent) {

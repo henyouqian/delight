@@ -15,7 +15,7 @@ public:
     
     virtual void onEnterTransitionDidFinish();
     
-    void enterBook(Object *sender, Control::EventType controlEvent);
+    void enterCollectionList(Object *sender, Control::EventType controlEvent);
     void enterUserPack(Object *sender, Control::EventType controlEvent);
     
     void onLogin(HttpClient *, HttpResponse *);

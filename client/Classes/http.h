@@ -11,5 +11,6 @@ HttpRequest* postHttpRequest(const char *path, const char *content, const std::f
 HttpRequest* postHttpRequest(const char *path, const char *content, cocos2d::Object *pTarget, SEL_HttpResponse pSelector);
 
 void getHttpRequest(const char *url, const std::function<void(HttpClient*, HttpResponse*)> &callback);
+void getHttpResponseString(HttpResponse *resp, std::string &str);
 
 #endif // __HTTP_H__

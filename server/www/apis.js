@@ -82,6 +82,10 @@ function Controller($scope, $http) {
 					"name": "list",
 					"method": "POST",
 					"data": {"UserId": 0, "StartId": 0, "Limit":12}
+				},{
+					"name": "listPack",
+					"method": "POST",
+					"data": {"Id": 0}
 				}
 			]
 		}

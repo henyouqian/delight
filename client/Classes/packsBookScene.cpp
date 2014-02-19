@@ -16,11 +16,11 @@ static const int PACKS_PER_PAGE = 12;
 static const float THUMB_MARGIN = 5.f;
 static const float HEADER_HEIGHT = 130.f;
 
-Scene* PacksBookScene::createScene() {
+PacksBookScene* PacksBookScene::createScene() {
     auto scene = Scene::create();
     auto layer = PacksBookScene::create();
     scene->addChild(layer);
-    return scene;
+    return layer;
 }
 
 bool PacksBookScene::init() {
@@ -53,7 +53,7 @@ bool PacksBookScene::init() {
     float y = visSize.height-70;
     
     //back button
-    auto btnBack = createColorButton("<", 64, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    auto btnBack = createColorButton("＜", 64, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
     btnBack->setPosition(Point(70, y));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksBookScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 10);
@@ -65,6 +65,7 @@ bool PacksBookScene::init() {
     title->setColor(Color3B(240, 240, 240));
     addChild(title, 10);
     
+    //thumb
     _thumbWidth = (visSize.width-2.f*THUMB_MARGIN) / 3.f;
     _thumbHeight = _thumbWidth * 1.414f;
     
@@ -89,7 +90,7 @@ bool PacksBookScene::init() {
 //    _pageCount = 0;
 //    postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetCount));
     
-    loadPage(0);
+    //loadPage(0);
     
     //
     _touch = nullptr;
@@ -99,6 +100,112 @@ bool PacksBookScene::init() {
 
 PacksBookScene::~PacksBookScene() {
     _sptLoader->destroy();
+}
+
+void PacksBookScene::loadCollection(Collection *collection) {
+    _collection = *collection;
+    
+    jsonxx::Object msg;
+    msg << "Id" << collection->id;
+    postHttpRequest("collection/listPack", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpListPack));
+    
+    //setup loading sprite
+    int packNum = collection->packs.size();
+    
+    auto batch = SpriteBatchNode::create("ui/loading.png");
+    _dragView->addChild(batch);
+    
+    for (auto i = 0; i < packNum; ++i) {
+        auto loadingSpr = Sprite::create("ui/loading.png");
+        batch->addChild(loadingSpr);
+        loadingSpr->setUserData((void*)i);
+        _thumbs.push_back(loadingSpr);
+        int row = i / 3;
+        int col = i % 3;
+        float w = _thumbWidth;
+        float x = (w+THUMB_MARGIN)*col + .5f*w;
+        float y = - ((_thumbHeight+THUMB_MARGIN)*row+.5f*_thumbHeight);
+        loadingSpr->setPosition(Point(x, y));
+        loadingSpr->setScale(_thumbWidth/loadingSpr->getContentSize().width);
+        
+        //stars
+        auto starNum = rand()%4;
+        float dx = 35.f;
+        x -= dx;
+        y -= 120.f;
+        for (auto iStar = 0; iStar < 3; ++iStar) {
+            Sprite *sprStar;
+            if (iStar < starNum) {
+                sprStar = Sprite::createWithSpriteFrameName("star36Gold.png");
+            } else {
+                sprStar = Sprite::createWithSpriteFrameName("star36White.png");
+                sprStar->setOpacity(128);
+            }
+            sprStar->setPosition(Point(x, y));
+            _starBatch->addChild(sprStar);
+            x += dx;
+        }
+    }
+}
+
+void PacksBookScene::onHttpListPack(HttpClient* client, HttpResponse* response) {
+    std::string body;
+    
+    if (!response->isSucceed()) {
+        lwerror("!response->isSucceed()");
+        
+        //load local
+        sqlite3_stmt* pStmt = NULL;
+        std::stringstream sql;
+        sql << "SELECT value FROM collectionPacks WHERE id=" << _collection.id<< ";";
+        auto r = sqlite3_prepare_v2(gSaveDb, sql.str().c_str(), -1, &pStmt, NULL);
+        if (r != SQLITE_OK) {
+            lwerror("sqlite error: %s", sql.str().c_str());
+            return;
+        }
+        r = sqlite3_step(pStmt);
+        if ( r == SQLITE_ROW ){
+            const char* value = (const char*)sqlite3_column_text(pStmt, 0);
+            if (value) {
+                body = value;
+            } else {
+                lwerror("packs empty");
+            }
+        }
+        sqlite3_finalize(pStmt);
+    } else {
+        getHttpResponseString(response, body);
+        
+        //sqlite
+        std::stringstream sql;
+        sql << "REPLACE INTO collectionPacks(id, value) VALUES(";
+        sql << _collection.id << ",";
+        sql << "'" << body << "');";
+        char *err;
+        auto r = sqlite3_exec(gSaveDb, sql.str().c_str(), NULL, NULL, &err);
+        if(r != SQLITE_OK) {
+            lwerror("sqlite error: %s\nsql=%s", err, sql.str().c_str());
+        }
+    }
+    
+    //load pack info
+    _packs.clear();
+    
+    jsonxx::Array msg;
+    bool ok = msg.parse(body);
+    if (!ok) {
+        lwerror("json parse error");
+        return;
+    }
+    
+    for (auto i = 0; i < msg.size(); ++i) {
+        auto packJs = msg.get<jsonxx::Object>(i);
+        PackInfo pack;
+        pack.init(packJs);
+        _packs.push_back(pack);
+        
+        _sptLoader->download(pack.thumb.c_str(), (void*)i);
+    }
 }
 
 void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
@@ -370,6 +477,7 @@ void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
     if (touch != _touch) {
         return;
     }
+    _touch = nullptr;
     
     if (_touchedPack && !_dragView->isDragging() && _dragView->getWindowRect().containsPoint(touch->getLocation())) {
         if (_touchedRect.containsPoint(touch->getLocation())) {
@@ -377,7 +485,6 @@ void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
             Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
         }
     }
-    _touch = nullptr;
     
     _dragView->onTouchesEnded(touch);
 }

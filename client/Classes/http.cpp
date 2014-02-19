@@ -48,3 +48,10 @@ void getHttpRequest(const char *url, const std::function<void(HttpClient*, HttpR
     HttpClient::getInstance()->send(request);
     request->release();
 }
+
+void getHttpResponseString(HttpResponse *resp, std::string &str) {
+    str.clear();
+    auto vData = resp->getResponseData();
+    std::istringstream is(std::string(vData->begin(), vData->end()));
+    str = is.str();
+}

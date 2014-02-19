@@ -3,6 +3,7 @@
 
 #include "spriteLoader.h"
 #include "pack.h"
+#include "collectionListScene.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -11,13 +12,17 @@ USING_NS_CC_EXT;
 
 class GifTexture;
 class DragView;
+class Collection;
 
 class PacksBookScene : public LayerColor, public SptLoaderListener{
 public:
-    static cocos2d::Scene* createScene();
+    static PacksBookScene* createScene();
     CREATE_FUNC(PacksBookScene);
     virtual bool init();
     virtual ~PacksBookScene();
+    
+    void loadCollection(Collection *collection);
+    void onHttpListPack(HttpClient* client, HttpResponse* response);
     
     void back(Object *sender, Control::EventType controlEvent);
     void onHttpGetCount(HttpClient* client, HttpResponse* response);
@@ -50,12 +55,10 @@ private:
     DragView *_dragView;
     
     std::vector<PackInfo> _packs;
-    
     SptLoader *_sptLoader;
-    
     SpriteBatchNode *_starBatch;
-    
     Touch* _touch;
+    Collection _collection;
 };
 
 
