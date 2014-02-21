@@ -1,5 +1,5 @@
 #include "userPackScene.h"
-#include "packsBookScene.h"
+#include "packsListScene.h"
 #include "lang.h"
 #include "http.h"
 #include "util.h"

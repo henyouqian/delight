@@ -79,6 +79,16 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"Id": 0}
 				},{
+					"name": "mod",
+					"method": "POST",
+					"data": {
+						"Id":0,
+						"Title":"",
+						"Text":"",
+						"Thumb":"qiniuThumb=.jpg",
+						"Packs":[1, 2, 3]
+					}
+				},{
 					"name": "list",
 					"method": "POST",
 					"data": {"UserId": 0, "StartId": 0, "Limit":12}

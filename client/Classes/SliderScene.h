@@ -17,6 +17,7 @@ public:
     bool init(float dur1, float dur2, float dur3);
     void run();
     void stop();
+    int getStarNum();
     
     virtual void update(float dt);
     

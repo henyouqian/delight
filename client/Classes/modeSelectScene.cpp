@@ -25,7 +25,7 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
         return false;
     }
     _packInfo = packInfo;
-    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Size visSize = Director::getInstance()->getVisibleSize();
     
     //sprite loader
     _sptLoader = SptLoader::create(this);
@@ -39,19 +39,19 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
     
     //casual button
     auto button = createButton(lang("Casual"), 36, 1.5f);
-    button->setPosition(Point(visibleSize.width/3, btnY));
+    button->setPosition(Point(visSize.width/3, btnY));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::enterCasualMode), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
     //time attck button
     button = createButton(lang("Time attack"), 36, 1.5f);
-    button->setPosition(Point(visibleSize.width/3*2.f, btnY));
+    button->setPosition(Point(visSize.width/3*2.f, btnY));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::enterCasualMode), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
     //back button
     auto btnBack = createButton("﹤", 48, 1.f);
-    btnBack->setPosition(Point(70, 70));
+    btnBack->setPosition(Point(70, visSize.height-70));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 1);
     
@@ -60,7 +60,6 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
     _packDownloader->init(_packInfo, this);
     
     //progress label
-    auto visSize = Director::getInstance()->getVisibleSize();
     _progressLabel = LabelTTF::create("0%", "HelveticaNeue", 38);
     _progressLabel->setAnchorPoint(Point(.5f, .5f));
     _progressLabel->setPosition(Point(visSize.width*.5f, 600));
@@ -98,7 +97,7 @@ void ModeSelectScene::enterTimeAttackMode(Object *sender, Control::EventType con
 }
 
 void ModeSelectScene::back(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
+    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
 }
 
 void ModeSelectScene::onPackError() {

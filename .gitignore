@@ -16,3 +16,8 @@ client/proj.android/assets/
 client/proj.android/bin/
 client/proj.android/gen/
 client/proj.android/obj/
+client/Classes/obsolete/
+client/publish/
+server/server
+server/obsolete/
+server/tools/packUploader/packUploader

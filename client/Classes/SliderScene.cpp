@@ -2,6 +2,7 @@
 #include "gifTexture.h"
 #include "util.h"
 #include "lang.h"
+#include "db.h"
 #include "lw/lwLog.h"
 #include "SimpleAudioEngine.h"
 #include <sys/stat.h>
@@ -97,6 +98,23 @@ void TimeBar::run() {
 
 void TimeBar::stop() {
     unscheduleUpdate();
+}
+
+int TimeBar::getStarNum() {
+    auto now = std::chrono::system_clock::now();
+    auto dur = now - _startTimePoint;
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds> (dur);
+    float t = ms.count()*.001f;
+    
+    if (t <= _dur1) {
+        return 3;
+    } else if (t <= _dur1+_dur2) {
+        return 2;
+    } else if (t <= _dur1+_dur2+_dur3) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 void TimeBar::update(float dt) {
@@ -338,7 +356,7 @@ void SliderScene::HideBackConfirm(Object *sender, Control::EventType controlEven
 }
 
 void SliderScene::back(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
+    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
 }
 
 void SliderScene::next(Object *sender, Control::EventType controlEvent) {
@@ -372,6 +390,14 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
             btnFadeIn(_btnFinish);
             _timeBar->stop();
             _isFinish = true;
+            
+            //setStar
+            auto cs = CollectionStars::getInstance();
+            int prevStarNum = cs->getStarNum(_packInfo->id);
+            int starNum = _timeBar->getStarNum();
+            if (starNum > prevStarNum) {
+                cs->setStarNum(_packInfo->id, starNum);
+            }
         } else {
             btnFadeIn(_btnNext);
         }

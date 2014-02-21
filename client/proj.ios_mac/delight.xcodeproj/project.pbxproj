@@ -135,8 +135,8 @@
 		B3E53B4A18B3B3630029D6BD /* collectionListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */; };
 		B3E841811857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
 		B3E841821857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
-		B3F01AF1187E87900000B33E /* packsBookScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsBookScene.cpp */; };
-		B3F01AF2187E87900000B33E /* packsBookScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsBookScene.cpp */; };
+		B3F01AF1187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
+		B3F01AF2187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
 		B3FB833D18A78CF90037DFB4 /* qiniu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FB833B18A78CF90037DFB4 /* qiniu.cpp */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -431,8 +431,8 @@
 		B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = collectionListScene.cpp; path = ../Classes/collectionListScene.cpp; sourceTree = "<group>"; };
 		B3E53B4918B3B3630029D6BD /* collectionListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = collectionListScene.h; path = ../Classes/collectionListScene.h; sourceTree = "<group>"; };
 		B3E841801857774B0004C636 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
-		B3F01AEF187E87900000B33E /* packsBookScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packsBookScene.cpp; path = ../Classes/packsBookScene.cpp; sourceTree = "<group>"; };
-		B3F01AF0187E87900000B33E /* packsBookScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsBookScene.h; path = ../Classes/packsBookScene.h; sourceTree = "<group>"; };
+		B3F01AEF187E87900000B33E /* packsListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packsListScene.cpp; path = ../Classes/packsListScene.cpp; sourceTree = "<group>"; };
+		B3F01AF0187E87900000B33E /* packsListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsListScene.h; path = ../Classes/packsListScene.h; sourceTree = "<group>"; };
 		B3FB833B18A78CF90037DFB4 /* qiniu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qiniu.cpp; path = ../Classes/qiniu.cpp; sourceTree = "<group>"; };
 		B3FB833C18A78CF90037DFB4 /* qiniu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qiniu.h; path = ../Classes/qiniu.h; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -508,6 +508,8 @@
 			children = (
 				B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */,
 				B3E53B4918B3B3630029D6BD /* collectionListScene.h */,
+				B3F01AEF187E87900000B33E /* packsListScene.cpp */,
+				B3F01AF0187E87900000B33E /* packsListScene.h */,
 				B364905818A51DA300B93930 /* userPackScene.cpp */,
 				B364905918A51DA300B93930 /* userPackScene.h */,
 				B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */,
@@ -516,8 +518,6 @@
 				B31003991879B5F40049A6CF /* mainMenuScene.h */,
 				B3ACE2DD18B227B20005830A /* dragView.cpp */,
 				B3ACE2DE18B227B20005830A /* dragView.h */,
-				B3F01AEF187E87900000B33E /* packsBookScene.cpp */,
-				B3F01AF0187E87900000B33E /* packsBookScene.h */,
 				B310039E187C067A0049A6CF /* modeSelectScene.cpp */,
 				B310039F187C067A0049A6CF /* modeSelectScene.h */,
 				B302CBFB18519276003746A6 /* sliderScene.cpp */,
@@ -1176,7 +1176,7 @@
 				B3A638E6185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				B3CC388518A3930B00056424 /* ELCImagePickerController.m in Sources */,
-				B3F01AF1187E87900000B33E /* packsBookScene.cpp in Sources */,
+				B3F01AF1187E87900000B33E /* packsListScene.cpp in Sources */,
 				B33DAC70184CC6B9001403BA /* dgif_lib.c in Sources */,
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
@@ -1209,7 +1209,7 @@
 				B33DAC73184CC6B9001403BA /* egif_lib.c in Sources */,
 				5087E75717EB910900C73F5D /* AppDelegate.cpp in Sources */,
 				B3AA0786186BEEE200706E4D /* util.cpp in Sources */,
-				B3F01AF2187E87900000B33E /* packsBookScene.cpp in Sources */,
+				B3F01AF2187E87900000B33E /* packsListScene.cpp in Sources */,
 				B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */,
 				B3A638E7185DBAE9009ECDF1 /* sha.cpp in Sources */,
 				B31003A1187C067A0049A6CF /* modeSelectScene.cpp in Sources */,

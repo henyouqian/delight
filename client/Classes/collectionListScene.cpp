@@ -3,7 +3,7 @@
 #include "lang.h"
 #include "http.h"
 #include "util.h"
-#include "packsBookScene.h"
+#include "packsListScene.h"
 #include "db.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
@@ -76,7 +76,7 @@ bool CollectionListScene::init() {
     addChild(_dragView);
     float dragViewHeight = visSize.height - HEADER_HEIGHT;
     _dragView->setWindowRect(Rect(0, 0, visSize.width, dragViewHeight));
-    _dragView->setContentHeight(1800.f);
+    //_dragView->setContentHeight(1800.f);
     
     //sptLoader
     _sptLoader = SptLoader::create(this);
@@ -94,7 +94,7 @@ bool CollectionListScene::init() {
 }
 
 void CollectionListScene::back(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->popSceneWithTransition<TransitionFade>(.5f);
+    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)getParent(), .5f);
 }
 
 void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse* response) {
@@ -173,7 +173,6 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
             sql << col.id << ",";
             sql << "'" << coljs << "');";
             char *err;
-            lwinfo("%s", sql.str().c_str());
             auto r = sqlite3_exec(gSaveDb, sql.str().c_str(), NULL, NULL, &err);
             if(r != SQLITE_OK) {
                 lwerror("sqlite error: %s\nsql=%s", err, sql.str().c_str());
@@ -185,9 +184,10 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
 void CollectionListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
     int i = (int)userData;
     sprite->setAnchorPoint(Point(0.f, 1.f));
-    sprite->setPosition(Point(THUMB_MARGIN, -THUMB_MARGIN));
+    sprite->setPosition(Point(THUMB_MARGIN, -(THUMB_MARGIN+_thumbHeight)*i));
     _dragView->addChild(sprite);
     _thumbs.push_back(sprite);
+    _dragView->setContentHeight((THUMB_MARGIN+_thumbHeight)*i+THUMB_MARGIN);
     
     //resize
     auto size = sprite->getContentSize();
@@ -234,7 +234,7 @@ void CollectionListScene::onTouchesEnded(const std::vector<Touch*>& touches, Eve
     }
     _touch = nullptr;
     
-    if (!_dragView->isDragging()) {
+    if (!_dragView->isDragging() && _dragView->getWindowRect().containsPoint(touch->getLocation())) {
         for( int i = 0; i < _thumbs.size(); i++){
             auto thumb = _thumbs[i];
             auto rect = thumb->getBoundingBox();

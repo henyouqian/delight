@@ -14,16 +14,25 @@ Scene* MainMenuScene::createScene() {
     auto scene = Scene::create();
     auto layer = MainMenuScene::create();
     scene->addChild(layer);
+    
     return scene;
 }
 
 void MainMenuScene::onLogin(HttpClient *c, HttpResponse *r) {
+    if (!r->isSucceed()) {
+        lwerror("http error");
+        return;
+    }
     auto vData = r->getResponseData();
     std::istringstream is(std::string(vData->begin(), vData->end()));
     lwinfo("%s", is.str().c_str());
 }
 
 void MainMenuScene::onInfo(HttpClient *c, HttpResponse *r) {
+    if (!r->isSucceed()) {
+        lwerror("http error");
+        return;
+    }
     auto vData = r->getResponseData();
     std::istringstream is(std::string(vData->begin(), vData->end()));
     lwinfo("%s", is.str().c_str());
