@@ -11,6 +11,7 @@ using namespace CocosDenshion;
 
 static const char *SND_TINK = "audio/tink.wav";
 static const char *SND_SUCCESS = "audio/success.aiff";
+static const char *SND_FINISH = "audio/finish.aiff";
 
 namespace {
     void shuffle(std::vector<int> &vec, int num) {
@@ -53,9 +54,11 @@ Gameplay::Gameplay(GameplayListener *listener) {
     _running = false;
     _currSliderGrp = nullptr;
     _newSliderGrp = nullptr;
+    _isLast = false;
     
     SimpleAudioEngine::getInstance()->preloadEffect(SND_TINK);
     SimpleAudioEngine::getInstance()->preloadEffect(SND_SUCCESS);
+    SimpleAudioEngine::getInstance()->preloadEffect(SND_FINISH);
     
     _sptLoader = SptLoader::create(this);
     this->addChild(_sptLoader);
@@ -93,6 +96,10 @@ Gameplay::~Gameplay() {
         }
     }
     TextureCache::getInstance()->removeUnusedTextures();
+    
+    SimpleAudioEngine::getInstance()->unloadEffect(SND_TINK);
+    SimpleAudioEngine::getInstance()->unloadEffect(SND_SUCCESS);
+    SimpleAudioEngine::getInstance()->unloadEffect(SND_FINISH);
 }
 
 void Gameplay::preload(const char *filePath) {
@@ -118,10 +125,11 @@ void Gameplay::preload(const char *filePath) {
     _sptLoader->load(filePath);
 }
 
-void Gameplay::reset(const char *filePath, int sliderNum) {
+void Gameplay::reset(const char *filePath, int sliderNum, bool isLast) {
     _resetImagePath = filePath;
     _sliderNum = sliderNum;
     _running = false;
+    _isLast = isLast;
     
     bool textureLoaded = false;
     auto it = _preloads.begin();
@@ -249,7 +257,11 @@ void Gameplay::onTouchesEnded(const std::vector<Touch*>& touches) {
         }
     }
     if (_isCompleted == false && complete == true && _running) {
-        SimpleAudioEngine::getInstance()->playEffect(SND_SUCCESS);
+        if (_isLast) {
+            SimpleAudioEngine::getInstance()->playEffect(SND_FINISH);
+        } else {
+            SimpleAudioEngine::getInstance()->playEffect(SND_SUCCESS);
+        }
     }
     _isCompleted = complete;
 }

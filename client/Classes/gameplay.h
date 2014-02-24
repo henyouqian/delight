@@ -26,7 +26,7 @@ public:
     Gameplay(GameplayListener *listener);
     ~Gameplay();
     void preload(const char *filePath);
-    void reset(const char *filePath, int sliderNum);
+    void reset(const char *filePath, int sliderNum, bool isLast = false);
     bool isCompleted();
     
     void onTouchesBegan(const std::vector<Touch*>& touches);
@@ -51,6 +51,7 @@ private:
     float _sliderY0;
     float _sliderH;
     bool _isCompleted;
+    bool _isLast;
     
     SptLoader *_sptLoader;
     

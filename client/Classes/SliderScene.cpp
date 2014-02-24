@@ -243,7 +243,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     this->addChild(_btnNo, 10);
     
     //finish button
-    _btnFinish = createColorButton(lang("Finish"), 36, 1.f, Color3B::WHITE, RED, BTN_BG_OPACITY);
+    _btnFinish = createColorButton(lang("Back"), 36, 1.f, Color3B::WHITE, RED, BTN_BG_OPACITY);
     _btnFinish->setPosition(Point(70, 70));
     _btnFinish->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
     _btnFinish->setOpacity(0);
@@ -279,7 +279,8 @@ bool SliderScene::init(PackInfo *packInfo) {
     }
     
     //timeBar
-    _timeBar = TimeBar::create(60, 10, 10);
+    //_timeBar = TimeBar::create(60, 10, 10);
+    _timeBar = TimeBar::create(10, 3, 3);
     this->addChild(_timeBar, 1);
     
     //shuffle image order
@@ -293,7 +294,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     _starLabel->setScaleY(0.f);
     this->addChild(_starLabel, 10);
     
-    SimpleAudioEngine::getInstance()->preloadEffect(SND_STAR);
+    //SimpleAudioEngine::getInstance()->preloadEffect(SND_STAR);
     
     //grade label
     _gradeLabel = LabelTTF::create("Great", "HelveticaNeue", 96);
@@ -436,6 +437,21 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
                 cs->setStarNum(_packInfo->id, starNum);
             }
             
+            //
+            if (starNum == 0) {
+                _gradeLabel->setString(lang("Failed"));
+                _starLabel->setString("");
+            } else if (starNum == 1) {
+                _gradeLabel->setString(lang("Pass"));
+                _starLabel->setString("★");
+            } else if (starNum == 2) {
+                _gradeLabel->setString(lang("Good"));
+                _starLabel->setString("★★");
+            } else if (starNum == 3) {
+                _gradeLabel->setString(lang("Great"));
+                _starLabel->setString("★★★");
+            }
+            
             //show grade
             float t = .2f;
             auto scaleTo = ScaleTo::create(t, 1.f);
@@ -453,7 +469,7 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
 }
 
 void SliderScene::showStar() {
-    SimpleAudioEngine::getInstance()->playEffect(SND_STAR);
+    //SimpleAudioEngine::getInstance()->playEffect(SND_STAR);
     
     float flipT = .15f;
     auto gScale = ScaleTo::create(flipT, 1.f, 0.f);
@@ -483,8 +499,9 @@ void SliderScene::reset(int imgIdx) {
     std::string local;
     auto idx = _packInfo->imageIndices[_imgIdx];
     makeLocalImagePath(local, _packInfo->images[idx].key.c_str());
-    //_gameplay->reset(local.c_str(), _packInfo->sliderNum);
-    _gameplay->reset(local.c_str(), 3);
+    bool isLast = imgIdx == _packInfo->images.size() - 1;
+    _gameplay->reset(local.c_str(), _packInfo->sliderNum, isLast);
+    //_gameplay->reset(local.c_str(), 3);
     auto nextIdx = _imgIdx + 1;
     if (nextIdx >= _packInfo->images.size()) {
         nextIdx = 0;
