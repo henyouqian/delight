@@ -96,6 +96,17 @@ ControlButton *createColorButton(const char *text, float fontSize, float bgScale
     return button;
 }
 
+ControlButton *createButton(const char* textFont, const char *text, float textSize, const Color3B &textColor, const char *bgFile, float bgScale, const Color3B &bgColor, GLubyte bgOpacity) {
+    auto label = LabelTTF::create(text, "HelveticaNeue", textSize);
+    label->setColor(textColor);
+    auto spr = Scale9Sprite::create(bgFile);
+    spr->setScale(bgScale);
+    spr->setColor(bgColor);
+    spr->setOpacity(bgOpacity);
+    auto button = ControlButton::create(label, spr);
+    button->setAdjustBackgroundImage(false);
+    return button;
+}
 
 
 

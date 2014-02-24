@@ -14,12 +14,12 @@ class GifTexture;
 class DragView;
 class Collection;
 
-class PacksBookScene : public LayerColor, public SptLoaderListener{
+class PacksListScene : public LayerColor, public SptLoaderListener{
 public:
-    static PacksBookScene* createScene();
-    CREATE_FUNC(PacksBookScene);
+    static PacksListScene* createScene();
+    CREATE_FUNC(PacksListScene);
     virtual bool init();
-    virtual ~PacksBookScene();
+    virtual ~PacksListScene();
     
     void loadCollection(Collection *collection);
     void onHttpListPack(HttpClient* client, HttpResponse* response);
@@ -42,8 +42,9 @@ public:
     virtual void onTouchesCancelled(const std::vector<Touch*>&touches, Event *event);
     
 private:
-    //page: zero based
-    void loadPage(int page);
+    ////page: zero based
+    //void loadPage(int page);
+    bool isLocked(int idx);
     
     int _packCount;
     int _pageCount;
@@ -60,6 +61,7 @@ private:
     SpriteBatchNode *_starBatch;
     Touch* _touch;
     Collection _collection;
+    SpriteBatchNode *_lockBatch;
     
 };
 

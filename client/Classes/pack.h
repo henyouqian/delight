@@ -15,6 +15,7 @@ struct PackInfo {
     std::string text;
     std::string thumb;
     std::string cover;
+    int sliderNum;
     
     struct Image {
         std::string key;

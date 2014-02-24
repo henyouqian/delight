@@ -47,6 +47,12 @@ void PackInfo::init(jsonxx::Object& packJs) {
     this->title = packJs.get<jsonxx::String>("Title");
     this->text = packJs.get<jsonxx::String>("Text");
     
+    if (!packJs.has<jsonxx::Array>("SliderNum")) {
+        this->sliderNum = 6;
+    } else {
+        this->sliderNum = MIN(12, (int)(packJs.get<jsonxx::Number>("Id")));
+    }
+    
     auto imagesJs = packJs.get<jsonxx::Array>("Images");
     for (auto j = 0; j < imagesJs.size(); ++j) {
         auto imageJs = imagesJs.get<jsonxx::Object>(j);

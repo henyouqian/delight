@@ -66,7 +66,8 @@ bool CollectionListScene::init() {
     _thumbHeight = _thumbWidth * 0.4f;
     
     //back button
-    auto btnBack = createColorButton("＜", 64, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    auto btnBack = createColorButton("〈", 56, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    btnBack->setTitleOffset(-14.f, 0.f);
     btnBack->setPosition(Point(70, y));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(CollectionListScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 10);
@@ -178,6 +179,38 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
                 lwerror("sqlite error: %s\nsql=%s", err, sql.str().c_str());
             }
         }
+        
+        //thumbs
+        auto thumb = Sprite::create("ui/loadingWide.png");
+        _thumbs.push_back(thumb);
+        _dragView->addChild(thumb);
+        thumb->setAnchorPoint(Point(0.f, 1.f));
+        float thumbX = THUMB_MARGIN;
+        float thumbY = -(THUMB_MARGIN+_thumbHeight)*i;
+        thumb->setPosition(Point(thumbX, thumbY));
+        
+        //resize thumbs
+        auto size = thumb->getContentSize();
+        auto scaleW = _thumbWidth/size.width;
+        auto scaleH = _thumbHeight/size.height;
+        auto scale = MAX(scaleW, scaleH);
+        float uvw = size.width;
+        float uvh = size.height;
+        if (scaleW <= scaleH) {
+            uvw = size.height * _thumbWidth/_thumbHeight;
+        } else {
+            uvh = size.width * _thumbHeight/_thumbWidth;
+        }
+        thumb->setScale(scale);
+        thumb->setTextureRect(Rect((size.width-uvw)*.5f, (size.height-uvh)*.5f, uvw, uvh));
+        
+        //titles
+        auto label = LabelTTF::create(col.title.c_str(), "HelveticaNeue", 36);
+        label->enableShadow(Size(2, -2), .6f, 1.f);
+        label->setAnchorPoint(Point(0.f, 1.f));
+        label->setPosition(Point(thumbX + 10, thumbY-10));
+        label->setColor(Color3B(240, 240, 240));
+        _dragView->addChild(label, 1);
     }
 }
 
@@ -186,7 +219,7 @@ void CollectionListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite,
     sprite->setAnchorPoint(Point(0.f, 1.f));
     sprite->setPosition(Point(THUMB_MARGIN, -(THUMB_MARGIN+_thumbHeight)*i));
     _dragView->addChild(sprite);
-    _thumbs.push_back(sprite);
+    _thumbs[i] = sprite;
     _dragView->setContentHeight((THUMB_MARGIN+_thumbHeight)*i+THUMB_MARGIN);
     
     //resize
@@ -241,7 +274,7 @@ void CollectionListScene::onTouchesEnded(const std::vector<Touch*>& touches, Eve
             rect.origin.y += _dragView->getPositionY();
             if (rect.containsPoint(touch->getLocation())) {
                 if (i < _collections.size()) {
-                    auto layer = PacksBookScene::createScene();
+                    auto layer = PacksListScene::createScene();
                     layer->loadCollection(&_collections[i]);
                     Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
                     

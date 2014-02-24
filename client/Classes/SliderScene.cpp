@@ -10,6 +10,8 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+using namespace CocosDenshion;
+
 static const GLubyte BTN_BG_OPACITY = 160;
 static const float BTN_EASE_DUR = .2f;
 static const GLubyte TRANS_DOT_OPACITY = 80;
@@ -17,6 +19,8 @@ static const GLubyte TRANS_DOT_OPACITY = 80;
 static const Color3B GREEN = Color3B(76, 217, 100);
 static const Color3B YELLOW = Color3B(255, 204, 0);
 static const Color3B RED = Color3B(255, 59, 48);
+
+static const char *SND_STAR = "audio/star.aiff";
 
 static const int SLIDER_NUM = 6;
 
@@ -193,6 +197,7 @@ bool SliderScene::init(PackInfo *packInfo) {
         return false;
     }
     this->setTouchEnabled(true);
+    auto visSize = Director::getInstance()->getVisibleSize();
     
     _isFinish = false;
     _imgIdx = 0;
@@ -238,14 +243,24 @@ bool SliderScene::init(PackInfo *packInfo) {
     this->addChild(_btnNo, 10);
     
     //finish button
-    _btnFinish = createColorButton(lang("Finish"), 36, 1.f, Color3B::WHITE, Color3B(255, 59, 48), BTN_BG_OPACITY);
-    _btnFinish->setPosition(Point(size.width-70, 70));
+    _btnFinish = createColorButton(lang("Finish"), 36, 1.f, Color3B::WHITE, RED, BTN_BG_OPACITY);
+    _btnFinish->setPosition(Point(70, 70));
     _btnFinish->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
     _btnFinish->setOpacity(0);
     _btnFinish->setEnabled(false);
     label = (LabelTTF*)_btnFinish->getTitleLabelForState(Control::State::NORMAL);
     label->setOpacity(0);
     this->addChild(_btnFinish, 10);
+    
+    //next pack button
+    _btnNextPack = createColorButton(lang("Next"), 36, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
+    _btnNextPack->setPosition(Point(visSize.width-70, 70));
+    _btnNextPack->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    _btnNextPack->setOpacity(0);
+    _btnNextPack->setEnabled(false);
+    label = (LabelTTF*)_btnNextPack->getTitleLabelForState(Control::State::NORMAL);
+    label->setOpacity(0);
+    this->addChild(_btnNextPack, 10);
     
     //dots
     _dotBatch = SpriteBatchNode::create("ui/dot24.png");
@@ -270,6 +285,25 @@ bool SliderScene::init(PackInfo *packInfo) {
     //shuffle image order
     _packInfo->shuffleImageIndices();
     
+    //stars
+    _starLabel = LabelTTF::create("★★★", "HelveticaNeue", 72);
+    _starLabel->setPosition(Point(visSize.width*.5f, visSize.height*.7f));
+    _starLabel->setColor(Color3B(255, 229, 153));
+    _starLabel->enableShadow(Size(3, -3), .5f, 1.f);
+    _starLabel->setScaleY(0.f);
+    this->addChild(_starLabel, 10);
+    
+    SimpleAudioEngine::getInstance()->preloadEffect(SND_STAR);
+    
+    //grade label
+    _gradeLabel = LabelTTF::create("Great", "HelveticaNeue", 96);
+    _gradeLabel->setPosition(Point(visSize.width*.5f, visSize.height*.7f));
+    _gradeLabel->setColor(Color3B(255, 229, 153));
+    _gradeLabel->setOpacity(0);
+    _gradeLabel->enableShadow(Size(3, -3), .5f, 1.f);
+    _gradeLabel->setScale(3.f);
+    this->addChild(_gradeLabel, 10);
+    
     //reset
     reset(0);
     
@@ -290,6 +324,7 @@ void SliderScene::onReset(float rotate) {
     _btnYes->runAction(ease->clone());
     _btnNo->runAction(ease->clone());
     _btnFinish->runAction(ease->clone());
+    _btnNextPack->runAction(ease->clone());
     
     if (_imgIdx == 0) {
         _timeBar->run();
@@ -388,6 +423,8 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
         if (_imgIdx == _packInfo->images.size()-1) {
             //complete
             btnFadeIn(_btnFinish);
+            btnFadeIn(_btnNextPack);
+            btnFadeOut(_btnBack);
             _timeBar->stop();
             _isFinish = true;
             
@@ -398,10 +435,43 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
             if (starNum > prevStarNum) {
                 cs->setStarNum(_packInfo->id, starNum);
             }
+            
+            //show grade
+            float t = .2f;
+            auto scaleTo = ScaleTo::create(t, 1.f);
+            auto ease = EaseSineIn::create(scaleTo);
+            auto fadeIn = FadeIn::create(t);
+            auto spawn = Spawn::create(ease, fadeIn, nullptr);
+            auto delay = DelayTime::create(1.2f);
+            auto callback = CallFunc::create(CC_CALLBACK_0(SliderScene::showStar, this));
+            auto seq = Sequence::create(spawn, delay, callback, nullptr);
+            _gradeLabel->runAction(seq);
         } else {
             btnFadeIn(_btnNext);
         }
     }
+}
+
+void SliderScene::showStar() {
+    SimpleAudioEngine::getInstance()->playEffect(SND_STAR);
+    
+    float flipT = .15f;
+    auto gScale = ScaleTo::create(flipT, 1.f, 0.f);
+    auto gEase = EaseSineIn::create(gScale);
+    _gradeLabel->runAction(gEase);
+    
+    float outT = .3f;
+    auto delay = DelayTime::create(flipT);
+    auto scale = ScaleTo::create(flipT, 1.f);
+    auto ease = EaseSineOut::create(scale);
+    auto stay = DelayTime::create(2.f);
+    auto fadeOut = FadeOut::create(outT);
+    auto eFadeOut = EaseSineIn::create(fadeOut);
+    auto scaleOut = ScaleTo::create(outT, 1.4f);
+    auto easeOut = EaseBackIn::create(scaleOut);
+    auto out = Spawn::create(eFadeOut, easeOut, nullptr);
+    auto seq = Sequence::create(delay, ease, stay, out, nullptr);
+    _starLabel->runAction(seq);
 }
 
 void SliderScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
@@ -413,7 +483,8 @@ void SliderScene::reset(int imgIdx) {
     std::string local;
     auto idx = _packInfo->imageIndices[_imgIdx];
     makeLocalImagePath(local, _packInfo->images[idx].key.c_str());
-    _gameplay->reset(local.c_str(), SLIDER_NUM);
+    //_gameplay->reset(local.c_str(), _packInfo->sliderNum);
+    _gameplay->reset(local.c_str(), 3);
     auto nextIdx = _imgIdx + 1;
     if (nextIdx >= _packInfo->images.size()) {
         nextIdx = 0;

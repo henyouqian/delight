@@ -16,14 +16,14 @@ static const int PACKS_PER_PAGE = 12;
 static const float THUMB_MARGIN = 5.f;
 static const float HEADER_HEIGHT = 130.f;
 
-PacksBookScene* PacksBookScene::createScene() {
+PacksListScene* PacksListScene::createScene() {
     auto scene = Scene::create();
-    auto layer = PacksBookScene::create();
+    auto layer = PacksListScene::create();
     scene->addChild(layer);
     return layer;
 }
 
-bool PacksBookScene::init() {
+bool PacksListScene::init() {
     auto visSize = Director::getInstance()->getVisibleSize();
     
     if (!LayerColor::initWithColor(Color4B(10, 10, 10, 255)))  {
@@ -53,9 +53,10 @@ bool PacksBookScene::init() {
     float y = visSize.height-70;
     
     //back button
-    auto btnBack = createColorButton("＜", 64, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    auto btnBack = createColorButton("〈", 56, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    btnBack->setTitleOffset(-14.f, 0.f);
     btnBack->setPosition(Point(70, y));
-    btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksBookScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksListScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 10);
     
     //label
@@ -84,10 +85,14 @@ bool PacksBookScene::init() {
     _dragView->addChild(_starBatch, 1);
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui/star36.plist");
     
+    //lock
+    _lockBatch = SpriteBatchNode::create("ui/lock.png");
+    _dragView->addChild(_lockBatch, 2);
+    
 //    //get pack count
 //    _packCount = 0;
 //    _pageCount = 0;
-//    postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetCount));
+//    postHttpRequest("pack/count", "", this, (SEL_HttpResponse)(&PacksListScene::onHttpGetCount));
     
     //loadPage(0);
     
@@ -97,43 +102,67 @@ bool PacksBookScene::init() {
     return true;
 }
 
-void PacksBookScene::onEnter() {
+void PacksListScene::onEnter() {
     LayerColor::onEnter();
     
     _starBatch->removeAllChildren();
+    _lockBatch->removeAllChildren();
+    
     int packNum = _collection.packs.size();
     for (auto i = 0; i < packNum; ++i) {
-        //stars
-        int starNum = CollectionStars::getInstance()->getStarNum(_collection.packs[i]);
-        
         int row = i / 3;
         int col = i % 3;
         float w = _thumbWidth;
-        float x = (w+THUMB_MARGIN)*col + .5f*w;
-        float y = - ((_thumbHeight+THUMB_MARGIN)*row+.5f*_thumbHeight);
-        float dx = 35.f;
-        x -= dx;
-        y -= 120.f;
-        for (auto iStar = 0; iStar < 3; ++iStar) {
-            Sprite *sprStar;
-            if (iStar < starNum) {
-                sprStar = Sprite::createWithSpriteFrameName("star36Gold.png");
-            } else {
-                sprStar = Sprite::createWithSpriteFrameName("star36White.png");
-                sprStar->setOpacity(128);
+        float centerX = (w+THUMB_MARGIN)*col + .5f*w;
+        float centerY = - ((_thumbHeight+THUMB_MARGIN)*row+.5f*_thumbHeight);
+        
+        //lock or star
+        if (isLocked(i)) {
+            auto sprLock = Sprite::create("ui/lock.png");
+            sprLock->setPosition(Point(centerX, centerY));
+            sprLock->setOpacity(150);
+            sprLock->setScale(100.f/128.f);
+            _lockBatch->addChild(sprLock);
+        } else {
+            //stars
+            int starNum = CollectionStars::getInstance()->getStarNum(_collection.packs[i]);
+            
+            float dx = 35.f;
+            float x = centerX - dx;
+            float y = centerY -120.f;
+            for (auto iStar = 0; iStar < 3; ++iStar) {
+                Sprite *sprStar;
+                if (iStar < starNum) {
+                    sprStar = Sprite::createWithSpriteFrameName("star36Gold.png");
+                } else {
+                    sprStar = Sprite::createWithSpriteFrameName("star36White.png");
+                    sprStar->setOpacity(128);
+                }
+                sprStar->setPosition(Point(x, y));
+                _starBatch->addChild(sprStar);
+                x += dx;
             }
-            sprStar->setPosition(Point(x, y));
-            _starBatch->addChild(sprStar);
-            x += dx;
         }
     }
 }
 
-PacksBookScene::~PacksBookScene() {
+bool PacksListScene::isLocked(int idx) {
+    if (idx == 0) {
+        return false;
+    }
+    int starNum = CollectionStars::getInstance()->getStarNum(_collection.packs[idx]);
+    int prevStarNum = CollectionStars::getInstance()->getStarNum(_collection.packs[idx-1]);
+    if (starNum || prevStarNum) {
+        return false;
+    }
+    return true;
+}
+
+PacksListScene::~PacksListScene() {
     _sptLoader->destroy();
 }
 
-void PacksBookScene::loadCollection(Collection *collection) {
+void PacksListScene::loadCollection(Collection *collection) {
     _collection = *collection;
     
     //setup loading sprite
@@ -165,10 +194,10 @@ void PacksBookScene::loadCollection(Collection *collection) {
     //
     jsonxx::Object msg;
     msg << "Id" << collection->id;
-    postHttpRequest("collection/listPack", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpListPack));
+    postHttpRequest("collection/listPack", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksListScene::onHttpListPack));
 }
 
-void PacksBookScene::onHttpListPack(HttpClient* client, HttpResponse* response) {
+void PacksListScene::onHttpListPack(HttpClient* client, HttpResponse* response) {
     std::string body;
     
     if (!response->isSucceed()) {
@@ -228,11 +257,11 @@ void PacksBookScene::onHttpListPack(HttpClient* client, HttpResponse* response) 
     }
 }
 
-void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
+void PacksListScene::back(Object *sender, Control::EventType controlEvent) {
     Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
 }
 
-//void PacksBookScene::onHttpGetCount(HttpClient* client, HttpResponse* response) {
+//void PacksListScene::onHttpGetCount(HttpClient* client, HttpResponse* response) {
 //    _packCount = 0;
 //    
 //    if (!response->isSucceed()) {
@@ -291,7 +320,7 @@ void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
 //    loadPage(_pageCount-1);
 //}
 
-//void PacksBookScene::loadPage(int page) {
+//void PacksListScene::loadPage(int page) {
 //    TextureCache::getInstance()->removeUnusedTextures();
 //    
 //    _currPage = page;
@@ -306,7 +335,7 @@ void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
 //    msg << "StartId" << 0;
 //    msg << "Limit" << limit;
 //    
-//    postHttpRequest("pack/list", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksBookScene::onHttpGetPage));
+//    postHttpRequest("pack/list", msg.json().c_str(), this, (SEL_HttpResponse)(&PacksListScene::onHttpGetPage));
 //    
 //    //setup loading sprite
 //    int packNum = PACKS_PER_PAGE;
@@ -360,7 +389,7 @@ void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
 //    return pageIdx*100+PACKS_PER_PAGE;
 //}
 
-//void PacksBookScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
+//void PacksListScene::onHttpGetPage(HttpClient* client, HttpResponse* response) {
 //    int pageKey = makePageKey(_currPage);
 //    std::string pageJs;
 //    
@@ -420,7 +449,7 @@ void PacksBookScene::back(Object *sender, Control::EventType controlEvent) {
 //    }
 //}
 
-void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
+void PacksListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
     int idx = (int)userData;
     if (idx >= 0 && idx < _thumbs.size()) {
         _dragView->addChild(sprite);
@@ -454,12 +483,12 @@ void PacksBookScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void
     }
 }
 
-void PacksBookScene::onSptLoaderError(const char *localPath, void *userData) {
+void PacksListScene::onSptLoaderError(const char *localPath, void *userData) {
     lwerror("sprite load error");
     //fixme:
 }
 
-void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
+void PacksListScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
     if (_touch){
         return;
     }
@@ -469,7 +498,7 @@ void PacksBookScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *e
     _dragView->onTouchesBegan(touch);
 }
 
-void PacksBookScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
+void PacksListScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
     if (touch != _touch) {
         return;
@@ -477,7 +506,7 @@ void PacksBookScene::onTouchesMoved(const std::vector<Touch*>& touches, Event *e
     _dragView->onTouchesMoved(touch);
 }
 
-void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *event) {
+void PacksListScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
     if (touch != _touch) {
         return;
@@ -486,13 +515,15 @@ void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
     
     if (!_dragView->isDragging() && _dragView->getWindowRect().containsPoint(touch->getLocation())) {
         for( int i = 0; i < _thumbs.size(); i++){
-            auto thumb = _thumbs[i];
-            auto rect = thumb->getBoundingBox();
-            rect.origin.y += _dragView->getPositionY();
-            if (rect.containsPoint(touch->getLocation())) {
-                auto scene = ModeSelectScene::createScene(&(_packs[i]));
-                Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
-                break;
+            if (!isLocked(i) && i < _packs.size() ) {
+                auto thumb = _thumbs[i];
+                auto rect = thumb->getBoundingBox();
+                rect.origin.y += _dragView->getPositionY();
+                if (rect.containsPoint(touch->getLocation())) {
+                    auto scene = ModeSelectScene::createScene(&(_packs[i]));
+                    Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
+                    break;
+                }
             }
         }
     }
@@ -500,7 +531,7 @@ void PacksBookScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
     _dragView->onTouchesEnded(touch);
 }
 
-void PacksBookScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
+void PacksListScene::onTouchesCancelled(const std::vector<Touch*>&touches, Event *event) {
     onTouchesEnded(touches, event);
 }
 

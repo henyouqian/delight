@@ -50,7 +50,9 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
     this->addChild(button, 1);
     
     //back button
-    auto btnBack = createButton("﹤", 48, 1.f);
+    //auto button = createButton("〈", 48, 1.f);
+    auto btnBack = createButton("Verdana-Bold", "〈", 56, Color3B(255, 255, 255), "ui/btnBg.png", 1.f, Color3B(255, 255, 255), 180);
+    btnBack->setTitleOffset(-14.f, 0.f);
     btnBack->setPosition(Point(70, visSize.height-70));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 1);

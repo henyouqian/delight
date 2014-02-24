@@ -53,6 +53,8 @@ public:
     void back(Object *sender, Control::EventType controlEvent);
     void next(Object *sender, Control::EventType controlEvent);
     
+    void showStar();
+    
 private:
     Gameplay *_gameplay;
     std::vector<std::string> _imagePaths;
@@ -65,6 +67,7 @@ private:
     ControlButton *_btnNo;
     
     ControlButton *_btnFinish;
+    ControlButton *_btnNextPack;
     
 //    void reset(const char* filename);
     void reset(int imgIdx);
@@ -77,6 +80,9 @@ private:
     
     TimeBar *_timeBar;
     bool _isFinish;
+    
+    LabelTTF *_starLabel;
+    LabelTTF *_gradeLabel;
 };
 
 
