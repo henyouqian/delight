@@ -10,6 +10,7 @@ import (
 	"github.com/qiniu/api/rs"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 const (
@@ -17,6 +18,7 @@ const (
 	USER_PACK_BUCKET = "sliderpack"
 	H_PACK           = "hPack"     //key:packId, value:packData
 	Z_USER_PACK_PRE  = "zUserPack" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
+	Z_TAG_PRE        = "zTag"      //name:Z_TAG_PRE/tag, key:packid, score:packid
 )
 
 type Image struct {
@@ -35,6 +37,7 @@ type Pack struct {
 	Thumb    string
 	Cover    string
 	Images   []Image
+	Tags     []string
 }
 
 func init() {
@@ -71,6 +74,10 @@ func getUptoken(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
+func makeTagName(tag string) (outName string) {
+	return Z_TAG_PRE + "/" + tag
+}
+
 func newPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -84,6 +91,10 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	err = lwutil.DecodeRequestBody(r, &pack)
 	lwutil.CheckError(err, "err_decode_body")
 	pack.AuthorId = session.Userid
+	pack.Time = time.Now().Format(time.RFC3339)
+	if len(pack.Tags) > 8 {
+		pack.Tags = pack.Tags[:8]
+	}
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
@@ -122,8 +133,51 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	resp, err = ssdb.Do("zset", name, pack.Id, pack.Id)
 	lwutil.CheckSsdbError(resp, err)
 
+	//tags
+	for _, v := range pack.Tags {
+		tagName := makeTagName(v)
+		resp, err = ssdb.Do("zset", tagName, pack.Id, pack.Id)
+		lwutil.CheckSsdbError(resp, err)
+	}
+
 	//out
 	lwutil.WriteResponse(w, pack)
+}
+
+func delPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		Id uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//check owner
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
+	resp, err := ssdb.Do("zexists", name, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] == "0" {
+		lwutil.SendError("err_not_exist", fmt.Sprintf("not own the pack: userId=%d, packId=%d", session.Userid, in.Id))
+	}
+	resp, err = ssdb.Do("zdel", name, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+	resp, err = ssdb.Do("hdel", H_PACK, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, in)
 }
 
 func listPack(w http.ResponseWriter, r *http.Request) {
@@ -183,45 +237,24 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
-func delPack(w http.ResponseWriter, r *http.Request) {
+func listPackByTag(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
-	//session
-	session, err := findSession(w, r, nil)
-	lwutil.CheckError(err, "err_auth")
-
 	//in
 	var in struct {
-		Id uint64
+		Tag     string
+		StartId uint32
+		Limit   uint32
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-
-	//ssdb
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
-
-	//check owner
-	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
-	resp, err := ssdb.Do("zexists", name, in.Id)
-	lwutil.CheckSsdbError(resp, err)
-	if resp[1] == "0" {
-		lwutil.SendError("err_not_exist", fmt.Sprintf("not own the pack: userId=%d, packId=%d", session.Userid, in.Id))
-	}
-	resp, err = ssdb.Do("zdel", name, in.Id)
-	lwutil.CheckSsdbError(resp, err)
-	resp, err = ssdb.Do("hdel", H_PACK, in.Id)
-	lwutil.CheckSsdbError(resp, err)
-
-	//out
-	lwutil.WriteResponse(w, in)
 }
 
 func regPack() {
 	http.Handle("/pack/getUptoken", lwutil.ReqHandler(getUptoken))
 	http.Handle("/pack/new", lwutil.ReqHandler(newPack))
-	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
 	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
+	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
+	http.Handle("/pack/listByTag", lwutil.ReqHandler(listPackByTag))
 }

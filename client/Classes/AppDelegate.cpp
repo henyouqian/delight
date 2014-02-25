@@ -17,7 +17,7 @@ namespace {
         
         Size resVec[] = {
             //Size(480, 800),
-            //Size(640, 960),
+            Size(640, 960),
             Size(640, 1136),
             //Size(768, 1024),
             //Size(1136, 640), //for mac ccbi player

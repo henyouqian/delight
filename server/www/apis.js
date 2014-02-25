@@ -49,16 +49,21 @@ function Controller($scope, $http) {
 								"Title": "",
 								"Text": ""
 							}
-						]
+						],
+						"Tags":["art", "portrait"]
 					}
+				},{
+					"name": "del",
+					"method": "POST",
+					"data": {"Id": 0}
 				},{
 					"name": "list",
 					"method": "POST",
 					"data": {"UserId": 0, "StartId": 0, "Limit":12}
 				},{
-					"name": "del",
+					"name": "listByTag",
 					"method": "POST",
-					"data": {"Id": 0}
+					"data": {"Tag": "art", "StartId": 0, "Limit":12}
 				}
 			]
 		},{

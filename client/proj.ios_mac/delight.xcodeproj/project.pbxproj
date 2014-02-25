@@ -56,7 +56,7 @@
 		B33DAC1F1847A3EA001403BA /* libcocos2dx iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC0C1847A3B6001403BA /* libcocos2dx iOS.a */; };
 		B33DAC201847A3EA001403BA /* libcocos2dx-extensions iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC0E1847A3B6001403BA /* libcocos2dx-extensions iOS.a */; };
 		B33DAC211847A3EA001403BA /* libCocosDenshion iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC141847A3B6001403BA /* libCocosDenshion iOS.a */; };
-		B33DAC231847A412001403BA /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC221847A412001403BA /* libcurl.a */; };
+		B33DAC231847A412001403BA /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B33DAC221847A412001403BA /* libcurl.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		B33DAC70184CC6B9001403BA /* dgif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC63184CC6B9001403BA /* dgif_lib.c */; };
 		B33DAC71184CC6B9001403BA /* dgif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC63184CC6B9001403BA /* dgif_lib.c */; };
 		B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC64184CC6B9001403BA /* egif_lib.c */; };
@@ -73,8 +73,7 @@
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
-		B364904918A4E6E900B93930 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904718A4E6E900B93930 /* libcrypto.a */; };
-		B364904A18A4E6E900B93930 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904818A4E6E900B93930 /* libssl.a */; };
+		B364904A18A4E6E900B93930 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904818A4E6E900B93930 /* libssl.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B364905A18A51DA300B93930 /* userPackScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B364905818A51DA300B93930 /* userPackScene.cpp */; };
 		B383F8DE18A4CBA700FA5700 /* b64.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8C118A4CBA700FA5700 /* b64.c */; };
 		B383F8DF18A4CBA700FA5700 /* urlsafe_b64.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8C318A4CBA700FA5700 /* urlsafe_b64.c */; };
@@ -354,7 +353,6 @@
 		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
 		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
-		B364904718A4E6E900B93930 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../external/openssl/lib/libcrypto.a; sourceTree = "<group>"; };
 		B364904818A4E6E900B93930 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../external/openssl/lib/libssl.a; sourceTree = "<group>"; };
 		B364905818A51DA300B93930 /* userPackScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = userPackScene.cpp; path = ../Classes/userPackScene.cpp; sourceTree = "<group>"; };
 		B364905918A51DA300B93930 /* userPackScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = userPackScene.h; path = ../Classes/userPackScene.h; sourceTree = "<group>"; };
@@ -448,9 +446,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B33DAC231847A412001403BA /* libcurl.a in Frameworks */,
 				B364904A18A4E6E900B93930 /* libssl.a in Frameworks */,
 				B3CC388C18A3944700056424 /* AssetsLibrary.framework in Frameworks */,
-				B33DAC231847A412001403BA /* libcurl.a in Frameworks */,
 				B33DAC1F1847A3EA001403BA /* libcocos2dx iOS.a in Frameworks */,
 				B33DAC201847A3EA001403BA /* libcocos2dx-extensions iOS.a in Frameworks */,
 				B33DAC211847A3EA001403BA /* libCocosDenshion iOS.a in Frameworks */,
@@ -460,7 +458,6 @@
 				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
 				BF1712471292920000B8313A /* libz.dylib in Frameworks */,
 				BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */,
-				B364904918A4E6E900B93930 /* libcrypto.a in Frameworks */,
 				D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */,
 				D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */,
 				D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */,
@@ -576,7 +573,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B364904718A4E6E900B93930 /* libcrypto.a */,
 				B364904818A4E6E900B93930 /* libssl.a */,
 				B3CC388B18A3944700056424 /* AssetsLibrary.framework */,
 				B33F4FC9188BF742000A5AD6 /* external */,
@@ -1295,7 +1291,6 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
 					"../../../cocos2d-x-3.0alpha0/external/libwebsockets/ios/lib",
 					"/Users/weili/Documents/projects/2014/cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
-					/Users/weili/Documents/projects/2014/delight/client/external/WeChatSDK_1.4.2.1,
 					/Users/weili/Documents/projects/2014/delight/client/external/openssl/lib,
 				);
 				PRODUCT_NAME = "delight iOS";
@@ -1345,7 +1340,6 @@
 					"../../../cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
 					"../../../cocos2d-x-3.0alpha0/external/libwebsockets/ios/lib",
 					"/Users/weili/Documents/projects/2014/cocos2d-x-3.0alpha0/cocos2dx/platform/third_party/ios/libraries",
-					/Users/weili/Documents/projects/2014/delight/client/external/WeChatSDK_1.4.2.1,
 					/Users/weili/Documents/projects/2014/delight/client/external/openssl/lib,
 				);
 				PRODUCT_NAME = "delight iOS";
