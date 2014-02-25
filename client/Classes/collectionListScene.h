@@ -10,7 +10,7 @@ USING_NS_CC_EXT;
 
 class DragView;
 
-struct Collection {
+struct CollectionInfo {
     uint64_t id;
     std::string title;
     std::string text;
@@ -42,7 +42,7 @@ public:
     
 private:
     DragView *_dragView;
-    std::vector<Collection> _collections;
+    std::vector<CollectionInfo> _collections;
     SptLoader *_sptLoader;
     Touch* _touch;
     float _thumbWidth;

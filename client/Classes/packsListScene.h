@@ -21,7 +21,7 @@ public:
     virtual bool init();
     virtual ~PacksListScene();
     
-    void loadCollection(Collection *collection);
+    void loadCollection(CollectionInfo *collection);
     void onHttpListPack(HttpClient* client, HttpResponse* response);
     
     void back(Object *sender, Control::EventType controlEvent);
@@ -56,11 +56,10 @@ private:
     float _thumbHeight;
     DragView *_dragView;
     
-    std::vector<PackInfo> _packs;
     SptLoader *_sptLoader;
     SpriteBatchNode *_starBatch;
     Touch* _touch;
-    Collection _collection;
+    CollectionInfo _collection;
     SpriteBatchNode *_lockBatch;
     
 };

@@ -153,7 +153,7 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
             lwerror("json invalid");
             return;
         }
-        Collection col;
+        CollectionInfo col;
         col.id = (uint64_t)coljs.get<jsonxx::Number>("Id");
         col.title = coljs.get<jsonxx::String>("Title");
         col.text = coljs.get<jsonxx::String>("Text");

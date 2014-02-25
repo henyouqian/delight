@@ -5,6 +5,7 @@
 #include "db.h"
 #include "lw/lwLog.h"
 #include "SimpleAudioEngine.h"
+#include "modeSelectScene.h"
 #include <sys/stat.h>
 
 USING_NS_CC;
@@ -20,7 +21,7 @@ static const Color3B GREEN = Color3B(76, 217, 100);
 static const Color3B YELLOW = Color3B(255, 204, 0);
 static const Color3B RED = Color3B(255, 59, 48);
 
-static const char *SND_STAR = "audio/star.aiff";
+//static const char *SND_STAR = "audio/star.aiff";
 
 static const int SLIDER_NUM = 6;
 
@@ -170,11 +171,12 @@ static void btnFadeIn(ControlButton *button) {
     label->runAction(easeFadein);
 }
 
-Scene* SliderScene::createScene(PackInfo *packInfo) {
+SliderScene* SliderScene::createScene(PackInfo *packInfo, ModeSelectScene *modeSelectScene) {
     auto scene = Scene::create();
     auto layer = SliderScene::create(packInfo);
     scene->addChild(layer);
-    return scene;
+    layer->_modeSelectScene = modeSelectScene;
+    return layer;
 }
 
 SliderScene* SliderScene::create(PackInfo *packInfo) {
@@ -208,7 +210,8 @@ bool SliderScene::init(PackInfo *packInfo) {
     addChild(_gameplay);
 
     //next button
-    _btnNext = createColorButton(lang("Next"), 36, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
+    _btnNext = createColorButton("〉", 56, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
+    _btnNext->setTitleOffset(14.f, 0.f);
     _btnNext->setPosition(Point(size.width-70, 70));
     _btnNext->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::next), Control::EventType::TOUCH_UP_INSIDE);
     _btnNext->setOpacity(0);
@@ -255,7 +258,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     //next pack button
     _btnNextPack = createColorButton(lang("Next"), 36, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
     _btnNextPack->setPosition(Point(visSize.width-70, 70));
-    _btnNextPack->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::back), Control::EventType::TOUCH_UP_INSIDE);
+    _btnNextPack->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::nextPack), Control::EventType::TOUCH_UP_INSIDE);
     _btnNextPack->setOpacity(0);
     _btnNextPack->setEnabled(false);
     label = (LabelTTF*)_btnNextPack->getTitleLabelForState(Control::State::NORMAL);
@@ -279,8 +282,8 @@ bool SliderScene::init(PackInfo *packInfo) {
     }
     
     //timeBar
-    //_timeBar = TimeBar::create(60, 10, 10);
-    _timeBar = TimeBar::create(10, 3, 3);
+    _timeBar = TimeBar::create(60, 10, 10);
+    //_timeBar = TimeBar::create(10, 3, 3);
     this->addChild(_timeBar, 1);
     
     //shuffle image order
@@ -403,6 +406,11 @@ void SliderScene::next(Object *sender, Control::EventType controlEvent) {
     reset(imgIdx);
 }
 
+void SliderScene::nextPack(Object *sender, Control::EventType controlEvent) {
+    _modeSelectScene->nextPack();
+    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+}
+
 void SliderScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
     _gameplay->onTouchesBegan(touches);
     if (_btnYes->getOpacity() != 0) {
@@ -424,7 +432,6 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
         if (_imgIdx == _packInfo->images.size()-1) {
             //complete
             btnFadeIn(_btnFinish);
-            btnFadeIn(_btnNextPack);
             btnFadeOut(_btnBack);
             _timeBar->stop();
             _isFinish = true;
@@ -450,6 +457,12 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
             } else if (starNum == 3) {
                 _gradeLabel->setString(lang("Great"));
                 _starLabel->setString("★★★");
+            }
+            
+            //_btnNextPack
+            int biggerStarNum = MAX(starNum, prevStarNum);
+            if (biggerStarNum != 0 && _modeSelectScene->getPackIdx() < getPacks().size()-1) {
+                btnFadeIn(_btnNextPack);
             }
             
             //show grade

@@ -125,7 +125,7 @@ void PackDownloader::destroy() {
         it->first->release();
     }
     this->release();
-    HttpClient::getInstance()->cancelAllRequest();
+    //HttpClient::getInstance()->cancelAllRequest();
 }
 
 PackDownloader::~PackDownloader() {
@@ -167,4 +167,9 @@ void PackDownloader::onImageDownload(HttpClient* client, HttpResponse* response)
     }
 }
 
+std::vector<PackInfo> _packs;
+
+std::vector<PackInfo>& getPacks() {
+    return _packs;
+}
 

@@ -6,13 +6,10 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-static SptLoader *g_currSptLoader = nullptr;
-
 SptLoader* SptLoader::create(SptLoaderListener *listener) {
     auto sptLoader = new SptLoader(listener);
     sptLoader->scheduleUpdate();
     sptLoader->_thread = new std::thread(&SptLoader::loadingThread, sptLoader);
-    g_currSptLoader = sptLoader;
     return sptLoader;
 }
 
@@ -22,11 +19,17 @@ SptLoader::SptLoader(SptLoaderListener *listener) {
 }
 
 void SptLoader::destroy() {
-    _listener = nullptr;
     std::lock_guard<std::mutex> lock(_mutex);
+    this->unscheduleUpdate();
+    this->removeFromParent();
+    _listener = nullptr;
+    
+    for (auto it = _requests.begin(); it != _requests.end(); ++it) {
+        (*it)->release();
+        release();
+    }
     _done = true;
     _cv.notify_all();
-    g_currSptLoader = nullptr;
 }
 
 SptLoader::~SptLoader() {
@@ -35,9 +38,6 @@ SptLoader::~SptLoader() {
     if (_thread) {
         _thread->detach();
         delete _thread;
-    }
-    for (auto it = _requests.begin(); it != _requests.end(); ++it) {
-        (*it)->release();
     }
     
     for (auto it = _loadedGifs.begin(); it != _loadedGifs.end(); ++it) {
@@ -55,9 +55,8 @@ struct AsyncLoader : public Object {
 void AsyncLoader::onImageLoad(Object *obj) {
     this->autorelease();
     auto tex = (Texture2D*)obj;
-    if (loader == g_currSptLoader) {
-        loader->onTextureCreated(localPath.c_str(), tex, userData);
-    }
+    loader->onTextureCreated(localPath.c_str(), tex, userData);
+    loader->release();
 }
 
 void SptLoader::onTextureCreated(const char *localPath, Texture2D *texture, void *userData) {
@@ -97,6 +96,9 @@ void SptLoader::loadingThread() {
             _cv.wait(lock);
         }
     }
+    
+    std::unique_lock<std::mutex> lock(_mutex);
+    //this->removeFromParent();
     this->release();
 }
 
@@ -148,6 +150,7 @@ void SptLoader::load(const char* localPath, void *userData) {
         al->localPath = localPath;
         al->loader = this;
         al->userData = userData;
+        this->retain();
         TextureCache::getInstance()->addImageAsync(localPath, al, (SEL_CallFuncO)&AsyncLoader::onImageLoad);
     }
 }
@@ -172,18 +175,22 @@ void SptLoader::download(const char *key, void *userData) {
         request->setUrl(url.c_str());
         request->setRequestType(HttpRequest::Type::GET);
         request->setCallback(std::bind(&SptLoader::onImageDownload, this, std::placeholders::_1, std::placeholders::_2, localPath));
+        //request->setResponseCallback(this, (SEL_HttpResponse)(&SptLoader::onImageDownload));
         request->setUserData(userData);
         HttpClient::getInstance()->send(request);
         
         _requests.insert(request);
         request->retain();
+        this->retain();
     }
 }
 
 void SptLoader::onImageDownload(HttpClient* client, HttpResponse* response, std::string localPath) {
+    lwinfo("download:%s", localPath.c_str());
     auto request = response->getHttpRequest();
-    request->release();
     _requests.erase(request);
+    request->release();
+    this->release();
     
     if (!response->isSucceed()) {
         if (_listener) {

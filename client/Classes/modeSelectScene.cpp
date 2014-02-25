@@ -7,10 +7,10 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-cocos2d::Scene* ModeSelectScene::createScene(PackInfo *packInfo) {
+cocos2d::Scene* ModeSelectScene::createScene(uint32_t packIdx) {
     auto scene = Scene::create();
     auto layer = new ModeSelectScene();
-    bool ok = layer->init(packInfo);
+    bool ok = layer->init(packIdx);
     if (ok) {
         layer->autorelease();
         scene->addChild(layer);
@@ -20,11 +20,15 @@ cocos2d::Scene* ModeSelectScene::createScene(PackInfo *packInfo) {
     }
 }
 
-bool ModeSelectScene::init(PackInfo *packInfo) {
+bool ModeSelectScene::init(uint32_t packIdx) {
     if ( !LayerColor::initWithColor(Color4B(0, 0, 0, 0)) ) {
         return false;
     }
-    _packInfo = packInfo;
+
+    _packIdx = packIdx;
+    PackInfo &packInfo = getPacks()[packIdx];
+    _bg = nullptr;
+    
     Size visSize = Director::getInstance()->getVisibleSize();
     
     //sprite loader
@@ -32,19 +36,19 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
     addChild(_sptLoader);
     
     //background(cover)
-    _sptLoader->download(packInfo->cover.c_str());
+    _sptLoader->download(packInfo.cover.c_str());
     
     //button
     float btnY = 240.f;
     
     //casual button
-    auto button = createButton(lang("Casual"), 36, 1.5f);
+    auto button = createButton(lang("Challenge"), 36, 1.5f);
     button->setPosition(Point(visSize.width/3, btnY));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::enterCasualMode), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
     //time attck button
-    button = createButton(lang("Time attack"), 36, 1.5f);
+    button = createButton(lang("Gallery"), 36, 1.5f);
     button->setPosition(Point(visSize.width/3*2.f, btnY));
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::enterCasualMode), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
@@ -59,7 +63,7 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
     
     //pack downloader
     _packDownloader = new PackDownloader;
-    _packDownloader->init(_packInfo, this);
+    _packDownloader->init(&packInfo, this);
     
     //progress label
     _progressLabel = LabelTTF::create("0%", "HelveticaNeue", 38);
@@ -67,7 +71,7 @@ bool ModeSelectScene::init(PackInfo *packInfo) {
     _progressLabel->setPosition(Point(visSize.width*.5f, 600));
     _progressLabel->setColor(Color3B(250, 250, 250));
     _progressLabel->setVisible(false);
-    _progressLabel->enableShadow(Size(2.f, 2.f), .8f, 3.f);
+    _progressLabel->enableShadow(Size(2.f, -2.f), .8f, 2.f);
     addChild(_progressLabel, 1);
     
     return true;
@@ -81,8 +85,8 @@ ModeSelectScene::~ModeSelectScene() {
 
 void ModeSelectScene::enterCasualMode(Object *sender, Control::EventType controlEvent) {
     if (_packDownloader->progress == 1.f) {
-        auto scene = SliderScene::createScene(_packInfo);
-        Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
+        auto layer = SliderScene::createScene(&getPacks()[_packIdx], this);
+        Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
         _progressLabel->setVisible(false);
     } else {
         _packDownloader->startDownload();
@@ -93,13 +97,35 @@ void ModeSelectScene::enterCasualMode(Object *sender, Control::EventType control
     }
 }
 
-void ModeSelectScene::enterTimeAttackMode(Object *sender, Control::EventType controlEvent) {
-    auto scene = SliderScene::createScene(_packInfo);
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
-}
+//void ModeSelectScene::enterTimeAttackMode(Object *sender, Control::EventType controlEvent) {
+//    auto scene = SliderScene::createScene(_packInfo);
+//    Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
+//}
 
 void ModeSelectScene::back(Object *sender, Control::EventType controlEvent) {
     Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+}
+
+void ModeSelectScene::nextPack() {
+    if (_packIdx == getPacks().size() - 1) {
+        return;
+    }
+    ++_packIdx;
+    PackInfo &packInfo = getPacks()[_packIdx];
+    
+    _sptLoader->destroy();
+    _sptLoader = SptLoader::create(this);
+    addChild(_sptLoader);
+    _sptLoader->download(packInfo.cover.c_str());
+    
+    _packDownloader->destroy();
+    _packDownloader = new PackDownloader;
+    _packDownloader->init(&packInfo, this);
+    
+    if (_bg) {
+        _bg->removeFromParent();
+        _bg = nullptr;
+    }
 }
 
 void ModeSelectScene::onPackError() {
@@ -113,8 +139,8 @@ void ModeSelectScene::onPackImageDownload() {
 }
 
 void ModeSelectScene::onPackDownloadComplete() {
-    auto scene = SliderScene::createScene(_packInfo);
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
+    auto layer = SliderScene::createScene(&getPacks()[_packIdx], this);
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
     _progressLabel->setVisible(false);
 }
 
@@ -128,7 +154,7 @@ void ModeSelectScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, voi
     addChild(sprite);
     auto fadeIn = EaseSineIn::create(FadeIn::create(.5f));
     sprite->runAction(fadeIn);
-    _x = sprite;
+    _bg = sprite;
 }
 
 void ModeSelectScene::onSptLoaderError(const char *localPath, void *userData) {

@@ -13,13 +13,14 @@ class PacksListScene;
 
 class ModeSelectScene : public LayerColor, public PackListener, public SptLoaderListener {
 public:
-    static cocos2d::Scene* createScene(PackInfo *packInfo);
-    bool init(PackInfo *packInfo);
+    static cocos2d::Scene* createScene(uint32_t packIdx);
+    bool init(uint32_t packIdx);
     virtual ~ModeSelectScene();
     
     void enterCasualMode(Object *sender, Control::EventType controlEvent);
-    void enterTimeAttackMode(Object *sender, Control::EventType controlEvent);
+    //void enterTimeAttackMode(Object *sender, Control::EventType controlEvent);
     void back(Object *sender, Control::EventType controlEvent);
+    void nextPack();
     
     //PackListener
     virtual void onPackError();
@@ -30,13 +31,16 @@ public:
     virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
     virtual void onSptLoaderError(const char *localPath, void *userData);
     
+    uint32_t getPackIdx() {
+        return _packIdx;
+    }
 private:
-    PackInfo *_packInfo;
+    uint32_t _packIdx;
     PackDownloader *_packDownloader;
     LabelTTF *_progressLabel;
     SptLoader *_sptLoader;
     
-    Sprite *_x;
+    Sprite *_bg;
 };
 
 #endif // __MODE_SELECT_SCENE_H__

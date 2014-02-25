@@ -162,7 +162,7 @@ PacksListScene::~PacksListScene() {
     _sptLoader->destroy();
 }
 
-void PacksListScene::loadCollection(Collection *collection) {
+void PacksListScene::loadCollection(CollectionInfo *collection) {
     _collection = *collection;
     
     //setup loading sprite
@@ -238,7 +238,7 @@ void PacksListScene::onHttpListPack(HttpClient* client, HttpResponse* response) 
     }
     
     //load pack info
-    _packs.clear();
+    getPacks().clear();
     
     jsonxx::Array msg;
     bool ok = msg.parse(body);
@@ -251,7 +251,7 @@ void PacksListScene::onHttpListPack(HttpClient* client, HttpResponse* response) 
         auto packJs = msg.get<jsonxx::Object>(i);
         PackInfo pack;
         pack.init(packJs);
-        _packs.push_back(pack);
+        getPacks().push_back(pack);
         
         _sptLoader->download(pack.thumb.c_str(), (void*)i);
     }
@@ -515,12 +515,12 @@ void PacksListScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e
     
     if (!_dragView->isDragging() && _dragView->getWindowRect().containsPoint(touch->getLocation())) {
         for( int i = 0; i < _thumbs.size(); i++){
-            if (!isLocked(i) && i < _packs.size() ) {
+            if (!isLocked(i) && i < getPacks().size() ) {
                 auto thumb = _thumbs[i];
                 auto rect = thumb->getBoundingBox();
                 rect.origin.y += _dragView->getPositionY();
                 if (rect.containsPoint(touch->getLocation())) {
-                    auto scene = ModeSelectScene::createScene(&(_packs[i]));
+                    auto scene = ModeSelectScene::createScene(i);
                     Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));
                     break;
                 }

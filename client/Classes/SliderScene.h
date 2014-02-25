@@ -10,6 +10,8 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+class ModeSelectScene;
+
 class TimeBar : public SpriteBatchNode {
 public:
     static TimeBar* create(float dur1, float dur2, float dur3);
@@ -34,7 +36,7 @@ private:
 
 class SliderScene : public cocos2d::Layer, public GameplayListener{
 public:
-    static Scene* createScene(PackInfo *packInfo);
+    static SliderScene* createScene(PackInfo *packInfo, ModeSelectScene *modeSelectScene);
     static SliderScene* create(PackInfo *packInfo);
     bool init(PackInfo *packInfo);
     
@@ -52,10 +54,12 @@ public:
     void HideBackConfirm(Object *sender, Control::EventType controlEvent);
     void back(Object *sender, Control::EventType controlEvent);
     void next(Object *sender, Control::EventType controlEvent);
+    void nextPack(Object *sender, Control::EventType controlEvent);
     
     void showStar();
     
 private:
+    ModeSelectScene *_modeSelectScene;
     Gameplay *_gameplay;
     std::vector<std::string> _imagePaths;
     int _imgIdx;

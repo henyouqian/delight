@@ -50,4 +50,8 @@ struct PackDownloader : cocos2d::Object{
     void onImageDownload(HttpClient* client, HttpResponse* response);
 };
 
+
+std::vector<PackInfo>& getPacks();
+
+
 #endif // __PACK_H__
