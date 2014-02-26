@@ -10,6 +10,7 @@ import (
 	"github.com/qiniu/api/rs"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -75,7 +76,8 @@ func getUptoken(w http.ResponseWriter, r *http.Request) {
 }
 
 func makeTagName(tag string) (outName string) {
-	return Z_TAG_PRE + "/" + tag
+	s := Z_TAG_PRE + "/" + tag
+	return strings.ToLower(s)
 }
 
 func newPack(w http.ResponseWriter, r *http.Request) {
@@ -171,8 +173,24 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 	if resp[1] == "0" {
 		lwutil.SendError("err_not_exist", fmt.Sprintf("not own the pack: userId=%d, packId=%d", session.Userid, in.Id))
 	}
+
+	//del from tags list
+	resp, err = ssdb.Do("hget", H_PACK, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+
+	for _, v := range pack.Tags {
+		resp, err = ssdb.Do("zdel", makeTagName(v), in.Id)
+		lwutil.CheckSsdbError(resp, err)
+	}
+
+	//del from owner list
 	resp, err = ssdb.Do("zdel", name, in.Id)
 	lwutil.CheckSsdbError(resp, err)
+
+	//del pack data
 	resp, err = ssdb.Do("hdel", H_PACK, in.Id)
 	lwutil.CheckSsdbError(resp, err)
 
@@ -195,8 +213,8 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 	if in.UserId == 0 {
 		in.UserId = ADMIN_USERID
 	}
-	if in.UserId > 60 {
-		in.UserId = 60
+	if in.Limit > 60 {
+		in.Limit = 60
 	}
 
 	//ssdb
@@ -231,6 +249,9 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 		packjs := resp[i*2+1]
 		err = json.Unmarshal([]byte(packjs), &packs[i])
 		lwutil.CheckError(err, "")
+		if packs[i].Tags == nil {
+			packs[i].Tags = make([]string, 0)
+		}
 	}
 
 	//out
@@ -249,6 +270,46 @@ func listPackByTag(w http.ResponseWriter, r *http.Request) {
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//get keys
+	name := makeTagName(in.Tag)
+	resp, err := ssdb.Do("zkeys", name, in.StartId, in.StartId, "", in.Limit)
+	lwutil.CheckSsdbError(resp, err)
+
+	if len(resp) == 1 {
+		lwutil.SendError("err_not_found", "")
+	}
+
+	//get packs
+	args := make([]interface{}, len(resp)+1)
+	args[0] = "multi_hget"
+	args[1] = H_PACK
+	for i, _ := range args {
+		if i >= 2 {
+			args[i] = resp[i-1]
+		}
+	}
+	resp, err = ssdb.Do(args...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	packs := make([]Pack, len(resp)/2)
+	for i, _ := range packs {
+		packjs := resp[i*2+1]
+		err = json.Unmarshal([]byte(packjs), &packs[i])
+		lwutil.CheckError(err, "")
+		if packs[i].Tags == nil {
+			packs[i].Tags = make([]string, 0)
+		}
+	}
+
+	//out
+	lwutil.WriteResponse(w, &packs)
 }
 
 func regPack() {

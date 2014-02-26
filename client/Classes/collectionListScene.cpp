@@ -139,6 +139,15 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
                 return;
             }
         }
+        
+        //del db
+        std::stringstream sql;
+        sql << "DELETE FROM collections;";
+        char *err;
+        auto r = sqlite3_exec(gSaveDb, sql.str().c_str(), NULL, NULL, &err);
+        if(r != SQLITE_OK) {
+            lwerror("sqlite error: %s\nsql=%s", err, sql.str().c_str());
+        }
     }
     
     //parse collection and load thumbs
@@ -172,7 +181,7 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
             std::stringstream sql;
             sql << "REPLACE INTO collections(id, value) VALUES(";
             sql << col.id << ",";
-            sql << "'" << coljs << "');";
+            sql << "'" << coljs.json() << "');";
             char *err;
             auto r = sqlite3_exec(gSaveDb, sql.str().c_str(), NULL, NULL, &err);
             if(r != SQLITE_OK) {

@@ -5,7 +5,6 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"flag"
 	"fmt"
 	"github.com/golang/glog"
@@ -49,6 +48,8 @@ func main() {
 		return
 	}
 
+	login()
+
 	os.Chdir(workDir)
 
 	switch flag.Arg(0) {
@@ -71,6 +72,7 @@ type Image struct {
 	Title string
 	Text  string
 }
+
 type Pack struct {
 	Id     uint64
 	Title  string
@@ -78,6 +80,12 @@ type Pack struct {
 	Cover  string
 	Thumb  string
 	Images []Image
+	Tags   []string
+}
+
+type Account struct {
+	Name     string
+	Password string
 }
 
 func newPack() {
@@ -205,9 +213,6 @@ func newPack() {
 
 	glog.Info("upload complete")
 
-	//login
-	login()
-
 	//add new pack to server
 	pack.Thumb = thumbKey
 	pack.Cover = genImageKey(pack.Cover)
@@ -246,7 +251,7 @@ func newPack() {
 	json.Indent(buf, packjs, "", "\t")
 	f.Write(buf.Bytes())
 
-	glog.Infoln("add pack succeed")
+	glog.Infof("add pack succeed: packId=%d", packRaw.Id)
 }
 
 func delPack() {
@@ -261,8 +266,6 @@ func delPack() {
 	if pack.Id == 0 {
 		glog.Fatalln("need pack id")
 	}
-
-	login()
 
 	//send msg to server
 	body := fmt.Sprintf(`{
@@ -294,6 +297,27 @@ func loadPack(pack *Pack) (err error) {
 	return nil
 }
 
+func loadAccount(account *Account) {
+	var f *os.File
+	var err error
+	if f, err = os.Open("account.json"); err != nil {
+		glog.Infoln("not found account.json, use admin")
+		account.Name = ADMIN_NAME
+		account.Password = ADMIN_PASSWORD
+		return
+	}
+	defer f.Close()
+
+	//json decode
+	decoder := json.NewDecoder(f)
+	if err = decoder.Decode(&account); err != nil {
+		glog.Fatalf("account.json decode failed: err=%s", err.Error())
+		return
+	}
+
+	glog.Infof("account: %s", account.Name)
+}
+
 func uploadImage() {
 	path := flag.Arg(1)
 	key := genImageKey(path)
@@ -317,11 +341,14 @@ func uploadImage() {
 func login() {
 	client := &http.Client{}
 
+	var account Account
+	loadAccount(&account)
+
 	url := SERVER_HOST + "auth/login"
 	body := fmt.Sprintf(`{
 	    "Username": "%s",
 	    "Password": "%s"
-	}`, ADMIN_NAME, ADMIN_PASSWORD)
+	}`, account.Name, account.Password)
 
 	resp, err := client.Post(url, "application/json", bytes.NewReader([]byte(body)))
 	if err != nil {
@@ -329,8 +356,7 @@ func login() {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		glog.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
-		panic(errors.New("login error"))
+		glog.Fatalf("login error: resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
 	}
 	tk, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

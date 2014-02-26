@@ -243,7 +243,7 @@ void PacksListScene::onHttpListPack(HttpClient* client, HttpResponse* response) 
     jsonxx::Array msg;
     bool ok = msg.parse(body);
     if (!ok) {
-        lwerror("json parse error");
+        lwerror("json parse error: body=%s", body.c_str());
         return;
     }
     
