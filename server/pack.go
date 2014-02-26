@@ -312,10 +312,42 @@ func listPackByTag(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
+func getPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in struct {
+		Id uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//get packs
+	resp, err := ssdb.Do("hget", H_PACK, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	if pack.Tags == nil {
+		pack.Tags = make([]string, 0)
+	}
+
+	//out
+	lwutil.WriteResponse(w, &pack)
+}
+
 func regPack() {
 	http.Handle("/pack/getUptoken", lwutil.ReqHandler(getUptoken))
 	http.Handle("/pack/new", lwutil.ReqHandler(newPack))
 	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
 	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
 	http.Handle("/pack/listByTag", lwutil.ReqHandler(listPackByTag))
+	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
 }

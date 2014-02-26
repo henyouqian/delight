@@ -65,13 +65,14 @@ var cocos2dApp = cc.Application.extend({
             "Id": id
         }
         var app = this
-        $.post('/userPack/get', JSON.stringify(data), function(resp){
+        $.post('/pack/get', JSON.stringify(data), function(resp){
             var reses = []
             g_imageUrls = []
             for (var i in resp.Images) {
                 var image = resp.Images[i]
-                reses.push({src:image.Url})
-                g_imageUrls.push(image.Url)
+                var url = "http://sliderpack.qiniudn.com/"+image.Key
+                reses.push({src:url})
+                g_imageUrls.push(url)
             }
 
             cc.LoaderScene.preload(reses, function () {

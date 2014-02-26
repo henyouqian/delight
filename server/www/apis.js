@@ -64,6 +64,10 @@ function Controller($scope, $http) {
 					"name": "listByTag",
 					"method": "POST",
 					"data": {"Tag": "art", "StartId": 0, "Limit":12}
+				},{
+					"name": "get",
+					"method": "POST",
+					"data": {"Id": 1}
 				}
 			]
 		},{
