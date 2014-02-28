@@ -55,8 +55,8 @@ bool ModeSelectScene::init(uint32_t packIdx) {
     
     //back button
     //auto button = createButton("〈", 48, 1.f);
-    auto btnBack = createButton("Verdana-Bold", "〈", 56, Color3B(255, 255, 255), "ui/btnBg.png", 1.f, Color3B(255, 255, 255), 180);
-    btnBack->setTitleOffset(-14.f, 0.f);
+    auto btnBack = createButton("HelveticaNeue", "〈", FORWARD_BACK_FONT_SIZE, Color3B(255, 255, 255), "ui/btnBg.png", 1.f, Color3B(255, 255, 255), 180);
+    btnBack->setTitleOffset(-FORWARD_BACK_FONT_OFFSET, 0.f);
     btnBack->setPosition(Point(70, visSize.height-70));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(ModeSelectScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 1);

@@ -53,8 +53,8 @@ bool PacksListScene::init() {
     float y = visSize.height-70;
     
     //back button
-    auto btnBack = createColorButton("〈", 56, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
-    btnBack->setTitleOffset(-14.f, 0.f);
+    auto btnBack = createColorButton("〈", FORWARD_BACK_FONT_SIZE, 1.f, Color3B(240, 240, 240), Color3B(240, 240, 240), 0);
+    btnBack->setTitleOffset(-FORWARD_BACK_FONT_OFFSET, 0.f);
     btnBack->setPosition(Point(70, y));
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(PacksListScene::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 10);

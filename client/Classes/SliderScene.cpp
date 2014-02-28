@@ -210,8 +210,8 @@ bool SliderScene::init(PackInfo *packInfo) {
     addChild(_gameplay);
 
     //next button
-    _btnNext = createColorButton("〉", 56, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
-    _btnNext->setTitleOffset(14.f, 0.f);
+    _btnNext = createColorButton("〉", FORWARD_BACK_FONT_SIZE, 1.f, Color3B::WHITE, GREEN, BTN_BG_OPACITY);
+    _btnNext->setTitleOffset(FORWARD_BACK_FONT_OFFSET, 0.f);
     _btnNext->setPosition(Point(size.width-70, 70));
     _btnNext->addTargetWithActionForControlEvents(this, cccontrol_selector(SliderScene::next), Control::EventType::TOUCH_UP_INSIDE);
     _btnNext->setOpacity(0);

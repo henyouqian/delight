@@ -10,8 +10,8 @@ USING_NS_CC_EXT;
 using namespace CocosDenshion;
 
 static const char *SND_TINK = "audio/tink.wav";
-static const char *SND_SUCCESS = "audio/success.aiff";
-static const char *SND_FINISH = "audio/finish.aiff";
+static const char *SND_SUCCESS = "audio/success.wav";
+static const char *SND_FINISH = "audio/finish.wav";
 
 namespace {
     void shuffle(std::vector<int> &vec, int num) {

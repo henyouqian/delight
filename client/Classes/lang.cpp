@@ -5,6 +5,14 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+#ifdef __APPLE__
+const float FORWARD_BACK_FONT_SIZE = 56;
+const float FORWARD_BACK_FONT_OFFSET = 14;
+#else
+const float FORWARD_BACK_FONT_SIZE = 36;
+const float FORWARD_BACK_FONT_OFFSET = 7;
+#endif
+
 static std::map<std::string, std::string> g_dict;
 
 void setLang(const char *langFile) {
