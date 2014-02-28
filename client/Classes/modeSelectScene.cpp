@@ -97,6 +97,11 @@ void ModeSelectScene::enterCasualMode(Object *sender, Control::EventType control
     }
 }
 
+void ModeSelectScene::onEnter() {
+    LayerColor::onEnter();
+    TextureCache::getInstance()->removeUnusedTextures();
+}
+
 //void ModeSelectScene::enterTimeAttackMode(Object *sender, Control::EventType controlEvent) {
 //    auto scene = SliderScene::createScene(_packInfo);
 //    Director::getInstance()->pushScene(TransitionFade::create(0.5f, scene));

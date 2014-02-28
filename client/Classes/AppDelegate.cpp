@@ -2,7 +2,7 @@
 #include "sliderScene.h"
 #include "mainMenuScene.h"
 #include "util.h"
-#include "qiniu.h"
+//#include "qiniu.h"
 #include "db.h"
 #include "lang.h"
 #include "lw/lwLog.h"
@@ -74,7 +74,7 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
-    qiniuQuit();
+    //qiniuQuit();
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -97,7 +97,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     makeLocalDir();
     dbInit();
     setLang("lang/zh-s.lang");
-    qiniuInit();
+    //qiniuInit();
 
     //auto scene = SliderScene::createScene();
     auto scene = MainMenuScene::createScene();

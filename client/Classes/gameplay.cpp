@@ -45,7 +45,20 @@ Slider::Slider() {
     touch = nullptr;
 }
 
-Gameplay::Gameplay(GameplayListener *listener) {
+Gameplay* Gameplay::create(GameplayListener *listener) {
+    Gameplay *pRet = new Gameplay();
+    if (pRet && pRet->init(listener)) {
+        pRet->autorelease();
+        return pRet;
+    }
+    else {
+        delete pRet;
+        pRet = NULL;
+        return NULL;
+    }
+}
+
+bool Gameplay::init(GameplayListener *listener) {
     Node::init();
     _listener = listener;
     _texW = _texH = 0;
@@ -81,6 +94,7 @@ Gameplay::Gameplay(GameplayListener *listener) {
         }
         y += bg->getContentSize().height;
     }
+    return true;
 }
 
 Gameplay::~Gameplay() {
@@ -497,7 +511,7 @@ void Gameplay::onImageChanged() {
     _currSliderGrp = _newSliderGrp;
     _newSliderGrp = nullptr;
     
-     TextureCache::getInstance()->removeUnusedTextures();
+    TextureCache::getInstance()->removeUnusedTextures();
 }
 
 void Gameplay::onSptLoaderError(const char *localPath, void *userData) {

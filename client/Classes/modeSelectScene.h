@@ -22,6 +22,9 @@ public:
     void back(Object *sender, Control::EventType controlEvent);
     void nextPack();
     
+    //
+    virtual void onEnter();
+    
     //PackListener
     virtual void onPackError();
     virtual void onPackImageDownload();

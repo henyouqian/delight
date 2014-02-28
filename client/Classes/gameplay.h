@@ -23,7 +23,8 @@ public:
 
 class Gameplay : public Node, public SptLoaderListener{
 public:
-    Gameplay(GameplayListener *listener);
+    static Gameplay* create(GameplayListener *listener);
+    bool init(GameplayListener *listener);
     ~Gameplay();
     void preload(const char *filePath);
     void reset(const char *filePath, int sliderNum, bool isLast = false);

@@ -1,5 +1,5 @@
 #include "mainMenuScene.h"
-#include "userPackScene.h"
+//#include "userPackScene.h"
 #include "collectionListScene.h"
 #include "util.h"
 #include "lang.h"
@@ -79,5 +79,5 @@ void MainMenuScene::enterCollectionList(Object *sender, Control::EventType contr
 }
 
 void MainMenuScene::enterUserPack(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, UserPackScene::createScene()));
+    //Director::getInstance()->pushScene(TransitionFade::create(0.5f, UserPackScene::createScene()));
 }

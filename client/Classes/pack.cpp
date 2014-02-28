@@ -6,6 +6,7 @@
 #include <fstream>
 #include <random>
 #include <chrono>
+#include <algorithm>
 
 USING_NS_CC;
 USING_NS_CC_EXT;

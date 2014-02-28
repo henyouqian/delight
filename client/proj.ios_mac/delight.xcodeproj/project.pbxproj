@@ -73,6 +73,7 @@
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
+		B35F7EB518C04DA400C4EFD9 /* menuBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35F7EB318C04DA400C4EFD9 /* menuBar.cpp */; };
 		B364904A18A4E6E900B93930 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B364904818A4E6E900B93930 /* libssl.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B364905A18A51DA300B93930 /* userPackScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B364905818A51DA300B93930 /* userPackScene.cpp */; };
 		B383F8DE18A4CBA700FA5700 /* b64.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8C118A4CBA700FA5700 /* b64.c */; };
@@ -84,9 +85,6 @@
 		B383F8E518A4CBA700FA5700 /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8CE18A4CBA700FA5700 /* conf.c */; };
 		B383F8E618A4CBA700FA5700 /* http.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8D018A4CBA700FA5700 /* http.c */; };
 		B383F8E718A4CBA700FA5700 /* io.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8D218A4CBA700FA5700 /* io.c */; };
-		B383F8E818A4CBA700FA5700 /* qiniu.bat in Resources */ = {isa = PBXBuildFile; fileRef = B383F8D418A4CBA700FA5700 /* qiniu.bat */; };
-		B383F8E918A4CBA700FA5700 /* qiniu.def in Resources */ = {isa = PBXBuildFile; fileRef = B383F8D518A4CBA700FA5700 /* qiniu.def */; };
-		B383F8EA18A4CBA700FA5700 /* qiniu.dsp in Resources */ = {isa = PBXBuildFile; fileRef = B383F8D618A4CBA700FA5700 /* qiniu.dsp */; };
 		B383F8EB18A4CBA700FA5700 /* resumable_io.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8D718A4CBA700FA5700 /* resumable_io.c */; };
 		B383F8EC18A4CBA700FA5700 /* rs.c in Sources */ = {isa = PBXBuildFile; fileRef = B383F8D918A4CBA700FA5700 /* rs.c */; };
 		B393ED25186DF3B300E372CC /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = B393ED23186DF3B300E372CC /* sqlite3.c */; };
@@ -353,6 +351,8 @@
 		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
 		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
+		B35F7EB318C04DA400C4EFD9 /* menuBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = menuBar.cpp; path = ../Classes/menuBar.cpp; sourceTree = "<group>"; };
+		B35F7EB418C04DA400C4EFD9 /* menuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = menuBar.h; path = ../Classes/menuBar.h; sourceTree = "<group>"; };
 		B364904818A4E6E900B93930 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../external/openssl/lib/libssl.a; sourceTree = "<group>"; };
 		B364905818A51DA300B93930 /* userPackScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = userPackScene.cpp; path = ../Classes/userPackScene.cpp; sourceTree = "<group>"; };
 		B364905918A51DA300B93930 /* userPackScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = userPackScene.h; path = ../Classes/userPackScene.h; sourceTree = "<group>"; };
@@ -372,9 +372,6 @@
 		B383F8D118A4CBA700FA5700 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = http.h; sourceTree = "<group>"; };
 		B383F8D218A4CBA700FA5700 /* io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = io.c; sourceTree = "<group>"; };
 		B383F8D318A4CBA700FA5700 /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
-		B383F8D418A4CBA700FA5700 /* qiniu.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = qiniu.bat; sourceTree = "<group>"; };
-		B383F8D518A4CBA700FA5700 /* qiniu.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = qiniu.def; sourceTree = "<group>"; };
-		B383F8D618A4CBA700FA5700 /* qiniu.dsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = qiniu.dsp; sourceTree = "<group>"; };
 		B383F8D718A4CBA700FA5700 /* resumable_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = resumable_io.c; sourceTree = "<group>"; };
 		B383F8D818A4CBA700FA5700 /* resumable_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resumable_io.h; sourceTree = "<group>"; };
 		B383F8D918A4CBA700FA5700 /* rs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rs.c; sourceTree = "<group>"; };
@@ -527,6 +524,8 @@
 				B34FDAD2186A10A9006D05A3 /* pack.h */,
 				B302CBE91850E733003746A6 /* gifTexture.cpp */,
 				B302CBEA1850E733003746A6 /* gifTexture.h */,
+				B35F7EB318C04DA400C4EFD9 /* menuBar.cpp */,
+				B35F7EB418C04DA400C4EFD9 /* menuBar.h */,
 				B3A638CD185D9A86009ECDF1 /* http.cpp */,
 				B3A638CE185D9A86009ECDF1 /* http.h */,
 				B3AA0783186BEEE200706E4D /* util.cpp */,
@@ -838,9 +837,6 @@
 				B383F8D118A4CBA700FA5700 /* http.h */,
 				B383F8D218A4CBA700FA5700 /* io.c */,
 				B383F8D318A4CBA700FA5700 /* io.h */,
-				B383F8D418A4CBA700FA5700 /* qiniu.bat */,
-				B383F8D518A4CBA700FA5700 /* qiniu.def */,
-				B383F8D618A4CBA700FA5700 /* qiniu.dsp */,
 				B383F8D718A4CBA700FA5700 /* resumable_io.c */,
 				B383F8D818A4CBA700FA5700 /* resumable_io.h */,
 				B383F8D918A4CBA700FA5700 /* rs.c */,
@@ -1097,16 +1093,13 @@
 				B3DC5D0A1854B4FF00F732B7 /* default in Resources */,
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
-				B383F8EA18A4CBA700FA5700 /* qiniu.dsp in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				B393ED39186EF38D00E372CC /* db in Resources */,
 				B3E841811857774B0004C636 /* audio in Resources */,
 				B3CA1F4418881826005637A0 /* lang in Resources */,
-				B383F8E918A4CBA700FA5700 /* qiniu.def in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				B3CC388918A3930B00056424 /* Overlay.png in Resources */,
-				B383F8E818A4CBA700FA5700 /* qiniu.bat in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				B3CC388818A3930B00056424 /* ELCAssetTablePicker.xib in Resources */,
@@ -1155,6 +1148,7 @@
 				B33DAC78184CC6B9001403BA /* gif_hash.c in Sources */,
 				B383F8EC18A4CBA700FA5700 /* rs.c in Sources */,
 				B3CC386018A392F800056424 /* ELCPicker.mm in Sources */,
+				B35F7EB518C04DA400C4EFD9 /* menuBar.cpp in Sources */,
 				B383F8DF18A4CBA700FA5700 /* urlsafe_b64.c in Sources */,
 				B3ACE2DF18B227B20005830A /* dragView.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,

@@ -206,7 +206,7 @@ bool SliderScene::init(PackInfo *packInfo) {
     
     auto size = Director::getInstance()->getVisibleSize();
     
-    _gameplay = new Gameplay(this);
+    _gameplay = Gameplay::create(this);
     addChild(_gameplay);
 
     //next button
@@ -315,9 +315,7 @@ bool SliderScene::init(PackInfo *packInfo) {
 }
 
 SliderScene::~SliderScene() {
-    if (_gameplay) {
-        delete _gameplay;
-    }
+    
 }
 
 void SliderScene::onReset(float rotate) {
