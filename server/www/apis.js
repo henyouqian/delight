@@ -53,6 +53,24 @@ function Controller($scope, $http) {
 						"Tags":["art", "portrait"]
 					}
 				},{
+					"name": "mod",
+					"method": "POST",
+					"data": {
+						"Title":"",
+						"Text":"",
+						"Thumb":"qiniuThumb=.jpg",
+						"Cover":"qiniuImage=.jpg",
+						"Images":[
+							{
+								"File": "aaa.jpg",
+								"Key": "qiniuImage=.jpg",
+								"Title": "",
+								"Text": ""
+							}
+						],
+						"Tags":["art", "portrait"]
+					}
+				},{
 					"name": "del",
 					"method": "POST",
 					"data": {"Id": 0}

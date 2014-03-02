@@ -9,7 +9,7 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 struct PackInfo {
-    int id;
+    uint64_t id;
     std::string time;
     std::string title;
     std::string text;

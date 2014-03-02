@@ -74,8 +74,11 @@ void MainMenuScene::onEnterTransitionDidFinish() {
 }
 
 void MainMenuScene::enterCollectionList(Object *sender, Control::EventType controlEvent) {
-    auto layer = CollectionListScene::createScene();
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, layer->scene));
+//    auto layer = CollectionListScene::createScene();
+//    Director::getInstance()->pushScene(TransitionFade::create(0.5f, layer->scene));
+    
+    auto layer = MainContainerLayer::create();
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, layer->getScene()));
 }
 
 void MainMenuScene::enterUserPack(Object *sender, Control::EventType controlEvent) {

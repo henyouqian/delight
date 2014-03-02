@@ -4,8 +4,10 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+static const float SPEED_LIMIT = 150.f;
+
 bool DragView::init() {
-    if ( !Node::init() ) {
+    if ( !LayerColor::init() ) {
         return false;
     }
     _trackTouch = false;
@@ -15,6 +17,7 @@ bool DragView::init() {
     _contentHeight = 1000.f;
     
     scheduleUpdate();
+    setTouchEnabled(true);
     return true;
 }
 
@@ -26,12 +29,20 @@ void DragView::setWindowRect(const Rect &rect) {
     }
 }
 
+void DragView::resetY() {
+    setPositionY(_windowRect.origin.y + _windowRect.size.height);
+}
+
 const Rect& DragView::getWindowRect() {
     return _windowRect;
 }
 
 void DragView::setContentHeight(float height) {
-    _contentHeight = MAX(height, _contentHeight);
+    _contentHeight = MAX(height, _windowRect.size.height);
+}
+
+float DragView::getContentHeight() {
+    return _contentHeight;
 }
 
 bool DragView::isDragging() {
@@ -120,7 +131,7 @@ void DragView::onTouchesEnded(const Touch* touch) {
             auto dt = std::chrono::duration_cast<std::chrono::duration<float>>(now - it->t).count();
             if (dt < minDt) {
                 _rollSpeed = (touch->getLocation().y - it->y) / dt / 60.f;
-                _rollSpeed = MIN(100.f, MAX(-100.f, _rollSpeed));
+                _rollSpeed = MIN(SPEED_LIMIT, MAX(-SPEED_LIMIT, _rollSpeed));
                 break;
             }
         }
@@ -185,7 +196,7 @@ void DragView::update(float delta) {
             bool neg = _rollSpeed < 0;
             float v = fabs(_rollSpeed);
             //v -= 2;
-            float brk = v * .06f;
+            float brk = v * .03f;
             brk = MAX(brk, 0.1f);
             v -= brk;
             if (v < 0.01f) {

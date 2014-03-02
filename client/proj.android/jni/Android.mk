@@ -17,6 +17,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                   ../../Classes/gameplay.cpp \
                   ../../Classes/pack.cpp \
                   ../../Classes/gifTexture.cpp \
+                  ../../Classes/menuBar.cpp \
                   ../../Classes/http.cpp \
                   ../../Classes/util.cpp \
                   ../../Classes/db.cpp \

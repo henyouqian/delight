@@ -146,6 +146,70 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, pack)
 }
 
+func modPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var pack Pack
+	err = lwutil.DecodeRequestBody(r, &pack)
+	lwutil.CheckError(err, "err_decode_body")
+	pack.AuthorId = session.Userid
+	pack.Time = time.Now().Format(time.RFC3339)
+	if len(pack.Tags) > 8 {
+		pack.Tags = pack.Tags[:8]
+	}
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//check owner
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, session.Userid)
+	resp, err := ssdb.Do("zexists", name, pack.Id)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] == "0" {
+		lwutil.SendError("err_not_exist", fmt.Sprintf("pack not exist or not own the pack: userId=%d, packId=%d", session.Userid, pack.Id))
+	}
+
+	//tags
+	///del from old tags list
+	resp, err = ssdb.Do("hget", H_PACK, pack.Id)
+	lwutil.CheckSsdbError(resp, err)
+	var oldPack Pack
+	err = json.Unmarshal([]byte(resp[1]), &oldPack)
+	lwutil.CheckError(err, "")
+
+	for _, v := range oldPack.Tags {
+		resp, err = ssdb.Do("zdel", makeTagName(v), pack.Id)
+		lwutil.CheckSsdbError(resp, err)
+	}
+
+	///add back
+	for _, v := range pack.Tags {
+		tagName := makeTagName(v)
+		resp, err = ssdb.Do("zset", tagName, pack.Id, pack.Id)
+		lwutil.CheckSsdbError(resp, err)
+	}
+
+	//add to hash
+	jsPack, _ := json.Marshal(&pack)
+	resp, err = ssdb.Do("hset", H_PACK, pack.Id, jsPack)
+	lwutil.CheckSsdbError(resp, err)
+
+	//add to user pack zset
+	resp, err = ssdb.Do("zset", name, pack.Id, pack.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, pack)
+}
+
 func delPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -278,20 +342,29 @@ func listPackByTag(w http.ResponseWriter, r *http.Request) {
 
 	//get keys
 	name := makeTagName(in.Tag)
-	resp, err := ssdb.Do("zkeys", name, in.StartId, in.StartId, "", in.Limit)
+	var start interface{}
+	if in.StartId == 0 {
+		start = ""
+	} else {
+		start = in.StartId
+	}
+
+	resp, err := ssdb.Do("zrscan", name, start, start, "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 
 	if len(resp) == 1 {
-		lwutil.SendError("err_not_found", "")
+		lwutil.SendError("err_not_found", fmt.Sprintf("in:%+v", in))
 	}
 
 	//get packs
-	args := make([]interface{}, len(resp)+1)
+	resp = resp[1:]
+	packNum := (len(resp)) / 2
+	args := make([]interface{}, packNum+2)
 	args[0] = "multi_hget"
 	args[1] = H_PACK
 	for i, _ := range args {
 		if i >= 2 {
-			args[i] = resp[i-1]
+			args[i] = resp[(i-2)*2]
 		}
 	}
 	resp, err = ssdb.Do(args...)
@@ -346,6 +419,7 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 func regPack() {
 	http.Handle("/pack/getUptoken", lwutil.ReqHandler(getUptoken))
 	http.Handle("/pack/new", lwutil.ReqHandler(newPack))
+	http.Handle("/pack/mod", lwutil.ReqHandler(modPack))
 	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
 	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
 	http.Handle("/pack/listByTag", lwutil.ReqHandler(listPackByTag))

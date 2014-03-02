@@ -7,14 +7,16 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-class DragView : public Node {
+class DragView : public LayerColor {
 public:
     CREATE_FUNC(DragView);
     bool init();
     void setWindowRect(const Rect &rect);
     const Rect& getWindowRect();
     void setContentHeight(float height);
+    float getContentHeight();
     bool isDragging();
+    void resetY();
     
     virtual void onTouchesBegan(const Touch* touch);
     virtual void onTouchesMoved(const Touch* touch);
@@ -24,10 +26,10 @@ public:
     
     void bounceEnd();
     
-private:
     bool beyondTop();
     bool beyondBottom();
     
+private:
     bool _trackTouch;
     bool _dragging;
     Rect _windowRect;
