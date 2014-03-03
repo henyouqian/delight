@@ -79,6 +79,10 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"UserId": 0, "StartId": 0, "Limit":12}
 				},{
+					"name": "listMatch",
+					"method": "POST",
+					"data": {"UserId": 0, "StartId": 0, "Limit":12}
+				},{
 					"name": "listByTag",
 					"method": "POST",
 					"data": {"Tag": "art", "StartId": 0, "Limit":12}
@@ -123,6 +127,16 @@ function Controller($scope, $http) {
 					"name": "listPack",
 					"method": "POST",
 					"data": {"Id": 0}
+				}
+			]
+		},{
+			"tab":"player",
+			"path":"player",
+			"apis":[
+				{
+					"name": "getInfo",
+					"method": "POST",
+					"data": ""
 				}
 			]
 		}

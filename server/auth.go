@@ -26,6 +26,13 @@ type Session struct {
 	Appid    uint32
 }
 
+type Account struct {
+	Username      string
+	Password      string
+	CountryAlpha2 string
+	RegisterTime  string
+}
+
 func newSession(w http.ResponseWriter, userid uint64, username string, appid uint32, rc redis.Conn) (usertoken string, err error) {
 	if rc == nil {
 		rc = authRedisPool.Get()
@@ -100,12 +107,6 @@ func findSession(w http.ResponseWriter, r *http.Request, rc redis.Conn) (*Sessio
 	}
 
 	return session, nil
-}
-
-type Account struct {
-	Username      string
-	Password      string
-	CountryAlpha2 string
 }
 
 func authRegister(w http.ResponseWriter, r *http.Request) {

@@ -322,6 +322,75 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
+func listMatchPack(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in struct {
+		UserId  uint64
+		StartId uint32
+		Limit   uint32
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+	if in.UserId == 0 {
+		in.UserId = ADMIN_USERID
+	}
+	if in.Limit > 60 {
+		in.Limit = 60
+	}
+
+	var start interface{}
+	if in.StartId == 0 {
+		start = ""
+	} else {
+		start = in.StartId
+	}
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//get keys
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, in.UserId)
+
+	resp, err := ssdb.Do("zrscan", name, start, start, "", in.Limit)
+	lwutil.CheckSsdbError(resp, err)
+	if len(resp) == 1 {
+		lwutil.SendError("err_not_found", fmt.Sprintf("in:%+v", in))
+	}
+
+	//get packs
+	resp = resp[1:]
+	packNum := (len(resp)) / 2
+	args := make([]interface{}, packNum+2)
+	args[0] = "multi_hget"
+	args[1] = H_PACK
+	for i, _ := range args {
+		if i >= 2 {
+			args[i] = resp[(i-2)*2]
+		}
+	}
+	resp, err = ssdb.Do(args...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	packs := make([]Pack, len(resp)/2)
+	for i, _ := range packs {
+		packjs := resp[i*2+1]
+		err = json.Unmarshal([]byte(packjs), &packs[i])
+		lwutil.CheckError(err, "")
+		if packs[i].Tags == nil {
+			packs[i].Tags = make([]string, 0)
+		}
+	}
+
+	//out
+	lwutil.WriteResponse(w, &packs)
+}
+
 func listPackByTag(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -422,6 +491,7 @@ func regPack() {
 	http.Handle("/pack/mod", lwutil.ReqHandler(modPack))
 	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
 	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
+	http.Handle("/pack/listMatch", lwutil.ReqHandler(listMatchPack))
 	http.Handle("/pack/listByTag", lwutil.ReqHandler(listPackByTag))
 	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
 }

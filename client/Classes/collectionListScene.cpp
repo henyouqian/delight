@@ -1,4 +1,5 @@
 #include "collectionListScene.h"
+#include "matchListScene.h"
 #include "dragView.h"
 #include "lang.h"
 #include "http.h"
@@ -336,6 +337,9 @@ bool SearchLayer::init() {
 }
 
 void SearchLayer::editBoxReturn(EditBox* editBox) {
+    if (editBox->ignoreKeyboardReturn()) {
+        return;
+    }
     _thumbNum = 0;
     _dragViewHeight = 0;
     _minPackId = std::numeric_limits<uint64_t>::max();
@@ -444,6 +448,8 @@ void SearchLayer::onSptLoaderError(const char *localPath, void *userData) {
 //touch
 void SearchLayer::onTouchesBegan(const std::vector<Touch*>& touches, Event *event) {
     auto touch = touches[0];
+    
+    _editSearch->closeKeyboard();
     _dragView->onTouchesBegan(touch);
 }
 
@@ -499,7 +505,8 @@ bool MainContainerLayer::init() {
     this->addChild(_layers[0]);
     _layers[1] = SearchLayer::create();
     this->addChild(_layers[1]);
-    _layers[2] = nullptr;
+    _layers[2] = MatchListLayer::create();
+    this->addChild(_layers[2]);
     _layers[3] = nullptr;
     
     //menu bar
