@@ -328,15 +328,11 @@ func listMatchPack(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		UserId  uint64
 		StartId uint32
 		Limit   uint32
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-	if in.UserId == 0 {
-		in.UserId = ADMIN_USERID
-	}
 	if in.Limit > 60 {
 		in.Limit = 60
 	}
@@ -354,7 +350,7 @@ func listMatchPack(w http.ResponseWriter, r *http.Request) {
 	defer ssdb.Close()
 
 	//get keys
-	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, in.UserId)
+	name := fmt.Sprintf("%s/%d", Z_USER_PACK_PRE, ADMIN_USERID)
 
 	resp, err := ssdb.Do("zrscan", name, start, start, "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)

@@ -6,6 +6,7 @@ import (
 	"github.com/henyouqian/lwutil"
 	//. "github.com/qiniu/api/conf"
 	//"github.com/qiniu/api/rs"
+	"./ssdb"
 	"net/http"
 	//"strconv"
 	//"strings"
@@ -19,6 +20,21 @@ const (
 
 type PlayerData struct {
 	Money uint32
+}
+
+func _getPlayerInfo(ssdb *ssdb.Client, userId uint64, data *PlayerData) {
+	resp, err := ssdb.Do("hget", H_PLAYER, userId)
+	lwutil.CheckSsdbError(resp, err)
+
+	err = json.Unmarshal([]byte(resp[1]), data)
+	lwutil.CheckError(err, "")
+}
+
+func _setPlayerInfo(ssdb *ssdb.Client, userId uint64, data *PlayerData) {
+	js, err := json.Marshal(data)
+	lwutil.CheckError(err, "")
+	resp, err := ssdb.Do("hset", H_PLAYER, userId, js)
+	lwutil.CheckSsdbError(resp, err)
 }
 
 func getPlayerInfo(w http.ResponseWriter, r *http.Request) {

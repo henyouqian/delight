@@ -135,6 +135,7 @@
 		B3F01AF1187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
 		B3F01AF2187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
 		B3F2D96418C4ECC700626086 /* matchListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D96218C4ECC700626086 /* matchListScene.cpp */; };
+		B3F2D97418C5F3EE00626086 /* matchLobbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */; };
 		B3FB833D18A78CF90037DFB4 /* qiniu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FB833B18A78CF90037DFB4 /* qiniu.cpp */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -431,6 +432,8 @@
 		B3F01AF0187E87900000B33E /* packsListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsListScene.h; path = ../Classes/packsListScene.h; sourceTree = "<group>"; };
 		B3F2D96218C4ECC700626086 /* matchListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchListScene.cpp; path = ../Classes/matchListScene.cpp; sourceTree = "<group>"; };
 		B3F2D96318C4ECC700626086 /* matchListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchListScene.h; path = ../Classes/matchListScene.h; sourceTree = "<group>"; };
+		B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchLobbyScene.cpp; path = ../Classes/matchLobbyScene.cpp; sourceTree = "<group>"; };
+		B3F2D97318C5F3EE00626086 /* matchLobbyScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchLobbyScene.h; path = ../Classes/matchLobbyScene.h; sourceTree = "<group>"; };
 		B3FB833B18A78CF90037DFB4 /* qiniu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qiniu.cpp; path = ../Classes/qiniu.cpp; sourceTree = "<group>"; };
 		B3FB833C18A78CF90037DFB4 /* qiniu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qiniu.h; path = ../Classes/qiniu.h; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -507,6 +510,8 @@
 				B31003991879B5F40049A6CF /* mainMenuScene.h */,
 				B3F2D96218C4ECC700626086 /* matchListScene.cpp */,
 				B3F2D96318C4ECC700626086 /* matchListScene.h */,
+				B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */,
+				B3F2D97318C5F3EE00626086 /* matchLobbyScene.h */,
 				B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */,
 				B3E53B4918B3B3630029D6BD /* collectionListScene.h */,
 				B3F01AEF187E87900000B33E /* packsListScene.cpp */,
@@ -1147,6 +1152,7 @@
 			files = (
 				B302CBEB1850E733003746A6 /* gifTexture.cpp in Sources */,
 				B33DAC76184CC6B9001403BA /* gif_font.c in Sources */,
+				B3F2D97418C5F3EE00626086 /* matchLobbyScene.cpp in Sources */,
 				B383F8DE18A4CBA700FA5700 /* b64.c in Sources */,
 				B33DAC74184CC6B9001403BA /* gif_err.c in Sources */,
 				B3BCF356188E7E6D00A1DD08 /* loginScene.cpp in Sources */,

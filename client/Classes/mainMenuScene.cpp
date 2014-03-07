@@ -1,5 +1,5 @@
 #include "mainMenuScene.h"
-//#include "userPackScene.h"
+#include "matchListScene.h"
 #include "collectionListScene.h"
 #include "util.h"
 #include "lang.h"
@@ -54,15 +54,15 @@ bool MainMenuScene::init() {
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterCollectionList), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button, 1);
     
-//    button = createButton(lang("我的"), 48, 2.f);
-//    button->setPosition(Point(visibleSize.width/2, visibleSize.height/3));
-//    button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterUserPack), Control::EventType::TOUCH_UP_INSIDE);
-//    this->addChild(button, 1);
+    button = createButton(lang("Match"), 48, 2.f);
+    button->setPosition(Point(visibleSize.width/2, visibleSize.height/3));
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(MainMenuScene::enterMatchMode), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(button, 1);
     
     //login test
     jsonxx::Object loginMsg;
-    loginMsg << "Username" << "admin";
-	loginMsg << "Password" << "admin";
+    loginMsg << "Username" << "aa";
+	loginMsg << "Password" << "aa";
     postHttpRequest("auth/login", loginMsg.json().c_str(), this, (SEL_HttpResponse)&MainMenuScene::onLogin);
     
     postHttpRequest("auth/info", "\"admin\"", this, (SEL_HttpResponse)&MainMenuScene::onInfo);
@@ -81,6 +81,6 @@ void MainMenuScene::enterCollectionList(Object *sender, Control::EventType contr
     Director::getInstance()->pushScene(TransitionFade::create(0.5f, layer->getScene()));
 }
 
-void MainMenuScene::enterUserPack(Object *sender, Control::EventType controlEvent) {
-    //Director::getInstance()->pushScene(TransitionFade::create(0.5f, UserPackScene::createScene()));
+void MainMenuScene::enterMatchMode(Object *sender, Control::EventType controlEvent) {
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)MatchListLayer::createWithScene()->getParent()));
 }

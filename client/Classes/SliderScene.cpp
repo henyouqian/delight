@@ -405,7 +405,10 @@ void SliderScene::next(Object *sender, Control::EventType controlEvent) {
 }
 
 void SliderScene::nextPack(Object *sender, Control::EventType controlEvent) {
-    _modeSelectScene->nextPack();
+    if (_modeSelectScene) {
+        _modeSelectScene->nextPack();
+    }
+    
     Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
 }
 
@@ -459,7 +462,7 @@ void SliderScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *even
             
             //_btnNextPack
             int biggerStarNum = MAX(starNum, prevStarNum);
-            if (biggerStarNum != 0 && _modeSelectScene->getPackIdx() < getPacks().size()-1) {
+            if (biggerStarNum != 0 && _modeSelectScene && _modeSelectScene->getPackIdx() < getPacks().size()-1) {
                 btnFadeIn(_btnNextPack);
             }
             

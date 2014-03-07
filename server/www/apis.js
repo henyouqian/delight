@@ -81,7 +81,7 @@ function Controller($scope, $http) {
 				},{
 					"name": "listMatch",
 					"method": "POST",
-					"data": {"UserId": 0, "StartId": 0, "Limit":12}
+					"data": {"StartId": 0, "Limit":12}
 				},{
 					"name": "listByTag",
 					"method": "POST",
@@ -137,6 +137,32 @@ function Controller($scope, $http) {
 					"name": "getInfo",
 					"method": "POST",
 					"data": ""
+				}
+			]
+		},{
+			"tab":"match",
+			"path":"match",
+			"apis":[
+				{
+					"name": "new",
+					"method": "POST",
+					"data": {"PackId": 0, "BeginTime": "2014-04-01T11:00", "EndTime": "2014-04-01T13:00"}
+				},{
+					"name": "del",
+					"method": "POST",
+					"data": {"Id": 0}
+				},{
+					"name": "list",
+					"method": "POST",
+					"data": {"StartMatchId": 0, "Limit": 20}
+				},{
+					"name": "begin",
+					"method": "POST",
+					"data": {"MatchId": 0}
+				},{
+					"name": "end",
+					"method": "POST",
+					"data": {"MatchId": 0, "MatchKey": "", "Score": 0}
 				}
 			]
 		}

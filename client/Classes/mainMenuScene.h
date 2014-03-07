@@ -16,7 +16,7 @@ public:
     virtual void onEnterTransitionDidFinish();
     
     void enterCollectionList(Object *sender, Control::EventType controlEvent);
-    void enterUserPack(Object *sender, Control::EventType controlEvent);
+    void enterMatchMode(Object *sender, Control::EventType controlEvent);
     
     void onLogin(HttpClient *, HttpResponse *);
     void onInfo(HttpClient *, HttpResponse *);

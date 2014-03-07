@@ -30,6 +30,7 @@ func main() {
 	regPack()
 	regCollection()
 	regPlayer()
+	regMatch()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
