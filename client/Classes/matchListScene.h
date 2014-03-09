@@ -31,9 +31,6 @@ public:
     virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
     virtual void onSptLoaderError(const char *localPath, void *userData);
     
-    //
-    void freePlay(Object *sender, Control::EventType controlEvent);
-    
 private:
     DragView *_dragView;
     SptLoader *_sptLoader;

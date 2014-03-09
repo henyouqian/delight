@@ -184,8 +184,7 @@ SliderScene* SliderScene::create(PackInfo *packInfo) {
     if (pRet && pRet->init(packInfo)) {
         pRet->autorelease();
         return pRet;
-    }
-    else {
+    } else {
         delete pRet;
         return NULL;
     }

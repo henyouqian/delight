@@ -14,14 +14,16 @@ import (
 )
 
 const (
-	H_MATCH                 = "hMatch"
-	Z_MATCH                 = "zMatch"
-	H_MATCH_RECORD          = "hMatchRecord"
-	Z_MATCH_LEADERBOARD_PRE = "zMatchLeaderboard"
-	H_PACK_MATCH            = "hPackMatch"
-	MATCH_SERIAL            = "matchSerial"
-	MATCH_COST_MONEY        = 100
-	MATCH_EXPIRE_SECONDS    = 600
+	H_MATCH                    = "hMatch"
+	Z_MATCH                    = "zMatch"
+	H_MATCH_RECORD             = "hMatchRecord"
+	Z_MATCH_LEADERBOARD_PRE    = "zMatchLeaderboard"
+	Z_FREEPLAY_LEADERBOARD_PRE = "zFreePlayLeaderboard"
+	H_PACK_MATCH               = "hPackMatch"
+	H_FREEPLAY_RECORD          = "hFreePlayRecord"
+	MATCH_SERIAL               = "matchSerial"
+	MATCH_COST_MONEY           = 100
+	MATCH_EXPIRE_SECONDS       = 600
 )
 
 type Match struct {
@@ -32,11 +34,15 @@ type Match struct {
 }
 
 type MatchRecord struct {
-	MatchId        uint64
-	Trys           uint32
 	MatchKey       string
 	MatchKeyExpire int64
+	Trys           uint32
 	HighScore      int32
+}
+
+type FreePlayRecord struct {
+	Trys      uint32
+	HighScore int32
 }
 
 func newMatch(w http.ResponseWriter, r *http.Request) {
@@ -267,7 +273,6 @@ func beginMatch(w http.ResponseWriter, r *http.Request) {
 
 	//check match record exist
 	record := MatchRecord{}
-	record.MatchId = in.MatchId
 
 	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
 	resp, err = ssdb.Do("hget", H_MATCH_RECORD, recordKey)
@@ -395,7 +400,228 @@ func endMatch(w http.ResponseWriter, r *http.Request) {
 	}{
 		uint32(rank + 1),
 		uint32(rankNum),
-		float32(rankNum-rank-1) / float32(rankNum-1),
+		0,
+	}
+
+	if rankNum == 1 {
+		out.BeatRate = 0
+	} else {
+		out.BeatRate = float32(rankNum-rank-1) / float32(rankNum-1)
+	}
+
+	//out
+	lwutil.WriteResponse(w, out)
+}
+
+func matchFreePlay(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		MatchId uint64
+		Score   int32
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//check match
+	resp, err := ssdb.Do("hexists", H_MATCH, in.MatchId)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] != "1" {
+		lwutil.SendError("err_not_found", "match not found")
+	}
+
+	//check free play record
+	record := FreePlayRecord{}
+
+	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
+	resp, err = ssdb.Do("hget", H_FREEPLAY_RECORD, recordKey)
+	lwutil.CheckError(err, "")
+	scoreUpdate := false
+	if resp[0] != "ok" {
+		record.HighScore = in.Score
+		record.Trys = 1
+		scoreUpdate = true
+	} else {
+		err = json.Unmarshal([]byte(resp[1]), &record)
+		lwutil.CheckError(err, "")
+		if in.Score > record.HighScore {
+			record.HighScore = in.Score
+			scoreUpdate = true
+		}
+		record.Trys++
+	}
+
+	//save record
+	jsRecord, err := json.Marshal(record)
+	resp, err = ssdb.Do("hset", H_FREEPLAY_RECORD, recordKey, jsRecord)
+	lwutil.CheckSsdbError(resp, err)
+
+	//redis
+	rc := authRedisPool.Get()
+	defer rc.Close()
+
+	//leaderboard
+	leaderBoardName := fmt.Sprintf("%s/%d", Z_FREEPLAY_LEADERBOARD_PRE, in.MatchId)
+	if scoreUpdate {
+		_, err = rc.Do("ZADD", leaderBoardName, record.HighScore, session.Userid)
+		lwutil.CheckError(err, "")
+	}
+
+	//get rank
+	rc.Send("ZREVRANK", leaderBoardName, session.Userid)
+	rc.Send("ZCARD", leaderBoardName)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+	rank, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+	rankNum, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		Rank     uint32
+		RankNum  uint32
+		BeatRate float32
+		Trys     uint32
+	}{
+		uint32(rank + 1),
+		uint32(rankNum),
+		0,
+		record.Trys,
+	}
+
+	if rankNum == 1 {
+		out.BeatRate = 0
+	} else {
+		out.BeatRate = float32(rankNum-rank-1) / float32(rankNum-1)
+	}
+
+	//out
+	lwutil.WriteResponse(w, out)
+}
+
+func matchInfo(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		MatchId uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//check match
+	resp, err := ssdb.Do("hexists", H_MATCH, in.MatchId)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] != "1" {
+		lwutil.SendError("err_not_found", "match not found")
+	}
+
+	//free play record
+	freePlayRecord := FreePlayRecord{}
+	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
+	resp, err = ssdb.Do("hget", H_FREEPLAY_RECORD, recordKey)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		freePlayRecord.HighScore = 0
+		freePlayRecord.Trys = 0
+	} else {
+		err = json.Unmarshal([]byte(resp[1]), &freePlayRecord)
+		lwutil.CheckError(err, "")
+	}
+
+	//match record
+	matchRecord := MatchRecord{}
+	recordKey = fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
+	resp, err = ssdb.Do("hget", H_MATCH_RECORD, recordKey)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		matchRecord.HighScore = 0
+		matchRecord.Trys = 0
+	} else {
+		err = json.Unmarshal([]byte(resp[1]), &matchRecord)
+		lwutil.CheckError(err, "")
+	}
+
+	//redis
+	rc := authRedisPool.Get()
+	defer rc.Close()
+
+	//leaderboard
+	freePlayLeaderBoardName := fmt.Sprintf("%s/%d", Z_FREEPLAY_LEADERBOARD_PRE, in.MatchId)
+	matchLeaderBoardName := fmt.Sprintf("%s/%d", Z_MATCH_LEADERBOARD_PRE, in.MatchId)
+
+	//get rank
+	rc.Send("ZREVRANK", freePlayLeaderBoardName, session.Userid)
+	rc.Send("ZCARD", freePlayLeaderBoardName)
+	rc.Send("ZREVRANK", matchLeaderBoardName, session.Userid)
+	rc.Send("ZCARD", matchLeaderBoardName)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+	fRank, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+	fRankNum, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+	mRank, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+	mRankNum, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		FreePlayRank      uint32
+		FreePlayRankNum   uint32
+		FreePlayBeatRate  float32
+		FreePlayTrys      uint32
+		FreePlayHighScore int32
+		MatchRank         uint32
+		MatchRankNum      uint32
+		MatchBeatRate     float32
+		MatchTrys         uint32
+		MatchHighScore    int32
+	}{
+		uint32(fRank + 1),
+		uint32(fRankNum),
+		0,
+		freePlayRecord.Trys,
+		freePlayRecord.HighScore,
+		uint32(mRank + 1),
+		uint32(mRankNum),
+		0,
+		matchRecord.Trys,
+		matchRecord.HighScore,
+	}
+
+	if fRankNum == 1 {
+		out.FreePlayBeatRate = 0
+	} else {
+		out.FreePlayBeatRate = float32(fRankNum-fRank-1) / float32(fRankNum-1)
+	}
+	if mRankNum == 1 {
+		out.MatchBeatRate = 0
+	} else {
+		out.MatchBeatRate = float32(mRankNum-mRank-1) / float32(mRankNum-1)
 	}
 
 	//out
@@ -408,4 +634,6 @@ func regMatch() {
 	http.Handle("/match/list", lwutil.ReqHandler(listMatch))
 	http.Handle("/match/begin", lwutil.ReqHandler(beginMatch))
 	http.Handle("/match/end", lwutil.ReqHandler(endMatch))
+	http.Handle("/match/freePlay", lwutil.ReqHandler(matchFreePlay))
+	http.Handle("/match/info", lwutil.ReqHandler(matchInfo))
 }

@@ -29,7 +29,7 @@ struct PackInfo {
     void shuffleImageIndices();
 };
 
-class PackListener {
+class PackDownloadListener {
 public:
     virtual void onPackError() {};
     virtual void onPackImageDownload() {};
@@ -39,16 +39,18 @@ public:
 struct PackDownloader : cocos2d::Object{
     PackInfo *pack;
     float progress;
-    PackListener *listener;
+    PackDownloadListener *listener;
     std::map<HttpRequest*, std::string> requestMapLocal;
     int downloadedNum;
     
-    void init(PackInfo *pack, PackListener *listener);
+    void init(PackInfo *pack, PackDownloadListener *listener);
     void destroy();
     virtual ~PackDownloader();
     void startDownload();
     void onImageDownload(HttpClient* client, HttpResponse* response);
 };
+
+bool isPackDownloaded(PackInfo &pack);
 
 
 std::vector<PackInfo>& getPacks();

@@ -11,7 +11,7 @@ USING_NS_CC_EXT;
 
 class PacksListScene;
 
-class ModeSelectScene : public LayerColor, public PackListener, public SptLoaderListener {
+class ModeSelectScene : public LayerColor, public PackDownloadListener, public SptLoaderListener {
 public:
     static cocos2d::Scene* createScene(uint32_t packIdx);
     bool init(uint32_t packIdx);
@@ -25,7 +25,7 @@ public:
     //
     virtual void onEnter();
     
-    //PackListener
+    //PackDownloadListener
     virtual void onPackError();
     virtual void onPackImageDownload();
     virtual void onPackDownloadComplete();

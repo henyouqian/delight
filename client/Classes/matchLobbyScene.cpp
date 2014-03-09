@@ -1,5 +1,5 @@
 #include "matchLobbyScene.h"
-#include "sliderScene.h"
+#include "matchScene.h"
 #include "util.h"
 #include "lang.h"
 #include "lw/lwLog.h"
@@ -34,7 +34,7 @@ bool MatchLobbyLayer::init(PackInfo &packInfo) {
     addChild(_sptLoader);
     
     //background(cover)
-    _sptLoader->download(packInfo.cover.c_str());
+    //_sptLoader->download(packInfo.cover.c_str());
     
     //button
     float btnY = 240.f;
@@ -59,10 +59,6 @@ bool MatchLobbyLayer::init(PackInfo &packInfo) {
     btnBack->addTargetWithActionForControlEvents(this, cccontrol_selector(MatchLobbyLayer::back), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(btnBack, 1);
     
-    //pack downloader
-    _packDownloader = new PackDownloader;
-    _packDownloader->init(&packInfo, this);
-    
     //progress label
     _progressLabel = LabelTTF::create("0%", "HelveticaNeue", 38);
     _progressLabel->setAnchorPoint(Point(.5f, .5f));
@@ -77,23 +73,13 @@ bool MatchLobbyLayer::init(PackInfo &packInfo) {
 
 
 MatchLobbyLayer::~MatchLobbyLayer() {
-    _packDownloader->destroy();
     _sptLoader->destroy();
     TextureCache::getInstance()->removeUnusedTextures();
 }
 
 void MatchLobbyLayer::enterCasualMode(Object *sender, Control::EventType controlEvent) {
-    if (_packDownloader->progress == 1.f) {
-        auto layer = SliderScene::createScene(&_packInfo, nullptr);
-        Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
-        _progressLabel->setVisible(false);
-    } else {
-        _packDownloader->startDownload();
-        char buf[64];
-        snprintf(buf, 64, "%s... %d%%", lang("Downloading"), (int)(_packDownloader->progress*100));
-        _progressLabel->setString(buf);
-        _progressLabel->setVisible(true);
-    }
+    auto layer = MatchLayer::create(&_packInfo);
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
 }
 
 void MatchLobbyLayer::onEnter() {
@@ -104,22 +90,6 @@ void MatchLobbyLayer::onEnter() {
 
 void MatchLobbyLayer::back(Object *sender, Control::EventType controlEvent) {
     Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
-}
-
-void MatchLobbyLayer::onPackError() {
-    
-}
-
-void MatchLobbyLayer::onPackImageDownload() {
-    char buf[64];
-    snprintf(buf, 64, "%s... %d%%", lang("Downloading"), (int)(_packDownloader->progress*100));
-    _progressLabel->setString(buf);
-}
-
-void MatchLobbyLayer::onPackDownloadComplete() {
-    auto layer = SliderScene::createScene(&_packInfo, nullptr);
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
-    _progressLabel->setVisible(false);
 }
 
 void MatchLobbyLayer::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {

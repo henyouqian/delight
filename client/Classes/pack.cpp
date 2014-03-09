@@ -77,10 +77,6 @@ void PackInfo::init(jsonxx::Object& packJs) {
     }
 }
 
-int myrandom (int i) {
-    return std::rand()%i;
-}
-
 void PackInfo::shuffleImageIndices() {
     imageIndices.clear();
     for (auto i = 0; i < images.size(); ++i) {
@@ -91,7 +87,7 @@ void PackInfo::shuffleImageIndices() {
     std::shuffle(imageIndices.begin(), imageIndices.end(), std::default_random_engine(seed));
 }
 
-void PackDownloader::init(PackInfo *pack, PackListener *listener) {
+void PackDownloader::init(PackInfo *pack, PackDownloadListener *listener) {
     this->pack = pack;
     progress = 0.f;
     this->listener = listener;
@@ -166,6 +162,20 @@ void PackDownloader::onImageDownload(HttpClient* client, HttpResponse* response)
             }
         }
     }
+}
+
+bool isPackDownloaded(PackInfo &pack) {
+    for (auto i = 0; i < pack.images.size(); ++i) {
+        auto &image = pack.images[i];
+        std::string local;
+        makeLocalImagePath(local, image.key.c_str());
+        
+        //check file exist and download image
+        if (!FileUtils::getInstance()->isFileExist(local)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::vector<PackInfo> _packs;

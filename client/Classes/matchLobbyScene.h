@@ -11,7 +11,7 @@ USING_NS_CC_EXT;
 
 class PacksListScene;
 
-class MatchLobbyLayer : public LayerColor, public PackListener, public SptLoaderListener {
+class MatchLobbyLayer : public LayerColor, public SptLoaderListener {
 public:
     static MatchLobbyLayer* create(PackInfo &packInfo);
     bool init(PackInfo &packInfo);
@@ -25,17 +25,12 @@ public:
     //
     virtual void onEnter();
     
-    //PackListener
-    virtual void onPackError();
-    virtual void onPackImageDownload();
-    virtual void onPackDownloadComplete();
-    
     //SptLoaderListener
     virtual void onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData);
     virtual void onSptLoaderError(const char *localPath, void *userData);
     
 private:
-    PackDownloader *_packDownloader;
+    //PackDownloader *_packDownloader;
     LabelTTF *_progressLabel;
     SptLoader *_sptLoader;
     PackInfo _packInfo;

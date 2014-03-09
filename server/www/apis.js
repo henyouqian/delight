@@ -158,11 +158,19 @@ function Controller($scope, $http) {
 				},{
 					"name": "begin",
 					"method": "POST",
-					"data": {"MatchId": 0}
+					"data": {"MatchId": 1}
 				},{
 					"name": "end",
 					"method": "POST",
-					"data": {"MatchId": 0, "MatchKey": "", "Score": 0}
+					"data": {"MatchId": 1, "MatchKey": "", "Score": 0}
+				},{
+					"name": "freePlay",
+					"method": "POST",
+					"data": {"MatchId": 1, "Score": 0}
+				},{
+					"name": "info",
+					"method": "POST",
+					"data": {"MatchId": 1}
 				}
 			]
 		}

@@ -47,6 +47,8 @@
 		B302CBEC1850E733003746A6 /* gifTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBE91850E733003746A6 /* gifTexture.cpp */; };
 		B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
 		B302CBFE18519276003746A6 /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B302CBFB18519276003746A6 /* sliderScene.cpp */; };
+		B3094AC518CCA6E600F1EF1A /* packLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3094AC318CCA6E600F1EF1A /* packLoadingScene.cpp */; };
+		B3094AD518CCEBED00F1EF1A /* matchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3094AD318CCEBED00F1EF1A /* matchScene.cpp */; };
 		B310039A1879B5F40049A6CF /* mainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31003981879B5F40049A6CF /* mainMenuScene.cpp */; };
 		B310039B1879B5F40049A6CF /* mainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31003981879B5F40049A6CF /* mainMenuScene.cpp */; };
 		B31003A0187C067A0049A6CF /* modeSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B310039E187C067A0049A6CF /* modeSelectScene.cpp */; };
@@ -309,6 +311,10 @@
 		B302CBEA1850E733003746A6 /* gifTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gifTexture.h; path = ../Classes/gifTexture.h; sourceTree = "<group>"; };
 		B302CBFB18519276003746A6 /* sliderScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sliderScene.cpp; path = ../Classes/sliderScene.cpp; sourceTree = "<group>"; };
 		B302CBFC18519276003746A6 /* sliderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sliderScene.h; path = ../Classes/sliderScene.h; sourceTree = "<group>"; };
+		B3094AC318CCA6E600F1EF1A /* packLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packLoadingScene.cpp; path = ../Classes/packLoadingScene.cpp; sourceTree = "<group>"; };
+		B3094AC418CCA6E600F1EF1A /* packLoadingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packLoadingScene.h; path = ../Classes/packLoadingScene.h; sourceTree = "<group>"; };
+		B3094AD318CCEBED00F1EF1A /* matchScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchScene.cpp; path = ../Classes/matchScene.cpp; sourceTree = "<group>"; };
+		B3094AD418CCEBED00F1EF1A /* matchScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchScene.h; path = ../Classes/matchScene.h; sourceTree = "<group>"; };
 		B31003981879B5F40049A6CF /* mainMenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mainMenuScene.cpp; path = ../Classes/mainMenuScene.cpp; sourceTree = "<group>"; };
 		B31003991879B5F40049A6CF /* mainMenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mainMenuScene.h; path = ../Classes/mainMenuScene.h; sourceTree = "<group>"; };
 		B310039E187C067A0049A6CF /* modeSelectScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = modeSelectScene.cpp; path = ../Classes/modeSelectScene.cpp; sourceTree = "<group>"; };
@@ -510,8 +516,12 @@
 				B31003991879B5F40049A6CF /* mainMenuScene.h */,
 				B3F2D96218C4ECC700626086 /* matchListScene.cpp */,
 				B3F2D96318C4ECC700626086 /* matchListScene.h */,
+				B3094AC318CCA6E600F1EF1A /* packLoadingScene.cpp */,
+				B3094AC418CCA6E600F1EF1A /* packLoadingScene.h */,
 				B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */,
 				B3F2D97318C5F3EE00626086 /* matchLobbyScene.h */,
+				B3094AD318CCEBED00F1EF1A /* matchScene.cpp */,
+				B3094AD418CCEBED00F1EF1A /* matchScene.h */,
 				B3E53B4818B3B3630029D6BD /* collectionListScene.cpp */,
 				B3E53B4918B3B3630029D6BD /* collectionListScene.h */,
 				B3F01AEF187E87900000B33E /* packsListScene.cpp */,
@@ -1170,6 +1180,7 @@
 				B393ED25186DF3B300E372CC /* sqlite3.c in Sources */,
 				B383F8E418A4CBA700FA5700 /* base_io.c in Sources */,
 				B3CC388418A3930B00056424 /* ELCAssetTablePicker.m in Sources */,
+				B3094AC518CCA6E600F1EF1A /* packLoadingScene.cpp in Sources */,
 				B383F8E318A4CBA700FA5700 /* base.c in Sources */,
 				B310039A1879B5F40049A6CF /* mainMenuScene.cpp in Sources */,
 				B3CA1F41188810A0005637A0 /* lang.cpp in Sources */,
@@ -1187,6 +1198,7 @@
 				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,
 				B383F8E518A4CBA700FA5700 /* conf.c in Sources */,
 				B383F8E218A4CBA700FA5700 /* auth_mac.c in Sources */,
+				B3094AD518CCEBED00F1EF1A /* matchScene.cpp in Sources */,
 				B3F2D96418C4ECC700626086 /* matchListScene.cpp in Sources */,
 				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
 				B3CC388218A3930B00056424 /* ELCAsset.m in Sources */,

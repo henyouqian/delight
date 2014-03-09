@@ -1,4 +1,5 @@
 #include "matchListScene.h"
+#include "packLoadingScene.h"
 #include "matchLobbyScene.h"
 #include "jsonxx/jsonxx.h"
 #include "db.h"
@@ -42,12 +43,6 @@ bool MatchListLayer::init() {
     float dragViewHeight = visSize.height;
     _dragView->setWindowRect(Rect(0, 0, visSize.width, dragViewHeight));
     
-    //test button
-    auto button = createButton("test", 48, 2.f);
-    button->setPosition(Point(640/2, -200));
-    button->addTargetWithActionForControlEvents(this, cccontrol_selector(MatchListLayer::freePlay), Control::EventType::TOUCH_UP_INSIDE);
-    _dragView->addChild(button, 10);
-    
     //thumb width and height
     _thumbWidth = (visSize.width - THUMB_MARGIN) * .5f;
     _thumbHeight = _thumbWidth;
@@ -60,10 +55,6 @@ bool MatchListLayer::init() {
     postHttpRequest("match/list", msg.json().c_str(), this, (SEL_HttpResponse)(&MatchListLayer::onHttpListMatch));
     
     return true;
-}
-
-void MatchListLayer::freePlay(Object *sender, Control::EventType controlEvent) {
-    
 }
 
 void MatchListLayer::onHttpListMatch(HttpClient* client, HttpResponse* response) {
@@ -195,9 +186,13 @@ void MatchListLayer::onTouchEnded(Touch* touch, Event  *event) {
             Point touchLocation = touch->getLocation();
             touchLocation = _dragView->convertToNodeSpace(touchLocation);
             if (it->thumbRect.containsPoint(touchLocation)) {
-                lwinfo("xxxxxx:%llu", it->packInfo.id);
-                auto layer = MatchLobbyLayer::create(it->packInfo);
-                Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)layer->getParent()));
+                auto matchLobbyLayer = MatchLobbyLayer::create(it->packInfo);
+                if (isPackDownloaded(it->packInfo)) {
+                    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)matchLobbyLayer->getParent()));
+                } else {
+                    auto loadingLayer = PackLoadingLayer::create(it->packInfo, (Scene*)matchLobbyLayer->getParent());
+                    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)loadingLayer->getParent()));
+                }
 
                 return;
             }
