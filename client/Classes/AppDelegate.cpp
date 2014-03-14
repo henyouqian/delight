@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "sliderScene.h"
 #include "mainMenuScene.h"
+#include "matchBoardScene.h"
 #include "util.h"
 //#include "qiniu.h"
 #include "db.h"
@@ -44,21 +45,17 @@ namespace {
         lwinfo("scaleFactor:%f", Director::getInstance()->getContentScaleFactor());
         
         //set search dir
-        std::vector<std::string> dirOrders;
-        dirOrders.push_back("default");
-        ////for ccbi player
-        dirOrders.push_back("ccbiPlayer/res");
-        FileUtils::getInstance()->setSearchPaths(dirOrders);
+//        std::vector<std::string> dirOrders;
+//        dirOrders.push_back(".");
+//        ////for ccbi player
+//        //dirOrders.push_back("ccbiPlayer/res");
+//        FileUtils::getInstance()->setSearchPaths(dirOrders);
         
         //set resolution search dir
         std::vector<std::string> resDirOrders;
         char buf[32];
         sprintf(buf, "%dX%d", int(bestFit.width), int(bestFit.height));
         resDirOrders.push_back(buf);
-        resDirOrders.push_back("high");
-        ////for ccbi player
-        resDirOrders.push_back("iphonehd");
-        
         // default resolution
         if (bestFit.width != 1136.f) {
             resDirOrders.push_back("640X1136");
@@ -100,7 +97,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //qiniuInit();
 
     //auto scene = SliderScene::createScene();
-    auto scene = MainMenuScene::createScene();
+    //auto scene = MainMenuScene::createScene();
+    auto scene = MatchBoardLayer::createScene();
     
     // run
     director->runWithScene(scene);

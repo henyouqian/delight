@@ -137,6 +137,10 @@ function Controller($scope, $http) {
 					"name": "getInfo",
 					"method": "POST",
 					"data": ""
+				},{
+					"name": "setZone",
+					"method": "POST",
+					"data": {"Zone": 0}
 				}
 			]
 		},{
@@ -144,25 +148,25 @@ function Controller($scope, $http) {
 			"path":"match",
 			"apis":[
 				{
-					"name": "new",
+					"name": "getCurrent",
 					"method": "POST",
-					"data": {"PackId": 0, "BeginTime": "2014-04-01T11:00", "EndTime": "2014-04-01T13:00"}
+					"data": ""
 				},{
-					"name": "del",
+					"name": "setCommingList",
 					"method": "POST",
-					"data": {"Id": 0}
+					"data": [1, 2, 3]
 				},{
-					"name": "list",
+					"name": "getCommingList",
 					"method": "POST",
-					"data": {"StartMatchId": 0, "Limit": 20}
+					"data": ""
 				},{
 					"name": "begin",
 					"method": "POST",
-					"data": {"MatchId": 1}
+					"data": ""
 				},{
 					"name": "end",
 					"method": "POST",
-					"data": {"MatchId": 1, "MatchKey": "", "Score": 0}
+					"data": {"MatchKey": "", "Score": 0}
 				},{
 					"name": "freePlay",
 					"method": "POST",
@@ -170,7 +174,7 @@ function Controller($scope, $http) {
 				},{
 					"name": "info",
 					"method": "POST",
-					"data": {"MatchId": 1}
+					"data": {"MatchId": 0}
 				}
 			]
 		}

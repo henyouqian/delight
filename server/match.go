@@ -4,20 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
-	// "github.com/golang/glog"
+	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	//. "github.com/qiniu/api/conf"
 	//"github.com/qiniu/api/rs"
 	"net/http"
-	//"strconv"
+	"strconv"
 	"time"
 )
 
 const (
+	CURRENT_MATCH              = "currentMatch"
+	MATCH_PACK_COMMING_LIST    = "matchPackCommingList"
 	H_MATCH                    = "hMatch"
 	Z_MATCH                    = "zMatch"
 	H_MATCH_RECORD             = "hMatchRecord"
 	Z_MATCH_LEADERBOARD_PRE    = "zMatchLeaderboard"
+	Z_ZONE_LEADERBOARD_PRE     = "zZoneLeaderboard"
 	Z_FREEPLAY_LEADERBOARD_PRE = "zFreePlayLeaderboard"
 	H_PACK_MATCH               = "hPackMatch"
 	H_FREEPLAY_RECORD          = "hFreePlayRecord"
@@ -26,11 +29,18 @@ const (
 	MATCH_EXPIRE_SECONDS       = 600
 )
 
-type Match struct {
+type _Match struct {
 	Id        uint64
 	PackId    uint64
 	BeginTime string
 	EndTime   string
+}
+
+type Match struct {
+	Id         uint64
+	PackId     uint64
+	RoundBegin [6]int64
+	CurrRound  int
 }
 
 type MatchRecord struct {
@@ -45,7 +55,37 @@ type FreePlayRecord struct {
 	HighScore int32
 }
 
-func newMatch(w http.ResponseWriter, r *http.Request) {
+func getCurrMatch(match *Match) {
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	resp, err := ssdb.Do("get", CURRENT_MATCH)
+	lwutil.CheckSsdbError(resp, err)
+	glog.Info(resp[1])
+	err = json.Unmarshal([]byte(resp[1]), match)
+	lwutil.CheckError(err, "")
+}
+
+func getCurrentMatch(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	var match Match
+	getCurrMatch(&match)
+
+	//
+	out := struct {
+		Match
+		Now int64
+	}{
+		match,
+		time.Now().Unix(),
+	}
+	lwutil.WriteResponse(w, out)
+}
+
+func setCommingMatchList(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -55,71 +95,7 @@ func newMatch(w http.ResponseWriter, r *http.Request) {
 	checkAdmin(session)
 
 	//in
-	var match Match
-	err = lwutil.DecodeRequestBody(r, &match)
-	lwutil.CheckError(err, "err_decode_body")
-
-	//check time
-	timeBegin, err := time.ParseInLocation("2006-01-02T15:04", match.BeginTime, time.Local)
-	lwutil.CheckError(err, "")
-	timeEnd, err := time.ParseInLocation("2006-01-02T15:04", match.EndTime, time.Local)
-	lwutil.CheckError(err, "")
-	dur := timeEnd.Sub(timeBegin)
-	if dur.Minutes() < 10 {
-		lwutil.SendError("err_time", "match duration < 10 minutes")
-	}
-	if timeBegin.Before(time.Now()) {
-		lwutil.SendError("err_time", "match begin time is smaller than now")
-	}
-
-	//ssdb
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
-
-	//check pack id
-	resp, err := ssdb.Do("hexists", H_PACK, match.PackId)
-	lwutil.CheckSsdbError(resp, err)
-	if resp[1] != "1" {
-		lwutil.SendError("err_not_found", "pack not found")
-	}
-
-	//check pack repeat
-	resp, err = ssdb.Do("hexists", H_PACK_MATCH, match.PackId)
-	lwutil.CheckSsdbError(resp, err)
-	if resp[1] == "1" {
-		lwutil.SendError("err_repeat", "pack repeat")
-	}
-
-	//gen id
-	match.Id, err = GenSerial(ssdb, MATCH_SERIAL)
-	lwutil.CheckError(err, "")
-
-	//add to hash
-	jsMatch, _ := json.Marshal(&match)
-	resp, err = ssdb.Do("hset", H_MATCH, match.Id, jsMatch)
-	lwutil.CheckSsdbError(resp, err)
-
-	//add to zset
-	resp, err = ssdb.Do("zset", Z_MATCH, match.Id, match.Id)
-	lwutil.CheckSsdbError(resp, err)
-
-	//add to exist hash
-	resp, err = ssdb.Do("hset", H_PACK_MATCH, match.PackId, match.Id)
-	lwutil.CheckSsdbError(resp, err)
-
-	//out
-	lwutil.WriteResponse(w, match)
-}
-
-func delMatch(w http.ResponseWriter, r *http.Request) {
-	var err error
-	lwutil.CheckMathod(r, "POST")
-
-	//in
-	var in struct {
-		Id uint64
-	}
+	var in []uint32
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
@@ -128,120 +104,39 @@ func delMatch(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//get match
-	resp, err := ssdb.Do("hget", H_MATCH, in.Id)
-	lwutil.CheckSsdbError(resp, err)
-	var match Match
-	err = json.Unmarshal([]byte(resp[1]), &match)
+	//set
+	js, err := json.Marshal(in)
 	lwutil.CheckError(err, "")
-
-	resp, err = ssdb.Do("hdel", H_MATCH, match.Id)
-	lwutil.CheckSsdbError(resp, err)
-
-	resp, err = ssdb.Do("zdel", Z_MATCH, match.Id)
-	lwutil.CheckSsdbError(resp, err)
-
-	resp, err = ssdb.Do("hdel", H_PACK_MATCH, match.PackId)
+	resp, err := ssdb.Do("set", MATCH_PACK_COMMING_LIST, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
-	lwutil.WriteResponse(w, match)
+	lwutil.WriteResponse(w, in)
 }
 
-func listMatch(w http.ResponseWriter, r *http.Request) {
+func getCommingMatchList(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
-	//in
-	var in struct {
-		StartMatchId uint64
-		Limit        uint32
-	}
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+	checkAdmin(session)
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//
-	var start interface{}
-	if in.StartMatchId == 0 {
-		start = ""
-	} else {
-		start = in.StartMatchId
-	}
-
-	resp, err := ssdb.Do("zrscan", Z_MATCH, start, start, "", in.Limit)
+	//get
+	var list []uint32
+	resp, err := ssdb.Do("get", MATCH_PACK_COMMING_LIST)
 	lwutil.CheckSsdbError(resp, err)
-
-	if len(resp) == 1 {
-		lwutil.SendError("err_not_found", fmt.Sprintf("in:%+v", in))
-	}
-
-	//get matches
-	resp = resp[1:]
-	matchNum := (len(resp)) / 2
-	args := make([]interface{}, matchNum+2)
-	args[0] = "multi_hget"
-	args[1] = H_MATCH
-	for i, _ := range args {
-		if i >= 2 {
-			args[i] = resp[(i-2)*2]
-		}
-	}
-	resp, err = ssdb.Do(args...)
-	lwutil.CheckSsdbError(resp, err)
-	resp = resp[1:]
-
-	matches := make([]Match, len(resp)/2)
-	for i, _ := range matches {
-		js := resp[i*2+1]
-		err = json.Unmarshal([]byte(js), &matches[i])
-		lwutil.CheckError(err, "")
-	}
-
-	//get packs
-	args = make([]interface{}, len(matches)+2)
-	args[0] = "multi_hget"
-	args[1] = H_PACK
-	for i, _ := range args {
-		if i >= 2 {
-			args[i] = matches[i-2].Id
-		}
-	}
-	resp, err = ssdb.Do(args...)
-	lwutil.CheckSsdbError(resp, err)
-	resp = resp[1:]
-
-	packs := make([]Pack, len(resp)/2)
-	for i, _ := range packs {
-		packjs := resp[i*2+1]
-		err = json.Unmarshal([]byte(packjs), &packs[i])
-		lwutil.CheckError(err, "")
-		if packs[i].Tags == nil {
-			packs[i].Tags = make([]string, 0)
-		}
-	}
+	err = json.Unmarshal([]byte(resp[1]), &list)
+	lwutil.CheckError(err, "")
 
 	//out
-	type OutMatch struct {
-		Id        uint64
-		BeginTime string
-		EndTime   string
-		Pack      Pack
-	}
-	out := make([]OutMatch, len(matches))
-	for i, v := range matches {
-		out[i].Id = v.Id
-		out[i].BeginTime = v.BeginTime
-		out[i].EndTime = v.EndTime
-		out[i].Pack = packs[i]
-	}
-
-	//out
-	lwutil.WriteResponse(w, &out)
+	lwutil.WriteResponse(w, list)
 }
 
 func beginMatch(w http.ResponseWriter, r *http.Request) {
@@ -252,44 +147,36 @@ func beginMatch(w http.ResponseWriter, r *http.Request) {
 	session, err := findSession(w, r, nil)
 	lwutil.CheckError(err, "err_auth")
 
-	//in
-	var in struct {
-		MatchId uint64
-	}
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
 	//ssdb
 	ssdb, err := ssdbPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//check match exist
-	resp, err := ssdb.Do("hexists", H_MATCH, in.MatchId)
-	lwutil.CheckSsdbError(resp, err)
-	if resp[1] != "1" {
-		lwutil.SendError("err_not_found", "match not found")
-	}
+	//get current match
+	var match Match
+	getCurrMatch(&match)
 
 	//check match record exist
 	record := MatchRecord{}
 
-	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
-	resp, err = ssdb.Do("hget", H_MATCH_RECORD, recordKey)
+	recordKey := fmt.Sprintf("%d/%d", match.Id, session.Userid)
+	resp, err := ssdb.Do("hget", H_MATCH_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] == "ok" {
 		err = json.Unmarshal([]byte(resp[1]), &record)
 		lwutil.CheckError(err, "")
 		record.Trys++
 
-		//spend money
-		var playerData PlayerData
-		_getPlayerInfo(ssdb, session.Userid, &playerData)
-		if playerData.Money < MATCH_COST_MONEY {
-			lwutil.SendError("err_money", "not enough money")
-		}
-		playerData.Money -= MATCH_COST_MONEY
-		_setPlayerInfo(ssdb, session.Userid, &playerData)
+		// //spend money
+		// moneyStr := _getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_MONEY)
+		// money, err := strconv.ParseUint(moneyStr, 10, 32)
+		// lwutil.CheckError(err, "")
+
+		// if money < MATCH_COST_MONEY {
+		// 	lwutil.SendError("err_money", "not enough money")
+		// }
+		// money -= MATCH_COST_MONEY
+		// _setPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_MONEY, money)
 
 	} else {
 		record.Trys = 1
@@ -318,7 +205,6 @@ func endMatch(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		MatchId  uint64
 		MatchKey string
 		Score    int32
 	}
@@ -330,10 +216,14 @@ func endMatch(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
+	//get current match
+	var match Match
+	getCurrMatch(&match)
+
 	//check match record
 	record := MatchRecord{}
 
-	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
+	recordKey := fmt.Sprintf("%d/%d", match.Id, session.Userid)
 	resp, err := ssdb.Do("hget", H_MATCH_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] != "ok" {
@@ -374,7 +264,7 @@ func endMatch(w http.ResponseWriter, r *http.Request) {
 	defer rc.Close()
 
 	//leaderboard
-	leaderBoardName := fmt.Sprintf("%s/%d", Z_MATCH_LEADERBOARD_PRE, in.MatchId)
+	leaderBoardName := fmt.Sprintf("%s/%d", Z_MATCH_LEADERBOARD_PRE, match.Id)
 	if scoreUpdate {
 		// resp, err = ssdb.Do("zset", leaderBoardName, session.Userid, record.HighScore)
 		// lwutil.CheckSsdbError(resp, err)
@@ -392,21 +282,38 @@ func endMatch(w http.ResponseWriter, r *http.Request) {
 	rankNum, err := redis.Int(rc.Receive())
 	lwutil.CheckError(err, "")
 
+	//zone leaderboard
+	zoneStr := _getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_ZONE)
+	zone, err := strconv.ParseUint(zoneStr, 10, 32)
+	lwutil.CheckError(err, "")
+	zoneLeaderboardKey := fmt.Sprintf("%s/%d/%d", Z_ZONE_LEADERBOARD_PRE, match.Id, zone)
+
+	if scoreUpdate {
+		_, err = rc.Do("ZADD", zoneLeaderboardKey, record.HighScore, session.Userid)
+		lwutil.CheckError(err, "")
+	}
+
+	//get rank in zone
+	rc.Send("ZREVRANK", zoneLeaderboardKey, session.Userid)
+	rc.Send("ZCARD", zoneLeaderboardKey)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+	zoneRank, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+	zoneRankNum, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+
 	//out
 	out := struct {
-		Rank     uint32
-		RankNum  uint32
-		BeatRate float32
+		Rank        uint32
+		RankNum     uint32
+		ZoneRank    uint32
+		ZoneRankNum uint32
 	}{
 		uint32(rank + 1),
 		uint32(rankNum),
-		0,
-	}
-
-	if rankNum == 1 {
-		out.BeatRate = 0
-	} else {
-		out.BeatRate = float32(rankNum-rank-1) / float32(rankNum-1)
+		uint32(zoneRank + 1),
+		uint32(zoneRankNum),
 	}
 
 	//out
@@ -490,25 +397,26 @@ func matchFreePlay(w http.ResponseWriter, r *http.Request) {
 
 	//out
 	out := struct {
-		Rank     uint32
-		RankNum  uint32
-		BeatRate float32
-		Trys     uint32
+		Rank    uint32
+		RankNum uint32
+		Trys    uint32
 	}{
 		uint32(rank + 1),
 		uint32(rankNum),
-		0,
 		record.Trys,
-	}
-
-	if rankNum == 1 {
-		out.BeatRate = 0
-	} else {
-		out.BeatRate = float32(rankNum-rank-1) / float32(rankNum-1)
 	}
 
 	//out
 	lwutil.WriteResponse(w, out)
+}
+
+func _redisInt(reply interface{}, err error) (int, error) {
+	v, err := redis.Int(reply, err)
+	if err == redis.ErrNil {
+		return -1, nil
+	} else {
+		return v, err
+	}
 }
 
 func matchInfo(w http.ResponseWriter, r *http.Request) {
@@ -531,17 +439,18 @@ func matchInfo(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//check match
-	resp, err := ssdb.Do("hexists", H_MATCH, in.MatchId)
-	lwutil.CheckSsdbError(resp, err)
-	if resp[1] != "1" {
-		lwutil.SendError("err_not_found", "match not found")
+	//get current match
+	var match Match
+	getCurrMatch(&match)
+
+	if in.MatchId == 0 {
+		in.MatchId = match.Id
 	}
 
 	//free play record
 	freePlayRecord := FreePlayRecord{}
 	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
-	resp, err = ssdb.Do("hget", H_FREEPLAY_RECORD, recordKey)
+	resp, err := ssdb.Do("hget", H_FREEPLAY_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] != "ok" {
 		freePlayRecord.HighScore = 0
@@ -579,59 +488,63 @@ func matchInfo(w http.ResponseWriter, r *http.Request) {
 	rc.Send("ZCARD", matchLeaderBoardName)
 	err = rc.Flush()
 	lwutil.CheckError(err, "")
-	fRank, err := redis.Int(rc.Receive())
+
+	fRank, err := _redisInt(rc.Receive())
 	lwutil.CheckError(err, "")
-	fRankNum, err := redis.Int(rc.Receive())
+	fRankNum, err := _redisInt(rc.Receive())
 	lwutil.CheckError(err, "")
-	mRank, err := redis.Int(rc.Receive())
+	mRank, err := _redisInt(rc.Receive())
 	lwutil.CheckError(err, "")
-	mRankNum, err := redis.Int(rc.Receive())
+	mRankNum, err := _redisInt(rc.Receive())
+	lwutil.CheckError(err, "")
+
+	//get rank in zone
+	zoneStr := _getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_ZONE)
+	zone, err := strconv.ParseUint(zoneStr, 10, 32)
+	lwutil.CheckError(err, "")
+	zoneLeaderboardKey := fmt.Sprintf("%s/%d/%d", Z_ZONE_LEADERBOARD_PRE, match.Id, zone)
+
+	rc.Send("ZREVRANK", zoneLeaderboardKey, session.Userid)
+	rc.Send("ZCARD", zoneLeaderboardKey)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+	zoneRank, err := redis.Int(rc.Receive())
+	lwutil.CheckError(err, "")
+	zoneRankNum, err := redis.Int(rc.Receive())
 	lwutil.CheckError(err, "")
 
 	//out
 	out := struct {
 		FreePlayRank      uint32
 		FreePlayRankNum   uint32
-		FreePlayBeatRate  float32
 		FreePlayTrys      uint32
 		FreePlayHighScore int32
 		MatchRank         uint32
 		MatchRankNum      uint32
-		MatchBeatRate     float32
 		MatchTrys         uint32
 		MatchHighScore    int32
+		ZoneRank          uint32
+		ZoneRankNum       uint32
 	}{
 		uint32(fRank + 1),
 		uint32(fRankNum),
-		0,
 		freePlayRecord.Trys,
 		freePlayRecord.HighScore,
 		uint32(mRank + 1),
 		uint32(mRankNum),
-		0,
 		matchRecord.Trys,
 		matchRecord.HighScore,
+		uint32(zoneRank + 1),
+		uint32(zoneRankNum),
 	}
 
-	if fRankNum == 1 {
-		out.FreePlayBeatRate = 0
-	} else {
-		out.FreePlayBeatRate = float32(fRankNum-fRank-1) / float32(fRankNum-1)
-	}
-	if mRankNum == 1 {
-		out.MatchBeatRate = 0
-	} else {
-		out.MatchBeatRate = float32(mRankNum-mRank-1) / float32(mRankNum-1)
-	}
-
-	//out
 	lwutil.WriteResponse(w, out)
 }
 
 func regMatch() {
-	http.Handle("/match/new", lwutil.ReqHandler(newMatch))
-	http.Handle("/match/del", lwutil.ReqHandler(delMatch))
-	http.Handle("/match/list", lwutil.ReqHandler(listMatch))
+	http.Handle("/match/getCurrent", lwutil.ReqHandler(getCurrentMatch))
+	http.Handle("/match/setCommingList", lwutil.ReqHandler(setCommingMatchList))
+	http.Handle("/match/getCommingList", lwutil.ReqHandler(getCommingMatchList))
 	http.Handle("/match/begin", lwutil.ReqHandler(beginMatch))
 	http.Handle("/match/end", lwutil.ReqHandler(endMatch))
 	http.Handle("/match/freePlay", lwutil.ReqHandler(matchFreePlay))

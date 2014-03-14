@@ -138,6 +138,8 @@
 		B3F01AF2187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
 		B3F2D96418C4ECC700626086 /* matchListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D96218C4ECC700626086 /* matchListScene.cpp */; };
 		B3F2D97418C5F3EE00626086 /* matchLobbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */; };
+		B3F4E42518D2D7A400C196A1 /* matchBoardScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F4E42318D2D7A400C196A1 /* matchBoardScene.cpp */; };
+		B3F4E45718D2F37800C196A1 /* ccb in Resources */ = {isa = PBXBuildFile; fileRef = B3F4E45618D2F37800C196A1 /* ccb */; };
 		B3FB833D18A78CF90037DFB4 /* qiniu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FB833B18A78CF90037DFB4 /* qiniu.cpp */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -440,6 +442,9 @@
 		B3F2D96318C4ECC700626086 /* matchListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchListScene.h; path = ../Classes/matchListScene.h; sourceTree = "<group>"; };
 		B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchLobbyScene.cpp; path = ../Classes/matchLobbyScene.cpp; sourceTree = "<group>"; };
 		B3F2D97318C5F3EE00626086 /* matchLobbyScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchLobbyScene.h; path = ../Classes/matchLobbyScene.h; sourceTree = "<group>"; };
+		B3F4E42318D2D7A400C196A1 /* matchBoardScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchBoardScene.cpp; path = ../Classes/matchBoardScene.cpp; sourceTree = "<group>"; };
+		B3F4E42418D2D7A400C196A1 /* matchBoardScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchBoardScene.h; path = ../Classes/matchBoardScene.h; sourceTree = "<group>"; };
+		B3F4E45618D2F37800C196A1 /* ccb */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ccb; sourceTree = "<group>"; };
 		B3FB833B18A78CF90037DFB4 /* qiniu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qiniu.cpp; path = ../Classes/qiniu.cpp; sourceTree = "<group>"; };
 		B3FB833C18A78CF90037DFB4 /* qiniu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qiniu.h; path = ../Classes/qiniu.h; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -518,6 +523,8 @@
 				B3F2D96318C4ECC700626086 /* matchListScene.h */,
 				B3094AC318CCA6E600F1EF1A /* packLoadingScene.cpp */,
 				B3094AC418CCA6E600F1EF1A /* packLoadingScene.h */,
+				B3F4E42318D2D7A400C196A1 /* matchBoardScene.cpp */,
+				B3F4E42418D2D7A400C196A1 /* matchBoardScene.h */,
 				B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */,
 				B3F2D97318C5F3EE00626086 /* matchLobbyScene.h */,
 				B3094AD318CCEBED00F1EF1A /* matchScene.cpp */,
@@ -716,6 +723,7 @@
 		B33DAC84184CE490001403BA /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B3F4E45618D2F37800C196A1 /* ccb */,
 				B3CA1F4318881825005637A0 /* lang */,
 				B393ED38186EF38D00E372CC /* db */,
 				B3A638EC1861B11B009ECDF1 /* ui */,
@@ -1128,6 +1136,7 @@
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				B3CC388618A3930B00056424 /* ELCAlbumPickerController.xib in Resources */,
+				B3F4E45718D2F37800C196A1 /* ccb in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				B3CC388A18A3930B00056424 /* Overlay@2x.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
@@ -1193,6 +1202,7 @@
 				B302CBFD18519276003746A6 /* sliderScene.cpp in Sources */,
 				B33DAC72184CC6B9001403BA /* egif_lib.c in Sources */,
 				B383F8E718A4CBA700FA5700 /* io.c in Sources */,
+				B3F4E42518D2D7A400C196A1 /* matchBoardScene.cpp in Sources */,
 				B3CC388118A3930B00056424 /* ELCAlbumPickerController.m in Sources */,
 				B3A639051862F842009ECDF1 /* spriteLoader.cpp in Sources */,
 				B3A638EA185F58B0009ECDF1 /* gameplay.cpp in Sources */,

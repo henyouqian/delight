@@ -13,13 +13,15 @@ class PacksListScene;
 
 class MatchLobbyLayer : public LayerColor, public SptLoaderListener {
 public:
-    static MatchLobbyLayer* create(PackInfo &packInfo);
-    bool init(PackInfo &packInfo);
-    
+    static MatchLobbyLayer* create(MatchInfo &matchInfo);
+    bool init(MatchInfo &matchInfo);
     virtual ~MatchLobbyLayer();
     
-    void enterCasualMode(Object *sender, Control::EventType controlEvent);
-    //void enterTimeAttackMode(Object *sender, Control::EventType controlEvent);
+    //http
+    void onHttpMatchInfo(HttpClient* client, HttpResponse* response);
+    
+    void enterFreePlayMode(Object *sender, Control::EventType controlEvent);
+    void enterMatchMode(Object *sender, Control::EventType controlEvent);
     void back(Object *sender, Control::EventType controlEvent);
     
     //
@@ -30,12 +32,11 @@ public:
     virtual void onSptLoaderError(const char *localPath, void *userData);
     
 private:
-    //PackDownloader *_packDownloader;
-    LabelTTF *_progressLabel;
     SptLoader *_sptLoader;
-    PackInfo _packInfo;
+    MatchInfo _matchInfo;
     
-    Sprite *_bg;
+    LabelTTF *_freePlayLabel;
+    LabelTTF *_matchLabel;
 };
 
 #endif // __MATCH_LOBBY_SCENE_H__

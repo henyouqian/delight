@@ -34,16 +34,6 @@ public:
 private:
     DragView *_dragView;
     SptLoader *_sptLoader;
-    
-    struct MatchInfo {
-        uint64_t matchId;
-        std::string beginTime;
-		std::string endTime;
-        PackInfo packInfo;
-        Rect thumbRect;
-        std::string thumbFilePath;
-        bool loaded;
-    };
     std::vector<MatchInfo> _matchInfos;
     float _thumbWidth;
     float _thumbHeight;

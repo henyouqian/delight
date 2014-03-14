@@ -29,6 +29,16 @@ struct PackInfo {
     void shuffleImageIndices();
 };
 
+struct MatchInfo {
+    uint64_t matchId;
+    std::string beginTime;
+    std::string endTime;
+    PackInfo packInfo;
+    Rect thumbRect;
+    std::string thumbFilePath;
+    bool loaded;
+};
+
 class PackDownloadListener {
 public:
     virtual void onPackError() {};

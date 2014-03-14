@@ -22,3 +22,5 @@ server/server
 server/obsolete/
 server/tools/packUploader/packUploader
 server/redis/
+robot/robot
+server/booker/booker

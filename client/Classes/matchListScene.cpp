@@ -186,7 +186,7 @@ void MatchListLayer::onTouchEnded(Touch* touch, Event  *event) {
             Point touchLocation = touch->getLocation();
             touchLocation = _dragView->convertToNodeSpace(touchLocation);
             if (it->thumbRect.containsPoint(touchLocation)) {
-                auto matchLobbyLayer = MatchLobbyLayer::create(it->packInfo);
+                auto matchLobbyLayer = MatchLobbyLayer::create(*it);
                 if (isPackDownloaded(it->packInfo)) {
                     Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)matchLobbyLayer->getParent()));
                 } else {
