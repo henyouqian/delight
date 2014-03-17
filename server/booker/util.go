@@ -2,7 +2,7 @@ package main
 
 import (
 	// "fmt"
-	"github.com/golang/glog"
+	// "github.com/golang/glog"
 	//"github.com/henyouqian/lwutil"
 	// "encoding/json"
 	// "net/http"
@@ -37,15 +37,15 @@ func init() {
 
 func checkError(err error) {
 	if err != nil {
-		glog.Fatal(err)
+		panic(err)
 	}
 }
 
 func checkSsdbError(resp []string, err error) {
 	if err != nil {
-		glog.Fatal(err)
+		panic(err)
 	} else if resp[0] != "ok" {
-		glog.Fatal(resp[0])
+		panic(resp[0])
 	}
 }
 

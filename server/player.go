@@ -14,14 +14,14 @@ import (
 )
 
 const (
-	H_PLAYER_INFO_PRE = "hPlayerInfoPre"
+	H_PLAYER_INFO_PRE = "H_PLAYER_INFO_PRE"
 	INIT_MONEY        = 500
 	FLD_PLAYER_MONEY  = "money"
-	FLD_PLAYER_ZONE   = "zone"
+	FLD_PLAYER_TEAM   = "team"
 )
 
 var (
-	ZONE_MAP = map[uint32]int{
+	TEAM_MAP = map[uint32]int{
 		11: 1, 12: 1, 13: 1, 14: 1, 15: 1,
 		21: 1, 22: 1, 23: 1,
 		31: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1,
@@ -35,7 +35,7 @@ var (
 
 type PlayerInfo struct {
 	Money uint32
-	Zone  uint32
+	Team  uint32
 }
 
 func makePlayerInfoKey(playerId uint64) string {
@@ -57,31 +57,31 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	//get info
 	key := makePlayerInfoKey(session.Userid)
-	resp, err := ssdb.Do("multi_hget", key, FLD_PLAYER_MONEY, FLD_PLAYER_ZONE)
+	resp, err := ssdb.Do("multi_hget", key, FLD_PLAYER_MONEY, FLD_PLAYER_TEAM)
 	lwutil.CheckError(err, "err_ssdb")
 
 	var info PlayerInfo
 	if resp[0] == "not_found" || len(resp) < 5 {
 		info.Money = INIT_MONEY
-		info.Zone = 0
+		info.Team = 0
 
 		resp, err := ssdb.Do("multi_hset", key, FLD_PLAYER_MONEY, INIT_MONEY,
-			FLD_PLAYER_ZONE, 0)
+			FLD_PLAYER_TEAM, 0)
 		lwutil.CheckSsdbError(resp, err)
 	} else {
 		money, err := strconv.ParseUint(resp[2], 10, 32)
 		lwutil.CheckError(err, "")
-		zone, err := strconv.ParseUint(resp[4], 10, 32)
+		team, err := strconv.ParseUint(resp[4], 10, 32)
 		lwutil.CheckError(err, "")
 		info.Money = uint32(money)
-		info.Zone = uint32(zone)
+		info.Team = uint32(team)
 	}
 
 	//out
 	lwutil.WriteResponse(w, info)
 }
 
-func _getPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string) string {
+func getPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string) string {
 	key := makePlayerInfoKey(userId)
 	resp, err := ssdb.Do("hget", key, field)
 	lwutil.CheckSsdbError(resp, err)
@@ -89,13 +89,13 @@ func _getPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string) string 
 	return resp[1]
 }
 
-func _setPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string, value interface{}) {
+func setPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string, value interface{}) {
 	key := makePlayerInfoKey(userId)
 	resp, err := ssdb.Do("hset", key, field, value)
 	lwutil.CheckSsdbError(resp, err)
 }
 
-func setPlayerZone(w http.ResponseWriter, r *http.Request) {
+func setPlayerTeam(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -105,12 +105,12 @@ func setPlayerZone(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		Zone uint32
+		TeamId uint32
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-	if _, ok := ZONE_MAP[in.Zone]; ok == false {
-		lwutil.SendError("err_zone", "")
+	if _, ok := TEAM_MAP[in.TeamId]; ok == false {
+		lwutil.SendError("err_team", "")
 	}
 
 	//ssdb
@@ -120,7 +120,7 @@ func setPlayerZone(w http.ResponseWriter, r *http.Request) {
 
 	//set
 	key := makePlayerInfoKey(session.Userid)
-	_, err = ssdb.Do("hset", key, FLD_PLAYER_ZONE, in.Zone)
+	_, err = ssdb.Do("hset", key, FLD_PLAYER_TEAM, in.TeamId)
 	lwutil.CheckError(err, "err_ssdb")
 
 	//out
@@ -129,5 +129,5 @@ func setPlayerZone(w http.ResponseWriter, r *http.Request) {
 
 func regPlayer() {
 	http.Handle("/player/getInfo", lwutil.ReqHandler(getPlayerInfo))
-	http.Handle("/player/setZone", lwutil.ReqHandler(setPlayerZone))
+	http.Handle("/player/setTeam", lwutil.ReqHandler(setPlayerTeam))
 }

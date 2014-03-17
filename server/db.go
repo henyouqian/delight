@@ -20,6 +20,7 @@ var (
 	authRedisPool *redis.Pool
 	authDB        *sql.DB
 	ssdbPool      *ssdb.Pool
+	ssdbAuthPool  *ssdb.Pool
 )
 
 func init() {
@@ -53,6 +54,7 @@ func init() {
 	authDB.SetMaxIdleConns(10)
 
 	ssdbPool = ssdb.NewPool("localhost", 9876, 10, 60)
+	ssdbAuthPool = ssdb.NewPool("localhost", 9875, 10, 60)
 }
 
 func opendb(dbname string) *sql.DB {
@@ -63,18 +65,11 @@ func opendb(dbname string) *sql.DB {
 	return db
 }
 
-func GenSerial(ssdb *ssdb.Client, key string) (uint64, error) {
-	rId, err := ssdb.Do("hincr", "hSerial", key, 1)
-	if err != nil {
-		return 0, lwutil.NewErr(err)
-	}
-	if rId[0] != "ok" {
-		return 0, lwutil.NewErrStr("ssdb error")
-	}
+func GenSerial(ssdb *ssdb.Client, key string) uint64 {
+	resp, err := ssdb.Do("hincr", "hSerial", key, 1)
+	lwutil.CheckSsdbError(resp, err)
 
-	out, err := strconv.ParseUint(rId[1], 10, 64)
-	if err != nil {
-		return 0, lwutil.NewErr(err)
-	}
-	return out, nil
+	out, err := strconv.ParseUint(resp[1], 10, 64)
+	lwutil.CheckError(err, "")
+	return out
 }

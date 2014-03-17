@@ -112,7 +112,7 @@ func findSession(w http.ResponseWriter, r *http.Request, rc redis.Conn) (*Sessio
 func authRegister(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	ssdb, err := ssdbPool.Get()
+	ssdb, err := ssdbAuthPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
@@ -135,8 +135,7 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//add account
-	id, err := GenSerial(ssdb, "account")
-	lwutil.CheckError(err, "")
+	id := GenSerial(ssdb, "account")
 	js, err := json.Marshal(in)
 	lwutil.CheckError(err, "")
 	_, err = ssdb.Do("hset", "hAccount", id, js)
@@ -216,7 +215,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	rc := authRedisPool.Get()
 	defer rc.Close()
 
-	ssdb, err := ssdbPool.Get()
+	ssdb, err := ssdbAuthPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
@@ -391,7 +390,7 @@ func authListApp(w http.ResponseWriter, r *http.Request) {
 func ssdbTest(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	ssdb, err := ssdbPool.Get()
+	ssdb, err := ssdbAuthPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 

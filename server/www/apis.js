@@ -138,9 +138,9 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": ""
 				},{
-					"name": "setZone",
+					"name": "setTeam",
 					"method": "POST",
-					"data": {"Zone": 0}
+					"data": {"TeamId": 0}
 				}
 			]
 		},{
@@ -148,25 +148,36 @@ function Controller($scope, $http) {
 			"path":"match",
 			"apis":[
 				{
-					"name": "getCurrent",
+					"name": "newEvent",
 					"method": "POST",
-					"data": ""
+					"data": {"Type": "TEAM_CHAMPIONSHIP", "PackId": 1, "TimePointStrings": [
+						"2014-03-17T00:00",
+						"2014-03-17T00:00",
+						"2014-03-17T00:00",
+						"2014-03-17T00:00",
+						"2014-03-17T00:00",
+						"2014-03-17T00:00"
+						]}
 				},{
-					"name": "setCommingList",
+					"name": "delEvent",
 					"method": "POST",
-					"data": [1, 2, 3]
+					"data": {"EventId": 0}
 				},{
-					"name": "getCommingList",
+					"name": "listEvent",
 					"method": "POST",
-					"data": ""
+					"data": {"StartId": 0, "Limit": 20}
 				},{
-					"name": "begin",
+					"name": "getEventResult",
 					"method": "POST",
-					"data": ""
+					"data": {"EventId": 1}
 				},{
-					"name": "end",
+					"name": "playBegin",
 					"method": "POST",
-					"data": {"MatchKey": "", "Score": 0}
+					"data": {"EventId": 1}
+				},{
+					"name": "playEnd",
+					"method": "POST",
+					"data": {"EventId": 1, "Secret": "", "Score": 100}
 				},{
 					"name": "freePlay",
 					"method": "POST",
