@@ -186,6 +186,10 @@ function Controller($scope, $http) {
 					"name": "info",
 					"method": "POST",
 					"data": {"MatchId": 0}
+				},{
+					"name": "topTen",
+					"method": "POST",
+					"data": {"EventId": 1, "RoundIdx": 0, "TeamId": 11}
 				}
 			]
 		}

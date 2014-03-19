@@ -21,17 +21,14 @@ const (
 )
 
 var (
-	TEAM_MAP = map[uint32]int{
-		11: 1, 12: 1, 13: 1, 14: 1, 15: 1,
-		21: 1, 22: 1, 23: 1,
-		31: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1,
-		41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1,
-		50: 1, 51: 1, 52: 1, 53: 1, 54: 1,
-		61: 1, 62: 1, 63: 1, 64: 1, 65: 1,
-		91: 1, 92: 1,
-		71: 1,
-	}
+	TEAM_MAP = make(map[uint32]bool)
 )
+
+func init() {
+	for _, v := range TEAM_IDS {
+		TEAM_MAP[v] = true
+	}
+}
 
 type PlayerInfo struct {
 	Money uint32
@@ -81,12 +78,17 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, info)
 }
 
-func getPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string) string {
+func getPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string) (string, error) {
 	key := makePlayerInfoKey(userId)
 	resp, err := ssdb.Do("hget", key, field)
-	lwutil.CheckSsdbError(resp, err)
+	if err != nil {
+		return "", err
+	}
+	if resp[0] != "ok" {
+		return "", lwutil.NewErrStr(resp[0])
+	}
 
-	return resp[1]
+	return resp[1], err
 }
 
 func setPlayerInfoField(ssdb *ssdb.Client, userId uint64, field string, value interface{}) {

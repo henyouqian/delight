@@ -16,11 +16,11 @@ const (
 )
 
 var (
-	redisPool     *redis.Pool
-	authRedisPool *redis.Pool
-	authDB        *sql.DB
-	ssdbPool      *ssdb.Pool
-	ssdbAuthPool  *ssdb.Pool
+	redisPool *redis.Pool
+	// authRedisPool *redis.Pool
+	authDB       *sql.DB
+	ssdbPool     *ssdb.Pool
+	ssdbAuthPool *ssdb.Pool
 )
 
 func init() {
@@ -36,19 +36,19 @@ func init() {
 			return c, err
 		},
 	}
-	authRedisPool = &redis.Pool{
-		MaxIdle:     10,
-		MaxActive:   0,
-		IdleTimeout: 240 * time.Second,
-		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", "localhost:6379")
-			if err != nil {
-				return nil, err
-			}
-			c.Do("SELECT", 10)
-			return c, err
-		},
-	}
+	// authRedisPool = &redis.Pool{
+	// 	MaxIdle:     10,
+	// 	MaxActive:   0,
+	// 	IdleTimeout: 240 * time.Second,
+	// 	Dial: func() (redis.Conn, error) {
+	// 		c, err := redis.Dial("tcp", "localhost:6379")
+	// 		if err != nil {
+	// 			return nil, err
+	// 		}
+	// 		c.Do("SELECT", 10)
+	// 		return c, err
+	// 	},
+	// }
 
 	authDB = opendb("auth_db")
 	authDB.SetMaxIdleConns(10)

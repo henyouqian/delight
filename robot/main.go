@@ -11,7 +11,7 @@ import (
 	"math/rand"
 	"net/http"
 	"runtime"
-	"sync"
+	// "sync"
 	// "time"
 )
 
@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	ZONE_VEC = []uint32{
+	TEAM_IDS = []uint32{
 		11, 12, 13, 14, 15,
 		21, 22, 23,
 		31, 32, 33, 34, 35, 36, 37,
@@ -116,14 +116,58 @@ func freePlay(userName string, matchId uint32, minScore int32, maxScore int32) {
 	glog.Info(string(resp))
 }
 
-func setZone(userName string) {
-	url := HOST + "/player/setZone"
-	zone := ZONE_VEC[rand.Int()%len(ZONE_VEC)]
+func play(userName string, eventId uint64, minScore int32, maxScore int32) {
+	//playBegin
+	url := HOST + "/match/playBegin"
+	body := struct {
+		EventId uint64
+	}{
+		eventId,
+	}
+	bodyjs, err := json.Marshal(body)
+	checkErr(err)
+
+	_resp := post(userName, url, bodyjs)
+	defer _resp.Body.Close()
+
+	resp, err := ioutil.ReadAll(_resp.Body)
+	checkErr(err)
+	secret := struct {
+		Secret string
+	}{}
+	err = json.Unmarshal(resp, &secret)
+	checkErr(err)
+
+	//playEnd
+	url = HOST + "/match/playEnd"
+	score := minScore + int32(rand.Int())%(maxScore-minScore)
+	playEndBody := struct {
+		EventId uint64
+		Secret  string
+		Score   int32
+	}{
+		eventId,
+		secret.Secret,
+		score,
+	}
+	bodyjs, err = json.Marshal(playEndBody)
+	checkErr(err)
+
+	_resp = post(userName, url, bodyjs)
+	defer _resp.Body.Close()
+	resp, err = ioutil.ReadAll(_resp.Body)
+	checkErr(err)
+	glog.Info(string(resp))
+}
+
+func setTeam(userName string) {
+	url := HOST + "/player/setTeam"
+	teamId := TEAM_IDS[rand.Int()%len(TEAM_IDS)]
 
 	body := struct {
-		Zone uint32
+		TeamId uint32
 	}{
-		zone,
+		teamId,
 	}
 	bodyjs, err := json.Marshal(body)
 	checkErr(err)
@@ -144,11 +188,11 @@ func main() {
 	for i := 0; i < 1000; i++ {
 		username := fmt.Sprintf("test%d", i)
 		//register(username)
-		//freePlay(username, 4, -1000*60, -1000*10)
-		setZone(username)
+		// setTeam(username)
+		play(username, 1, -1000*60, -1000*10)
 	}
 
-	var w sync.WaitGroup
-	w.Add(1)
-	w.Wait()
+	// var w sync.WaitGroup
+	// w.Add(1)
+	// w.Wait()
 }

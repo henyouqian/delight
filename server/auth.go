@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/garyburd/redigo/redis"
-	// "github.com/golang/glog"
-	//"./ssdb"
+	// "github.com/garyburd/redigo/redis"
+	"./ssdb"
+	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	"net/http"
 	"strconv"
@@ -14,9 +14,13 @@ import (
 )
 
 const (
-	passwordSalt        = "liwei"
-	sessionLifeSecond   = 60 * 60 * 24 * 7
-	sessionUpdateSecond = 60 * 60
+	PASSWORD_SALT      = "liwei"
+	SESSION_LIFE_SEC   = 60 * 60 * 24 * 7
+	SESSION_UPDATE_SEC = 60 * 60
+	H_ACCOUNT          = "H_ACCOUNT"
+	H_NAME_ACCONT      = "H_NAME_ACCONT"
+	H_SESSION          = "H_SESSION"    //key:token, value:session
+	H_USER_TOKEN       = "H_USER_TOKEN" //key:appid/userid, value:token
 )
 
 type Session struct {
@@ -27,48 +31,47 @@ type Session struct {
 }
 
 type Account struct {
-	Username      string
-	Password      string
-	CountryAlpha2 string
-	RegisterTime  string
+	Username     string
+	Password     string
+	RegisterTime string
 }
 
-func newSession(w http.ResponseWriter, userid uint64, username string, appid uint32, rc redis.Conn) (usertoken string, err error) {
-	if rc == nil {
-		rc = authRedisPool.Get()
-		defer rc.Close()
+func init() {
+	glog.Infoln("auth init")
+}
+
+func newSession(w http.ResponseWriter, userid uint64, username string, appid uint32, ssdb *ssdb.Client) (usertoken string) {
+	var err error
+	if ssdb == nil {
+		ssdb, err = ssdbAuthPool.Get()
+		lwutil.CheckError(err, "")
+		defer ssdb.Close()
 	}
-	usertoken = ""
-	usertokenRaw, err := rc.Do("get", fmt.Sprintf("usertokens/%d+%d", userid, appid))
-	lwutil.CheckError(err, "")
-	if usertokenRaw != nil {
-		if usertoken, err := redis.String(usertokenRaw, err); err != nil {
-			return usertoken, lwutil.NewErr(err)
-		}
-		rc.Do("del", fmt.Sprintf("sessions/%s", usertoken))
+
+	tokenKey := fmt.Sprintf("%s/%d/%d", H_USER_TOKEN, appid, userid)
+	resp, err := ssdb.Do("get", tokenKey)
+	if resp[0] == "ok" {
+		sessionKey := fmt.Sprintf("%s/%s", H_SESSION, resp[1])
+		ssdb.Do("del", tokenKey)
+		ssdb.Do("del", sessionKey)
 	}
 
 	usertoken = lwutil.GenUUID()
+	sessionKey := fmt.Sprintf("%s/%s", H_SESSION, usertoken)
 
 	session := Session{userid, username, time.Now(), appid}
-	jsonSession, err := json.Marshal(session)
-	if err != nil {
-		return usertoken, lwutil.NewErr(err)
-	}
+	js, err := json.Marshal(session)
+	lwutil.CheckError(err, "")
 
-	rc.Send("setex", fmt.Sprintf("sessions/%s", usertoken), sessionLifeSecond, jsonSession)
-	rc.Send("setex", fmt.Sprintf("usertokens/%d+%d", userid, appid), sessionLifeSecond, usertoken)
-	rc.Flush()
-	for i := 0; i < 2; i++ {
-		if _, err = rc.Receive(); err != nil {
-			return usertoken, lwutil.NewErr(err)
-		}
-	}
+	resp, err = ssdb.Do("setx", sessionKey, js, SESSION_LIFE_SEC)
+	lwutil.CheckSsdbError(resp, err)
+	resp, err = ssdb.Do("setx", tokenKey, usertoken, SESSION_LIFE_SEC)
+	lwutil.CheckSsdbError(resp, err)
 
 	// cookie
-	http.SetCookie(w, &http.Cookie{Name: "usertoken", Value: usertoken, MaxAge: sessionLifeSecond, Path: "/"})
+	http.SetCookie(w, &http.Cookie{Name: "usertoken", Value: usertoken, MaxAge: SESSION_LIFE_SEC, Path: "/"})
 
-	return usertoken, err
+	return usertoken
 }
 
 func checkAdmin(session *Session) {
@@ -77,41 +80,46 @@ func checkAdmin(session *Session) {
 	}
 }
 
-func findSession(w http.ResponseWriter, r *http.Request, rc redis.Conn) (*Session, error) {
-	session := new(Session)
+func findSession(w http.ResponseWriter, r *http.Request, ssdb *ssdb.Client) (*Session, error) {
+	var err error
+	if ssdb == nil {
+		ssdb, err = ssdbAuthPool.Get()
+		lwutil.CheckError(err, "")
+		defer ssdb.Close()
+	}
 
 	usertokenCookie, err := r.Cookie("usertoken")
 	if err != nil {
-		return session, lwutil.NewErr(err)
+		return nil, lwutil.NewErr(err)
 	}
 	usertoken := usertokenCookie.Value
 
-	//redis
-	if rc == nil {
-		rc = authRedisPool.Get()
-		defer rc.Close()
-	}
-
-	sessionBytes, err := redis.Bytes(rc.Do("get", fmt.Sprintf("sessions/%s", usertoken)))
+	sessionKey := fmt.Sprintf("%s/%s", H_SESSION, usertoken)
+	resp, err := ssdb.Do("get", sessionKey)
 	if err != nil {
-		return session, lwutil.NewErr(err)
+		return nil, lwutil.NewErr(err)
+	}
+	if resp[0] != "ok" {
+		return nil, lwutil.NewErrStr(resp[0])
 	}
 
-	err = json.Unmarshal(sessionBytes, session)
+	var session Session
+	err = json.Unmarshal([]byte(resp[1]), &session)
 	lwutil.CheckError(err, "")
 
 	//update session
 	dt := time.Now().Sub(session.Born)
-	if dt > sessionUpdateSecond*time.Second {
-		newSession(w, session.Userid, session.Username, session.Appid, rc)
+	if dt > SESSION_UPDATE_SEC*time.Second {
+		newSession(w, session.Userid, session.Username, session.Appid, ssdb)
 	}
 
-	return session, nil
+	return &session, nil
 }
 
 func authRegister(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
+	//ssdb
 	ssdb, err := ssdbAuthPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
@@ -125,10 +133,10 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 		lwutil.SendError("err_input", "")
 	}
 
-	in.Password = lwutil.Sha224(in.Password + passwordSalt)
+	in.Password = lwutil.Sha224(in.Password + PASSWORD_SALT)
 
 	//check exist
-	rName, err := ssdb.Do("hexists", "hNameAccount", in.Username)
+	rName, err := ssdb.Do("hexists", H_NAME_ACCONT, in.Username)
 	lwutil.CheckError(err, "")
 	if rName[1] == "1" {
 		lwutil.SendError("err_exist", "account already exists")
@@ -138,10 +146,10 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 	id := GenSerial(ssdb, "account")
 	js, err := json.Marshal(in)
 	lwutil.CheckError(err, "")
-	_, err = ssdb.Do("hset", "hAccount", id, js)
+	_, err = ssdb.Do("hset", H_ACCOUNT, id, js)
 	lwutil.CheckError(err, "")
 
-	_, err = ssdb.Do("hset", "hNameAccount", in.Username, id)
+	_, err = ssdb.Do("hset", H_NAME_ACCONT, in.Username, id)
 	lwutil.CheckError(err, "")
 
 	// reply
@@ -151,86 +159,26 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, reply)
 }
 
-func _authLogin(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	rc := authRedisPool.Get()
-	defer rc.Close()
-
-	// logout if already login
-	session, err := findSession(w, r, rc)
-	if err == nil {
-		usertokenCookie, err := r.Cookie("usertoken")
-		if err == nil {
-			usertoken := usertokenCookie.Value
-			rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
-			rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
-			err = rc.Flush()
-			lwutil.CheckError(err, "")
-		}
-	}
-
-	// input
-	var input struct {
-		Username  string
-		Password  string
-		Appsecret string
-	}
-	err = lwutil.DecodeRequestBody(r, &input)
-	lwutil.CheckError(err, "err_decode_body")
-
-	if input.Username == "" || input.Password == "" {
-		lwutil.SendError("err_input", "")
-	}
-
-	pwsha := lwutil.Sha224(input.Password + passwordSalt)
-
-	// get userid
-	row := authDB.QueryRow("SELECT id, countryAlpha2, signCode FROM user_accounts WHERE username=? AND password=?", input.Username, pwsha)
-	var userid uint64
-	var countryAlpha2 string
-	var signCode uint32
-	err = row.Scan(&userid, &countryAlpha2, &signCode)
-	lwutil.CheckError(err, "err_not_match")
-
-	// get appid
-	appid := uint32(0)
-	if input.Appsecret != "" {
-		row = authDB.QueryRow("SELECT id FROM apps WHERE secret=?", input.Appsecret)
-		err = row.Scan(&appid)
-		lwutil.CheckError(err, "err_app_secret")
-	}
-
-	// new session
-	usertoken, err := newSession(w, userid, input.Username, appid, rc)
-	lwutil.CheckError(err, "")
-
-	// reply
-	lwutil.WriteResponse(w, usertoken)
-}
-
 func authLogin(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	rc := authRedisPool.Get()
-	defer rc.Close()
-
+	//ssdb
 	ssdb, err := ssdbAuthPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
 	// logout if already login
-	session, err := findSession(w, r, rc)
-	if err == nil {
-		usertokenCookie, err := r.Cookie("usertoken")
-		if err == nil {
-			usertoken := usertokenCookie.Value
-			rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
-			rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
-			err = rc.Flush()
-			lwutil.CheckError(err, "")
-		}
-	}
+	// session, err := findSession(w, r, nil)
+	// if err == nil {
+	// 	usertokenCookie, err := r.Cookie("usertoken")
+	// 	if err == nil {
+	// 		usertoken := usertokenCookie.Value
+	// 		rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
+	// 		rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
+	// 		err = rc.Flush()
+	// 		lwutil.CheckError(err, "")
+	// 	}
+	// }
 
 	// input
 	var in struct {
@@ -245,24 +193,24 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 		lwutil.SendError("err_input", "")
 	}
 
-	pwsha := lwutil.Sha224(in.Password + passwordSalt)
+	pwsha := lwutil.Sha224(in.Password + PASSWORD_SALT)
 
 	// get userid
-	rUserId, err := ssdb.Do("hget", "hNameAccount", in.Username)
+	resp, err := ssdb.Do("hget", H_NAME_ACCONT, in.Username)
 	lwutil.CheckError(err, "")
-	if rUserId[0] != "ok" {
+	if resp[0] != "ok" {
 		lwutil.SendError("err_not_match", "name and password not match")
 	}
-	userId, err := strconv.ParseUint(rUserId[1], 10, 32)
+	userId, err := strconv.ParseUint(resp[1], 10, 64)
 	lwutil.CheckError(err, "")
 
-	rAccount, err := ssdb.Do("hget", "hAccount", userId)
+	resp, err = ssdb.Do("hget", H_ACCOUNT, userId)
 	lwutil.CheckError(err, "")
-	if rUserId[0] != "ok" {
+	if resp[0] != "ok" {
 		lwutil.SendError("err_internal", "account not exist")
 	}
 	var account Account
-	err = json.Unmarshal([]byte(rAccount[1]), &account)
+	err = json.Unmarshal([]byte(resp[1]), &account)
 	lwutil.CheckError(err, "")
 
 	if account.Password != pwsha {
@@ -278,8 +226,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// new session
-	usertoken, err := newSession(w, userId, in.Username, appid, rc)
-	lwutil.CheckError(err, "")
+	usertoken := newSession(w, userId, in.Username, appid, ssdb)
 
 	// reply
 	lwutil.WriteResponse(w, usertoken)
@@ -288,20 +235,31 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 func authLogout(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
-	rc := authRedisPool.Get()
-	defer rc.Close()
+	//ssdb
+	ssdb, err := ssdbAuthPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
 
-	session, err := findSession(w, r, rc)
-	lwutil.CheckError(err, "err_already_logout")
-
+	//find user token
 	usertokenCookie, err := r.Cookie("usertoken")
 	lwutil.CheckError(err, "err_already_logout")
 	usertoken := usertokenCookie.Value
 
-	rc.Send("del", fmt.Sprintf("sessions/%s", usertoken))
-	rc.Send("del", fmt.Sprintf("usertokens/%d+%d", session.Userid, session.Appid))
-	err = rc.Flush()
+	//get session
+	sessionKey := fmt.Sprintf("%s/%s", H_SESSION, usertoken)
+	resp, err := ssdb.Do("get", sessionKey)
+	if err != nil || resp[0] != "ok" {
+		lwutil.SendError("err_already_logout", "")
+	}
+
+	var session Session
+	err = json.Unmarshal([]byte(resp[1]), &session)
 	lwutil.CheckError(err, "")
+
+	//del
+	tokenKey := fmt.Sprintf("%s/%d/%d", H_USER_TOKEN, session.Appid, session.Userid)
+	ssdb.Do("del", tokenKey)
+	ssdb.Do("del", sessionKey)
 
 	// reply
 	lwutil.WriteResponse(w, "logout")
