@@ -9,6 +9,7 @@ import (
 	"github.com/golang/glog"
 	"runtime"
 	// "strconv"
+	"sort"
 	"time"
 )
 
@@ -18,6 +19,8 @@ const (
 	H_EVENT_RESULT               = "H_EVENT_RESULT"
 	Z_EVENT_TEAM_LEADERBOARD_PRE = "Z_EVENT_TEAM_LEADERBOARD_PRE"
 	H_EVENT_ROUND_TEAM_TOPTEN    = "H_EVENT_ROUND_TEAM_TOPTEN"
+
+	PUNISH_SCORE = 10 * 1000 * 60
 )
 
 type Event struct {
@@ -43,9 +46,10 @@ type Game struct {
 }
 
 type Team struct {
-	Id     uint32
-	Score  int32
-	TopTen []GameRecord
+	Id    uint32
+	Score int32
+	Win   bool
+	//TopTen []GameRecord
 }
 
 type GameRecord struct {
@@ -132,21 +136,32 @@ func update() {
 		checkError(err)
 		resp, err = ssdb.Do("hset", H_EVENT_RESULT, event.Id, js)
 		checkSsdbError(resp, err)
+
+		//glog.Info(string(js))
 	}
 
 	// glog.Info(events)
 	// glog.Info(results)
 }
 
+type ByScore []Team
+
+func (a ByScore) Len() int           { return len(a) }
+func (a ByScore) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByScore) Less(i, j int) bool { return a[i].Score > a[j].Score }
+
 func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 	glog.Info("updateRound0")
 	rc := redisPool.Get()
 	defer rc.Close()
 
-	round := &result.Rounds[result.CurrRound]
-	for _, game := range round.Games {
+	round := &result.Rounds[0]
+	nextRound := &result.Rounds[1]
+	nextRound.Games = make([]Game, 8)
+	for iGame, game := range round.Games {
 		for iTeam := range game.Teams {
 			team := &game.Teams[iTeam]
+			team.Win = false
 			//get top ten of the team
 			teamLbKey := fmt.Sprintf("%s/%d/%d", Z_EVENT_TEAM_LEADERBOARD_PRE, event.Id, team.Id)
 
@@ -166,12 +181,45 @@ func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 			}
 			js, err := json.Marshal(topTen)
 			checkError(err)
+
+			//save top ten
 			key := fmt.Sprintf("%d/%d/%d", event.Id, result.CurrRound, team.Id)
 			resp, err := ssdb.Do("hset", H_EVENT_ROUND_TEAM_TOPTEN, key, js)
 			checkSsdbError(resp, err)
 
-			glog.Info(string(js))
+			//calc score
+			scoreSum := int32(0)
+			for _, v := range topTen {
+				scoreSum += v.Score
+			}
+			punishScore := PUNISH_SCORE * (10 - len(topTen))
+			team.Score = scoreSum - int32(punishScore)
 		}
+
+		//pick top 2
+		sortedTeams := make([]Team, len(game.Teams))
+		copy(sortedTeams, game.Teams)
+		sort.Sort(ByScore(sortedTeams))
+
+		glog.Info(game.Teams)
+
+		//win
+		for i, team := range game.Teams {
+			if team.Id == sortedTeams[0].Id || team.Id == sortedTeams[1].Id {
+				game.Teams[i].Win = true
+				continue
+			}
+		}
+
+		//next round
+		nextRoundTeam := make([]Team, 2)
+		nextRoundTeam = make([]Team, 2)
+		nextRoundTeam[0] = Team{}
+		nextRoundTeam[0].Id = sortedTeams[0].Id
+		nextRoundTeam[1] = Team{}
+		nextRoundTeam[1].Id = sortedTeams[1].Id
+
+		nextRound.Games[iGame].Teams = nextRoundTeam
 	}
 	// round := result.Rounds[result.CurrRound]
 	// for _, v := range round {
