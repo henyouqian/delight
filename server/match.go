@@ -79,14 +79,16 @@ type Team struct {
 type GameRecord struct {
 	PlayerId uint64
 	Score    int32
+	Time     int64
 }
 
 type EventPlayerRecord struct {
-	TeamId       uint32
-	Secret       string
-	SecretExpire int64
-	Trys         uint32
-	HighScore    int32
+	TeamId        uint32
+	Secret        string
+	SecretExpire  int64
+	Trys          uint32
+	HighScore     int32
+	HighScoreTime int64
 }
 
 type FreePlayRecord struct {
@@ -422,6 +424,7 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	scoreUpdate := false
 	if record.Trys == 1 || record.HighScore == 0 {
 		record.HighScore = in.Score
+		record.HighScoreTime = time.Now().Unix()
 		scoreUpdate = true
 	} else {
 		if in.Score > record.HighScore {

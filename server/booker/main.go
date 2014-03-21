@@ -19,8 +19,9 @@ const (
 	H_EVENT_RESULT               = "H_EVENT_RESULT"
 	Z_EVENT_TEAM_LEADERBOARD_PRE = "Z_EVENT_TEAM_LEADERBOARD_PRE"
 	H_EVENT_ROUND_TEAM_TOPTEN    = "H_EVENT_ROUND_TEAM_TOPTEN"
-
-	PUNISH_SCORE = 10 * 1000 * 60
+	H_EVENT_PLAYER_RECORD        = "H_EVENT_PLAYER_RECORD"
+	PUNISH_SCORE                 = 10 * 1000 * 60
+	TEAM_CHAMPIONSHIP_ROUND_NUM  = 6
 )
 
 type Event struct {
@@ -55,6 +56,16 @@ type Team struct {
 type GameRecord struct {
 	PlayerId uint64
 	Score    int32
+	Time     int64
+}
+
+type EventPlayerRecord struct {
+	TeamId        uint32
+	Secret        string
+	SecretExpire  int64
+	Trys          uint32
+	HighScore     int32
+	HighScoreTime int64
 }
 
 func handleError() {
@@ -150,6 +161,12 @@ func (a ByScore) Len() int           { return len(a) }
 func (a ByScore) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByScore) Less(i, j int) bool { return a[i].Score > a[j].Score }
 
+type ByTime []GameRecord
+
+func (a ByTime) Len() int           { return len(a) }
+func (a ByTime) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByTime) Less(i, j int) bool { return a[i].Time < a[j].Time }
+
 func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 	glog.Info("updateRound0")
 	rc := redisPool.Get()
@@ -178,6 +195,15 @@ func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 				checkError(err)
 				record.PlayerId = uint64(playerId)
 				record.Score = int32(score)
+
+				//get score time
+				key := fmt.Sprintf("%d/%d", event.Id, playerId)
+				resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
+				checkSsdbError(resp, err)
+				rcd := EventPlayerRecord{}
+				err = json.Unmarshal([]byte(resp[1]), &rcd)
+				checkError(err)
+				record.Time = rcd.HighScoreTime
 			}
 			js, err := json.Marshal(topTen)
 			checkError(err)
@@ -201,8 +227,6 @@ func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 		copy(sortedTeams, game.Teams)
 		sort.Sort(ByScore(sortedTeams))
 
-		glog.Info(game.Teams)
-
 		//win
 		for i, team := range game.Teams {
 			if team.Id == sortedTeams[0].Id || team.Id == sortedTeams[1].Id {
@@ -213,7 +237,6 @@ func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 
 		//next round
 		nextRoundTeam := make([]Team, 2)
-		nextRoundTeam = make([]Team, 2)
 		nextRoundTeam[0] = Team{}
 		nextRoundTeam[0].Id = sortedTeams[0].Id
 		nextRoundTeam[1] = Team{}
@@ -221,38 +244,166 @@ func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
 
 		nextRound.Games[iGame].Teams = nextRoundTeam
 	}
-	// round := result.Rounds[result.CurrRound]
-	// for _, v := range round {
-	// 	teamScores := make([][]int32, len(v.PlayerOrTeamIds))
-	// 	for i, teamId := range v.PlayerOrTeamIds {
-	// 		//get top ten of the team
-	// 		teamLbKey := fmt.Sprintf("%s/%d/%d", Z_EVENT_TEAM_LEADERBOARD_PRE, event.Id, teamId)
-	// 		topScoreNum := 10
-	// 		resp, err := ssdb.Do("zrscan", teamLbKey, "", "", "", topScoreNum)
-	// 		checkSsdbError(resp, err)
-	// 		resp = resp[1:]
+	result.CurrRound = 1
 
-	// 		scoreSum := int32(0)
-	// 		scoreNum := 0
-	// 		for i, v := range resp {
-	// 			if i%2 == 1 {
-	// 				score, err := strconv.ParseInt(resp[i], 10, 32)
-	// 				checkError(err)
-	// 				scoreSum += int32(score)
-	// 				scoreNum++
-	// 			}
-	// 		}
-	// 		if scoreNum == 0 {
-	// 			scoreSum = 0
-	// 		}
-	// 	}
-	// }
-
-	// result.CurrRound++
 }
 
 func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
+	glog.Info("updateRound")
+	rc := redisPool.Get()
+	defer rc.Close()
 
+	round := &result.Rounds[result.CurrRound]
+
+	hasNextRound := result.CurrRound < TEAM_CHAMPIONSHIP_ROUND_NUM-1
+	var nextRound *Round
+	if hasNextRound {
+		nextRound = &result.Rounds[result.CurrRound+1]
+		switch result.CurrRound {
+		case 0, TEAM_CHAMPIONSHIP_ROUND_NUM - 2:
+			nextRound.Games = make([]Game, len(round.Games))
+		case TEAM_CHAMPIONSHIP_ROUND_NUM - 1:
+
+		default:
+			nextRound.Games = make([]Game, len(round.Games)/2)
+		}
+
+		for i := range nextRound.Games {
+			nextRound.Games[i].Teams = make([]Team, 2)
+		}
+	}
+
+	for iGame, game := range round.Games {
+		topTens := make([][]GameRecord, len(game.Teams))
+		for iTeam := range game.Teams {
+			team := &game.Teams[iTeam]
+			team.Win = false
+			team.Score = 0
+			//get top ten of the team
+			teamLbKey := fmt.Sprintf("%s/%d/%d", Z_EVENT_TEAM_LEADERBOARD_PRE, event.Id, team.Id)
+
+			reply, err := rc.Do("ZREVRANGE", teamLbKey, 0, 10, "WITHSCORES")
+			values, err := redis.Values(reply, err)
+			checkError(err)
+
+			topTen := make([]GameRecord, len(values)/2)
+			for iRecord := range topTen {
+				record := &topTen[iRecord]
+				playerId, err := redis.Int64(values[iRecord*2], nil)
+				checkError(err)
+				score, err := redis.Int64(values[iRecord*2+1], nil)
+				checkError(err)
+				record.PlayerId = uint64(playerId)
+				record.Score = int32(score)
+
+				//get score time
+				key := fmt.Sprintf("%d/%d", event.Id, playerId)
+				resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
+				checkSsdbError(resp, err)
+				rcd := EventPlayerRecord{}
+				err = json.Unmarshal([]byte(resp[1]), &rcd)
+				checkError(err)
+				record.Time = rcd.HighScoreTime
+			}
+			js, err := json.Marshal(topTen)
+			checkError(err)
+			topTens = append(topTens, topTen)
+
+			//save top ten
+			key := fmt.Sprintf("%d/%d/%d", event.Id, result.CurrRound, team.Id)
+			resp, err := ssdb.Do("hset", H_EVENT_ROUND_TEAM_TOPTEN, key, js)
+			checkSsdbError(resp, err)
+
+			//calc score if round == 0
+			if result.CurrRound == 0 {
+				scoreSum := int32(0)
+				for _, v := range topTen {
+					scoreSum += v.Score
+				}
+				punishScore := PUNISH_SCORE * (10 - len(topTen))
+				team.Score = scoreSum - int32(punishScore)
+			}
+		}
+
+		//calc score if round > 0
+		if result.CurrRound > 0 {
+			if len(topTens) != 2 {
+				panic("topTens != 2")
+			}
+
+			//resort top ten by time
+			for i := range topTens {
+				sort.Sort(ByTime(topTens[i]))
+			}
+
+			//calc score
+			for i := 0; i < 10; i++ {
+				maxScore := topTens[0][i].Score
+				for _, topTen := range topTens {
+					if topTen[i].Score > maxScore {
+						maxScore = topTen[i].Score
+					}
+				}
+				for iTeam, topTen := range topTens {
+					team := &game.Teams[iTeam]
+					if topTen[i].Score == maxScore {
+						team.Score += 1
+					}
+				}
+			}
+
+			//if draw
+			if game.Teams[0].Score == game.Teams[1].Score {
+				for i := 0; i < 10; i++ {
+					if topTens[0][i].Score > topTens[1][i].Score {
+						game.Teams[0].Score++
+						break
+					} else if topTens[0][i].Score < topTens[1][i].Score {
+						game.Teams[1].Score++
+						break
+					}
+				}
+			}
+			var winnerTeamId, loserTeamId uint32
+			if game.Teams[0].Score >= game.Teams[1].Score {
+				game.Teams[0].Win = true
+				winnerTeamId = game.Teams[0].Id
+				loserTeamId = game.Teams[1].Id
+			} else {
+				game.Teams[1].Win = true
+				winnerTeamId = game.Teams[1].Id
+				loserTeamId = game.Teams[0].Id
+			}
+
+			//next round
+			if result.CurrRound == TEAM_CHAMPIONSHIP_ROUND_NUM-2 {
+				nextRound.Games[0].Teams[iGame].Id = winnerTeamId
+				nextRound.Games[1].Teams[iGame].Id = loserTeamId
+			} else {
+				nextRound.Games[iGame/2].Teams[iGame%2].Id = winnerTeamId
+			}
+
+		} else {
+			//pick top 1
+			sortedTeams := make([]Team, len(game.Teams))
+			copy(sortedTeams, game.Teams)
+			sort.Sort(ByScore(sortedTeams))
+
+			//win
+			for i, team := range game.Teams {
+				if team.Id == sortedTeams[0].Id {
+					game.Teams[i].Win = true
+					continue
+				}
+			}
+
+			//next round
+			nextRound.Games[iGame].Teams[0].Id = sortedTeams[0].Id
+			nextRound.Games[iGame].Teams[1].Id = sortedTeams[1].Id
+		}
+
+	}
+	result.CurrRound++
 }
 
 func main() {
