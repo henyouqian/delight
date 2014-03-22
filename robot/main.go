@@ -132,6 +132,11 @@ func play(userName string, eventId uint64, minScore int32, maxScore int32) {
 
 	resp, err := ioutil.ReadAll(_resp.Body)
 	checkErr(err)
+
+	if _resp.StatusCode != 200 {
+		glog.Fatalf("http code=%d, body=%s", _resp.StatusCode, string(resp))
+	}
+
 	secret := struct {
 		Secret string
 	}{}
@@ -189,7 +194,7 @@ func main() {
 		username := fmt.Sprintf("test%d", i)
 		//register(username)
 		// setTeam(username)
-		play(username, 1, -1000*60, -1000*10)
+		play(username, 8, -1000*60, -1000*10)
 	}
 
 	// var w sync.WaitGroup

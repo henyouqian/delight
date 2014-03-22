@@ -14,9 +14,14 @@ import (
 	"time"
 )
 
+func init() {
+	glog.Info("match init")
+}
+
 const (
 	H_EVENT                      = "H_EVENT"
 	Z_EVENT                      = "Z_EVENT"
+	Z_CLOSED_EVENT               = "Z_CLOSED_EVENT"
 	H_EVENT_RESULT               = "H_EVENT_RESULT"
 	H_EVENT_PLAYER_RECORD        = "H_EVENT_PLAYER_RECORD"
 	Z_EVENT_LEADERBOARD_PRE      = "Z_EVENT_LEADERBOARD_PRE"
@@ -288,6 +293,63 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func listClosedEvent(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	_, err = findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		StartId uint32
+		Limit   uint32
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+	if in.Limit > 20 {
+		in.Limit = 20
+	}
+
+	var startId interface{}
+	if in.StartId == 0 {
+		startId = ""
+	} else {
+		startId = in.StartId
+	}
+
+	//zrscan
+	resp, err := ssdb.Do("zrscan", Z_CLOSED_EVENT, startId, "", "", in.Limit)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	//multi_hget
+	keyNum := len(resp) / 2
+	cmds := make([]interface{}, keyNum+2)
+	cmds[0] = "multi_hget"
+	cmds[1] = H_EVENT
+	for i := 0; i < keyNum; i++ {
+		cmds[2+i] = resp[i*2]
+	}
+	resp, err = ssdb.Do(cmds...)
+	resp = resp[1:]
+
+	//out
+	eventNum := len(resp) / 2
+	out := make([]Event, eventNum)
+	for i := 0; i < eventNum; i++ {
+		err = json.Unmarshal([]byte(resp[i*2+1]), &out[i])
+		lwutil.CheckError(err, "")
+	}
+
+	lwutil.WriteResponse(w, out)
+}
+
 func getEventResult(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
@@ -450,7 +512,6 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get rank
-	glog.Info(eventLbLey)
 	rc.Send("ZREVRANK", eventLbLey, session.Userid)
 	rc.Send("ZCARD", eventLbLey)
 	err = rc.Flush()
@@ -462,7 +523,6 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 
 	//team leaderboard
 	teamLbKey := fmt.Sprintf("%s/%d/%d", Z_EVENT_TEAM_LEADERBOARD_PRE, in.EventId, record.TeamId)
-	glog.Info(teamLbKey)
 	if scoreUpdate {
 		_, err = rc.Do("ZADD", teamLbKey, record.HighScore, session.Userid)
 		lwutil.CheckError(err, "")
@@ -940,6 +1000,7 @@ func regMatch() {
 	http.Handle("/match/newEvent", lwutil.ReqHandler(newEvent))
 	http.Handle("/match/delEvent", lwutil.ReqHandler(delEvent))
 	http.Handle("/match/listEvent", lwutil.ReqHandler(listEvent))
+	http.Handle("/match/listClosedEvent", lwutil.ReqHandler(listClosedEvent))
 	http.Handle("/match/getEventResult", lwutil.ReqHandler(getEventResult))
 	http.Handle("/match/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/match/playEnd", lwutil.ReqHandler(playEnd))

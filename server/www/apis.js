@@ -167,6 +167,10 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}
 				},{
+					"name": "listClosedEvent",
+					"method": "POST",
+					"data": {"StartId": 0, "Limit": 20}
+				},{
 					"name": "getEventResult",
 					"method": "POST",
 					"data": {"EventId": 1}
