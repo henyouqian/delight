@@ -6,6 +6,7 @@
 #include "http.h"
 #include "dragView.h"
 #include "util.h"
+#include "lw/lwLog.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -49,17 +50,20 @@ bool MatchListLayer::init() {
     
     //get match pack list
     jsonxx::Object msg;
-    msg << "StartMatchId" << 0;
+    msg << "StartId" << 0;
     msg << "Limit" << 20;
     
-    postHttpRequest("match/list", msg.json().c_str(), this, (SEL_HttpResponse)(&MatchListLayer::onHttpListMatch));
+    lwinfo("%s", msg.json().c_str());
+    
+    postHttpRequest("match/listClosedEvent", msg.json().c_str(), this, (SEL_HttpResponse)(&MatchListLayer::onHttpListMatch));
     
     return true;
 }
 
-void MatchListLayer::onHttpListMatch(HttpClient* client, HttpResponse* response) {
+void MatchListLayer::onHttpListMatch(HttpClient* client, HttpResponse* resp) {
     jsonxx::Array msg;
-    if (!response->isSucceed()) {
+    std::string body;
+    if (!checkHttpResp(resp, body)) {
 //        //load local
 //        sqlite3_stmt* pStmt = NULL;
 //        std::stringstream sql;
@@ -80,12 +84,10 @@ void MatchListLayer::onHttpListMatch(HttpClient* client, HttpResponse* response)
 //            msg << coljs;
 //        }
 //        sqlite3_finalize(pStmt);
-        lwerror("MatchListLayer::onHttpListMatch http error");
+        lwerror("MatchListLayer::onHttpListMatch http error:%s", body.c_str());
         return;
     } else {
         //parse response
-        std::string body;
-        getHttpResponseString(response, body);
         bool ok = msg.parse(body);
         if (!ok) {
             lwerror("json parse error");
@@ -93,42 +95,30 @@ void MatchListLayer::onHttpListMatch(HttpClient* client, HttpResponse* response)
         }
     }
     
-    float minY = 0.f;
+//    float minY = 0.f;
     for (auto i = 0; i < msg.size(); ++i) {
-        auto matchJs = msg.get<jsonxx::Object>(i);
-        if (!matchJs.has<jsonxx::Number>("Id")
-            || !matchJs.has<jsonxx::String>("BeginTime")
-            || !matchJs.has<jsonxx::String>("EndTime")
-            || !matchJs.has<jsonxx::Object>("Pack")) {
-            lwerror("json invalid, need Id, BeginTime, EndTime, Pack");
+        auto eventObj = msg.get<jsonxx::Object>(i);
+        if (!eventObj.has<jsonxx::String>("Type")
+            || !eventObj.has<jsonxx::Number>("Id")
+            || !eventObj.has<jsonxx::Number>("PackId")
+            || !eventObj.has<jsonxx::Array>("TimePoints")) {
+            lwerror("json invalid, need Type, Id, PackId, TimePoints");
             return;
         }
         
-        MatchInfo matchInfo;
-        matchInfo.matchId = (uint64_t)matchJs.get<jsonxx::Number>("Id");
-        matchInfo.beginTime = matchJs.get<jsonxx::String>("BeginTime");
-        matchInfo.endTime = matchJs.get<jsonxx::String>("EndTime");
+        auto type = eventObj.get<jsonxx::String>("Type");
+        auto id = (uint64_t)eventObj.get<jsonxx::Number>("Id");
+        auto packId = (uint64_t)eventObj.get<jsonxx::Number>("PackId");
+        lwinfo("event:type=%s, id=%llu, packId=%llu", type.c_str(), id, packId);
         
-        auto packJs = matchJs.get<jsonxx::Object>("Pack");
-        matchInfo.packInfo.init(packJs);
-        matchInfo.loaded = false;
-        
-        auto idx = _matchInfos.size();
-        auto firstW = _thumbWidth * 2.f + THUMB_MARGIN;
-        if (idx == 0) {
-            matchInfo.thumbRect.setRect(THUMB_MARGIN, -THUMB_MARGIN-firstW, firstW, firstW);
-        } else {
-            float x = (idx-1)%2 == 0 ? THUMB_MARGIN : THUMB_MARGIN*2+_thumbWidth;
-            float y = -(THUMB_MARGIN*2 + firstW + ((idx-1)/2)*(_thumbHeight+THUMB_MARGIN) + _thumbHeight);
-            
-            matchInfo.thumbRect.setRect(x, y, _thumbWidth, _thumbHeight);
+        auto timePointsObj = eventObj.get<jsonxx::Array>("TimePoints");
+        for (auto itp = 0; itp < timePointsObj.size(); ++itp) {
+            auto timePoint = (uint64_t)timePointsObj.get<jsonxx::Number>(itp);
+            lwinfo("timePoint=%llu", timePoint);
         }
-        _matchInfos.push_back(matchInfo);
-        _sptLoader->download(matchInfo.packInfo.cover.c_str(), (void*)(uint32_t)matchInfo.packInfo.id);
-        minY = MIN(minY, matchInfo.thumbRect.origin.y - THUMB_MARGIN);
     }
     
-    _dragView->setContentHeight(-minY);
+//    _dragView->setContentHeight(-minY);
 }
 
 //SptLoaderListener

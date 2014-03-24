@@ -8,6 +8,7 @@ import (
 	"github.com/henyouqian/lwutil"
 	//. "github.com/qiniu/api/conf"
 	//"github.com/qiniu/api/rs"
+	// "io/ioutil"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -310,6 +311,7 @@ func listClosedEvent(w http.ResponseWriter, r *http.Request) {
 		StartId uint32
 		Limit   uint32
 	}
+
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 	if in.Limit > 20 {

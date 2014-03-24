@@ -12,5 +12,7 @@ HttpRequest* postHttpRequest(const char *path, const char *content, cocos2d::Obj
 
 void getHttpRequest(const char *url, const std::function<void(HttpClient*, HttpResponse*)> &callback);
 void getHttpResponseString(HttpResponse *resp, std::string &str);
+bool checkHttpResp(HttpResponse *resp, std::string &str);
+void setHttpUserToken(const char* token);
 
 #endif // __HTTP_H__

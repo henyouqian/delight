@@ -229,7 +229,12 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	usertoken := newSession(w, userId, in.Username, appid, ssdb)
 
 	// reply
-	lwutil.WriteResponse(w, usertoken)
+	out := struct {
+		Token string
+	}{
+		usertoken,
+	}
+	lwutil.WriteResponse(w, out)
 }
 
 func authLogout(w http.ResponseWriter, r *http.Request) {

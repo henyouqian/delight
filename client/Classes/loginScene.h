@@ -7,6 +7,21 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+class LoginLayer : public Layer, public EditBoxDelegate{
+public:
+    static LoginLayer* createWithScene();
+    bool init();
+    
+    //EditBoxDelegate
+    virtual void editBoxReturn(EditBox* editBox);
+    
+    //
+    void onHttpLogin(HttpClient* client, HttpResponse* response);
+    
+private:
+    EditBox *_editUserName;
+    EditBox *_editPassword;
+};
 
 
 #endif // __LOGIN_SCENE_H__

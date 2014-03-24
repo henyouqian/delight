@@ -2,6 +2,8 @@
 #include "sliderScene.h"
 #include "mainMenuScene.h"
 #include "matchBoardScene.h"
+#include "matchListScene.h"
+#include "loginScene.h"
 #include "util.h"
 //#include "qiniu.h"
 #include "db.h"
@@ -98,10 +100,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //auto scene = SliderScene::createScene();
     //auto scene = MainMenuScene::createScene();
-    auto scene = MatchBoardLayer::createScene();
+    //auto scene = MatchBoardLayer::createScene();
+    //auto layer = MatchListLayer::createWithScene();
+    auto layer = LoginLayer::createWithScene();
     
     // run
-    director->runWithScene(scene);
+    director->runWithScene((Scene*)(layer->getParent()));
 
     return true;
 }

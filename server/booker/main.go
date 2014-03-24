@@ -424,15 +424,13 @@ func update() {
 			panic("event.Id != result.EventId")
 		}
 
-		// if time.Now().Unix() >= event.TimePoints[result.CurrRound+1] {
-		// 	updateRound(ssdb, &event, &result)
-		// }
+		if time.Now().Unix() >= event.TimePoints[result.CurrRound+1] {
+			updateRound(ssdb, &event, &result)
+		}
 
 		// test: force update
 		//result.CurrRound = 0
-		updateRound(ssdb, &event, &result)
-
-		//glog.Info(string(js))
+		// updateRound(ssdb, &event, &result)
 	}
 
 	// glog.Info(events)
