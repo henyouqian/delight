@@ -999,14 +999,14 @@ func getTopTen(w http.ResponseWriter, r *http.Request) {
 }
 
 func regMatch() {
-	http.Handle("/match/newEvent", lwutil.ReqHandler(newEvent))
-	http.Handle("/match/delEvent", lwutil.ReqHandler(delEvent))
-	http.Handle("/match/listEvent", lwutil.ReqHandler(listEvent))
-	http.Handle("/match/listClosedEvent", lwutil.ReqHandler(listClosedEvent))
-	http.Handle("/match/getEventResult", lwutil.ReqHandler(getEventResult))
-	http.Handle("/match/playBegin", lwutil.ReqHandler(playBegin))
-	http.Handle("/match/playEnd", lwutil.ReqHandler(playEnd))
-	http.Handle("/match/freePlay", lwutil.ReqHandler(matchFreePlay))
-	http.Handle("/match/topTen", lwutil.ReqHandler(getTopTen))
+	http.Handle("/event/new", lwutil.ReqHandler(newEvent))
+	http.Handle("/event/del", lwutil.ReqHandler(delEvent))
+	http.Handle("/event/list", lwutil.ReqHandler(listEvent))
+	http.Handle("/event/listClosed", lwutil.ReqHandler(listClosedEvent))
+	http.Handle("/event/getResult", lwutil.ReqHandler(getEventResult))
+	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
+	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
+	http.Handle("/event/freePlay", lwutil.ReqHandler(matchFreePlay))
+	http.Handle("/event/topTen", lwutil.ReqHandler(getTopTen))
 	// http.Handle("/match/info", lwutil.ReqHandler(matchInfo))
 }

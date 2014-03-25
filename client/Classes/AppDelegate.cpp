@@ -2,7 +2,7 @@
 #include "sliderScene.h"
 #include "mainMenuScene.h"
 #include "matchBoardScene.h"
-#include "matchListScene.h"
+#include "eventListScene.h"
 #include "loginScene.h"
 #include "util.h"
 //#include "qiniu.h"

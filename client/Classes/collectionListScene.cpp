@@ -1,5 +1,5 @@
 #include "collectionListScene.h"
-#include "matchListScene.h"
+#include "eventListScene.h"
 #include "dragView.h"
 #include "lang.h"
 #include "http.h"
@@ -505,7 +505,7 @@ bool MainContainerLayer::init() {
     this->addChild(_layers[0]);
     _layers[1] = SearchLayer::create();
     this->addChild(_layers[1]);
-    _layers[2] = MatchListLayer::create();
+    _layers[2] = EventListLayer::create();
     this->addChild(_layers[2]);
     _layers[3] = nullptr;
     

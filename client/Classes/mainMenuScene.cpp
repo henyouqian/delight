@@ -1,5 +1,5 @@
 #include "mainMenuScene.h"
-#include "matchListScene.h"
+#include "eventListScene.h"
 #include "collectionListScene.h"
 #include "util.h"
 #include "lang.h"
@@ -82,5 +82,5 @@ void MainMenuScene::enterCollectionList(Object *sender, Control::EventType contr
 }
 
 void MainMenuScene::enterMatchMode(Object *sender, Control::EventType controlEvent) {
-    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)MatchListLayer::createWithScene()->getParent()));
+    Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)EventListLayer::createWithScene()->getParent()));
 }

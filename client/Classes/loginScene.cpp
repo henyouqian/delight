@@ -1,6 +1,7 @@
 #include "loginScene.h"
-#include "matchListScene.h"
+#include "eventListScene.h"
 #include "http.h"
+#include "util.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 
@@ -39,6 +40,7 @@ bool LoginLayer::init() {
     _editUserName->setInputFlag(EditBox::InputFlag::SENSITIVE);
     _editUserName->setReturnType(EditBox::KeyboardReturnType::DONE);
     _editUserName->setDelegate(this);
+    _editUserName->setText("aa");
     addChild(_editUserName, 1);
     
     _editPassword = EditBox::create(editBoxSize, Scale9Sprite::create("ui/pt.png"));
@@ -52,9 +54,28 @@ bool LoginLayer::init() {
     _editPassword->setReturnType(EditBox::KeyboardReturnType::GO);
     _editPassword->setDelegate(this);
     _editPassword->setInputFlag(EditBox::InputFlag::PASSWORD);
+    _editPassword->setText("aa");
     addChild(_editPassword, 1);
     
+    auto btnLogin = createTextButton("HelveticaNeue", "Login", 48, Color3B::WHITE);
+    btnLogin->setPosition(Point(visSize.width*.5f, visSize.height - 600));
+    btnLogin->setAnchorPoint(Point(.5f, 1));
+    btnLogin->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
+    btnLogin->addTargetWithActionForControlEvents(this, cccontrol_selector(LoginLayer::sendLoginMsg), Control::EventType::TOUCH_UP_INSIDE);
+    addChild(btnLogin, 1);
+    
     return true;
+}
+
+void LoginLayer::sendLoginMsg(Object *sender, Control::EventType controlEvent) {
+    std::string username = _editUserName->getText();
+    std::string password = _editPassword->getText();
+    if (username.size() > 0 && password.size() > 0) {
+        jsonxx::Object loginMsg;
+        loginMsg << "Username" << username;
+        loginMsg << "Password" << password;
+        postHttpRequest("auth/login", loginMsg.json().c_str(), this, (SEL_HttpResponse)&LoginLayer::onHttpLogin);
+    }
 }
 
 void LoginLayer::editBoxReturn(EditBox* editBox) {
@@ -62,14 +83,7 @@ void LoginLayer::editBoxReturn(EditBox* editBox) {
         return;
     }
     if (editBox == _editPassword) {
-        std::string username = _editUserName->getText();
-        std::string password = _editPassword->getText();
-        if (username.size() > 0 && password.size() > 0) {
-            jsonxx::Object loginMsg;
-            loginMsg << "Username" << username;
-            loginMsg << "Password" << password;
-            postHttpRequest("auth/login", loginMsg.json().c_str(), this, (SEL_HttpResponse)&LoginLayer::onHttpLogin);
-        }
+        sendLoginMsg(nullptr, Control::EventType::TOUCH_UP_INSIDE);
     }
 }
 
@@ -88,6 +102,6 @@ void LoginLayer::onHttpLogin(HttpClient* client, HttpResponse* resp) {
     auto token = msg.get<jsonxx::String>("Token");
     setHttpUserToken(token.c_str());
     
-    Director::getInstance()->replaceScene(TransitionFade::create(0.5f, (Scene*)MatchListLayer::createWithScene()->getParent()));
+    Director::getInstance()->replaceScene(TransitionFade::create(0.5f, (Scene*)EventListLayer::createWithScene()->getParent()));
     
 }

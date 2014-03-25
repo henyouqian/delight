@@ -19,6 +19,8 @@ ControlButton *createColorButton(const char *text, float fontSize, float bgScale
 
 ControlButton *createButton(const char* textFont, const char *text, float textSize, const Color3B &textColor, const char *bgFile, float bgScale, const Color3B &bgColor, GLubyte bgOpacity);
 
+ControlButton *createTextButton(const char* textFont, const char *text, float textSize, const Color3B &textColor);
+
 const char* getUploadPackDir();
 
 

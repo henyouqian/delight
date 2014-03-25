@@ -12,11 +12,15 @@ public:
     static LoginLayer* createWithScene();
     bool init();
     
+    //callback
+    void sendLoginMsg(Object *sender, Control::EventType controlEvent);
+    
     //EditBoxDelegate
     virtual void editBoxReturn(EditBox* editBox);
     
     //
     void onHttpLogin(HttpClient* client, HttpResponse* response);
+    
     
 private:
     EditBox *_editUserName;

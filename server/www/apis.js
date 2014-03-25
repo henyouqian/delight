@@ -144,11 +144,11 @@ function Controller($scope, $http) {
 				}
 			]
 		},{
-			"tab":"match",
-			"path":"match",
+			"tab":"event",
+			"path":"event",
 			"apis":[
 				{
-					"name": "newEvent",
+					"name": "new",
 					"method": "POST",
 					"data": {"Type": "TEAM_CHAMPIONSHIP", "PackId": 1, "TimePointStrings": [
 						"2014-03-17T00:00",
@@ -159,19 +159,19 @@ function Controller($scope, $http) {
 						"2014-03-17T00:00"
 						]}
 				},{
-					"name": "delEvent",
+					"name": "del",
 					"method": "POST",
 					"data": {"EventId": 0}
 				},{
-					"name": "listEvent",
+					"name": "list",
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}
 				},{
-					"name": "listClosedEvent",
+					"name": "listClosed",
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}
 				},{
-					"name": "getEventResult",
+					"name": "getResult",
 					"method": "POST",
 					"data": {"EventId": 1}
 				},{
@@ -185,11 +185,11 @@ function Controller($scope, $http) {
 				},{
 					"name": "freePlay",
 					"method": "POST",
-					"data": {"MatchId": 1, "Score": 0}
+					"data": {"EventId": 1, "Score": 0}
 				},{
 					"name": "info",
 					"method": "POST",
-					"data": {"MatchId": 0}
+					"data": {"EventId": 0}
 				},{
 					"name": "topTen",
 					"method": "POST",

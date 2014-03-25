@@ -41,6 +41,9 @@ bool getKv(T key, std::string &value) {
     }
     if (sqlite3_step(pStmt) == SQLITE_ROW ){
         value = (const char*)sqlite3_column_text(pStmt, 0);
+    } else {
+        sqlite3_finalize(pStmt);
+        return false;
     }
     sqlite3_finalize(pStmt);
     return true;

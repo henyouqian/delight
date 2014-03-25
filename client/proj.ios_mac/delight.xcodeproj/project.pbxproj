@@ -73,6 +73,7 @@
 		B33DAC7B184CC6B9001403BA /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6B184CC6B9001403BA /* gifalloc.c */; };
 		B33DAC82184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
 		B33DAC83184CC6B9001403BA /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B33DAC6F184CC6B9001403BA /* quantize.c */; };
+		B340C08918E193780000F51E /* eventHomeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B340C08718E193780000F51E /* eventHomeScene.cpp */; };
 		B34FDAD3186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B34FDAD4186A10AA006D05A3 /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34FDAD1186A10A9006D05A3 /* pack.cpp */; };
 		B35F7EB518C04DA400C4EFD9 /* menuBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35F7EB318C04DA400C4EFD9 /* menuBar.cpp */; };
@@ -136,7 +137,7 @@
 		B3E841821857774B0004C636 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3E841801857774B0004C636 /* audio */; };
 		B3F01AF1187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
 		B3F01AF2187E87900000B33E /* packsListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F01AEF187E87900000B33E /* packsListScene.cpp */; };
-		B3F2D96418C4ECC700626086 /* matchListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D96218C4ECC700626086 /* matchListScene.cpp */; };
+		B3F2D96418C4ECC700626086 /* eventListScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D96218C4ECC700626086 /* eventListScene.cpp */; };
 		B3F2D97418C5F3EE00626086 /* matchLobbyScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */; };
 		B3F4E42518D2D7A400C196A1 /* matchBoardScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F4E42318D2D7A400C196A1 /* matchBoardScene.cpp */; };
 		B3F4E45718D2F37800C196A1 /* ccb in Resources */ = {isa = PBXBuildFile; fileRef = B3F4E45618D2F37800C196A1 /* ccb */; };
@@ -358,6 +359,8 @@
 		B33F4FE4188BF742000A5AD6 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		B33F4FE5188BF742000A5AD6 /* WXApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		B33F4FE6188BF742000A5AD6 /* WXApiObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
+		B340C08718E193780000F51E /* eventHomeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = eventHomeScene.cpp; path = ../Classes/eventHomeScene.cpp; sourceTree = "<group>"; };
+		B340C08818E193780000F51E /* eventHomeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = eventHomeScene.h; path = ../Classes/eventHomeScene.h; sourceTree = "<group>"; };
 		B34FDAD1186A10A9006D05A3 /* pack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pack.cpp; path = ../Classes/pack.cpp; sourceTree = "<group>"; };
 		B34FDAD2186A10A9006D05A3 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pack.h; path = ../Classes/pack.h; sourceTree = "<group>"; };
 		B34FDAE3186A198A006D05A3 /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
@@ -438,8 +441,8 @@
 		B3E841801857774B0004C636 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
 		B3F01AEF187E87900000B33E /* packsListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packsListScene.cpp; path = ../Classes/packsListScene.cpp; sourceTree = "<group>"; };
 		B3F01AF0187E87900000B33E /* packsListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packsListScene.h; path = ../Classes/packsListScene.h; sourceTree = "<group>"; };
-		B3F2D96218C4ECC700626086 /* matchListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchListScene.cpp; path = ../Classes/matchListScene.cpp; sourceTree = "<group>"; };
-		B3F2D96318C4ECC700626086 /* matchListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchListScene.h; path = ../Classes/matchListScene.h; sourceTree = "<group>"; };
+		B3F2D96218C4ECC700626086 /* eventListScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = eventListScene.cpp; path = ../Classes/eventListScene.cpp; sourceTree = "<group>"; };
+		B3F2D96318C4ECC700626086 /* eventListScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = eventListScene.h; path = ../Classes/eventListScene.h; sourceTree = "<group>"; };
 		B3F2D97218C5F3EE00626086 /* matchLobbyScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchLobbyScene.cpp; path = ../Classes/matchLobbyScene.cpp; sourceTree = "<group>"; };
 		B3F2D97318C5F3EE00626086 /* matchLobbyScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matchLobbyScene.h; path = ../Classes/matchLobbyScene.h; sourceTree = "<group>"; };
 		B3F4E42318D2D7A400C196A1 /* matchBoardScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matchBoardScene.cpp; path = ../Classes/matchBoardScene.cpp; sourceTree = "<group>"; };
@@ -519,10 +522,12 @@
 			children = (
 				B3BCF354188E7E6C00A1DD08 /* loginScene.cpp */,
 				B3BCF355188E7E6D00A1DD08 /* loginScene.h */,
+				B3F2D96218C4ECC700626086 /* eventListScene.cpp */,
+				B3F2D96318C4ECC700626086 /* eventListScene.h */,
+				B340C08718E193780000F51E /* eventHomeScene.cpp */,
+				B340C08818E193780000F51E /* eventHomeScene.h */,
 				B31003981879B5F40049A6CF /* mainMenuScene.cpp */,
 				B31003991879B5F40049A6CF /* mainMenuScene.h */,
-				B3F2D96218C4ECC700626086 /* matchListScene.cpp */,
-				B3F2D96318C4ECC700626086 /* matchListScene.h */,
 				B3094AC318CCA6E600F1EF1A /* packLoadingScene.cpp */,
 				B3094AC418CCA6E600F1EF1A /* packLoadingScene.h */,
 				B3F4E42318D2D7A400C196A1 /* matchBoardScene.cpp */,
@@ -1209,8 +1214,9 @@
 				B383F8E518A4CBA700FA5700 /* conf.c in Sources */,
 				B383F8E218A4CBA700FA5700 /* auth_mac.c in Sources */,
 				B3094AD518CCEBED00F1EF1A /* matchScene.cpp in Sources */,
-				B3F2D96418C4ECC700626086 /* matchListScene.cpp in Sources */,
+				B3F2D96418C4ECC700626086 /* eventListScene.cpp in Sources */,
 				B3A638CF185D9A86009ECDF1 /* http.cpp in Sources */,
+				B340C08918E193780000F51E /* eventHomeScene.cpp in Sources */,
 				B3CC388218A3930B00056424 /* ELCAsset.m in Sources */,
 				B3A638E1185DA7C7009ECDF1 /* jsonxx.cc in Sources */,
 				B393ED36186EE43100E372CC /* db.cpp in Sources */,

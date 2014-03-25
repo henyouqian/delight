@@ -36,6 +36,12 @@ func init() {
 	qiniuconf.SECRET_KEY = "FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ"
 }
 
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	glog.Infof("start: cpu=%d", runtime.NumCPU())
@@ -93,10 +99,7 @@ func newPack() {
 
 	pack := Pack{}
 	err = loadPack(&pack)
-	if err != nil {
-		glog.Errorf("loadPack failed: err=%s", err.Error())
-		return
-	}
+	checkErr(err)
 	packRaw := pack
 
 	if pack.Title == "" {
@@ -205,9 +208,8 @@ func newPack() {
 			continue
 		}
 		var ret qiniuio.PutRet
-		if err = qiniuio.PutFile(nil, &ret, token, img.Key, img.File, nil); err != nil {
-			panic(err)
-		}
+		err = qiniuio.PutFile(nil, &ret, token, img.Key, img.File, nil)
+		checkErr(err)
 		glog.Infof("upload image ok: %s", img.File)
 	}
 
@@ -218,25 +220,19 @@ func newPack() {
 	pack.Cover = genImageKey(pack.Cover)
 
 	packjs, err := json.Marshal(pack)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	packBytes := postReq("pack/new", packjs)
 
 	//update pack.js
 	var dwpack Pack
 	err = json.Unmarshal(packBytes, &dwpack)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	packRaw.Id = dwpack.Id
 
 	packjs, err = json.Marshal(packRaw)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	var f *os.File
 	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
@@ -259,9 +255,7 @@ func delPack() {
 
 	pack := Pack{}
 	err = loadPack(&pack)
-	if err != nil {
-		glog.Fatalf("loadPack failed: err=%s", err.Error())
-	}
+	checkErr(err)
 
 	if pack.Id == 0 {
 		glog.Fatalln("need pack id")
@@ -290,10 +284,8 @@ func loadPack(pack *Pack) (err error) {
 
 	//json decode
 	decoder := json.NewDecoder(f)
-	if err = decoder.Decode(&pack); err != nil {
-		glog.Errorf("pack.js decode failed: err=%s", err.Error())
-		return err
-	}
+	err = decoder.Decode(&pack)
+	checkErr(err)
 	return nil
 }
 
@@ -310,10 +302,8 @@ func loadAccount(account *Account) {
 
 	//json decode
 	decoder := json.NewDecoder(f)
-	if err = decoder.Decode(&account); err != nil {
-		glog.Fatalf("account.json decode failed: err=%s", err.Error())
-		return
-	}
+	err = decoder.Decode(&account)
+	checkErr(err)
 
 	glog.Infof("account: %s", account.Name)
 }
@@ -332,9 +322,8 @@ func uploadImage() {
 
 	//upload
 	var ret qiniuio.PutRet
-	if err := qiniuio.PutFile(nil, &ret, token, key, path, nil); err != nil {
-		glog.Fatalln(err.Error())
-	}
+	err := qiniuio.PutFile(nil, &ret, token, key, path, nil)
+	checkErr(err)
 	glog.Infof("upload image ok: path=%s", path)
 }
 
@@ -351,19 +340,20 @@ func login() {
 	}`, account.Name, account.Password)
 
 	resp, err := client.Post(url, "application/json", bytes.NewReader([]byte(body)))
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		glog.Fatalf("login error: resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
 	}
-	tk, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-	_userToken = string(tk)
-	_userToken = _userToken[1 : len(_userToken)-2]
+	bts, err := ioutil.ReadAll(resp.Body)
+	checkErr(err)
+
+	msg := struct {
+		Token string
+	}{}
+	err = json.Unmarshal(bts, &msg)
+	checkErr(err)
+	_userToken = msg.Token
 }
 
 func postReq(partialUrl string, body []byte) (respBytes []byte) {
@@ -374,9 +364,7 @@ func postReq(partialUrl string, body []byte) (respBytes []byte) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 	defer resp.Body.Close()
 	respBytes, _ = ioutil.ReadAll(resp.Body)
 	if resp.StatusCode != 200 {
@@ -389,9 +377,7 @@ func postReq(partialUrl string, body []byte) (respBytes []byte) {
 
 func genImageKey(inFileName string) (outFileName string) {
 	data, err := ioutil.ReadFile(inFileName)
-	if err != nil {
-		glog.Fatalln(err.Error())
-	}
+	checkErr(err)
 	h := sha1.New()
 	h.Write(data)
 	shaBytes := h.Sum(nil)

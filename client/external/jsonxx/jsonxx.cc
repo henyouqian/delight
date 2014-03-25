@@ -292,10 +292,6 @@ bool Value::parse(std::istream& input, Value& value) {
         value.type_ = STRING_;
         return true;
     }
-    if (parse_number(input, value.number_value_)) {
-        value.type_ = NUMBER_;
-        return true;
-    }
 
     if (parse_bool(input, value.bool_value_)) {
         value.type_ = BOOL_;
@@ -303,6 +299,10 @@ bool Value::parse(std::istream& input, Value& value) {
     }
     if (parse_null(input)) {
         value.type_ = NULL_;
+        return true;
+    }
+    if (parse_number(input, value.number_value_)) {
+        value.type_ = NUMBER_;
         return true;
     }
     if (input.peek() == '[') {
