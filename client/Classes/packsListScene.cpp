@@ -450,7 +450,7 @@ void PacksListScene::back(Object *sender, Control::EventType controlEvent) {
 //}
 
 void PacksListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
-    int idx = (int)userData;
+    long idx = (long)userData;
     if (idx >= 0 && idx < _thumbs.size()) {
         _dragView->addChild(sprite);
         sprite->setPosition(_thumbs[idx]->getPosition());

@@ -85,7 +85,7 @@
 	for (NSDictionary *dict in info) {
         UIImage *image = [dict objectForKey:UIImagePickerControllerOriginalImage];
         NSData *data = UIImageJPEGRepresentation (image, 0.8);
-        ElcListener::JpgData jpgData = {data.bytes, data.length};
+        ElcListener::JpgData jpgData = {data.bytes, static_cast<unsigned int>(data.length)};
         jpgDatas.push_back(jpgData);
 	}
     

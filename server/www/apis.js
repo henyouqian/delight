@@ -175,6 +175,10 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"EventId": 1}
 				},{
+					"name": "getPlayerResult",
+					"method": "POST",
+					"data": {"EventId": 1}
+				},{
 					"name": "playBegin",
 					"method": "POST",
 					"data": {"EventId": 1}

@@ -31,6 +31,16 @@ struct EventResult {
 	std::vector<Round> Rounds;
 };
 
+struct PlayerResult {
+    int32_t HighScore;
+    uint32_t TeamId;
+    uint32_t Trys;
+    uint32_t Rank;
+    uint32_t RankNum;
+    uint32_t TeamRank;
+    uint32_t TeamRankNum;
+};
+
 class EventHomeLayer : public LayerColor{
 public:
     static EventHomeLayer* createWithScene(EventInfo* eventInfo);
@@ -38,10 +48,13 @@ public:
     
     //button callback
     void back(Object *sender, Control::EventType controlEvent);
+    void play(Object *sender, Control::EventType controlEvent);
+    void rounds(Object *sender, Control::EventType controlEvent);
     
     //http callback
     void onHttpGetPack(HttpClient* cli, HttpResponse* resp);
     void onHttpGetResult(HttpClient* cli, HttpResponse* resp);
+    void onHttpGetPlayerResult(HttpClient* cli, HttpResponse* resp);
     
     //touch
     virtual bool onTouchBegan(Touch* touch, Event  *event);
@@ -56,6 +69,7 @@ private:
     
     LabelTTF *_labelEventInfo;
     LabelTTF *_labelEventResult;
+    LabelTTF *_labelPlayerResult;
 };
 
 #endif // __EVENT_HOME_SCENE_H__

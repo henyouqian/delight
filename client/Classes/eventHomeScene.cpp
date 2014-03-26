@@ -10,6 +10,8 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+static Color3B BTN_COLOR(0, 122, 255);
+
 EventHomeLayer* EventHomeLayer::createWithScene(EventInfo* eventInfo) {
     auto scene = Scene::create();
     auto layer = new EventHomeLayer();
@@ -27,6 +29,8 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
         return false;
     }
     
+    auto sz = this->getContentSize();
+    
     _eventInfo = *eventInfo;
     
     setTouchEnabled(true);
@@ -40,7 +44,7 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     _dragView->setWindowRect(Rect(0, 0, visSize.width, dragViewHeight));
     
     //back button
-    auto button = createTextButton("HelveticaNeue", "Back", 48, Color3B::BLACK);
+    auto button = createTextButton("HelveticaNeue", "Back", 48, BTN_COLOR);
     button->setAnchorPoint(Point(0.f, 1.f));
     button->setPosition(Point(20, visSize.height-20));
     button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
@@ -61,12 +65,36 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     this->addChild(_labelEventInfo);
     
     //event result label
-    _labelEventResult = LabelTTF::create("loading result", "HelveticaNeue", 42);
-    _labelEventResult->setPosition(Point(40, visSize.height-600));
+    _labelEventResult = LabelTTF::create("loading event result", "HelveticaNeue", 42);
+    _labelEventResult->setPosition(Point(40, visSize.height-400));
     _labelEventResult->setHorizontalAlignment(TextHAlignment::LEFT);
     _labelEventResult->setColor(Color3B::BLACK);
     _labelEventResult->setAnchorPoint(Point(0.f, 1.f));
     this->addChild(_labelEventResult);
+    
+    //player result label
+    _labelPlayerResult = LabelTTF::create("loading player result", "HelveticaNeue", 42);
+    _labelPlayerResult->setPosition(Point(40, visSize.height-600));
+    _labelPlayerResult->setHorizontalAlignment(TextHAlignment::LEFT);
+    _labelPlayerResult->setColor(Color3B::BLACK);
+    _labelPlayerResult->setAnchorPoint(Point(0.f, 1.f));
+    this->addChild(_labelPlayerResult);
+    
+    //play button
+    button = createTextButton("HelveticaNeue", "Play", 48, BTN_COLOR);
+    button->setAnchorPoint(Point(0.5f, 1.f));
+    button->setPosition(Point(160, visSize.height-1000));
+    button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(EventHomeLayer::play), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(button);
+    
+    //rounds button
+    button = createTextButton("HelveticaNeue", "Rounds", 48, BTN_COLOR);
+    button->setAnchorPoint(Point(.5f, 1.f));
+    button->setPosition(Point(visSize.width-160, visSize.height-1000));
+    button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(EventHomeLayer::rounds), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(button);
     
     //get pack info
     jsonxx::Object msg;
@@ -78,10 +106,23 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     resultMsg << "EventId" << _eventInfo.id;
     postHttpRequest("event/getResult", resultMsg.json().c_str(), this, (SEL_HttpResponse)&EventHomeLayer::onHttpGetResult);
     
+    //get result info
+    jsonxx::Object playerResult;
+    playerResult << "EventId" << _eventInfo.id;
+    postHttpRequest("event/getPlayerResult", resultMsg.json().c_str(), this, (SEL_HttpResponse)&EventHomeLayer::onHttpGetPlayerResult);
+    
     return true;
 }
 
 void EventHomeLayer::back(Object *sender, Control::EventType controlEvent) {
+    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+}
+
+void EventHomeLayer::play(Object *sender, Control::EventType controlEvent) {
+    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+}
+
+void EventHomeLayer::rounds(Object *sender, Control::EventType controlEvent) {
     Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
 }
 
@@ -129,6 +170,9 @@ void EventHomeLayer::onHttpGetResult(HttpClient* cli, HttpResponse* resp) {
     auto roundsArray = resultObj.get<jsonxx::Array>("Rounds");
     for (auto i = 0; i < roundsArray.size(); ++i) {
         auto roundObj = roundsArray.get<jsonxx::Object>(i);
+        if (roundObj.has<jsonxx::Null>("Games")) {
+            continue;
+        }
         auto gamesArray = roundObj.get<jsonxx::Array>("Games");
         std::vector<Game> games;
         for (auto i = 0; i < gamesArray.size(); ++i) {
@@ -157,6 +201,55 @@ void EventHomeLayer::onHttpGetResult(HttpClient* cli, HttpResponse* resp) {
     ss << "RoundsNum: " << result.Rounds.size() << "\n";
     _labelEventResult->setString(ss.str().c_str());
 }
+
+void EventHomeLayer::onHttpGetPlayerResult(HttpClient* cli, HttpResponse* resp) {
+    std::string body;
+    if (!checkHttpResp(resp, body)) {
+        lwerror("http error:%s", body.c_str());
+        _labelPlayerResult->setString(body.c_str());
+        return;
+    }
+    
+    //lwinfo("%s", body.c_str());
+    jsonxx::Object playerResultObj;
+    auto ok = playerResultObj.parse(body.c_str());
+    if (!ok) {
+        lwerror("resultObj.parse error");
+        return;
+    }
+    
+    if (!playerResultObj.has<jsonxx::Number>("HighScore")
+        ||!playerResultObj.has<jsonxx::Number>("TeamId")
+        ||!playerResultObj.has<jsonxx::Number>("Trys")
+        ||!playerResultObj.has<jsonxx::Number>("Rank")
+        ||!playerResultObj.has<jsonxx::Number>("RankNum")
+        ||!playerResultObj.has<jsonxx::Number>("TeamRank")
+        ||!playerResultObj.has<jsonxx::Number>("TeamRankNum")) {
+        lwerror("playerResultObj key error");
+        return;
+    }
+    
+    PlayerResult result;
+    result.HighScore = (int32_t)(playerResultObj.get<jsonxx::Number>("HighScore"));
+    result.TeamId = (uint32_t)(playerResultObj.get<jsonxx::Number>("TeamId"));
+    result.Trys = (uint32_t)(playerResultObj.get<jsonxx::Number>("Trys"));
+    result.Rank = (uint32_t)(playerResultObj.get<jsonxx::Number>("Rank"));
+    result.RankNum = (uint32_t)(playerResultObj.get<jsonxx::Number>("RankNum"));
+    result.TeamRank = (uint32_t)(playerResultObj.get<jsonxx::Number>("TeamRank"));
+    result.TeamRankNum = (uint32_t)(playerResultObj.get<jsonxx::Number>("TeamRankNum"));
+    
+    //
+    std::stringstream ss;
+    ss << "HighScore: " << result.HighScore << "\n";
+    ss << "TeamId: " << result.TeamId << "\n";
+    ss << "Trys: " << result.Trys << "\n";
+    ss << "Rank: " << result.Rank << "\n";
+    ss << "RankNum: " << result.RankNum << "\n";
+    ss << "TeamRank: " << result.TeamRank << "\n";
+    ss << "TeamRankNum: " << result.TeamRankNum << "\n";
+    _labelPlayerResult->setString(ss.str().c_str());
+}
+
 
 //touch
 bool EventHomeLayer::onTouchBegan(Touch* touch, Event *event) {

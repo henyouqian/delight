@@ -379,6 +379,88 @@ func getEventResult(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(out))
 }
 
+func getPlayerResult(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		EventId uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	//get rank
+	eventLbLey := fmt.Sprintf("%s/%d", Z_EVENT_LEADERBOARD_PRE, in.EventId)
+	rc.Send("ZREVRANK", eventLbLey, session.Userid)
+	rc.Send("ZCARD", eventLbLey)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+	rank, err := _redisInt(rc.Receive())
+	lwutil.CheckError(err, "")
+	rankNum, err := _redisInt(rc.Receive())
+	lwutil.CheckError(err, "")
+
+	//
+	recordKey := fmt.Sprintf("%d/%d", in.EventId, session.Userid)
+	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		lwutil.SendError("err_not_played", "event not played")
+	}
+
+	record := EventPlayerRecord{}
+	err = json.Unmarshal([]byte(resp[1]), &record)
+	lwutil.CheckError(err, "")
+
+	//team leaderboard
+	teamLbKey := fmt.Sprintf("%s/%d/%d", Z_EVENT_TEAM_LEADERBOARD_PRE, in.EventId, record.TeamId)
+
+	//get rank in team
+	rc.Send("ZREVRANK", teamLbKey, session.Userid)
+	rc.Send("ZCARD", teamLbKey)
+	err = rc.Flush()
+	lwutil.CheckError(err, "")
+	teamRank, err := _redisInt(rc.Receive())
+	lwutil.CheckError(err, "")
+	teamRankNum, err := _redisInt(rc.Receive())
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		HighScore   int32
+		TeamId      uint32
+		Trys        uint32
+		Rank        uint32
+		RankNum     uint32
+		TeamRank    uint32
+		TeamRankNum uint32
+	}{
+		record.HighScore,
+		record.TeamId,
+		record.Trys,
+		uint32(rank + 1),
+		uint32(rankNum),
+		uint32(teamRank + 1),
+		uint32(teamRankNum),
+	}
+
+	//out
+	lwutil.WriteResponse(w, out)
+}
+
 func playBegin(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -423,9 +505,13 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 		record.Trys = 1
 		teamIdStr, err := getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_TEAM)
 		lwutil.CheckError(err, "err_player_team")
-		teamId, err := strconv.ParseUint(teamIdStr, 10, 32)
+		teamIdRaw, err := strconv.ParseUint(teamIdStr, 10, 32)
+		teamId := uint32(teamIdRaw)
 		lwutil.CheckError(err, "")
-		record.TeamId = uint32(teamId)
+		if TEAM_MAP[teamId] == false {
+			lwutil.SendError("err_team", fmt.Sprintf("invalid team id: %d", teamId))
+		}
+		record.TeamId = teamId
 	}
 
 	//gen secret
@@ -530,213 +616,32 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 		lwutil.CheckError(err, "")
 	}
 
-	//get rank in zone
+	//get rank in team
 	rc.Send("ZREVRANK", teamLbKey, session.Userid)
 	rc.Send("ZCARD", teamLbKey)
 	err = rc.Flush()
 	lwutil.CheckError(err, "")
-	zoneRank, err := redis.Int(rc.Receive())
+	teamRank, err := redis.Int(rc.Receive())
 	lwutil.CheckError(err, "")
-	zoneRankNum, err := redis.Int(rc.Receive())
+	teamRankNum, err := redis.Int(rc.Receive())
 	lwutil.CheckError(err, "")
 
 	//out
 	out := struct {
 		Rank        uint32
 		RankNum     uint32
-		ZoneRank    uint32
-		ZoneRankNum uint32
+		TeamRank    uint32
+		TeamRankNum uint32
 	}{
 		uint32(rank + 1),
 		uint32(rankNum),
-		uint32(zoneRank + 1),
-		uint32(zoneRankNum),
+		uint32(teamRank + 1),
+		uint32(teamRankNum),
 	}
 
 	//out
 	lwutil.WriteResponse(w, out)
 }
-
-// func beginMatch(w http.ResponseWriter, r *http.Request) {
-// 	var err error
-// 	lwutil.CheckMathod(r, "POST")
-
-// 	//session
-// 	session, err := findSession(w, r, nil)
-// 	lwutil.CheckError(err, "err_auth")
-
-// 	//ssdb
-// 	ssdb, err := ssdbPool.Get()
-// 	lwutil.CheckError(err, "")
-// 	defer ssdb.Close()
-
-// 	//get current match
-// 	var match Match
-// 	getCurrMatch(&match)
-
-// 	//check match record exist
-// 	record := MatchRecord{}
-
-// 	recordKey := fmt.Sprintf("%d/%d", match.Id, session.Userid)
-// 	resp, err := ssdb.Do("hget", H_EVENT_RECORD, recordKey)
-// 	lwutil.CheckError(err, "")
-// 	if resp[0] == "ok" {
-// 		err = json.Unmarshal([]byte(resp[1]), &record)
-// 		lwutil.CheckError(err, "")
-// 		record.Trys++
-
-// 		// //spend money
-// 		// moneyStr := _getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_MONEY)
-// 		// money, err := strconv.ParseUint(moneyStr, 10, 32)
-// 		// lwutil.CheckError(err, "")
-
-// 		// if money < MATCH_COST_MONEY {
-// 		// 	lwutil.SendError("err_money", "not enough money")
-// 		// }
-// 		// money -= MATCH_COST_MONEY
-// 		// _setPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_MONEY, money)
-
-// 	} else {
-// 		record.Trys = 1
-// 	}
-
-// 	//gen match key
-// 	record.MatchKey = lwutil.GenUUID()
-// 	record.MatchKeyExpire = time.Now().Unix() + MATCH_EXPIRE_SECONDS
-
-// 	//update record
-// 	jsRecord, err := json.Marshal(record)
-// 	resp, err = ssdb.Do("hset", H_EVENT_RECORD, recordKey, jsRecord)
-// 	lwutil.CheckSsdbError(resp, err)
-
-// 	//out
-// 	lwutil.WriteResponse(w, record)
-// }
-
-// func endMatch(w http.ResponseWriter, r *http.Request) {
-// 	var err error
-// 	lwutil.CheckMathod(r, "POST")
-
-// 	//session
-// 	session, err := findSession(w, r, nil)
-// 	lwutil.CheckError(err, "err_auth")
-
-// 	//in
-// 	var in struct {
-// 		MatchKey string
-// 		Score    int32
-// 	}
-// 	err = lwutil.DecodeRequestBody(r, &in)
-// 	lwutil.CheckError(err, "err_decode_body")
-
-// 	//ssdb
-// 	ssdb, err := ssdbPool.Get()
-// 	lwutil.CheckError(err, "")
-// 	defer ssdb.Close()
-
-// 	//get current match
-// 	var match Match
-// 	getCurrMatch(&match)
-
-// 	//check match record
-// 	record := MatchRecord{}
-
-// 	recordKey := fmt.Sprintf("%d/%d", match.Id, session.Userid)
-// 	resp, err := ssdb.Do("hget", H_EVENT_RECORD, recordKey)
-// 	lwutil.CheckError(err, "")
-// 	if resp[0] != "ok" {
-// 		lwutil.SendError("err_not_found", "match record not found")
-// 	}
-
-// 	err = json.Unmarshal([]byte(resp[1]), &record)
-// 	lwutil.CheckError(err, "")
-// 	if record.MatchKey != in.MatchKey {
-// 		lwutil.SendError("err_not_match", "matchKey not match")
-// 	}
-// 	if time.Now().Unix() > record.MatchKeyExpire {
-// 		lwutil.SendError("err_expired", "matchKey expired")
-// 	}
-
-// 	//clear record
-// 	record.MatchKeyExpire = 0
-
-// 	//update score
-// 	scoreUpdate := false
-// 	if record.Trys == 1 {
-// 		record.HighScore = in.Score
-// 		scoreUpdate = true
-// 	} else {
-// 		if in.Score > record.HighScore {
-// 			record.HighScore = in.Score
-// 			scoreUpdate = true
-// 		}
-// 	}
-
-// 	//save record
-// 	jsRecord, err := json.Marshal(record)
-// 	resp, err = ssdb.Do("hset", H_EVENT_RECORD, recordKey, jsRecord)
-// 	lwutil.CheckSsdbError(resp, err)
-
-// 	//redis
-// 	rc := redisPool.Get()
-// 	defer rc.Close()
-
-// 	//leaderboard
-// 	leaderBoardName := fmt.Sprintf("%s/%d", Z_EVENT_LEADERBOARD_PRE, match.Id)
-// 	if scoreUpdate {
-// 		// resp, err = ssdb.Do("zset", leaderBoardName, session.Userid, record.HighScore)
-// 		// lwutil.CheckSsdbError(resp, err)
-// 		_, err = rc.Do("ZADD", leaderBoardName, record.HighScore, session.Userid)
-// 		lwutil.CheckError(err, "")
-// 	}
-
-// 	//get rank
-// 	rc.Send("ZREVRANK", leaderBoardName, session.Userid)
-// 	rc.Send("ZCARD", leaderBoardName)
-// 	err = rc.Flush()
-// 	lwutil.CheckError(err, "")
-// 	rank, err := redis.Int(rc.Receive())
-// 	lwutil.CheckError(err, "")
-// 	rankNum, err := redis.Int(rc.Receive())
-// 	lwutil.CheckError(err, "")
-
-// 	//zone leaderboard
-// 	zoneStr := _getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_ZONE)
-// 	zone, err := strconv.ParseUint(zoneStr, 10, 32)
-// 	lwutil.CheckError(err, "")
-// 	zoneLeaderboardKey := fmt.Sprintf("%s/%d/%d", Z_ZONE_LEADERBOARD_PRE, match.Id, zone)
-
-// 	if scoreUpdate {
-// 		_, err = rc.Do("ZADD", zoneLeaderboardKey, record.HighScore, session.Userid)
-// 		lwutil.CheckError(err, "")
-// 	}
-
-// 	//get rank in zone
-// 	rc.Send("ZREVRANK", zoneLeaderboardKey, session.Userid)
-// 	rc.Send("ZCARD", zoneLeaderboardKey)
-// 	err = rc.Flush()
-// 	lwutil.CheckError(err, "")
-// 	zoneRank, err := redis.Int(rc.Receive())
-// 	lwutil.CheckError(err, "")
-// 	zoneRankNum, err := redis.Int(rc.Receive())
-// 	lwutil.CheckError(err, "")
-
-// 	//out
-// 	out := struct {
-// 		Rank        uint32
-// 		RankNum     uint32
-// 		ZoneRank    uint32
-// 		ZoneRankNum uint32
-// 	}{
-// 		uint32(rank + 1),
-// 		uint32(rankNum),
-// 		uint32(zoneRank + 1),
-// 		uint32(zoneRankNum),
-// 	}
-
-// 	//out
-// 	lwutil.WriteResponse(w, out)
-// }
 
 func matchFreePlay(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -1004,6 +909,7 @@ func regMatch() {
 	http.Handle("/event/list", lwutil.ReqHandler(listEvent))
 	http.Handle("/event/listClosed", lwutil.ReqHandler(listClosedEvent))
 	http.Handle("/event/getResult", lwutil.ReqHandler(getEventResult))
+	http.Handle("/event/getPlayerResult", lwutil.ReqHandler(getPlayerResult))
 	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
 	http.Handle("/event/freePlay", lwutil.ReqHandler(matchFreePlay))

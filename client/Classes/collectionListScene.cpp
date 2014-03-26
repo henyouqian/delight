@@ -219,7 +219,7 @@ void CollectionListScene::onHttpListCollection(HttpClient* client, HttpResponse*
 }
 
 void CollectionListScene::onSptLoaderLoad(const char *localPath, Sprite* sprite, void *userData) {
-    int i = (int)userData;
+    int i = (int)(reinterpret_cast<long>(userData));
     sprite->setAnchorPoint(Point(0.f, 1.f));
     sprite->setPosition(Point(THUMB_MARGIN, -(THUMB_MARGIN+_thumbHeight)*i));
     _dragView->addChild(sprite);

@@ -18,6 +18,7 @@ client/proj.android/gen/
 client/proj.android/obj/
 client/Classes/obsolete/
 client/publish/
+client2/cocos2d/external/
 server/server
 server/obsolete/
 server/tools/packUploader/packUploader
