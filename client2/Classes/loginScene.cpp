@@ -2,6 +2,7 @@
 #include "eventListScene.h"
 #include "http.h"
 #include "util.h"
+#include "button.h"
 #include "jsonxx/jsonxx.h"
 #include "lw/lwLog.h"
 
@@ -40,7 +41,7 @@ bool LoginLayer::init() {
     _editUserName->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
     _editUserName->setInputFlag(EditBox::InputFlag::SENSITIVE);
     _editUserName->setReturnType(EditBox::KeyboardReturnType::DONE);
-    _editUserName->setText("aa");
+    _editUserName->setText("test1");
     addChild(_editUserName, 1);
     
     _editPassword = EditBox::create(editBoxSize, Scale9Sprite::create("ui/pt.png"));
@@ -53,17 +54,36 @@ bool LoginLayer::init() {
     _editPassword->setMaxLength(20);
     _editPassword->setReturnType(EditBox::KeyboardReturnType::DONE);
     _editPassword->setInputFlag(EditBox::InputFlag::PASSWORD);
-    _editPassword->setText("aa");
+    _editPassword->setText("aaa");
     addChild(_editPassword, 1);
     
-    auto btnLogin = createTextButton("HelveticaNeue", "Login", 48, Color3B::WHITE);
+    auto btnLogin = createTextButton("HelveticaNeue", "Login", 64, Color3B::WHITE);
     btnLogin->setPosition(Point(visSize.width*.5f, visSize.height - 600));
     btnLogin->setAnchorPoint(Point(.5f, 1));
     btnLogin->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
     btnLogin->addTargetWithActionForControlEvents(this, cccontrol_selector(LoginLayer::sendLoginMsg), Control::EventType::TOUCH_UP_INSIDE);
     addChild(btnLogin, 1);
+    //btnLogin->setPreferredSize(Size(300, 300));
+    
+    //test
+    auto btn = Button::create("ui/pt.png");
+    btn->setPosition(Point(visSize.width*.5f, visSize.height - 800));
+    //btn->setPosition(Point(0, 0));
+    btn->setContentSize(Size(200, 100));
+    this->addChild(btn);
+    
+    auto label = LabelTTF::create("aaabbb", "HelveticaNeue", 42);
+    label->setPosition(Point(btn->getContentSize().width*.5f, btn->getContentSize().height*.5f));
+    label->setColor(Color3B::RED);
+    label->setAnchorPoint(Point(.5f, 0.5f));
+    btn->addLabel(label, Color3B::WHITE, Color3B::BLACK);
+    btn->onClick(this, (Button::Handler)&LoginLayer::onBtn);
     
     return true;
+}
+
+void LoginLayer::onBtn(Ref* btn) {
+    lwinfo("xxxxxxxxx");
 }
 
 void LoginLayer::sendLoginMsg(Ref *sender, Control::EventType controlEvent) {
@@ -82,21 +102,56 @@ void LoginLayer::sendLoginMsg(Ref *sender, Control::EventType controlEvent) {
 }
 
 void LoginLayer::onHttpLogin(HttpClient* client, HttpResponse* resp) {
-    _waiting = false;
     std::string body;
     if (!checkHttpResp(resp, body)) {
         lwerror("http error:%s", body.c_str());
+        _waiting = false;
         return;
     }
     
     jsonxx::Object msg;
     if (!msg.parse(body)) {
         lwerror("msg.parse(body)");
+        _waiting = false;
         return;
     }
     auto token = msg.get<jsonxx::String>("Token");
     setHttpUserToken(token.c_str());
     
-    Director::getInstance()->replaceScene(TransitionFade::create(0.5f, (Scene*)EventListLayer::createWithScene()->getParent()));
+    //
+    postHttpRequest("player/getInfo", "", this, (SEL_HttpResponse)&LoginLayer::onHttpGetPlayerInfo);
     
 }
+
+void LoginLayer::onHttpGetPlayerInfo(HttpClient* client, HttpResponse* resp) {
+    _waiting = false;
+    
+    std::string body;
+    if (!checkHttpResp(resp, body)) {
+        lwerror("http error:%s", body.c_str());
+        _waiting = false;
+        return;
+    }
+    
+    jsonxx::Object msg;
+    if (!msg.parse(body)) {
+        lwerror("msg.parse(body)");
+        _waiting = false;
+        return;
+    }
+    
+    auto playerInfo = getPlayerInfo();
+    playerInfo.name = msg.get<jsonxx::String>("Name");
+    playerInfo.teamId = (uint32_t)msg.get<jsonxx::Number>("TeamId");
+    
+    Director::getInstance()->replaceScene(TransitionFade::create(0.5f, (Scene*)EventListLayer::createWithScene()->getParent()));
+}
+
+
+
+
+
+
+
+
+

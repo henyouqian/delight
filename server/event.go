@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -83,12 +84,14 @@ type Team struct {
 }
 
 type GameRecord struct {
-	PlayerId uint64
-	Score    int32
-	Time     int64
+	PlayerId   uint64
+	PlayerName string
+	Score      int32
+	Time       int64
 }
 
 type EventPlayerRecord struct {
+	PlayerName    string
 	TeamId        uint32
 	Secret        string
 	SecretExpire  int64
@@ -379,7 +382,7 @@ func getEventResult(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(out))
 }
 
-func getPlayerResult(w http.ResponseWriter, r *http.Request) {
+func getMyResult(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//ssdb
@@ -503,15 +506,17 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 		record.Trys++
 	} else {
 		record.Trys = 1
-		teamIdStr, err := getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_TEAM)
-		lwutil.CheckError(err, "err_player_team")
-		teamIdRaw, err := strconv.ParseUint(teamIdStr, 10, 32)
-		teamId := uint32(teamIdRaw)
+
+		var playerInfo PlayerInfo
+		_getPlayerInfo(ssdb, session, &playerInfo)
+
+		teamId := playerInfo.TeamId
 		lwutil.CheckError(err, "")
 		if TEAM_MAP[teamId] == false {
 			lwutil.SendError("err_team", fmt.Sprintf("invalid team id: %d", teamId))
 		}
 		record.TeamId = teamId
+		record.PlayerName = playerInfo.Name
 	}
 
 	//gen secret
@@ -877,29 +882,58 @@ func getTopTen(w http.ResponseWriter, r *http.Request) {
 	var in struct {
 		EventId  uint64
 		RoundIdx uint32
-		TeamId   uint64
+		TeamIds  []uint64
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+	teamNum := len(in.TeamIds)
+	if teamNum == 0 {
+		lwutil.SendError("err_decode_body", "need TeamIds []uint64")
+	}
+	if teamNum > 5 {
+		in.TeamIds = in.TeamIds[:5]
+	}
 
-	key := fmt.Sprintf("%d/%d/%d", in.EventId, in.RoundIdx, in.TeamId)
-	resp, err := ssdb.Do("hget", H_EVENT_ROUND_TEAM_TOPTEN, key)
+	cmds := []interface{}{
+		"multi_hget",
+		H_EVENT_ROUND_TEAM_TOPTEN,
+	}
+	for _, v := range in.TeamIds {
+		key := fmt.Sprintf("%d/%d/%d", in.EventId, in.RoundIdx, v)
+		cmds = append(cmds, key)
+	}
+
+	resp, err := ssdb.Do(cmds...)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
+	resp = resp[1:]
 	out := struct {
-		EventId     uint64
-		RoundIdx    uint32
-		TeamId      uint64
-		GameRecords []GameRecord
+		EventId  uint64
+		RoundIdx uint32
+		Top10s   []interface{}
 	}{
 		in.EventId,
 		in.RoundIdx,
-		in.TeamId,
-		make([]GameRecord, 0, 10),
+		make([]interface{}, 0, teamNum),
 	}
-	err = json.Unmarshal([]byte(resp[1]), &out.GameRecords)
-	lwutil.CheckError(err, "")
+	for i := 0; i < len(resp)/2; i++ {
+		key := resp[i*2]
+		teamIdStr := strings.Split(key, "/")[2]
+		teamIdRaw, err := strconv.ParseUint(teamIdStr, 10, 32)
+		lwutil.CheckError(err, "")
+		elem := struct {
+			TeamId      uint32
+			GameRecords []GameRecord
+		}{
+			uint32(teamIdRaw),
+			make([]GameRecord, 0, 10),
+		}
+		err = json.Unmarshal([]byte(resp[i*2+1]), &elem.GameRecords)
+		lwutil.CheckError(err, resp[i*2+1])
+		out.Top10s = append(out.Top10s, elem)
+	}
+
 	lwutil.WriteResponse(w, out)
 }
 
@@ -909,7 +943,7 @@ func regMatch() {
 	http.Handle("/event/list", lwutil.ReqHandler(listEvent))
 	http.Handle("/event/listClosed", lwutil.ReqHandler(listClosedEvent))
 	http.Handle("/event/getResult", lwutil.ReqHandler(getEventResult))
-	http.Handle("/event/getPlayerResult", lwutil.ReqHandler(getPlayerResult))
+	http.Handle("/event/getMyResult", lwutil.ReqHandler(getMyResult))
 	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
 	http.Handle("/event/freePlay", lwutil.ReqHandler(matchFreePlay))

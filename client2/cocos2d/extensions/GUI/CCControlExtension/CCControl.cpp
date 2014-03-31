@@ -80,6 +80,10 @@ bool Control::init()
         touchListener->onTouchEnded = CC_CALLBACK_2(Control::onTouchEnded, this);
         touchListener->onTouchCancelled = CC_CALLBACK_2(Control::onTouchCancelled, this);
         
+        //lw begin
+        touchListener->setSwallowTouches(true);
+        //lw end
+        
         dispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
         
         return true;

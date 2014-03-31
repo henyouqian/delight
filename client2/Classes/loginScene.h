@@ -20,6 +20,9 @@ public:
     
     //
     void onHttpLogin(HttpClient* client, HttpResponse* response);
+    void onHttpGetPlayerInfo(HttpClient* client, HttpResponse* response);
+    
+    void onBtn(Ref* btn);
     
     
 private:

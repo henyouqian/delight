@@ -51,16 +51,17 @@ type Team struct {
 	Id    uint32
 	Score int32
 	Win   bool
-	//TopTen []GameRecord
 }
 
 type GameRecord struct {
-	PlayerId uint64
-	Score    int32
-	Time     int64
+	PlayerId   uint64
+	PlayerName string
+	Score      int32
+	Time       int64
 }
 
 type EventPlayerRecord struct {
+	PlayerName    string
 	TeamId        uint32
 	Secret        string
 	SecretExpire  int64
@@ -89,87 +90,6 @@ type ByTime []GameRecord
 func (a ByTime) Len() int           { return len(a) }
 func (a ByTime) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByTime) Less(i, j int) bool { return a[i].Time < a[j].Time }
-
-func updateRound0(ssdb *ssdb.Client, event *Event, result *EventResult) {
-	glog.Info("updateRound0")
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	round := &result.Rounds[0]
-	nextRound := &result.Rounds[1]
-	nextRound.Games = make([]Game, 8)
-	for iGame, game := range round.Games {
-		for iTeam := range game.Teams {
-			team := &game.Teams[iTeam]
-			team.Win = false
-			//get top ten of the team
-			teamLbKey := fmt.Sprintf("%s/%d/%d", Z_EVENT_TEAM_LEADERBOARD_PRE, event.Id, team.Id)
-
-			reply, err := rc.Do("ZREVRANGE", teamLbKey, 0, 10, "WITHSCORES")
-			values, err := redis.Values(reply, err)
-			checkError(err)
-
-			topTen := make([]GameRecord, len(values)/2)
-			for iRecord := range topTen {
-				record := &topTen[iRecord]
-				playerId, err := redis.Int64(values[iRecord*2], nil)
-				checkError(err)
-				score, err := redis.Int64(values[iRecord*2+1], nil)
-				checkError(err)
-				record.PlayerId = uint64(playerId)
-				record.Score = int32(score)
-
-				//get score time
-				key := fmt.Sprintf("%d/%d", event.Id, playerId)
-				resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
-				checkSsdbError(resp, err)
-				rcd := EventPlayerRecord{}
-				err = json.Unmarshal([]byte(resp[1]), &rcd)
-				checkError(err)
-				record.Time = rcd.HighScoreTime
-			}
-			js, err := json.Marshal(topTen)
-			checkError(err)
-
-			//save top ten
-			key := fmt.Sprintf("%d/%d/%d", event.Id, result.CurrRound, team.Id)
-			resp, err := ssdb.Do("hset", H_EVENT_ROUND_TEAM_TOPTEN, key, js)
-			checkSsdbError(resp, err)
-
-			//calc score
-			scoreSum := int32(0)
-			for _, v := range topTen {
-				scoreSum += v.Score
-			}
-			punishScore := PUNISH_SCORE * (10 - len(topTen))
-			team.Score = scoreSum - int32(punishScore)
-		}
-
-		//pick top 2
-		sortedTeams := make([]Team, len(game.Teams))
-		copy(sortedTeams, game.Teams)
-		sort.Sort(ByScore(sortedTeams))
-
-		//win
-		for i, team := range game.Teams {
-			if team.Id == sortedTeams[0].Id || team.Id == sortedTeams[1].Id {
-				game.Teams[i].Win = true
-				continue
-			}
-		}
-
-		//next round
-		nextRoundTeam := make([]Team, 2)
-		nextRoundTeam[0] = Team{}
-		nextRoundTeam[0].Id = sortedTeams[0].Id
-		nextRoundTeam[1] = Team{}
-		nextRoundTeam[1].Id = sortedTeams[1].Id
-
-		nextRound.Games[iGame].Teams = nextRoundTeam
-	}
-	result.CurrRound = 1
-
-}
 
 func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
 	glog.Infof("updateRound:eventId=%d, currRound=%d", event.Id, result.CurrRound)
@@ -227,6 +147,7 @@ func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
 				err = json.Unmarshal([]byte(resp[1]), &rcd)
 				checkError(err)
 				record.Time = rcd.HighScoreTime
+				record.PlayerName = rcd.PlayerName
 			}
 			js, err := json.Marshal(topTen)
 			checkError(err)

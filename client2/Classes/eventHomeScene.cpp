@@ -1,16 +1,21 @@
 #include "eventHomeScene.h"
 #include "eventListScene.h"
+#include "eventRoundLayer.h"
+#include "packLoadingScene.h"
+#include "sliderScene.h"
 #include "jsonxx/jsonxx.h"
 #include "db.h"
 #include "http.h"
 #include "dragView.h"
 #include "util.h"
+#include "lang.h"
 #include "lw/lwLog.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
 
 static Color3B BTN_COLOR(0, 122, 255);
+static int ROUND_NUM = 6;
 
 EventHomeLayer* EventHomeLayer::createWithScene(EventInfo* eventInfo) {
     auto scene = Scene::create();
@@ -32,9 +37,6 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     auto sz = this->getContentSize();
     
     _eventInfo = *eventInfo;
-    
-    setTouchEnabled(true);
-    this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
     auto visSize = Director::getInstance()->getVisibleSize();
     
     //drag view
@@ -63,6 +65,7 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     _labelEventInfo->setColor(Color3B::BLACK);
     _labelEventInfo->setAnchorPoint(Point(0.f, 1.f));
     this->addChild(_labelEventInfo);
+    _labelEventInfo->setVisible(false);
     
     //event result label
     _labelEventResult = LabelTTF::create("loading event result", "HelveticaNeue", 42);
@@ -71,6 +74,7 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     _labelEventResult->setColor(Color3B::BLACK);
     _labelEventResult->setAnchorPoint(Point(0.f, 1.f));
     this->addChild(_labelEventResult);
+    _labelEventResult->setVisible(false);
     
     //player result label
     _labelPlayerResult = LabelTTF::create("loading player result", "HelveticaNeue", 42);
@@ -79,22 +83,60 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     _labelPlayerResult->setColor(Color3B::BLACK);
     _labelPlayerResult->setAnchorPoint(Point(0.f, 1.f));
     this->addChild(_labelPlayerResult);
+    _labelPlayerResult->setVisible(false);
     
-    //play button
-    button = createTextButton("HelveticaNeue", "Play", 48, BTN_COLOR);
+    //_labelHighScore
+    float y = visSize.height-200;
+    _labelHighScore = LabelTTF::create("High score", "HelveticaNeue", 42);
+    _labelHighScore->setPosition(Point(40, y));
+    _labelHighScore->setHorizontalAlignment(TextHAlignment::LEFT);
+    _labelHighScore->setColor(Color3B::BLACK);
+    _labelHighScore->setAnchorPoint(Point(0.f, 1.f));
+    this->addChild(_labelHighScore);
+    
+    //_labelRank
+    y -= 100;
+    _labelRank = LabelTTF::create("Rank", "HelveticaNeue", 42);
+    _labelRank->setPosition(Point(40, y));
+    _labelRank->setHorizontalAlignment(TextHAlignment::LEFT);
+    _labelRank->setColor(Color3B::BLACK);
+    _labelRank->setAnchorPoint(Point(0.f, 1.f));
+    this->addChild(_labelRank);
+    
+    //_labelTeams
+    y -= 160;
+    _labelTeams = LabelTTF::create("Teams", "HelveticaNeue", 42);
+    _labelTeams->setPosition(Point(40, y));
+    _labelTeams->setHorizontalAlignment(TextHAlignment::LEFT);
+    _labelTeams->setColor(Color3B::BLACK);
+    _labelTeams->setAnchorPoint(Point(0.f, 1.f));
+    this->addChild(_labelTeams);
+
+    
+    //practice button
+    button = createTextButton("HelveticaNeue", lang("Practice"), 48, BTN_COLOR);
     button->setAnchorPoint(Point(0.5f, 1.f));
     button->setPosition(Point(160, visSize.height-1000));
+    button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(EventHomeLayer::practice), Control::EventType::TOUCH_UP_INSIDE);
+    this->addChild(button);
+    
+    //match button
+    button = createTextButton("HelveticaNeue", lang("Match"), 48, BTN_COLOR);
+    button->setAnchorPoint(Point(.5f, 1.f));
+    button->setPosition(Point(visSize.width-160, visSize.height-1000));
     button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
     button->addTargetWithActionForControlEvents(this, cccontrol_selector(EventHomeLayer::play), Control::EventType::TOUCH_UP_INSIDE);
     this->addChild(button);
     
-    //rounds button
-    button = createTextButton("HelveticaNeue", "Rounds", 48, BTN_COLOR);
-    button->setAnchorPoint(Point(.5f, 1.f));
-    button->setPosition(Point(visSize.width-160, visSize.height-1000));
-    button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
-    button->addTargetWithActionForControlEvents(this, cccontrol_selector(EventHomeLayer::rounds), Control::EventType::TOUCH_UP_INSIDE);
-    this->addChild(button);
+    //round layers
+    for (auto i = 0; i < ROUND_NUM; ++i) {
+        auto roundLayer = EventRoundLayer::create(i);
+        roundLayer->setAnchorPoint(Point(0, 0));
+        roundLayer->setPosition(Point(visSize.width*(i+1), 0));
+        this->addChild(roundLayer);
+        _roundLayers.push_back(roundLayer);
+    }
     
     //get pack info
     jsonxx::Object msg;
@@ -107,15 +149,105 @@ bool EventHomeLayer::init(EventInfo* eventInfo) {
     postHttpRequest("event/getResult", resultMsg.json().c_str(), this, (SEL_HttpResponse)&EventHomeLayer::onHttpGetResult);
     
     //get result info
-    jsonxx::Object playerResult;
-    playerResult << "EventId" << _eventInfo.id;
-    postHttpRequest("event/getPlayerResult", resultMsg.json().c_str(), this, (SEL_HttpResponse)&EventHomeLayer::onHttpGetPlayerResult);
+    jsonxx::Object myResult;
+    myResult << "EventId" << _eventInfo.id;
+    postHttpRequest("event/getMyResult", resultMsg.json().c_str(), this, (SEL_HttpResponse)&EventHomeLayer::onHttpGetMyResult);
     
     return true;
 }
 
+EventHomeLayer::~EventHomeLayer() {
+    
+}
+
+void EventHomeLayer::onEnter() {
+    LayerColor::onEnter();
+    
+    //touch
+    auto visSize = Director::getInstance()->getVisibleSize();
+    
+    _touchListener = EventListenerTouchOneByOne::create();
+    _touchListener->setSwallowTouches(true);
+    _touchListener->onTouchBegan = [this](Touch* touch, Event* event){
+        _isDragging = false;
+        return true;
+    };
+    
+    _touchListener->onTouchMoved = [=](Touch* touch, Event* event){
+        if (!_isDragging) {
+            auto dx = fabs(touch->getStartLocation().x - touch->getLocation().x);
+            if (dx > 10) {
+                _isDragging = true;
+                for (auto it = _roundLayers.begin(); it != _roundLayers.end(); ++it) {
+                    (*it)->cancelButton();
+                }
+            }
+        }
+        auto pos = this->getPosition();
+        auto d = touch->getDelta();
+        auto toX = pos.x+d.x;
+        float maxDist = 300.f;
+        if (pos.x > 0) {
+            float dt = pos.x;
+            if (dt < maxDist) {
+                toX = pos.x + d.x * (cos((dt/maxDist)*M_PI_2+M_PI_2)+1.f);
+            }
+        } else if (pos.x < -visSize.width*ROUND_NUM) {
+            float dt = -visSize.width*ROUND_NUM-pos.x;
+            if (dt < maxDist) {
+                toX = pos.x + d.x * (cos((dt/maxDist)*M_PI_2+M_PI_2)+1.f);
+            }
+        }
+        
+        this->setPosition(toX, pos.y);
+        
+        
+    };
+    
+    _touchListener->onTouchEnded = [=](Touch* touch, Event* event){
+        if (!_isDragging) {
+            return;
+        }
+        _isDragging = false;
+        auto dx = touch->getDelta().x;
+        auto posX = -this->getPosition().x;
+        float idx = floor(posX/visSize.width);
+        float toX = -idx * visSize.width;
+        if (dx < 0) {
+            toX = -(idx+1) * visSize.width;
+        }
+        toX = MAX(-visSize.width*ROUND_NUM, MIN(0.f, toX));
+        auto moveto = MoveTo::create(.2f, Point(toX, 0));
+        auto ease = EaseSineOut::create(moveto);
+        this->runAction(ease);
+    };
+    
+    _eventDispatcher->addEventListenerWithFixedPriority(_touchListener, 1);
+}
+
+void EventHomeLayer::onExit() {
+    LayerColor::onExit();
+    
+    _eventDispatcher->removeEventListener(_touchListener);
+}
+
 void EventHomeLayer::back(Ref *sender, Control::EventType controlEvent) {
     Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+}
+
+void EventHomeLayer::practice(Ref *sender, Control::EventType controlEvent) {
+    //Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+    if (_packInfo.id != 0) {
+        
+        //Director::getInstance()->pushScene(TransitionFade::create(0.5f, (Scene*)(SliderLayer::createWithScene(&_packInfo)->getParent())));
+        auto sliderScene = (Scene*)(SliderLayer::createWithScene(&_packInfo)->getParent());
+        if (isPackDownloaded(_packInfo)) {
+            Director::getInstance()->pushScene(TransitionFade::create(0.5f, sliderScene));
+        } else {
+            auto loadingScene = (Scene*)(PackLoadingLayer::createWithScene(_packInfo, sliderScene)->getParent());
+            Director::getInstance()->pushScene(TransitionFade::create(0.5f, loadingScene));
+        }
+    }
 }
 
 void EventHomeLayer::play(Ref *sender, Control::EventType controlEvent) {
@@ -123,7 +255,9 @@ void EventHomeLayer::play(Ref *sender, Control::EventType controlEvent) {
 }
 
 void EventHomeLayer::rounds(Ref *sender, Control::EventType controlEvent) {
-    Director::getInstance()->popSceneWithTransition<TransitionFade>((Scene*)this->getParent(), .5f);
+    auto moveto = MoveTo::create(.2f, Point(-Director::getInstance()->getVisibleSize().width, 0));
+    auto ease = EaseSineOut::create(moveto);
+    this->runAction(ease);
 }
 
 void EventHomeLayer::onHttpGetPack(HttpClient* cli, HttpResponse* resp) {
@@ -164,9 +298,8 @@ void EventHomeLayer::onHttpGetResult(HttpClient* cli, HttpResponse* resp) {
         return;
     }
     
-    EventResult result;
-    result.EventId = (uint64_t)(resultObj.get<jsonxx::Number>("EventId"));
-    result.CurrRound = (int)(resultObj.get<jsonxx::Number>("CurrRound"));
+    _result.EventId = (uint64_t)(resultObj.get<jsonxx::Number>("EventId"));
+    _result.CurrRound = (int)(resultObj.get<jsonxx::Number>("CurrRound"));
     auto roundsArray = resultObj.get<jsonxx::Array>("Rounds");
     for (auto i = 0; i < roundsArray.size(); ++i) {
         auto roundObj = roundsArray.get<jsonxx::Object>(i);
@@ -192,21 +325,35 @@ void EventHomeLayer::onHttpGetResult(HttpClient* cli, HttpResponse* resp) {
         }
         Round round;
         round.Games = games;
-        result.Rounds.push_back(round);
+        _result.Rounds.push_back(round);
+        
+        if (i < _roundLayers.size()) {
+            _roundLayers[i]->setRound(&round);
+        }
     }
     
     //
     std::stringstream ss;
-    ss << "CurrRound: " << result.CurrRound << "\n";
-    ss << "RoundsNum: " << result.Rounds.size() << "\n";
+    ss << "CurrRound: " << _result.CurrRound << "\n";
+    ss << "RoundsNum: " << _result.Rounds.size() << "\n";
     _labelEventResult->setString(ss.str().c_str());
 }
 
-void EventHomeLayer::onHttpGetPlayerResult(HttpClient* cli, HttpResponse* resp) {
+void EventHomeLayer::onHttpGetMyResult(HttpClient* cli, HttpResponse* resp) {
     std::string body;
     if (!checkHttpResp(resp, body)) {
         lwerror("http error:%s", body.c_str());
-        _labelPlayerResult->setString(body.c_str());
+        jsonxx::Object errObj;
+        auto ok = errObj.parse(body);
+        if (!ok) {
+            lwerror("resultObj.parse error");
+            return;
+        }
+        auto err = errObj.get<jsonxx::String>("Error");
+        if (err.compare("err_not_played") == 0) {
+            _labelHighScore->setString("--");
+            _labelRank->setString("--");
+        }
         return;
     }
     
@@ -248,6 +395,50 @@ void EventHomeLayer::onHttpGetPlayerResult(HttpClient* cli, HttpResponse* resp) 
     ss << "TeamRank: " << result.TeamRank << "\n";
     ss << "TeamRankNum: " << result.TeamRankNum << "\n";
     _labelPlayerResult->setString(ss.str().c_str());
+    
+    //score
+    const int BUF_SZ = 256;
+    char buf[BUF_SZ];
+    snprintf(buf, BUF_SZ, "HighScore:%d", result.HighScore);
+    _labelHighScore->setString(buf);
+    
+    //rank
+    float beatRate = 0.f;
+    float beatRateTeam = 0.f;
+    if (result.RankNum > 1) {
+        beatRate = (float)(result.RankNum - result.Rank)/(float)(result.RankNum-1)*100.f;
+    }
+    if (result.TeamRankNum > 1) {
+        beatRateTeam = (float)(result.TeamRankNum - result.TeamRank)/(float)(result.TeamRankNum-1)*100.f;
+    }
+    
+    snprintf(buf, BUF_SZ, "全国排名:%d, 击败了%.1f%%\n全省排名:%d, 击败了%.1f%%", result.Rank, beatRate, result.TeamRank, beatRateTeam);
+    _labelRank->setString(buf);
+    
+    //team vs match
+    auto playerInfo = getPlayerInfo();
+    if (_result.CurrRound < _result.Rounds.size()) {
+        auto currRound = _result.Rounds[_result.CurrRound];
+        std::vector<Team>* teams = nullptr;
+        for (auto itGame = currRound.Games.begin(); itGame != currRound.Games.end(); ++itGame) {
+            for (auto itTeam = itGame->Teams.begin(); itTeam != itGame->Teams.end(); ++itTeam) {
+                if (itTeam->Id == playerInfo.teamId) {
+                    teams = &(itGame->Teams);
+                    break;
+                }
+            }
+        }
+        if (teams) {
+            std::stringstream ss;
+            for (auto it = teams->begin(); it != teams->end(); ++it) {
+                ss << getTeamName(it->Id) << "  ";
+            }
+            _labelTeams->setString(ss.str().c_str());
+        } else {
+            _labelTeams->setString("已淘汰");
+        }
+    }
+    
 }
 
 

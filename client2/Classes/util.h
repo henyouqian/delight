@@ -23,5 +23,13 @@ ControlButton *createTextButton(const char* textFont, const char *text, float te
 
 const char* getUploadPackDir();
 
+const char* getTeamName(uint32_t id);
+
+struct PlayerInfo {
+    std::string name;
+    uint32_t teamId;
+};
+
+PlayerInfo& getPlayerInfo();
 
 #endif // __UTIL_H__

@@ -13,6 +13,7 @@ USING_NS_CC_EXT;
 using namespace cocos2d::network;
 
 class DragView;
+class EventRoundLayer;
 
 struct Team {
 	uint32_t Id;
@@ -47,16 +48,21 @@ class EventHomeLayer : public LayerColor{
 public:
     static EventHomeLayer* createWithScene(EventInfo* eventInfo);
     bool init(EventInfo* eventInfo);
+    ~EventHomeLayer();
+    
+    virtual void onEnter();
+    virtual void onExit();
     
     //button callback
     void back(Ref *sender, Control::EventType controlEvent);
+    void practice(Ref *sender, Control::EventType controlEvent);
     void play(Ref *sender, Control::EventType controlEvent);
     void rounds(Ref *sender, Control::EventType controlEvent);
     
     //http callback
     void onHttpGetPack(HttpClient* cli, HttpResponse* resp);
     void onHttpGetResult(HttpClient* cli, HttpResponse* resp);
-    void onHttpGetPlayerResult(HttpClient* cli, HttpResponse* resp);
+    void onHttpGetMyResult(HttpClient* cli, HttpResponse* resp);
     
     //touch
     virtual bool onTouchBegan(Touch* touch, Event  *event);
@@ -68,10 +74,19 @@ private:
     DragView *_dragView;
     EventInfo _eventInfo;
     PackInfo _packInfo;
+    EventResult _result;
+    
+    LabelTTF *_labelHighScore;
+    LabelTTF *_labelRank;
+    LabelTTF *_labelTeams;
     
     LabelTTF *_labelEventInfo;
     LabelTTF *_labelEventResult;
     LabelTTF *_labelPlayerResult;
+    EventListenerTouchOneByOne *_touchListener;
+    
+    std::vector<EventRoundLayer*> _roundLayers;
+    bool _isDragging;
 };
 
 #endif // __EVENT_HOME_SCENE_H__

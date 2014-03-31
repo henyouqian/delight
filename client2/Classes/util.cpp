@@ -1,4 +1,5 @@
 #include "util.h"
+#include "lang.h"
 #include "crypto/sha.h"
 #include <sys/stat.h>
 
@@ -119,10 +120,17 @@ ControlButton *createTextButton(const char* textFont, const char *text, float te
     return button;
 }
 
+const char* getTeamName(uint32_t id) {
+    char buf[64];
+    snprintf(buf, 64, "teamName%d", id);
+    return lang(buf);
+}
 
+static PlayerInfo g_playerInfo;
 
-
-
+PlayerInfo& getPlayerInfo() {
+    return g_playerInfo;
+}
 
 
 

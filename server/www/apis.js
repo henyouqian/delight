@@ -138,9 +138,9 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": ""
 				},{
-					"name": "setTeam",
+					"name": "setInfo",
 					"method": "POST",
-					"data": {"TeamId": 0}
+					"data": {"Name":"", "TeamId": 11}
 				}
 			]
 		},{
@@ -175,7 +175,7 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"EventId": 1}
 				},{
-					"name": "getPlayerResult",
+					"name": "getMyResult",
 					"method": "POST",
 					"data": {"EventId": 1}
 				},{
@@ -197,7 +197,7 @@ function Controller($scope, $http) {
 				},{
 					"name": "topTen",
 					"method": "POST",
-					"data": {"EventId": 1, "RoundIdx": 0, "TeamId": 11}
+					"data": {"EventId": 1, "RoundIdx": 0, "TeamIds": [11,12,13]}
 				}
 			]
 		}

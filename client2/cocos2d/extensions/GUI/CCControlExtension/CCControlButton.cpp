@@ -644,6 +644,9 @@ void ControlButton::onTouchMoved(Touch *pTouch, Event *pEvent)
 void ControlButton::onTouchEnded(Touch *pTouch, Event *pEvent)
 {
     _isPushed = false;
+    if (_state != Control::State::HIGH_LIGHTED) {
+        return;
+    }
     setHighlighted(false);
     
     

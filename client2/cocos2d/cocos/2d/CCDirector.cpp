@@ -648,6 +648,23 @@ void Director::pushScene(Scene *scene)
 }
 
 //lw begin
+void Director::popScene(Scene *scene) {
+    CCAssert(_runningScene != NULL, "running scene should not null");
+    
+    if (_scenesStack.back() != scene) {
+        return;
+    }
+    
+    _scenesStack.popBack();
+    if (_scenesStack.empty()) {
+        end();
+    }
+    else {
+        _sendCleanupToScene = true;
+        _nextScene = _scenesStack.back();
+    }
+}
+
 //void Director::popScene(void)
 //{
 //    CCASSERT(_runningScene != nullptr, "running scene should not null");

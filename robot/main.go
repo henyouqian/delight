@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"runtime"
 	// "sync"
-	// "time"
+	"time"
 )
 
 const (
@@ -118,7 +118,7 @@ func freePlay(userName string, matchId uint32, minScore int32, maxScore int32) {
 
 func play(userName string, eventId uint64, minScore int32, maxScore int32) {
 	//playBegin
-	url := HOST + "/match/playBegin"
+	url := HOST + "/event/playBegin"
 	body := struct {
 		EventId uint64
 	}{
@@ -144,7 +144,7 @@ func play(userName string, eventId uint64, minScore int32, maxScore int32) {
 	checkErr(err)
 
 	//playEnd
-	url = HOST + "/match/playEnd"
+	url = HOST + "/event/playEnd"
 	score := minScore + int32(rand.Int())%(maxScore-minScore)
 	playEndBody := struct {
 		EventId uint64
@@ -165,8 +165,8 @@ func play(userName string, eventId uint64, minScore int32, maxScore int32) {
 	glog.Info(string(resp))
 }
 
-func setTeam(userName string) {
-	url := HOST + "/player/setTeam"
+func setInfo(userName string) {
+	url := HOST + "/player/setInfo"
 	teamId := TEAM_IDS[rand.Int()%len(TEAM_IDS)]
 
 	body := struct {
@@ -190,11 +190,13 @@ func main() {
 
 	glog.Infof("Robot running: cpu=%d", runtime.NumCPU())
 
+	rand.Seed(time.Now().UnixNano())
+
 	for i := 0; i < 1000; i++ {
 		username := fmt.Sprintf("test%d", i)
 		//register(username)
-		// setTeam(username)
-		play(username, 9, -1000*60, -1000*10)
+		//setInfo(username)
+		play(username, 10, -1000*60, -1000*10)
 	}
 
 	// var w sync.WaitGroup
