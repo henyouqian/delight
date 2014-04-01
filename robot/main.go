@@ -196,7 +196,7 @@ func main() {
 		username := fmt.Sprintf("test%d", i)
 		//register(username)
 		//setInfo(username)
-		play(username, 10, -1000*60, -1000*10)
+		play(username, 1, -1000*60, -1000*10)
 	}
 
 	// var w sync.WaitGroup

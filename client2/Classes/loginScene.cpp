@@ -140,7 +140,7 @@ void LoginLayer::onHttpGetPlayerInfo(HttpClient* client, HttpResponse* resp) {
         return;
     }
     
-    auto playerInfo = getPlayerInfo();
+    auto &playerInfo = getPlayerInfo();
     playerInfo.name = msg.get<jsonxx::String>("Name");
     playerInfo.teamId = (uint32_t)msg.get<jsonxx::Number>("TeamId");
     

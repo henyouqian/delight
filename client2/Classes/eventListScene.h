@@ -20,7 +20,9 @@ struct EventInfo {
     Type type;
     uint64_t id;
     uint64_t packId;
-    std::vector<int64_t> timePoints;
+    int64_t beginTime;
+    int64_t endTime;
+    bool isFinished;
 };
 
 class EventListLayer : public Layer{
@@ -35,7 +37,6 @@ public:
     
     //
     void onHttpListEvent(HttpClient* client, HttpResponse* response);
-    void onHttpListClosedEvent(HttpClient* client, HttpResponse* resp);
     
     //touch
     virtual bool onTouchBegan(Touch* touch, Event  *event);

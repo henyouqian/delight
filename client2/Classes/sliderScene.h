@@ -40,7 +40,7 @@ public:
     bool init(PackInfo *packInfo);
     virtual ~SliderLayer();
     virtual void onEnter();
-    
+    virtual void onExit();
     
     //GameplayListener
     virtual void onReset(float rotate);

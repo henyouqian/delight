@@ -150,24 +150,16 @@ function Controller($scope, $http) {
 				{
 					"name": "new",
 					"method": "POST",
-					"data": {"Type": "TEAM_CHAMPIONSHIP", "PackId": 1, "TimePointStrings": [
-						"2014-03-17T00:00",
-						"2014-03-17T00:00",
-						"2014-03-17T00:00",
-						"2014-03-17T00:00",
-						"2014-03-17T00:00",
-						"2014-03-17T00:00"
-						]}
+					"data": {"Type": "TEAM_CHAMPIONSHIP", "PackId": 1, 
+						"BeginTimeString": "2014-04-01T00:00",					
+						"EndTimeString": "2014-04-02T00:00"
+						}
 				},{
 					"name": "del",
 					"method": "POST",
 					"data": {"EventId": 0}
 				},{
 					"name": "list",
-					"method": "POST",
-					"data": {"StartId": 0, "Limit": 20}
-				},{
-					"name": "listClosed",
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}
 				},{

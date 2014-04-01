@@ -11,6 +11,9 @@ class DragView : public LayerColor {
 public:
     CREATE_FUNC(DragView);
     bool init();
+    virtual void onEnter();
+    virtual void onExit();
+    
     void setWindowRect(const Rect &rect);
     const Rect& getWindowRect();
     void setContentHeight(float height);
@@ -21,6 +24,10 @@ public:
     virtual void onTouchesBegan(const Touch* touch);
     virtual void onTouchesMoved(const Touch* touch);
     virtual void onTouchesEnded(const Touch* touch);
+    
+    bool onTouchBegan(Touch* touch, Event* event);
+    void onTouchMoved(Touch* touch, Event* event);
+    void onTouchEnded(Touch* touch, Event* event);
     
     virtual void update(float delta);
     
@@ -42,7 +49,7 @@ private:
     std::list<DragPointInfo> _dragPointInfos;
     float _rollSpeed;
     bool _bouncing;
-    
+    EventListenerTouchOneByOne *_touchListener;
 };
 
 #endif // __DRAG_VIEW_H__

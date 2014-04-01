@@ -17,8 +17,24 @@ bool DragView::init() {
     _contentHeight = 1000.f;
     
     scheduleUpdate();
-    setTouchEnabled(true);
+    //setTouchEnabled(true);
     return true;
+}
+
+void DragView::onEnter() {
+    LayerColor::onEnter();
+    _touchListener = EventListenerTouchOneByOne::create();
+    _touchListener->setSwallowTouches(true);
+    _touchListener->onTouchBegan = CC_CALLBACK_2(DragView::onTouchBegan, this);
+    _touchListener->onTouchMoved = CC_CALLBACK_2(DragView::onTouchMoved, this);
+    _touchListener->onTouchEnded = CC_CALLBACK_2(DragView::onTouchEnded, this);
+    _touchListener->onTouchCancelled = CC_CALLBACK_2(DragView::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithFixedPriority(_touchListener, 1);
+}
+
+void DragView::onExit() {
+    LayerColor::onExit();
+    _eventDispatcher->removeEventListener(_touchListener);
 }
 
 void DragView::setWindowRect(const Rect &rect) {
@@ -47,6 +63,18 @@ float DragView::getContentHeight() {
 
 bool DragView::isDragging() {
     return _dragging;
+}
+
+bool DragView::onTouchBegan(Touch* touch, Event* event) {
+    return false;
+}
+
+void DragView::onTouchMoved(Touch* touch, Event* event) {
+    
+}
+
+void DragView::onTouchEnded(Touch* touch, Event* event) {
+    
 }
 
 void DragView::onTouchesBegan(const Touch* touch) {

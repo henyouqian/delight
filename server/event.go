@@ -23,7 +23,6 @@ func init() {
 const (
 	H_EVENT                      = "H_EVENT"
 	Z_EVENT                      = "Z_EVENT"
-	Z_CLOSED_EVENT               = "Z_CLOSED_EVENT"
 	H_EVENT_RESULT               = "H_EVENT_RESULT"
 	H_EVENT_PLAYER_RECORD        = "H_EVENT_PLAYER_RECORD"
 	Z_EVENT_LEADERBOARD_PRE      = "Z_EVENT_LEADERBOARD_PRE"
@@ -56,11 +55,14 @@ var (
 )
 
 type Event struct {
-	Type             string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
-	Id               uint64
-	PackId           uint64
-	TimePointStrings []string
-	TimePoints       []int64
+	Type            string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
+	Id              uint64
+	PackId          uint64
+	BeginTime       int64
+	EndTime         int64
+	BeginTimeString string
+	EndTimeString   string
+	IsFinished      bool
 }
 
 type EventResult struct {
@@ -135,36 +137,35 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 	if _, ok := EVENT_TYPES[event.Type]; ok == false {
 		lwutil.SendError("err_match_type", "")
 	}
-	switch event.Type {
-	case "PERSONAL_RANK":
-		if len(event.TimePointStrings) != 2 {
-			lwutil.SendError("err_timepoint_num", "len(event.TimePointStrings) != 2")
-		}
-	case "TEAM_CHAMPIONSHIP":
-		if len(event.TimePointStrings) != TEAM_CHAMPIONSHIP_ROUND_NUM {
-			lwutil.SendError("err_timepoint_num", "len(event.TimePointStrings) != 6")
-		}
-	}
+	event.IsFinished = false
 
 	//fill TimePoints
 	now := time.Now().Unix()
-	event.TimePoints = make([]int64, len(event.TimePointStrings))
-	for i, v := range event.TimePointStrings {
-		t, err := time.ParseInLocation("2006-01-02T15:04", v, time.Local)
-		lwutil.CheckError(err, "")
-		event.TimePoints[i] = t.Unix()
-		if event.TimePoints[i] < now {
-			lwutil.SendError("err_time_points", "timePoints must larger than now")
-		}
+
+	t, err := time.ParseInLocation("2006-01-02T15:04", event.BeginTimeString, time.Local)
+	lwutil.CheckError(err, "")
+	event.BeginTime = t.Unix()
+	if event.BeginTime < now {
+		lwutil.SendError("err_time", "BeginTime must larger than now")
+	}
+
+	t, err = time.ParseInLocation("2006-01-02T15:04", event.EndTimeString, time.Local)
+	lwutil.CheckError(err, "")
+	event.EndTime = t.Unix()
+	if event.EndTime < now {
+		lwutil.SendError("err_time", "EndTime must larger than now")
 	}
 
 	//check timePotins
-	tp := event.TimePoints[0]
-	for i := 1; i < len(event.TimePoints); i++ {
-		if tp >= event.TimePoints[i] {
-			lwutil.SendError("err_time_points", fmt.Sprintf("timePoints must order by asc. TimePoints=%v", event.TimePoints))
-		}
-		tp = event.TimePoints[i]
+	if event.BeginTime >= event.EndTime {
+		lwutil.SendError("err_time", "event.BeginTime >= event.EndTime")
+	}
+
+	//check pack
+	resp, err := ssdb.Do("hexists", H_PACK, event.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] == "0" {
+		lwutil.SendError("err_pack", "pack not exist")
 	}
 
 	//gen serial
@@ -172,10 +173,10 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 
 	//save to ssdb
 	js, err := json.Marshal(event)
-	resp, err := ssdb.Do("hset", H_EVENT, event.Id, js)
+	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
-	resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.TimePoints[0])
+	resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.EndTime)
 	lwutil.CheckSsdbError(resp, err)
 
 	//init first round
@@ -272,64 +273,6 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 
 	//zrscan
 	resp, err := ssdb.Do("zrscan", Z_EVENT, startId, "", "", in.Limit)
-	lwutil.CheckSsdbError(resp, err)
-	resp = resp[1:]
-
-	//multi_hget
-	keyNum := len(resp) / 2
-	cmds := make([]interface{}, keyNum+2)
-	cmds[0] = "multi_hget"
-	cmds[1] = H_EVENT
-	for i := 0; i < keyNum; i++ {
-		cmds[2+i] = resp[i*2]
-	}
-	resp, err = ssdb.Do(cmds...)
-	resp = resp[1:]
-
-	//out
-	eventNum := len(resp) / 2
-	out := make([]Event, eventNum)
-	for i := 0; i < eventNum; i++ {
-		err = json.Unmarshal([]byte(resp[i*2+1]), &out[i])
-		lwutil.CheckError(err, "")
-	}
-
-	lwutil.WriteResponse(w, out)
-}
-
-func listClosedEvent(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	//ssdb
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
-
-	//session
-	_, err = findSession(w, r, nil)
-	lwutil.CheckError(err, "err_auth")
-
-	//in
-	var in struct {
-		StartId uint32
-		Limit   uint32
-	}
-
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-	if in.Limit > 20 {
-		in.Limit = 20
-	}
-
-	var startId interface{}
-	if in.StartId == 0 {
-		startId = ""
-	} else {
-		startId = in.StartId
-	}
-
-	//zrscan
-	resp, err := ssdb.Do("zrscan", Z_CLOSED_EVENT, startId, "", "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
 
@@ -491,7 +434,7 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
 	now := time.Now().Unix()
-	if now < event.TimePoints[0] || now >= event.TimePoints[len(event.TimePoints)-1] {
+	if now < event.BeginTime || now >= event.EndTime {
 		lwutil.SendError("err_time", "event not running")
 	}
 
@@ -648,96 +591,6 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
-func matchFreePlay(w http.ResponseWriter, r *http.Request) {
-	var err error
-	lwutil.CheckMathod(r, "POST")
-
-	//ssdb
-	ssdb, err := ssdbPool.Get()
-	lwutil.CheckError(err, "")
-	defer ssdb.Close()
-
-	//session
-	session, err := findSession(w, r, nil)
-	lwutil.CheckError(err, "err_auth")
-
-	//in
-	var in struct {
-		MatchId uint64
-		Score   int32
-	}
-	err = lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	//check match
-	resp, err := ssdb.Do("hexists", H_EVENT, in.MatchId)
-	lwutil.CheckSsdbError(resp, err)
-	if resp[1] != "1" {
-		lwutil.SendError("err_not_found", "match not found")
-	}
-
-	//check free play record
-	record := FreePlayRecord{}
-
-	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
-	resp, err = ssdb.Do("hget", H_FREEPLAY_RECORD, recordKey)
-	lwutil.CheckError(err, "")
-	scoreUpdate := false
-	if resp[0] != "ok" {
-		record.HighScore = in.Score
-		record.Trys = 1
-		scoreUpdate = true
-	} else {
-		err = json.Unmarshal([]byte(resp[1]), &record)
-		lwutil.CheckError(err, "")
-		if in.Score > record.HighScore {
-			record.HighScore = in.Score
-			scoreUpdate = true
-		}
-		record.Trys++
-	}
-
-	//save record
-	jsRecord, err := json.Marshal(record)
-	resp, err = ssdb.Do("hset", H_FREEPLAY_RECORD, recordKey, jsRecord)
-	lwutil.CheckSsdbError(resp, err)
-
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	//leaderboard
-	leaderBoardName := fmt.Sprintf("%s/%d", Z_FREEPLAY_LEADERBOARD_PRE, in.MatchId)
-	if scoreUpdate {
-		_, err = rc.Do("ZADD", leaderBoardName, record.HighScore, session.Userid)
-		lwutil.CheckError(err, "")
-	}
-
-	//get rank
-	rc.Send("ZREVRANK", leaderBoardName, session.Userid)
-	rc.Send("ZCARD", leaderBoardName)
-	err = rc.Flush()
-	lwutil.CheckError(err, "")
-	rank, err := redis.Int(rc.Receive())
-	lwutil.CheckError(err, "")
-	rankNum, err := redis.Int(rc.Receive())
-	lwutil.CheckError(err, "")
-
-	//out
-	out := struct {
-		Rank    uint32
-		RankNum uint32
-		Trys    uint32
-	}{
-		uint32(rank + 1),
-		uint32(rankNum),
-		record.Trys,
-	}
-
-	//out
-	lwutil.WriteResponse(w, out)
-}
-
 func _redisInt(reply interface{}, err error) (int, error) {
 	v, err := redis.Int(reply, err)
 	if err == redis.ErrNil {
@@ -746,128 +599,6 @@ func _redisInt(reply interface{}, err error) (int, error) {
 		return v, err
 	}
 }
-
-// func matchInfo(w http.ResponseWriter, r *http.Request) {
-// 	var err error
-// 	lwutil.CheckMathod(r, "POST")
-
-// 	//session
-// 	session, err := findSession(w, r, nil)
-// 	lwutil.CheckError(err, "err_auth")
-
-// 	//in
-// 	var in struct {
-// 		MatchId uint64
-// 	}
-// 	err = lwutil.DecodeRequestBody(r, &in)
-// 	lwutil.CheckError(err, "err_decode_body")
-
-// 	//ssdb
-// 	ssdb, err := ssdbPool.Get()
-// 	lwutil.CheckError(err, "")
-// 	defer ssdb.Close()
-
-// 	//get current match
-// 	var match Match
-// 	getCurrMatch(&match)
-
-// 	if in.MatchId == 0 {
-// 		in.MatchId = match.Id
-// 	}
-
-// 	//free play record
-// 	freePlayRecord := FreePlayRecord{}
-// 	recordKey := fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
-// 	resp, err := ssdb.Do("hget", H_FREEPLAY_RECORD, recordKey)
-// 	lwutil.CheckError(err, "")
-// 	if resp[0] != "ok" {
-// 		freePlayRecord.HighScore = 0
-// 		freePlayRecord.Trys = 0
-// 	} else {
-// 		err = json.Unmarshal([]byte(resp[1]), &freePlayRecord)
-// 		lwutil.CheckError(err, "")
-// 	}
-
-// 	//match record
-// 	matchRecord := MatchRecord{}
-// 	recordKey = fmt.Sprintf("%d/%d", in.MatchId, session.Userid)
-// 	resp, err = ssdb.Do("hget", H_EVENT_RECORD, recordKey)
-// 	lwutil.CheckError(err, "")
-// 	if resp[0] != "ok" {
-// 		matchRecord.HighScore = 0
-// 		matchRecord.Trys = 0
-// 	} else {
-// 		err = json.Unmarshal([]byte(resp[1]), &matchRecord)
-// 		lwutil.CheckError(err, "")
-// 	}
-
-// 	//redis
-// 	rc := redisPool.Get()
-// 	defer rc.Close()
-
-// 	//leaderboard
-// 	freePlayLeaderBoardName := fmt.Sprintf("%s/%d", Z_FREEPLAY_LEADERBOARD_PRE, in.MatchId)
-// 	matchLeaderBoardName := fmt.Sprintf("%s/%d", Z_EVENT_LEADERBOARD_PRE, in.MatchId)
-
-// 	//get rank
-// 	rc.Send("ZREVRANK", freePlayLeaderBoardName, session.Userid)
-// 	rc.Send("ZCARD", freePlayLeaderBoardName)
-// 	rc.Send("ZREVRANK", matchLeaderBoardName, session.Userid)
-// 	rc.Send("ZCARD", matchLeaderBoardName)
-// 	err = rc.Flush()
-// 	lwutil.CheckError(err, "")
-
-// 	fRank, err := _redisInt(rc.Receive())
-// 	lwutil.CheckError(err, "")
-// 	fRankNum, err := _redisInt(rc.Receive())
-// 	lwutil.CheckError(err, "")
-// 	mRank, err := _redisInt(rc.Receive())
-// 	lwutil.CheckError(err, "")
-// 	mRankNum, err := _redisInt(rc.Receive())
-// 	lwutil.CheckError(err, "")
-
-// 	//get rank in zone
-// 	zoneStr := _getPlayerInfoField(ssdb, session.Userid, FLD_PLAYER_ZONE)
-// 	zone, err := strconv.ParseUint(zoneStr, 10, 32)
-// 	lwutil.CheckError(err, "")
-// 	zoneLeaderboardKey := fmt.Sprintf("%s/%d/%d", Z_ZONE_LEADERBOARD_PRE, match.Id, zone)
-
-// 	rc.Send("ZREVRANK", zoneLeaderboardKey, session.Userid)
-// 	rc.Send("ZCARD", zoneLeaderboardKey)
-// 	err = rc.Flush()
-// 	lwutil.CheckError(err, "")
-// 	zoneRank, err := redis.Int(rc.Receive())
-// 	lwutil.CheckError(err, "")
-// 	zoneRankNum, err := redis.Int(rc.Receive())
-// 	lwutil.CheckError(err, "")
-
-// 	//out
-// 	out := struct {
-// 		FreePlayRank      uint32
-// 		FreePlayRankNum   uint32
-// 		FreePlayTrys      uint32
-// 		FreePlayHighScore int32
-// 		MatchRank         uint32
-// 		MatchRankNum      uint32
-// 		©rys         uint32
-// 		MatchHighScore    int32
-// 		ZoneRank          uint32
-// 		ZoneRankNum       uint32
-// 	}{
-// 		uint32(fRank + 1),
-// 		uint32(fRankNum),
-// 		freePlayRecord.Trys,
-// 		freePlayRecord.HighScore,
-// 		uint32(mRank + 1),
-// 		uint32(mRankNum),
-// 		matchRecord.Trys,
-// 		matchRecord.HighScore,
-// 		uint32(zoneRank + 1),
-// 		uint32(zoneRankNum),
-// 	}
-
-// 	lwutil.WriteResponse(w, out)
-// }
 
 func getTopTen(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -941,12 +672,9 @@ func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(newEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(delEvent))
 	http.Handle("/event/list", lwutil.ReqHandler(listEvent))
-	http.Handle("/event/listClosed", lwutil.ReqHandler(listClosedEvent))
 	http.Handle("/event/getResult", lwutil.ReqHandler(getEventResult))
 	http.Handle("/event/getMyResult", lwutil.ReqHandler(getMyResult))
 	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
-	http.Handle("/event/freePlay", lwutil.ReqHandler(matchFreePlay))
 	http.Handle("/event/topTen", lwutil.ReqHandler(getTopTen))
-	// http.Handle("/match/info", lwutil.ReqHandler(matchInfo))
 }

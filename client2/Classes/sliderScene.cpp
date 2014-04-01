@@ -300,6 +300,16 @@ bool SliderLayer::init(PackInfo *packInfo) {
     _gradeLabel->setScale(3.f);
     this->addChild(_gradeLabel, 10);
     
+    return true;
+}
+
+SliderLayer::~SliderLayer() {
+    
+}
+
+void SliderLayer::onEnter() {
+    Layer::onEnter();
+    
     //touch
     _touchListener = EventListenerTouchOneByOne::create();
     _touchListener->setSwallowTouches(true);
@@ -307,20 +317,15 @@ bool SliderLayer::init(PackInfo *packInfo) {
     _touchListener->onTouchMoved = CC_CALLBACK_2(SliderLayer::onTouchMoved, this);
     _touchListener->onTouchEnded = CC_CALLBACK_2(SliderLayer::onTouchEnded, this);
     _touchListener->onTouchCancelled = CC_CALLBACK_2(SliderLayer::onTouchEnded, this);
-    //_eventDispatcher->addEventListenerWithSceneGraphPriority(_touchListener, this);
     _eventDispatcher->addEventListenerWithFixedPriority(_touchListener, 1);
     
-    return true;
-}
-
-SliderLayer::~SliderLayer() {
-    _eventDispatcher->removeEventListener(_touchListener);
-}
-
-void SliderLayer::onEnter() {
-    //reset
+    //
     reset(0);
-    Layer::onEnter();
+}
+
+void SliderLayer::onExit() {
+    Layer::onExit();
+    _eventDispatcher->removeEventListener(_touchListener);
 }
 
 void SliderLayer::onReset(float rotate) {

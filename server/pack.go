@@ -17,9 +17,9 @@ import (
 const (
 	ADMIN_USERID     = uint64(1)
 	USER_PACK_BUCKET = "sliderpack"
-	H_PACK           = "hPack"     //key:packId, value:packData
-	Z_USER_PACK_PRE  = "zUserPack" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
-	Z_TAG_PRE        = "zTag"      //name:Z_TAG_PRE/tag, key:packid, score:packid
+	H_PACK           = "H_PACK"          //key:packId, value:packData
+	Z_USER_PACK_PRE  = "Z_USER_PACK_PRE" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
+	Z_TAG_PRE        = "Z_TAG_PRE"       //name:Z_TAG_PRE/tag, key:packid, score:packid
 )
 
 type Image struct {

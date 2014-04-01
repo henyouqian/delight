@@ -57,7 +57,6 @@ bool EventListLayer::init() {
     lwinfo("%s", msg.json().c_str());
     
     postHttpRequest("event/list", msg.json().c_str(), this, (SEL_HttpResponse)(&EventListLayer::onHttpListEvent));
-    postHttpRequest("event/listClosed", msg.json().c_str(), this, (SEL_HttpResponse)(&EventListLayer::onHttpListClosedEvent));
     
     return true;
 }
@@ -93,58 +92,10 @@ void EventListLayer::onHttpListEvent(HttpClient* client, HttpResponse* resp) {
         if (!eventObj.has<jsonxx::String>("Type")
             || !eventObj.has<jsonxx::Number>("Id")
             || !eventObj.has<jsonxx::Number>("PackId")
-            || !eventObj.has<jsonxx::Array>("TimePoints")) {
-            lwerror("json invalid, need Type, Id, PackId, TimePoints");
-            return;
-        }
-        
-        auto type = eventObj.get<jsonxx::String>("Type");
-        auto id = (uint64_t)eventObj.get<jsonxx::Number>("Id");
-        auto packId = (uint64_t)eventObj.get<jsonxx::Number>("PackId");
-        lwinfo("event:type=%s, id=%llu, packId=%llu", type.c_str(), id, packId);
-        
-        auto timePointsObj = eventObj.get<jsonxx::Array>("TimePoints");
-        for (auto itp = 0; itp < timePointsObj.size(); ++itp) {
-            auto timePoint = (int64_t)timePointsObj.get<jsonxx::Number>(itp);
-            lwinfo("timePoint=%llu", timePoint);
-        }
-        
-        std::stringstream ss;
-        ss << "event" << id;
-        auto button = createTextButton("HelveticaNeue", ss.str().c_str(), 48, Color3B::WHITE);
-        button->setPosition(Point(visSize.width*.5f, _listY));
-        button->setTitleColorForState(Color3B(255, 0, 0), Control::State::HIGH_LIGHTED);
-        //button->addTargetWithActionForControlEvents(this, cccontrol_selector(LoginLayer::sendLoginMsg), Control::EventType::TOUCH_UP_INSIDE);
-        _dragView->addChild(button);
-        _listY -= 120;
-    }
-    
-    _dragView->setContentHeight(-_listY + 120);
-}
-
-void EventListLayer::onHttpListClosedEvent(HttpClient* client, HttpResponse* resp) {
-    jsonxx::Array msg;
-    std::string body;
-    if (!checkHttpResp(resp, body)) {
-        lwerror("MatchListLayer::onHttpListMatch http error:%s", body.c_str());
-        return;
-    } else {
-        //parse response
-        bool ok = msg.parse(body);
-        if (!ok) {
-            lwerror("json parse error");
-            return;
-        }
-    }
-    
-    auto visSize = Director::getInstance()->getVisibleSize();
-    for (auto i = 0; i < msg.size(); ++i) {
-        auto eventObj = msg.get<jsonxx::Object>(i);
-        if (!eventObj.has<jsonxx::String>("Type")
-            || !eventObj.has<jsonxx::Number>("Id")
-            || !eventObj.has<jsonxx::Number>("PackId")
-            || !eventObj.has<jsonxx::Array>("TimePoints")) {
-            lwerror("json invalid, need Type, Id, PackId, TimePoints");
+            || !eventObj.has<jsonxx::Number>("BeginTime")
+            || !eventObj.has<jsonxx::Number>("EndTime")
+            || !eventObj.has<jsonxx::Boolean>("IsFinished")) {
+            lwerror("json invalid, need Type, Id, PackId, BeginTime, EndTime, IsFinished: %s", eventObj.json().c_str());
             return;
         }
         
@@ -159,13 +110,10 @@ void EventListLayer::onHttpListClosedEvent(HttpClient* client, HttpResponse* res
             return;
         }
         eventInfo->id = (uint64_t)eventObj.get<jsonxx::Number>("Id");
-        eventInfo->packId = (int64_t)eventObj.get<jsonxx::Number>("PackId");
-        
-        auto timePointsObj = eventObj.get<jsonxx::Array>("TimePoints");
-        for (auto itp = 0; itp < timePointsObj.size(); ++itp) {
-            auto timePoint = (uint64_t)timePointsObj.get<jsonxx::Number>(itp);
-            eventInfo->timePoints.push_back(timePoint);
-        }
+        eventInfo->packId = (uint64_t)eventObj.get<jsonxx::Number>("PackId");
+        eventInfo->beginTime = (int64_t)eventObj.get<jsonxx::Number>("BeginTime");
+        eventInfo->endTime = (int64_t)eventObj.get<jsonxx::Number>("EndTime");
+        eventInfo->isFinished = eventObj.get<jsonxx::Boolean>("IsFinished");
         
         _eventInfos.push_back(eventInfo);
         

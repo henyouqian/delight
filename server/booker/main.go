@@ -15,22 +15,21 @@ import (
 
 const (
 	Z_EVENT                      = "Z_EVENT"
-	Z_CLOSED_EVENT               = "Z_CLOSED_EVENT"
 	H_EVENT                      = "H_EVENT"
 	H_EVENT_RESULT               = "H_EVENT_RESULT"
 	Z_EVENT_TEAM_LEADERBOARD_PRE = "Z_EVENT_TEAM_LEADERBOARD_PRE"
 	H_EVENT_ROUND_TEAM_TOPTEN    = "H_EVENT_ROUND_TEAM_TOPTEN"
 	H_EVENT_PLAYER_RECORD        = "H_EVENT_PLAYER_RECORD"
 	PUNISH_SCORE                 = 10 * 1000 * 60
-	TEAM_CHAMPIONSHIP_ROUND_NUM  = 6
+	TEAM_CHAMPIONSHIP_ROUND_NUM  = uint32(6)
 )
 
 type Event struct {
-	Type             string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
-	Id               uint64
-	PackId           uint64
-	TimePointStrings []string
-	TimePoints       []int64
+	Type      string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
+	Id        uint64
+	PackId    uint64
+	BeginTime int64
+	EndTime   int64
 }
 
 type EventResult struct {
@@ -91,18 +90,18 @@ func (a ByTime) Len() int           { return len(a) }
 func (a ByTime) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByTime) Less(i, j int) bool { return a[i].Time < a[j].Time }
 
-func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
-	glog.Infof("updateRound:eventId=%d, currRound=%d", event.Id, result.CurrRound)
+func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult, currRound uint32) {
+	glog.Infof("updateRound:eventId=%d, currRound=%d", event.Id, currRound)
 	rc := redisPool.Get()
 	defer rc.Close()
 
-	round := &result.Rounds[result.CurrRound]
+	round := &result.Rounds[currRound]
 
-	hasNextRound := result.CurrRound < TEAM_CHAMPIONSHIP_ROUND_NUM-1
+	hasNextRound := currRound < TEAM_CHAMPIONSHIP_ROUND_NUM-1
 	var nextRound *Round
 	if hasNextRound {
-		nextRound = &result.Rounds[result.CurrRound+1]
-		switch result.CurrRound {
+		nextRound = &result.Rounds[currRound+1]
+		switch currRound {
 		case 0, TEAM_CHAMPIONSHIP_ROUND_NUM - 3:
 			nextRound.Games = make([]Game, len(round.Games))
 		case TEAM_CHAMPIONSHIP_ROUND_NUM - 1:
@@ -155,12 +154,12 @@ func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
 			topTens[iTeam] = topTen
 
 			//save top ten
-			key := fmt.Sprintf("%d/%d/%d", event.Id, result.CurrRound, team.Id)
+			key := fmt.Sprintf("%d/%d/%d", event.Id, currRound, team.Id)
 			resp, err := ssdb.Do("hset", H_EVENT_ROUND_TEAM_TOPTEN, key, js)
 			checkSsdbError(resp, err)
 
 			//calc score if round == 0
-			if result.CurrRound == 0 {
+			if currRound == 0 {
 				scoreSum := int32(0)
 				for _, v := range topTen {
 					scoreSum += v.Score
@@ -171,7 +170,7 @@ func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
 		}
 
 		//calc score if round > 0
-		if result.CurrRound > 0 {
+		if currRound > 0 {
 			if len(topTens) != 2 {
 				panic("topTens != 2")
 			}
@@ -236,7 +235,7 @@ func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
 
 			//next round
 			if hasNextRound {
-				if result.CurrRound == TEAM_CHAMPIONSHIP_ROUND_NUM-3 {
+				if currRound == TEAM_CHAMPIONSHIP_ROUND_NUM-3 {
 					nextRound.Games[0].Teams[iGame].Id = winnerTeamId
 					nextRound.Games[1].Teams[iGame].Id = loserTeamId
 				} else {
@@ -263,22 +262,6 @@ func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult) {
 		}
 
 	}
-	result.CurrRound++
-
-	//save result
-	js, err := json.Marshal(result)
-	checkError(err)
-	resp, err := ssdb.Do("hset", H_EVENT_RESULT, event.Id, js)
-	checkSsdbError(resp, err)
-
-	//put into closed list if at last round
-	if result.CurrRound == TEAM_CHAMPIONSHIP_ROUND_NUM-1 {
-		resp, err := ssdb.Do("zset", Z_CLOSED_EVENT, event.Id, event.TimePoints[len(event.TimePoints)-1])
-		checkSsdbError(resp, err)
-
-		resp, err = ssdb.Do("zdel", Z_EVENT, event.Id)
-		checkSsdbError(resp, err)
-	}
 }
 
 func update() {
@@ -290,26 +273,32 @@ func update() {
 	defer ssdb.Close()
 
 	//get not finish events
-	resp, err := ssdb.Do("zkeys", Z_EVENT, "", "", "", 20)
+	resp, err := ssdb.Do("zrscan", Z_EVENT, "", "", "", 20)
 	checkSsdbError(resp, err)
-	eventStrs := resp[1:]
+	resp = resp[1:]
 
-	if len(eventStrs) == 0 {
+	if len(resp) == 0 {
 		glog.Info("no event")
 		return
 	}
 
-	cmd := make([]interface{}, len(eventStrs)+2)
+	eventNum := len(resp) / 2
+	eventIds := make([]string, eventNum)
+	for i := 0; i < eventNum; i++ {
+		eventIds[i] = resp[i*2]
+	}
+
+	cmd := make([]interface{}, eventNum+2)
 	cmd[0] = "multi_hget"
 	cmd[1] = H_EVENT
-	for i, v := range eventStrs {
+	for i, v := range eventIds {
 		cmd[i+2] = v
 	}
 	resp, err = ssdb.Do(cmd...)
 	checkSsdbError(resp, err)
 
 	resp = resp[1:]
-	eventNum := len(resp) / 2
+	eventNum = len(resp) / 2
 	events := make([]Event, eventNum)
 	for i := 0; i < eventNum; i++ {
 		err = json.Unmarshal([]byte(resp[i*2+1]), &events[i])
@@ -317,10 +306,10 @@ func update() {
 	}
 
 	//get not finish event results
-	cmd = make([]interface{}, len(eventStrs)+2)
+	cmd = make([]interface{}, len(eventIds)+2)
 	cmd[0] = "multi_hget"
 	cmd[1] = H_EVENT_RESULT
-	for i, v := range eventStrs {
+	for i, v := range eventIds {
 		cmd[i+2] = v
 	}
 	resp, err = ssdb.Do(cmd...)
@@ -345,9 +334,21 @@ func update() {
 			panic("event.Id != result.EventId")
 		}
 
-		if time.Now().Unix() >= event.TimePoints[result.CurrRound+1] {
-			updateRound(ssdb, &event, &result)
+		if true || time.Now().Unix() >= event.EndTime {
+			//updateRound(ssdb, &event, &result)
+			for i := uint32(0); i < TEAM_CHAMPIONSHIP_ROUND_NUM; i++ {
+				updateRound(ssdb, &event, &result, i)
+			}
+
+			//save result
+			js, err := json.Marshal(result)
+			checkError(err)
+			resp, err := ssdb.Do("hset", H_EVENT_RESULT, event.Id, js)
+			checkSsdbError(resp, err)
 		}
+
+		glog.Infof("%+v", event)
+		glog.Infof("%+v", result)
 
 		// test: force update
 		//result.CurrRound = 0
