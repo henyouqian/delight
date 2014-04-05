@@ -11,6 +11,7 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 class ModeSelectScene;
+struct EventInfo;
 
 class TimeBar : public SpriteBatchNode {
 public:
@@ -20,7 +21,7 @@ public:
     void run();
     void stop();
     int getStarNum();
-    
+    uint32_t getMilliseconds();
     virtual void update(float dt);
     
 private:
@@ -34,10 +35,17 @@ private:
     int _colorIdx;
 };
 
+struct PlayTicket {
+    std::string secret;
+    int64_t secretExpire;
+    int32_t highScore;
+    uint32_t trys;
+};
+
 class SliderLayer : public cocos2d::Layer, public GameplayListener{
 public:
-    static SliderLayer* createWithScene(PackInfo *packInfo);
-    bool init(PackInfo *packInfo);
+    static SliderLayer* createWithScene(PackInfo *packInfo, EventInfo *eventInfo, PlayTicket *ticket);
+    bool init(PackInfo *packInfo, EventInfo *eventInfo, PlayTicket *ticket);
     virtual ~SliderLayer();
     virtual void onEnter();
     virtual void onExit();
@@ -45,6 +53,10 @@ public:
     //GameplayListener
     virtual void onReset(float rotate);
     
+    //http
+    void onHttpPlayEnd(HttpClient* cli, HttpResponse* resp);
+    
+    //
     bool onTouchBegan(Touch* touch, Event* event);
     void onTouchMoved(Touch* touch, Event* event);
     void onTouchEnded(Touch* touch, Event* event);
@@ -75,6 +87,7 @@ private:
     void reset(int imgIdx);
     
     PackInfo *_packInfo;
+    EventInfo *_eventInfo;
     std::string _randomImagePaths;
     
     SpriteBatchNode *_dotBatch;
@@ -87,6 +100,7 @@ private:
     LabelTTF *_gradeLabel;
     
     EventListenerTouchOneByOne *_touchListener;
+    PlayTicket *_ticket;
 };
 
 

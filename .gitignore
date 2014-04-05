@@ -25,3 +25,5 @@ server/tools/packUploader/packUploader
 server/redis/
 robot/robot
 server/booker/booker
+ssdb/
+redis/

@@ -66,26 +66,16 @@ bool DragView::isDragging() {
 }
 
 bool DragView::onTouchBegan(Touch* touch, Event* event) {
-    return false;
-}
-
-void DragView::onTouchMoved(Touch* touch, Event* event) {
-    
-}
-
-void DragView::onTouchEnded(Touch* touch, Event* event) {
-    
-}
-
-void DragView::onTouchesBegan(const Touch* touch) {
     if (_windowRect.containsPoint(touch->getLocation()) /*&& !_bouncing*/) {
         _trackTouch = true;
         _dragPointInfos.clear();
         _rollSpeed = 0.f;
+        return true;
     }
+    return false;
 }
 
-void DragView::onTouchesMoved(const Touch* touch) {
+void DragView::onTouchMoved(Touch* touch, Event* event) {
     if (!_trackTouch) {
         return;
     }
@@ -130,7 +120,7 @@ void DragView::onTouchesMoved(const Touch* touch) {
     }
 }
 
-void DragView::onTouchesEnded(const Touch* touch) {
+void DragView::onTouchEnded(Touch* touch, Event* event) {
     _trackTouch = false;
     _dragging = false;
     

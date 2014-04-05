@@ -38,12 +38,6 @@ public:
     //
     void onHttpListEvent(HttpClient* client, HttpResponse* response);
     
-    //touch
-    virtual bool onTouchBegan(Touch* touch, Event  *event);
-    virtual void onTouchMoved(Touch* touch, Event  *event);
-    virtual void onTouchEnded(Touch* touch, Event  *event);
-    virtual void onTouchCancelled(Touch *touch, Event *event);
-    
 private:
     DragView *_dragView;
     std::vector<EventInfo*> _eventInfos;

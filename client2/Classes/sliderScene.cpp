@@ -1,6 +1,8 @@
 #include "sliderScene.h"
+#include "eventListScene.h"
 #include "gifTexture.h"
 #include "util.h"
+#include "http.h"
 #include "lang.h"
 #include "db.h"
 #include "lw/lwLog.h"
@@ -11,6 +13,7 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 using namespace CocosDenshion;
+using std::chrono::system_clock;
 
 static const GLubyte BTN_BG_OPACITY = 160;
 static const float BTN_EASE_DUR = .2f;
@@ -121,6 +124,13 @@ int TimeBar::getStarNum() {
     }
 }
 
+uint32_t TimeBar::getMilliseconds() {
+    auto now = std::chrono::system_clock::now();
+    auto dur = now - _startTimePoint;
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds> (dur);
+    return (uint32_t)(ms.count());
+}
+
 void TimeBar::update(float dt) {
     auto now = std::chrono::system_clock::now();
     auto dur = now - _startTimePoint;
@@ -170,10 +180,10 @@ static void btnFadeIn(ControlButton *button) {
     label->runAction(easeFadein);
 }
 
-SliderLayer* SliderLayer::createWithScene(PackInfo *packInfo) {
+SliderLayer* SliderLayer::createWithScene(PackInfo *packInfo, EventInfo *eventInfo, PlayTicket *ticket) {
     auto scene = Scene::create();
     auto layer = new SliderLayer();
-    if (layer && layer->init(packInfo)) {
+    if (layer && layer->init(packInfo, eventInfo, ticket)) {
         layer->autorelease();
         scene->addChild(layer);
         return layer;
@@ -183,8 +193,10 @@ SliderLayer* SliderLayer::createWithScene(PackInfo *packInfo) {
 }
 
 
-bool SliderLayer::init(PackInfo *packInfo) {
+bool SliderLayer::init(PackInfo *packInfo, EventInfo *eventInfo, PlayTicket *ticket) {
     _packInfo = packInfo;
+    _eventInfo = eventInfo;
+    _ticket = ticket;
     auto t = time(nullptr);
     srand(t);
     if (!Layer::init()) {
@@ -482,10 +494,51 @@ void SliderLayer::onTouchEnded(Touch* touch, Event* event) {
             auto callback = CallFunc::create(CC_CALLBACK_0(SliderLayer::showStar, this));
             auto seq = Sequence::create(spawn, delay, callback, nullptr);
             _gradeLabel->runAction(seq);
+            
+            //upload score
+            if (_ticket) {
+                auto ms = _timeBar->getMilliseconds();
+                int32_t score = -ms;
+                if (_ticket->highScore == 0 || score > _ticket->highScore) {
+                    jsonxx::Object msg;
+                    msg << "EventId" << _eventInfo->id;
+                    msg << "Secret" << _ticket->secret;
+                    msg << "Score" << score;
+                    postHttpRequest("event/playEnd", msg.json().c_str(), this, (SEL_HttpResponse)&SliderLayer::onHttpPlayEnd);
+                }
+            }
         } else {
             btnFadeIn(_btnNext);
         }
     }
+}
+
+void SliderLayer::onHttpPlayEnd(HttpClient* cli, HttpResponse* resp) {
+    std::string body;
+    if (!checkHttpResp(resp, body)) {
+        lwerror("http error:%s", body.c_str());
+        return;
+    }
+    
+    jsonxx::Object rootObj;
+    if (!rootObj.parse(body)) {
+        lwerror("msgObj(body)");
+        return;
+    }
+    
+    if (!rootObj.has<jsonxx::Number>("Rank")
+        ||!rootObj.has<jsonxx::Number>("RankNum")
+        ||!rootObj.has<jsonxx::Number>("TeamRank")
+        ||!rootObj.has<jsonxx::Number>("TeamRankNum")) {
+        lwerror("msgObj key error");
+        return;
+    }
+    
+    auto rank = (uint32_t)rootObj.get<jsonxx::Number>("Rank");
+    auto rankNum = (uint32_t)rootObj.get<jsonxx::Number>("RankNum");
+    auto teamRank = (uint32_t)rootObj.get<jsonxx::Number>("TeamRank");
+    auto teamRankNum = (uint32_t)rootObj.get<jsonxx::Number>("TeamRankNum");
+    
 }
 
 void SliderLayer::showStar() {

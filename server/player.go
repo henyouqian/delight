@@ -10,7 +10,7 @@ import (
 	"net/http"
 	// "strconv"
 	//"strings"
-	//"time"
+	"time"
 )
 
 const (
@@ -71,7 +71,14 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	_getPlayerInfo(ssdb, session, &playerInfo)
 
 	//out
-	lwutil.WriteResponse(w, playerInfo)
+	out := struct {
+		PlayerInfo
+		Now int64
+	}{
+		playerInfo,
+		time.Now().Unix(),
+	}
+	lwutil.WriteResponse(w, out)
 }
 
 func setPlayerInfo(w http.ResponseWriter, r *http.Request) {

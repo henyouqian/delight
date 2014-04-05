@@ -10,7 +10,7 @@ USING_NS_CC_EXT;
 using namespace cocos2d::network;
 
 
-class LoginLayer : public Layer {
+class LoginLayer : public LayerColor {
 public:
     static LoginLayer* createWithScene();
     bool init();

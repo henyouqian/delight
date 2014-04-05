@@ -6,6 +6,7 @@
 #include "network/HttpClient.h"
 
 #include "eventListScene.h"
+#include "sliderScene.h"
 #include "pack.h"
 
 USING_NS_CC;
@@ -52,6 +53,7 @@ public:
     
     virtual void onEnter();
     virtual void onExit();
+    virtual void update(float delta);
     
     //button callback
     void back(Ref *sender, Control::EventType controlEvent);
@@ -63,15 +65,14 @@ public:
     void onHttpGetPack(HttpClient* cli, HttpResponse* resp);
     void onHttpGetResult(HttpClient* cli, HttpResponse* resp);
     void onHttpGetMyResult(HttpClient* cli, HttpResponse* resp);
+    void onHttpPlayBegin(HttpClient* cli, HttpResponse* resp);
     
     //touch
-    virtual bool onTouchBegan(Touch* touch, Event  *event);
-    virtual void onTouchMoved(Touch* touch, Event  *event);
-    virtual void onTouchEnded(Touch* touch, Event  *event);
-    virtual void onTouchCancelled(Touch *touch, Event *event);
+    bool onTouchBegan(Touch* touch, Event* event);
+    void onTouchMoved(Touch* touch, Event* event);
+    void onTouchEnded(Touch* touch, Event* event);
     
 private:
-    DragView *_dragView;
     EventInfo _eventInfo;
     PackInfo _packInfo;
     EventResult _result;
@@ -83,10 +84,12 @@ private:
     LabelTTF *_labelEventInfo;
     LabelTTF *_labelEventResult;
     LabelTTF *_labelPlayerResult;
+    LabelTTF *_labelTimeLeft;
     EventListenerTouchOneByOne *_touchListener;
     
     std::vector<EventRoundLayer*> _roundLayers;
     bool _isDragging;
+    PlayTicket _ticket;
 };
 
 #endif // __EVENT_HOME_SCENE_H__

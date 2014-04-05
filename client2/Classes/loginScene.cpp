@@ -22,7 +22,7 @@ LoginLayer* LoginLayer::createWithScene() {
 }
 
 bool LoginLayer::init() {
-    if (!Layer::init()) {
+    if (!LayerColor::initWithColor(Color4B(255, 255, 255, 255))) {
         return false;
     }
     
@@ -78,6 +78,19 @@ bool LoginLayer::init() {
     label->setAnchorPoint(Point(.5f, 0.5f));
     btn->addLabel(label, Color3B::WHITE, Color3B::BLACK);
     btn->onClick(this, (Button::Handler)&LoginLayer::onBtn);
+    //label->enableStroke(Color3B::RED, 3.0f, true);
+    
+    //test
+    label = LabelTTF::create("xxxxxiiii", "HelveticaNeue", 42);
+    //label->enableStroke(Color3B::RED, 3.0f, true);
+    label->disableStroke();
+    //label->enableShadow(Size(2, 2), .5f, 1.f, true);
+    label->setPosition(Point(visSize.width*.5f, 200));
+    label->setColor(Color3B::YELLOW);
+    label->setAnchorPoint(Point(.5f, 0.5f));
+    
+    addChild(label);
+    
     
     return true;
 }
@@ -140,9 +153,17 @@ void LoginLayer::onHttpGetPlayerInfo(HttpClient* client, HttpResponse* resp) {
         return;
     }
     
+    if (!msg.has<jsonxx::String>("Name")
+        ||!msg.has<jsonxx::Number>("TeamId")
+        ||!msg.has<jsonxx::Number>("Now")) {
+        lwerror("msg need key Name, TeamId, Now");
+        return;
+    }
+    
     auto &playerInfo = getPlayerInfo();
     playerInfo.name = msg.get<jsonxx::String>("Name");
     playerInfo.teamId = (uint32_t)msg.get<jsonxx::Number>("TeamId");
+    setNow((int64_t)msg.get<jsonxx::Number>("Now"));
     
     Director::getInstance()->replaceScene(TransitionFade::create(0.5f, (Scene*)EventListLayer::createWithScene()->getParent()));
 }

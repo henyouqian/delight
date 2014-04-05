@@ -99,6 +99,7 @@
 		B3BF01D918E947CD004E109E /* spriteLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BF01D718E947CD004E109E /* spriteLoader.cpp */; };
 		B3BF01DC18E94CFA004E109E /* sliderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BF01DA18E94CFA004E109E /* sliderScene.cpp */; };
 		B3BF01DF18E960F9004E109E /* packLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BF01DD18E960F9004E109E /* packLoadingScene.cpp */; };
+		B3BF01E118EDC597004E109E /* img in Resources */ = {isa = PBXBuildFile; fileRef = B3BF01E018EDC597004E109E /* img */; };
 		B3BF984918E324E90022EE49 /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3BF984718E324E90022EE49 /* db.cpp */; };
 		B3BF984D18E3258A0022EE49 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3BF984C18E3258A0022EE49 /* libsqlite3.dylib */; };
 		B3BF985018E328330022EE49 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = B3BF984F18E328330022EE49 /* lang */; };
@@ -449,6 +450,7 @@
 		B3BF01DB18E94CFA004E109E /* sliderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sliderScene.h; path = ../Classes/sliderScene.h; sourceTree = "<group>"; };
 		B3BF01DD18E960F9004E109E /* packLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packLoadingScene.cpp; path = ../Classes/packLoadingScene.cpp; sourceTree = "<group>"; };
 		B3BF01DE18E960F9004E109E /* packLoadingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packLoadingScene.h; path = ../Classes/packLoadingScene.h; sourceTree = "<group>"; };
+		B3BF01E018EDC597004E109E /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = ../res/img; sourceTree = "<group>"; };
 		B3BF984718E324E90022EE49 /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = db.cpp; path = ../Classes/db.cpp; sourceTree = "<group>"; };
 		B3BF984818E324E90022EE49 /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = db.h; path = ../Classes/db.h; sourceTree = "<group>"; };
 		B3BF984C18E3258A0022EE49 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
@@ -954,6 +956,7 @@
 		B3BF984E18E328170022EE49 /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B3BF01E018EDC597004E109E /* img */,
 				B3BF985318E3284A0022EE49 /* audio */,
 				B3BF985418E3284A0022EE49 /* ui */,
 				B3BF985118E3283C0022EE49 /* default */,
@@ -1126,6 +1129,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3BF01E118EDC597004E109E /* img in Resources */,
 				B3BF985218E3283C0022EE49 /* default in Resources */,
 				B331A06018E316A100270DDA /* .gitignore in Resources */,
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,

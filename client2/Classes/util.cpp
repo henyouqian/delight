@@ -132,6 +132,13 @@ PlayerInfo& getPlayerInfo() {
     return g_playerInfo;
 }
 
+static int64_t g_now_diff = 0;
+void setNow(int64_t now) {
+    g_now_diff = now - time(nullptr);
+}
 
+int64_t getNow() {
+    return time(nullptr) + g_now_diff;
+}
 
 

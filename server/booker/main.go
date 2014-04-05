@@ -140,6 +140,7 @@ func updateRound(ssdb *ssdb.Client, event *Event, result *EventResult, currRound
 
 				//get score time
 				key := fmt.Sprintf("%d/%d", event.Id, playerId)
+				glog.Info(key)
 				resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
 				checkSsdbError(resp, err)
 				rcd := EventPlayerRecord{}

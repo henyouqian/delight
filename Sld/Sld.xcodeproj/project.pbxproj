@@ -1,0 +1,589 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B31EE7CC18F05BE60047E9FD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CB18F05BE60047E9FD /* Foundation.framework */; };
+		B31EE7CE18F05BE60047E9FD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */; };
+		B31EE7D018F05BE60047E9FD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CF18F05BE60047E9FD /* UIKit.framework */; };
+		B31EE7D218F05BE60047E9FD /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7D118F05BE60047E9FD /* SpriteKit.framework */; };
+		B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7D618F05BE60047E9FD /* InfoPlist.strings */; };
+		B31EE7DA18F05BE60047E9FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7D918F05BE60047E9FD /* main.m */; };
+		B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */; };
+		B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */; };
+		B31EE7E418F05BE60047E9FD /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7E218F05BE60047E9FD /* Main_iPad.storyboard */; };
+		B31EE7E718F05BE60047E9FD /* SldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7E618F05BE60047E9FD /* SldViewController.m */; };
+		B31EE7EA18F05BE60047E9FD /* SldMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7E918F05BE60047E9FD /* SldMyScene.m */; };
+		B31EE7EC18F05BE60047E9FD /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7EB18F05BE60047E9FD /* Spaceship.png */; };
+		B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7ED18F05BE60047E9FD /* Images.xcassets */; };
+		B31EE7F518F05BE60047E9FD /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7F418F05BE60047E9FD /* XCTest.framework */; };
+		B31EE7F618F05BE60047E9FD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CB18F05BE60047E9FD /* Foundation.framework */; };
+		B31EE7F718F05BE60047E9FD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CF18F05BE60047E9FD /* UIKit.framework */; };
+		B31EE7FF18F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */; };
+		B31EE80118F05BE60047E9FD /* SldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80018F05BE60047E9FD /* SldTests.m */; };
+		B31EE81618F05D520047E9FD /* dgif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80C18F05D520047E9FD /* dgif_lib.c */; };
+		B31EE81718F05D530047E9FD /* egif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80D18F05D520047E9FD /* egif_lib.c */; };
+		B31EE81818F05D530047E9FD /* gif_err.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80E18F05D520047E9FD /* gif_err.c */; };
+		B31EE81918F05D530047E9FD /* gif_font.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80F18F05D520047E9FD /* gif_font.c */; };
+		B31EE81A18F05D530047E9FD /* gif_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81018F05D520047E9FD /* gif_hash.c */; };
+		B31EE81B18F05D530047E9FD /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81418F05D520047E9FD /* gifalloc.c */; };
+		B31EE81C18F05D530047E9FD /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81518F05D520047E9FD /* quantize.c */; };
+		B31EE82218F061560047E9FD /* gifTexture.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE82118F061560047E9FD /* gifTexture.c */; };
+		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B31EE7F818F05BE60047E9FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B31EE7C018F05BE50047E9FD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B31EE7C718F05BE60047E9FD;
+			remoteInfo = Sld;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B31EE7C818F05BE60047E9FD /* Sld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sld.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B31EE7CB18F05BE60047E9FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B31EE7CF18F05BE60047E9FD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B31EE7D118F05BE60047E9FD /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		B31EE7D518F05BE60047E9FD /* Sld-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sld-Info.plist"; sourceTree = "<group>"; };
+		B31EE7D718F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B31EE7D918F05BE60047E9FD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B31EE7DB18F05BE60047E9FD /* Sld-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sld-Prefix.pch"; sourceTree = "<group>"; };
+		B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldAppDelegate.h; sourceTree = "<group>"; };
+		B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldAppDelegate.m; sourceTree = "<group>"; };
+		B31EE7E018F05BE60047E9FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		B31EE7E318F05BE60047E9FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		B31EE7E518F05BE60047E9FD /* SldViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldViewController.h; sourceTree = "<group>"; };
+		B31EE7E618F05BE60047E9FD /* SldViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldViewController.m; sourceTree = "<group>"; };
+		B31EE7E818F05BE60047E9FD /* SldMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldMyScene.h; sourceTree = "<group>"; };
+		B31EE7E918F05BE60047E9FD /* SldMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldMyScene.m; sourceTree = "<group>"; };
+		B31EE7EB18F05BE60047E9FD /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
+		B31EE7ED18F05BE60047E9FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B31EE7F318F05BE60047E9FD /* SldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B31EE7F418F05BE60047E9FD /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B31EE7FC18F05BE60047E9FD /* SldTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SldTests-Info.plist"; sourceTree = "<group>"; };
+		B31EE7FE18F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B31EE80018F05BE60047E9FD /* SldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldTests.m; sourceTree = "<group>"; };
+		B31EE80C18F05D520047E9FD /* dgif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dgif_lib.c; sourceTree = "<group>"; };
+		B31EE80D18F05D520047E9FD /* egif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = egif_lib.c; sourceTree = "<group>"; };
+		B31EE80E18F05D520047E9FD /* gif_err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_err.c; sourceTree = "<group>"; };
+		B31EE80F18F05D520047E9FD /* gif_font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_font.c; sourceTree = "<group>"; };
+		B31EE81018F05D520047E9FD /* gif_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_hash.c; sourceTree = "<group>"; };
+		B31EE81118F05D520047E9FD /* gif_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_hash.h; sourceTree = "<group>"; };
+		B31EE81218F05D520047E9FD /* gif_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib.h; sourceTree = "<group>"; };
+		B31EE81318F05D520047E9FD /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
+		B31EE81418F05D520047E9FD /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
+		B31EE81518F05D520047E9FD /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		B31EE82118F061560047E9FD /* gifTexture.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifTexture.c; sourceTree = "<group>"; };
+		B31EE82318F0617C0047E9FD /* gifTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gifTexture.h; sourceTree = "<group>"; };
+		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B31EE7C518F05BE60047E9FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31EE7CE18F05BE60047E9FD /* CoreGraphics.framework in Frameworks */,
+				B31EE7D018F05BE60047E9FD /* UIKit.framework in Frameworks */,
+				B31EE7D218F05BE60047E9FD /* SpriteKit.framework in Frameworks */,
+				B31EE7CC18F05BE60047E9FD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B31EE7F018F05BE60047E9FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31EE7F518F05BE60047E9FD /* XCTest.framework in Frameworks */,
+				B31EE7F718F05BE60047E9FD /* UIKit.framework in Frameworks */,
+				B31EE7F618F05BE60047E9FD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B31EE7BF18F05BE50047E9FD = {
+			isa = PBXGroup;
+			children = (
+				B31EE80A18F05D3B0047E9FD /* External */,
+				B31EE7D318F05BE60047E9FD /* Sld */,
+				B31EE7FA18F05BE60047E9FD /* SldTests */,
+				B31EE7CA18F05BE60047E9FD /* Frameworks */,
+				B31EE7C918F05BE60047E9FD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B31EE7C918F05BE60047E9FD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE7C818F05BE60047E9FD /* Sld.app */,
+				B31EE7F318F05BE60047E9FD /* SldTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE7CB18F05BE60047E9FD /* Foundation.framework */,
+				B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */,
+				B31EE7CF18F05BE60047E9FD /* UIKit.framework */,
+				B31EE7D118F05BE60047E9FD /* SpriteKit.framework */,
+				B31EE7F418F05BE60047E9FD /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B31EE7D318F05BE60047E9FD /* Sld */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE82918F06F160047E9FD /* res */,
+				B31EE81D18F060020047E9FD /* util */,
+				B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */,
+				B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */,
+				B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */,
+				B31EE7E218F05BE60047E9FD /* Main_iPad.storyboard */,
+				B31EE7E518F05BE60047E9FD /* SldViewController.h */,
+				B31EE7E618F05BE60047E9FD /* SldViewController.m */,
+				B31EE7E818F05BE60047E9FD /* SldMyScene.h */,
+				B31EE7E918F05BE60047E9FD /* SldMyScene.m */,
+				B31EE7EB18F05BE60047E9FD /* Spaceship.png */,
+				B31EE7ED18F05BE60047E9FD /* Images.xcassets */,
+				B31EE7D418F05BE60047E9FD /* Supporting Files */,
+			);
+			path = Sld;
+			sourceTree = "<group>";
+		};
+		B31EE7D418F05BE60047E9FD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE7D518F05BE60047E9FD /* Sld-Info.plist */,
+				B31EE7D618F05BE60047E9FD /* InfoPlist.strings */,
+				B31EE7D918F05BE60047E9FD /* main.m */,
+				B31EE7DB18F05BE60047E9FD /* Sld-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B31EE7FA18F05BE60047E9FD /* SldTests */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE80018F05BE60047E9FD /* SldTests.m */,
+				B31EE7FB18F05BE60047E9FD /* Supporting Files */,
+			);
+			path = SldTests;
+			sourceTree = "<group>";
+		};
+		B31EE7FB18F05BE60047E9FD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE7FC18F05BE60047E9FD /* SldTests-Info.plist */,
+				B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B31EE80A18F05D3B0047E9FD /* External */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE80B18F05D520047E9FD /* giflib */,
+			);
+			name = External;
+			sourceTree = "<group>";
+		};
+		B31EE80B18F05D520047E9FD /* giflib */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE80C18F05D520047E9FD /* dgif_lib.c */,
+				B31EE80D18F05D520047E9FD /* egif_lib.c */,
+				B31EE80E18F05D520047E9FD /* gif_err.c */,
+				B31EE80F18F05D520047E9FD /* gif_font.c */,
+				B31EE81018F05D520047E9FD /* gif_hash.c */,
+				B31EE81118F05D520047E9FD /* gif_hash.h */,
+				B31EE81218F05D520047E9FD /* gif_lib.h */,
+				B31EE81318F05D520047E9FD /* gif_lib_private.h */,
+				B31EE81418F05D520047E9FD /* gifalloc.c */,
+				B31EE81518F05D520047E9FD /* quantize.c */,
+			);
+			name = giflib;
+			path = External/giflib;
+			sourceTree = "<group>";
+		};
+		B31EE81D18F060020047E9FD /* util */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE82118F061560047E9FD /* gifTexture.c */,
+				B31EE82318F0617C0047E9FD /* gifTexture.h */,
+			);
+			name = util;
+			sourceTree = "<group>";
+		};
+		B31EE82918F06F160047E9FD /* res */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE82A18F06F4D0047E9FD /* img */,
+			);
+			name = res;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B31EE7C718F05BE60047E9FD /* Sld */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B31EE80418F05BE70047E9FD /* Build configuration list for PBXNativeTarget "Sld" */;
+			buildPhases = (
+				B31EE7C418F05BE60047E9FD /* Sources */,
+				B31EE7C518F05BE60047E9FD /* Frameworks */,
+				B31EE7C618F05BE60047E9FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Sld;
+			productName = Sld;
+			productReference = B31EE7C818F05BE60047E9FD /* Sld.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B31EE7F218F05BE60047E9FD /* SldTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "SldTests" */;
+			buildPhases = (
+				B31EE7EF18F05BE60047E9FD /* Sources */,
+				B31EE7F018F05BE60047E9FD /* Frameworks */,
+				B31EE7F118F05BE60047E9FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B31EE7F918F05BE60047E9FD /* PBXTargetDependency */,
+			);
+			name = SldTests;
+			productName = SldTests;
+			productReference = B31EE7F318F05BE60047E9FD /* SldTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B31EE7C018F05BE50047E9FD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = Sld;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Wei Li";
+				TargetAttributes = {
+					B31EE7F218F05BE60047E9FD = {
+						TestTargetID = B31EE7C718F05BE60047E9FD;
+					};
+				};
+			};
+			buildConfigurationList = B31EE7C318F05BE50047E9FD /* Build configuration list for PBXProject "Sld" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B31EE7BF18F05BE50047E9FD;
+			productRefGroup = B31EE7C918F05BE60047E9FD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B31EE7C718F05BE60047E9FD /* Sld */,
+				B31EE7F218F05BE60047E9FD /* SldTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B31EE7C618F05BE60047E9FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31EE82B18F06F4D0047E9FD /* img in Resources */,
+				B31EE7EC18F05BE60047E9FD /* Spaceship.png in Resources */,
+				B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */,
+				B31EE7E418F05BE60047E9FD /* Main_iPad.storyboard in Resources */,
+				B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */,
+				B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B31EE7F118F05BE60047E9FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31EE7FF18F05BE60047E9FD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B31EE7C418F05BE60047E9FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31EE82218F061560047E9FD /* gifTexture.c in Sources */,
+				B31EE81618F05D520047E9FD /* dgif_lib.c in Sources */,
+				B31EE81818F05D530047E9FD /* gif_err.c in Sources */,
+				B31EE81B18F05D530047E9FD /* gifalloc.c in Sources */,
+				B31EE81C18F05D530047E9FD /* quantize.c in Sources */,
+				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
+				B31EE7E718F05BE60047E9FD /* SldViewController.m in Sources */,
+				B31EE7EA18F05BE60047E9FD /* SldMyScene.m in Sources */,
+				B31EE81718F05D530047E9FD /* egif_lib.c in Sources */,
+				B31EE81A18F05D530047E9FD /* gif_hash.c in Sources */,
+				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
+				B31EE81918F05D530047E9FD /* gif_font.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B31EE7EF18F05BE60047E9FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31EE80118F05BE60047E9FD /* SldTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B31EE7F918F05BE60047E9FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B31EE7C718F05BE60047E9FD /* Sld */;
+			targetProxy = B31EE7F818F05BE60047E9FD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B31EE7D618F05BE60047E9FD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B31EE7D718F05BE60047E9FD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B31EE7E018F05BE60047E9FD /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		B31EE7E218F05BE60047E9FD /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B31EE7E318F05BE60047E9FD /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B31EE7FE18F05BE60047E9FD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B31EE80218F05BE70047E9FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B31EE80318F05BE70047E9FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B31EE80518F05BE70047E9FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					./External,
+				);
+				INFOPLIST_FILE = "Sld/Sld-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B31EE80618F05BE70047E9FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					./External,
+				);
+				INFOPLIST_FILE = "Sld/Sld-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		B31EE80818F05BE70047E9FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Sld.app/Sld";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "SldTests/SldTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B31EE80918F05BE70047E9FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Sld.app/Sld";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
+				INFOPLIST_FILE = "SldTests/SldTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B31EE7C318F05BE50047E9FD /* Build configuration list for PBXProject "Sld" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B31EE80218F05BE70047E9FD /* Debug */,
+				B31EE80318F05BE70047E9FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B31EE80418F05BE70047E9FD /* Build configuration list for PBXNativeTarget "Sld" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B31EE80518F05BE70047E9FD /* Debug */,
+				B31EE80618F05BE70047E9FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "SldTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B31EE80818F05BE70047E9FD /* Debug */,
+				B31EE80918F05BE70047E9FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B31EE7C018F05BE50047E9FD /* Project object */;
+}

@@ -5,6 +5,7 @@
 #include "db.h"
 #include "lang.h"
 #include <thread>
+#include <time.h>
 
 USING_NS_CC;
 
@@ -77,6 +78,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
     
     //init
+    srand((unsigned int)time(nullptr));
     makeLocalDir();
     dbInit();
     setLang("lang/zh-s.lang");

@@ -21,10 +21,6 @@ public:
     bool isDragging();
     void resetY();
     
-    virtual void onTouchesBegan(const Touch* touch);
-    virtual void onTouchesMoved(const Touch* touch);
-    virtual void onTouchesEnded(const Touch* touch);
-    
     bool onTouchBegan(Touch* touch, Event* event);
     void onTouchMoved(Touch* touch, Event* event);
     void onTouchEnded(Touch* touch, Event* event);

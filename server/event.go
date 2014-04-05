@@ -364,7 +364,7 @@ func getMyResult(w http.ResponseWriter, r *http.Request) {
 	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] != "ok" {
-		lwutil.SendError("err_not_played", "event not played")
+		lwutil.SendError("err_not_played", fmt.Sprintf("event not played: recordKey=%s", recordKey))
 	}
 
 	record := EventPlayerRecord{}
@@ -668,6 +668,73 @@ func getTopTen(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func getRanks(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//in
+	var in struct {
+		EventId uint64
+		Offset  uint32
+		Limit   uint32
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	if in.Limit > 20 {
+		in.Limit = 20
+	}
+
+	//check event id
+	resp, err := ssdb.Do("hget", H_EVENT, in.EventId)
+	lwutil.CheckSsdbError(resp, err)
+	var event Event
+	err = json.Unmarshal([]byte(resp[1]), &event)
+	lwutil.CheckError(err, "")
+	if event.IsFinished {
+		lwutil.SendError("err_event_finished", fmt.Sprintf("eventId=%d", in.EventId))
+	}
+
+	//redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
+	//get rank
+	eventLbLey := fmt.Sprintf("%s/%d", Z_EVENT_LEADERBOARD_PRE, in.EventId)
+	values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, in.Offset, in.Offset+in.Limit-1, "WITHSCORES"))
+	lwutil.CheckError(err, "")
+
+	num := len(values) / 2
+	userIds := make([]uint64, num)
+	scores := make([]int32, num)
+	for i, v := range values {
+		if i%2 == 0 {
+			userIds[i/2], err = redisUint64(v, nil)
+			lwutil.CheckError(err, "")
+		} else {
+			scores[i/2], err = redisInt32(v, nil)
+			lwutil.CheckError(err, "")
+		}
+	}
+
+	out := struct {
+		EventId uint64
+		UserIds []uint64
+		Scores  []int32
+	}{
+		in.EventId,
+		userIds,
+		scores,
+	}
+
+	lwutil.WriteResponse(w, out)
+}
+
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(newEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(delEvent))
@@ -677,4 +744,5 @@ func regMatch() {
 	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
 	http.Handle("/event/topTen", lwutil.ReqHandler(getTopTen))
+	http.Handle("/event/getRanks", lwutil.ReqHandler(getRanks))
 }

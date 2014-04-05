@@ -190,6 +190,10 @@ function Controller($scope, $http) {
 					"name": "topTen",
 					"method": "POST",
 					"data": {"EventId": 1, "RoundIdx": 0, "TeamIds": [11,12,13]}
+				},{
+					"name": "getRanks",
+					"method": "POST",
+					"data": {"EventId": 1, "Offset": 0, "Limit": 20}
 				}
 			]
 		}

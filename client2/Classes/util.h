@@ -32,4 +32,7 @@ struct PlayerInfo {
 
 PlayerInfo& getPlayerInfo();
 
+void setNow(int64_t now);
+int64_t getNow();
+
 #endif // __UTIL_H__
