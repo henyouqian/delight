@@ -35,7 +35,7 @@
         /* Setup your scene here */
         self.currFrame = -1;
         int err = GIF_OK;
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"img/y.gif" ofType:nil];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"img/x.gif" ofType:nil];
         self.gifFile = DGifOpenFileName([path UTF8String], &err);
         err = DGifSlurp(self.gifFile);
         
@@ -92,19 +92,24 @@
     
     //read pixel
     int i = 0;
-    
-    for (GifWord y = imgDesc->Top; y < imgDesc->Top + imgDesc->Height; ++y) {
-        for (GifWord x = imgDesc->Left; x < imgDesc->Left+imgDesc->Width; ++x) {
+    GifWord gifWidth = self.gifFile->SWidth;
+    GifWord gifHeight = self.gifFile->SHeight;
+    size_t colorSize = sizeof(GifByteType)*4;
+    GifWord top = imgDesc->Top;
+    GifWord height = imgDesc->Height;
+    GifWord left = imgDesc->Left;
+    GifWord width = imgDesc->Width;
+    CGSize size = CGSizeMake(gifWidth, gifHeight);
+    for (GifWord y = top; y < top + height; ++y) {
+        for (GifWord x = left; x < left + width; ++x) {
             unsigned char colorIdx = imgBuf[i];
-            GifWord revY = self.gifFile->SHeight - y;
+            GifWord revY = gifHeight - y - 1;
             
             if (hasTrans && colorIdx == transIdx) {
                 if (gcb.DisposalMode == DISPOSE_BACKGROUND) {
                     GifColorType *bgColor = &(colorMap->Colors[_gifFile->SBackGroundColor]);
                     GifByteType c[4] = {bgColor->Red, bgColor->Green, bgColor->Blue, 0xff};
-                    //NSRange range = {(self.gifFile->SWidth*y+x)*4, sizeof(GifByteType)*4};
-                    //[self.buf replaceBytesInRange:range withBytes:c length:sizeof(GifByteType)*4];
-                    memcpy(self.buff+(self.gifFile->SWidth*revY+x)*4, c, sizeof(GifByteType)*4);
+                    memcpy(self.buff+(gifWidth*revY+x)*4, c, colorSize);
                 }
                 ++i;
                 continue;
@@ -112,33 +117,28 @@
             
             GifColorType *color = &(colorMap->Colors[imgBuf[i]]);
             GifByteType c[4] = {color->Red, color->Green, color->Blue, 0xff};
-            //NSRange range = {(self.gifFile->SWidth*y+x)*4, sizeof(GifByteType)*4};
-            //[self.buf replaceBytesInRange:range withBytes:c length:sizeof(GifByteType)*4];
-            memcpy(self.buff+(self.gifFile->SWidth*revY+x)*4, c, sizeof(GifByteType)*4);
+            memcpy(self.buff+(gifWidth*revY+x)*4, c, colorSize);
             ++i;
         }
     }
     
-    NSData *buf = [NSData dataWithBytes:self.buff length:self.gifFile->SWidth*self.gifFile->SHeight*4];
-    SKTexture *texture = [SKTexture textureWithData:buf size:CGSizeMake(self.gifFile->SWidth, self.gifFile->SHeight)];
+    NSData *buf = [NSData dataWithBytes:self.buff length:gifWidth*gifHeight*4];
+    SKTexture *texture = [SKTexture textureWithData:buf size:size];
+    
+//    for (int i = 0; i < 10; ++i) {
+//        texture = [SKTexture textureWithRect:CGRectMake(0, 0, 1, 1) inTexture:texture];
+//    }
+    
     
     if (!self.sprite) {
         //self.sprite = [SKSpriteNode spriteNodeWithImageNamed:@"img/x.gif"];
         self.sprite = [SKSpriteNode spriteNodeWithTexture:texture];
         self.sprite.position = CGPointMake(self.size.width*.5f, self.size.height*.5f);
+        //[self.sprite setScale:.5f];
         [self addChild:self.sprite];
     } else {
         self.sprite.texture = texture;
     }
-    
-    //action
-//    SKAction *wait = [SKAction waitForDuration:currFrameDuration];
-//    SKAction *act = [SKAction runBlock:^{
-//        [self updateBuff];
-//    }];
-//    SKAction *seq = [SKAction sequence:@[wait, act]];
-//    [self removeAllActions];
-//    [self runAction:seq];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
