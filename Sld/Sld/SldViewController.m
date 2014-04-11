@@ -8,6 +8,7 @@
 
 #import "SldViewController.h"
 #import "SldMyScene.h"
+#import "SldGameScene.h"
 
 @implementation SldViewController
 
@@ -21,7 +22,8 @@
     skView.showsNodeCount = YES;
     
     // Create and configure the scene.
-    SKScene * scene = [SldMyScene sceneWithSize:skView.bounds.size];
+    //SKScene * scene = [SldMyScene sceneWithSize:skView.bounds.size];
+    SKScene * scene = [SldGameScene sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
@@ -30,15 +32,15 @@
 
 - (BOOL)shouldAutorotate
 {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return UIInterfaceOrientationMaskAllButUpsideDown;
+        return UIInterfaceOrientationMaskPortrait;
     } else {
-        return UIInterfaceOrientationMaskAll;
+        return UIInterfaceOrientationMaskPortrait;
     }
 }
 

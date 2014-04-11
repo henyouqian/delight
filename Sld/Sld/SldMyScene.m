@@ -7,23 +7,29 @@
 //
 
 #import "SldMyScene.h"
+#import "SldGamePlay.h"
+#import "util.h"
+#import "lw/lwLog.h"
 #import "giflib/gif_lib.h"
 
 @interface TextureInfo : NSObject
     @property SKTexture *texture;
     @property Float32 duration;
 @end
+
 @implementation TextureInfo
 @end
 
 
 @interface SldMyScene()
-    @property GifFileType *gifFile;
+    @property (nonatomic) GifFileType *gifFile;
     @property NSUInteger currFrame;
     @property SKSpriteNode *sprite;
     @property char *buff;
     @property Float32 waitSec;
     @property NSMutableArray *textures;
+    @property BOOL loaded;
+    @property SldGamePlay *gamePlay;
 @end
 
 @implementation SldMyScene
@@ -32,21 +38,38 @@
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         self.currFrame = -1;
-        int err = GIF_OK;
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"img/c.gif" ofType:nil];
-        self.gifFile = DGifOpenFileName([path UTF8String], &err);
-        err = DGifSlurp(self.gifFile);
+        self.loaded = false;
         
-        //buf
-        NSUInteger bufLen = self.gifFile->SWidth*self.gifFile->SHeight*4;
-        self.buff = malloc(bufLen);
-        memset(self.buff, 0, bufLen);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            int err = GIF_OK;
+            NSString *path = getResFullPath(@"img/b.gif");
+            self.gifFile = DGifOpenFileName([path UTF8String], &err);
+            err = DGifSlurp(self.gifFile);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //buf
+                NSUInteger bufLen = self.gifFile->SWidth*self.gifFile->SHeight*4;
+                self.buff = malloc(bufLen);
+                memset(self.buff, 0, bufLen);
+                
+                //
+                self.waitSec = 0;
+                self.textures = [NSMutableArray arrayWithCapacity:10];
+                
+                self.loaded = true;
+                [self updateBuff];
+            });
+        });
         
-        //
-        self.waitSec = 0;
-        self.textures = [NSMutableArray arrayWithCapacity:10];
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:6];
+        [files addObject:getResFullPath(@"img/a.gif")];
+        [files addObject:getResFullPath(@"img/b.gif")];
+        [files addObject:getResFullPath(@"img/c.gif")];
+        [files addObject:getResFullPath(@"img/x.gif")];
+        [files addObject:getResFullPath(@"img/y.gif")];
+        [files addObject:getResFullPath(@"img/z.gif")];
         
-        [self updateBuff];
+        self.gamePlay = [SldGamePlay gamePlayWithScene:self files:files];
     }
     return self;
 }
@@ -162,11 +185,6 @@
     NSData *data = [NSData dataWithBytes:self.buff length:gifWidth*gifHeight*4];
     SKTexture *texture = [SKTexture textureWithData:data size:size];
     
-//    for (int i = 0; i < 10; ++i) {
-//        texture = [SKTexture textureWithRect:CGRectMake(0, 0, 1, 1) inTexture:texture];
-//    }
-    
-    
     if (!self.sprite) {
         //self.sprite = [SKSpriteNode spriteNodeWithImageNamed:@"img/x.gif"];
         self.sprite = [SKSpriteNode spriteNodeWithTexture:texture];
@@ -202,9 +220,11 @@
 }
 
 -(void)update:(CFTimeInterval)currentTime {
-    self.waitSec -= 1.f/60.f;
-    if (self.waitSec <= 0) {
-        [self updateBuff];
+    if (self.loaded) {
+        self.waitSec -= 1.f/60.f;
+        if (self.waitSec <= 0) {
+            [self updateBuff];
+        }
     }
 }
 

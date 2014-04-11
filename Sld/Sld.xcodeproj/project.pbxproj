@@ -34,6 +34,10 @@
 		B31EE81C18F05D530047E9FD /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81518F05D520047E9FD /* quantize.c */; };
 		B31EE82218F061560047E9FD /* gifTexture.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE82118F061560047E9FD /* gifTexture.c */; };
 		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
+		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
+		B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27DC18F8087B00E5A38A /* SldSprite.m */; };
+		B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */; };
+		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +88,15 @@
 		B31EE82118F061560047E9FD /* gifTexture.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifTexture.c; sourceTree = "<group>"; };
 		B31EE82318F0617C0047E9FD /* gifTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gifTexture.h; sourceTree = "<group>"; };
 		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
+		B36C27D618F459A500E5A38A /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
+		B36C27D818F7D8A700E5A38A /* SldGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGameScene.h; sourceTree = "<group>"; };
+		B36C27D918F7D8A700E5A38A /* SldGameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGameScene.m; sourceTree = "<group>"; };
+		B36C27DB18F8087B00E5A38A /* SldSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldSprite.h; sourceTree = "<group>"; };
+		B36C27DC18F8087B00E5A38A /* SldSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldSprite.m; sourceTree = "<group>"; };
+		B37A9C2F18F133CF0080E8F0 /* SldGamePlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGamePlay.h; sourceTree = "<group>"; };
+		B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGamePlay.m; sourceTree = "<group>"; };
+		B37A9C3418F2E4850080E8F0 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		B37A9C3518F2E4850080E8F0 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,7 +159,7 @@
 		B31EE7D318F05BE60047E9FD /* Sld */ = {
 			isa = PBXGroup;
 			children = (
-				B31EE82918F06F160047E9FD /* res */,
+				B36C27D718F7D85900E5A38A /* scene */,
 				B31EE81D18F060020047E9FD /* util */,
 				B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */,
 				B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */,
@@ -154,10 +167,9 @@
 				B31EE7E218F05BE60047E9FD /* Main_iPad.storyboard */,
 				B31EE7E518F05BE60047E9FD /* SldViewController.h */,
 				B31EE7E618F05BE60047E9FD /* SldViewController.m */,
-				B31EE7E818F05BE60047E9FD /* SldMyScene.h */,
-				B31EE7E918F05BE60047E9FD /* SldMyScene.m */,
 				B31EE7EB18F05BE60047E9FD /* Spaceship.png */,
 				B31EE7ED18F05BE60047E9FD /* Images.xcassets */,
+				B31EE82918F06F160047E9FD /* res */,
 				B31EE7D418F05BE60047E9FD /* Supporting Files */,
 			);
 			path = Sld;
@@ -195,6 +207,7 @@
 		B31EE80A18F05D3B0047E9FD /* External */ = {
 			isa = PBXGroup;
 			children = (
+				B36C27D518F459A500E5A38A /* lw */,
 				B31EE80B18F05D520047E9FD /* giflib */,
 			);
 			name = External;
@@ -221,6 +234,12 @@
 		B31EE81D18F060020047E9FD /* util */ = {
 			isa = PBXGroup;
 			children = (
+				B37A9C2F18F133CF0080E8F0 /* SldGamePlay.h */,
+				B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */,
+				B36C27DB18F8087B00E5A38A /* SldSprite.h */,
+				B36C27DC18F8087B00E5A38A /* SldSprite.m */,
+				B37A9C3418F2E4850080E8F0 /* util.h */,
+				B37A9C3518F2E4850080E8F0 /* util.m */,
 				B31EE82118F061560047E9FD /* gifTexture.c */,
 				B31EE82318F0617C0047E9FD /* gifTexture.h */,
 			);
@@ -233,6 +252,26 @@
 				B31EE82A18F06F4D0047E9FD /* img */,
 			);
 			name = res;
+			sourceTree = "<group>";
+		};
+		B36C27D518F459A500E5A38A /* lw */ = {
+			isa = PBXGroup;
+			children = (
+				B36C27D618F459A500E5A38A /* lwLog.h */,
+			);
+			name = lw;
+			path = External/lw;
+			sourceTree = "<group>";
+		};
+		B36C27D718F7D85900E5A38A /* scene */ = {
+			isa = PBXGroup;
+			children = (
+				B31EE7E818F05BE60047E9FD /* SldMyScene.h */,
+				B31EE7E918F05BE60047E9FD /* SldMyScene.m */,
+				B36C27D818F7D8A700E5A38A /* SldGameScene.h */,
+				B36C27D918F7D8A700E5A38A /* SldGameScene.m */,
+			);
+			name = scene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,8 +375,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
 				B31EE82218F061560047E9FD /* gifTexture.c in Sources */,
+				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B31EE81618F05D520047E9FD /* dgif_lib.c in Sources */,
+				B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */,
+				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				B31EE81818F05D530047E9FD /* gif_err.c in Sources */,
 				B31EE81B18F05D530047E9FD /* gifalloc.c in Sources */,
 				B31EE81C18F05D530047E9FD /* quantize.c in Sources */,
@@ -574,6 +617,7 @@
 				B31EE80618F05BE70047E9FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "SldTests" */ = {
 			isa = XCConfigurationList;
@@ -582,6 +626,7 @@
 				B31EE80918F05BE70047E9FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
