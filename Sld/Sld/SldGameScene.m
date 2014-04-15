@@ -19,6 +19,7 @@
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
         NSMutableArray *files = [NSMutableArray arrayWithCapacity:6];
+        
         [files addObject:getResFullPath(@"img/a.gif")];
         [files addObject:getResFullPath(@"img/b.gif")];
         [files addObject:getResFullPath(@"img/c.gif")];
@@ -40,6 +41,14 @@
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.gamePlay touchesBegan:touches withEvent:event];
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.gamePlay touchesMoved:touches withEvent:event];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.gamePlay touchesEnded:touches withEvent:event];
 }
 
 @end

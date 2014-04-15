@@ -13,6 +13,6 @@
 +(instancetype)spriteWithPath:(NSString*)path;
 -(instancetype)initWithPath:(NSString*)path;
 
--(void)update;
+-(BOOL)update;
 
 @end

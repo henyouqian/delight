@@ -17,7 +17,6 @@
 		B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */; };
 		B31EE7E418F05BE60047E9FD /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7E218F05BE60047E9FD /* Main_iPad.storyboard */; };
 		B31EE7E718F05BE60047E9FD /* SldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7E618F05BE60047E9FD /* SldViewController.m */; };
-		B31EE7EA18F05BE60047E9FD /* SldMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7E918F05BE60047E9FD /* SldMyScene.m */; };
 		B31EE7EC18F05BE60047E9FD /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7EB18F05BE60047E9FD /* Spaceship.png */; };
 		B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7ED18F05BE60047E9FD /* Images.xcassets */; };
 		B31EE7F518F05BE60047E9FD /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7F418F05BE60047E9FD /* XCTest.framework */; };
@@ -32,7 +31,6 @@
 		B31EE81A18F05D530047E9FD /* gif_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81018F05D520047E9FD /* gif_hash.c */; };
 		B31EE81B18F05D530047E9FD /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81418F05D520047E9FD /* gifalloc.c */; };
 		B31EE81C18F05D530047E9FD /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81518F05D520047E9FD /* quantize.c */; };
-		B31EE82218F061560047E9FD /* gifTexture.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE82118F061560047E9FD /* gifTexture.c */; };
 		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
 		B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27DC18F8087B00E5A38A /* SldSprite.m */; };
@@ -66,8 +64,6 @@
 		B31EE7E318F05BE60047E9FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		B31EE7E518F05BE60047E9FD /* SldViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldViewController.h; sourceTree = "<group>"; };
 		B31EE7E618F05BE60047E9FD /* SldViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldViewController.m; sourceTree = "<group>"; };
-		B31EE7E818F05BE60047E9FD /* SldMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldMyScene.h; sourceTree = "<group>"; };
-		B31EE7E918F05BE60047E9FD /* SldMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldMyScene.m; sourceTree = "<group>"; };
 		B31EE7EB18F05BE60047E9FD /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		B31EE7ED18F05BE60047E9FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B31EE7F318F05BE60047E9FD /* SldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,8 +81,6 @@
 		B31EE81318F05D520047E9FD /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
 		B31EE81418F05D520047E9FD /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
 		B31EE81518F05D520047E9FD /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
-		B31EE82118F061560047E9FD /* gifTexture.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifTexture.c; sourceTree = "<group>"; };
-		B31EE82318F0617C0047E9FD /* gifTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gifTexture.h; sourceTree = "<group>"; };
 		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
 		B36C27D618F459A500E5A38A /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
 		B36C27D818F7D8A700E5A38A /* SldGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGameScene.h; sourceTree = "<group>"; };
@@ -240,8 +234,6 @@
 				B36C27DC18F8087B00E5A38A /* SldSprite.m */,
 				B37A9C3418F2E4850080E8F0 /* util.h */,
 				B37A9C3518F2E4850080E8F0 /* util.m */,
-				B31EE82118F061560047E9FD /* gifTexture.c */,
-				B31EE82318F0617C0047E9FD /* gifTexture.h */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -266,8 +258,6 @@
 		B36C27D718F7D85900E5A38A /* scene */ = {
 			isa = PBXGroup;
 			children = (
-				B31EE7E818F05BE60047E9FD /* SldMyScene.h */,
-				B31EE7E918F05BE60047E9FD /* SldMyScene.m */,
 				B36C27D818F7D8A700E5A38A /* SldGameScene.h */,
 				B36C27D918F7D8A700E5A38A /* SldGameScene.m */,
 			);
@@ -376,7 +366,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
-				B31EE82218F061560047E9FD /* gifTexture.c in Sources */,
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B31EE81618F05D520047E9FD /* dgif_lib.c in Sources */,
 				B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */,
@@ -386,7 +375,6 @@
 				B31EE81C18F05D530047E9FD /* quantize.c in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldViewController.m in Sources */,
-				B31EE7EA18F05BE60047E9FD /* SldMyScene.m in Sources */,
 				B31EE81718F05D530047E9FD /* egif_lib.c in Sources */,
 				B31EE81A18F05D530047E9FD /* gif_hash.c in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,

@@ -52,13 +52,15 @@
     return self;
 }
 
--(void)update {
+-(BOOL)update {
     if (self.gifFile && self.loaded) {
         self.waitSec -= 1.f/60.f;
         if (self.waitSec <= 0) {
             [self updateBuff];
+            return YES;
         }
     }
+    return NO;
 }
 
 -(void)dealloc {
