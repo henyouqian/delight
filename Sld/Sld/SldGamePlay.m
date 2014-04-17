@@ -8,9 +8,12 @@
 
 #import "SldGamePlay.h"
 #import "SldSprite.h"
+#import "FISoundEngine.h"
+#import "AHEasing/easing.h"
 
 static const float MOVE_DURATION = .1f;
-static const uint32_t DEFUALT_SLIDER_NUM = 7;
+static const uint32_t DEFUALT_SLIDER_NUM = 2;
+static const float TRANS_DURATION = .3f;
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -21,15 +24,21 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
 @end
 
 @interface SldGamePlay()
-@property (nonatomic) SKScene *scene;
+@property (nonatomic, weak) SKScene *scene;
 @property (nonatomic) NSArray *files;
 @property (nonatomic) NSUInteger imgIdx;
 @property (nonatomic) NSMutableArray *sprites;
 @property (nonatomic) SKNode *sliderParent;
+@property (nonatomic) SKNode *nextSliderParent;
 @property (nonatomic) BOOL needRotate;
 @property (nonatomic) float sliderX0;
 @property (nonatomic) float sliderY0;
 @property (nonatomic) float sliderH;
+@property (nonatomic) FISound *sndTink;
+@property (nonatomic) FISound *sndSuccess;
+@property (nonatomic) FISound *sndFinish;
+@property (nonatomic) BOOL hasFinished;
+@property (nonatomic) BOOL touchEnable;
 @end
 
 @implementation SldGamePlay
@@ -50,59 +59,112 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
         
         self.files = files;
         self.scene = scene;
-        self.imgIdx = 0;
+        self.imgIdx = -1;
         self.sprites = [NSMutableArray arrayWithCapacity:3];
-        self.sliderParent = [SKNode node];
         self.sliderNum = DEFUALT_SLIDER_NUM;
         self.needRotate = NO;
+        self.sliderParent = [SKNode node];
         [self.scene addChild:self.sliderParent];
-        [self loadNextImage];
+        self.nextSliderParent = [SKNode node];
+        [self.scene addChild:self.nextSliderParent];
+        self.touchEnable = false;
+        [self nextImage];
+        
+        //audio
+        NSError *error = nil;
+        FISoundEngine *engine = [FISoundEngine sharedEngine];
+        self.sndTink = [engine soundNamed:@"audio/tink.wav" maxPolyphony:4 error:&error];
+        NSAssert(self.sndTink, @"self.sndTink: error:%@", [error localizedDescription]);
+        self.sndSuccess = [engine soundNamed:@"audio/success.wav" maxPolyphony:1 error:&error];
+        NSAssert(self.sndSuccess, @"self.sndSuccess: error:%@", [error localizedDescription]);
+        self.sndFinish = [engine soundNamed:@"audio/finish.wav" maxPolyphony:1 error:&error];
+        NSAssert(self.sndSuccess, @"self.sndFinish: error:%@", [error localizedDescription]);
     }
     
     return self;
 }
 
--(void)loadNextImage {
-    if (self.imgIdx >= (NSInteger)[self.files count]-1) {
-        lwError("idx >= [self.files count]: self.imgIdx=%d", self.imgIdx);
-        return;
-    }
-    
-    if ([self.sprites count] >= 1) {
-        self.imgIdx++;
-        [self.sprites removeObjectAtIndex:0];
-    }
-    
-    if ([self.sprites count] >= 1 && self.sprites[0] != [NSNull null]) {
-        [self setupSprite:self.sprites[0]];
-    }
+-(void)loadImage {
     while (1) {
         if ([self.sprites count] == 3) {
             break;
         }
-        NSUInteger loadImgIdx = self.imgIdx + [self.sprites count];
+        //NSUInteger loadImgIdx = self.imgIdx + [self.sprites count];
+        NSUInteger loadImgIdx = 0;
+        if ([self.sprites count]) {
+            id last = [self.sprites lastObject];
+            if ([last isKindOfClass:[NSNumber class]]) {
+                loadImgIdx = [(NSNumber*)last unsignedIntegerValue]+1;
+            } else {
+                loadImgIdx = ((SldSprite*)last).index+1;
+            }
+        }
         if (loadImgIdx > (NSInteger)[self.files count]-1) {
             break;
         }
         NSString *file = self.files[loadImgIdx];
-        [self.sprites addObject:[NSNull null]];
-        NSUInteger addIdx = [self.sprites count]-1;
-        NSUInteger imgIdx = self.imgIdx;
+        [self.sprites addObject:[NSNumber numberWithUnsignedInteger:loadImgIdx]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            SldSprite *sprite = [SldSprite spriteWithPath:file];
+            SldSprite *sprite = [SldSprite spriteWithPath:file index:loadImgIdx];
             dispatch_async(dispatch_get_main_queue(), ^{
-                sprite.position = CGPointMake(self.scene.size.width*.5f, self.scene.size.height*.5f);
-                NSInteger idx = addIdx - (self.imgIdx-imgIdx);
+                NSInteger idx = sprite.index;
                 if (idx >= 0) {
-                    self.sprites[idx] = sprite;
-                    if (idx == 0) {
-                        [self setupSprite:self.sprites[0]];
+                    for (int i = 0; i < [self.sprites count]; i++) {
+                        NSObject *v = self.sprites[i];
+                        if ([v isKindOfClass:[NSNumber class]] && [(NSNumber*)v unsignedIntegerValue] == idx) {
+                            self.sprites[i] = sprite;
+                            if (idx == 0 || (i == 1 && self.imgIdx == idx)) {
+                                [self setupSprite:sprite];
+                            }
+                        }
                     }
                 }
-                
             });
         });
     }
+}
+
+-(void)nextImage {
+    self.touchEnable = NO;
+    self.imgIdx++;
+    
+    if (self.imgIdx >= (NSInteger)[self.files count]) {
+        lwError("idx >= [self.files count]: self.imgIdx=%d", self.imgIdx);
+        return;
+    }
+    
+    self.hasFinished = NO;
+    
+//    if ([self.sprites count] >= 1) {
+//        self.imgIdx++;
+//    }
+    
+    
+    if ([self.sprites count] >= 2 && [self.sprites[1] isKindOfClass:[SldSprite class]]) {
+        [self setupSprite:self.sprites[1]];
+    }
+    
+    [self loadImage];
+}
+
+- (NSMutableArray*)shuffle:(NSUInteger)num {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:num];
+    for (NSUInteger i = 0; i < num; ++i) {
+        array[i] = [NSNumber numberWithUnsignedInteger:i];
+    }
+    NSUInteger count = [array count];
+    for (NSUInteger i = 0; i < count; ++i) {
+        // Select a random element between i and end of array to swap with.
+        NSInteger nElements = count - i;
+        NSInteger n = arc4random_uniform(nElements) + i;
+        [array exchangeObjectAtIndex:i withObjectAtIndex:n];
+    }
+    for (NSUInteger i = 1; i < count; ++i) {
+        if ([array[i-1] integerValue] + 1 == [array[i] integerValue]) {
+            [array exchangeObjectAtIndex:i withObjectAtIndex:i-1];
+        }
+    }
+    return array;
 }
 
 -(void)setupSprite:(SldSprite*)sprite {
@@ -115,13 +177,20 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
         self.needRotate = YES;
     }
     
-    [self.sliderParent removeAllChildren];
+    __weak SKNode *parent = self.nextSliderParent;
+    if (self.imgIdx == 0) {
+        parent = self.sliderParent;
+    }
+    //[parent removeAllChildren];
     
     float refRatios[] = {
         9.f/16.f,
         2.f/3.f,
         3.f/4.f,
     };
+    
+    //shuffle sliders
+    NSMutableArray* idxs = [self shuffle:self.sliderNum];
     
     if (self.needRotate) {
         float tmp = texW;
@@ -148,7 +217,6 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
         self.sliderH = sliderH;
         self.sliderX0 = screenW*.5;
         self.sliderY0 = screenH*.5 - targetH*.5 + sliderH*.5;
-        float y = self.sliderY0;
         
         //uv
         float uvW = 0;
@@ -168,17 +236,18 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
         
         //
         for (NSUInteger i = 0; i < self.sliderNum; i++) {
-            float uvY = uvY0+uvh*(self.sliderNum-i-1);
+            NSUInteger idx = [idxs[i] unsignedIntegerValue];
+            float uvY = uvY0+uvh*(self.sliderNum-idx-1);
             
             //SKTexture *texture = [SKTexture textureWithRect:CGRectMake(uvX0/texW, uvY/texH, uvW/texW, uvh/texH) inTexture:sprite.texture];
             SKTexture *texture = [SKTexture textureWithRect:CGRectMake(uvY/texH, uvX0/texW, uvh/texH, uvW/texW) inTexture:sprite.texture];
             Slider *slider = [Slider spriteNodeWithTexture:texture size:CGSizeMake(sliderH, sliderW)];
-            slider.idx = 0;
+            slider.idx = idx;
             slider.touch = nil;
+            float y = self.sliderY0+i*sliderH;
             [slider setPosition:CGPointMake(self.sliderX0, y)];
             [slider setZRotation:-M_PI_2];
-            [self.sliderParent addChild:slider];
-            y += sliderH;
+            [parent addChild:slider];
         }
     } else {
         float texRatio = texW/texH;
@@ -201,7 +270,6 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
         self.sliderH = sliderH;
         self.sliderX0 = screenW*.5;
         self.sliderY0 = screenH*.5 - targetH*.5 + sliderH*.5;
-        float y = self.sliderY0;
         
         //uv
         float uvW = 0;
@@ -221,20 +289,48 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
         
         //
         for (NSUInteger i = 0; i < self.sliderNum; i++) {
+            NSUInteger idx = [idxs[i] unsignedIntegerValue];
             float uvY = uvY0+uvh*(self.sliderNum-i-1);
             
             SKTexture *texture = [SKTexture textureWithRect:CGRectMake(uvX0/texW, uvY/texH, uvW/texW, uvh/texH) inTexture:sprite.texture];
             Slider *slider = [Slider spriteNodeWithTexture:texture size:CGSizeMake(sliderW, sliderH)];
-            slider.idx = 0;
+            slider.idx = idx;
             slider.touch = nil;
+            float y = self.sliderY0+i*sliderH;
             [slider setPosition:CGPointMake(self.sliderX0, y)];
-            [self.sliderParent addChild:slider];
-            y += sliderH;
+            [parent addChild:slider];
         }
     }
     
-    
-    //[self.sliderParent addChild:sprite];
+    //transition
+    if (parent == self.nextSliderParent) {
+        [parent setPosition:CGPointMake(screenW, 0)];
+        [parent setAlpha:0];
+        
+        SKAction *action = [SKAction customActionWithDuration:TRANS_DURATION actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+            CGFloat t = elapsedTime/TRANS_DURATION;
+            t = QuarticEaseOut(t);
+            
+            [node setPosition:CGPointMake(screenW + t*(-screenW), 0)];
+            [node setAlpha:t];
+        }];
+        
+        [parent runAction:action completion:^{
+            SKNode *tmp = self.sliderParent;
+            self.sliderParent = self.nextSliderParent;
+            self.nextSliderParent = tmp;
+            
+            [self.sliderParent setZPosition:0.f];
+            [self.nextSliderParent setZPosition:1.f];
+            
+            [self.nextSliderParent removeAllChildren];
+            [self.sprites removeObjectAtIndex:0];
+            [self loadImage];
+            self.touchEnable = YES;
+        }];
+    } else {
+        self.touchEnable = YES;
+    }
 }
 
 -(void)update {
@@ -243,7 +339,7 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
 //    }
     if ([self.sprites count]) {
         SldSprite *sldSpt = self.sprites[0];
-        if (self.sprites[0] != [NSNull null] && [sldSpt update]) {
+        if ([sldSpt isKindOfClass:[SldSprite class]] && [sldSpt update]) {
             for (SKSpriteNode *sprite in self.sliderParent.children) {
                 sprite.texture = [SKTexture textureWithRect:sprite.texture.textureRect inTexture:sldSpt.texture];
             }
@@ -254,12 +350,20 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    //[self loadNextImage];
+    if (!self.touchEnable) {
+        return;
+    }
+    
     UITouch *touch = [touches anyObject];
+    
+    if (self.hasFinished) {
+        [self nextImage];
+        return;
+    }
     
     CGPoint ptView = [touch locationInView:self.scene.view];
     if (ptView.x < 30 && ptView.y < 30) {
-        [self loadNextImage];
+        [self nextImage];
         return;
     }
     
@@ -274,6 +378,10 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.touchEnable) {
+        return;
+    }
+    
     UITouch *touch = [touches anyObject];
     
     int i = 0;
@@ -312,10 +420,15 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
             }
             i++;
         }
+        [self.sndTink play];
     }
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.touchEnable) {
+        return;
+    }
+    
     UITouch *touch = [touches anyObject];
     int i = 0;
     for (Slider *slider in self.sliderParent.children) {
@@ -325,10 +438,27 @@ static const uint32_t DEFUALT_SLIDER_NUM = 7;
             float y = self.sliderY0 + i * self.sliderH;
             SKAction *moveTo = [SKAction moveTo:CGPointMake(self.sliderX0, y) duration:MOVE_DURATION];
             moveTo.timingMode = SKActionTimingEaseOut;
-            [slider removeAllActions];
+            //[slider removeAllActions];
             [slider runAction:moveTo completion:^{
                 slider.zPosition = 0.f;
             }];
+            
+            //check finished
+            NSUInteger idx = 0;
+            for (Slider *slider in self.sliderParent.children) {
+                if (slider.idx != idx) {
+                    break;
+                }
+                idx++;
+            }
+            if (idx == [self.sliderParent.children count]) {
+                if (self.imgIdx == [self.files count]-1) {
+                    [self.sndFinish play];
+                } else {
+                    [self.sndSuccess play];
+                }
+                self.hasFinished = YES;
+            }
             break;
         }
         i++;

@@ -15,4 +15,5 @@
     #import <Foundation/Foundation.h>
     #import <SpriteKit/SpriteKit.h>
     #import "lw/lwLog.h"
+    #import "Finch/Lib-Prefix.pch"
 #endif

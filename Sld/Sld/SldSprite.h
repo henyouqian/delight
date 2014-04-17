@@ -10,8 +10,10 @@
 
 @interface SldSprite : SKSpriteNode
 
-+(instancetype)spriteWithPath:(NSString*)path;
--(instancetype)initWithPath:(NSString*)path;
+@property NSUInteger index;
+
++(instancetype)spriteWithPath:(NSString*)path index:(NSUInteger)index;
+-(instancetype)initWithPath:(NSString*)path index:(NSUInteger)index;
 
 -(BOOL)update;
 

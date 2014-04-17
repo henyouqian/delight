@@ -28,6 +28,10 @@
     [skView presentScene:scene];
 }
 
+-(void)dealloc {
+    
+}
+
 - (BOOL)shouldAutorotate
 {
     return NO;

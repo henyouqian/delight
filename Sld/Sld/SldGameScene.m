@@ -35,6 +35,10 @@
     return self;
 }
 
+-(void)dealloc {
+    
+}
+
 -(void)update:(CFTimeInterval)currentTime {
     [self.gamePlay update];
 }

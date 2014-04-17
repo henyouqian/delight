@@ -20,12 +20,13 @@
 
 @implementation SldSprite
 
-+(instancetype)spriteWithPath:(NSString*)path {
-    return [[SldSprite alloc] initWithPath:path];
++(instancetype)spriteWithPath:(NSString*)path index:(NSUInteger)index {
+    return [[SldSprite alloc] initWithPath:path index:index];
 }
 
--(instancetype)initWithPath:(NSString*)path {
+-(instancetype)initWithPath:(NSString*)path index:(NSUInteger)index {
     self.gifFile = nil;
+    self.index = index;
     if ([[path lowercaseString] hasSuffix:@".gif"]) {
         self.currFrame = -1;
         self.loaded = false;
