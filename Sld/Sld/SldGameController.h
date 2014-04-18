@@ -1,5 +1,5 @@
 //
-//  SldViewController.h
+//  SldGameController.h
 //  Sld
 //
 
@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <SpriteKit/SpriteKit.h>
 
-@interface SldViewController : UIViewController
+@interface SldGameController : UIViewController
 
 @end
