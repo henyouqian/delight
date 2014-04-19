@@ -15,6 +15,5 @@
     @import Foundation;
     @import SpriteKit;
     #import "lw/lwLog.h"
-    #import "AFNetworking/AFNetworking.h"
     #import "Finch/Lib-Prefix.pch"
 #endif
