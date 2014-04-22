@@ -48,29 +48,32 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
     }
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
-        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                lwError("post error: %@", error);
-                completionHandler(data, response, error);
-                return;
-            } else {
-                id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        completionHandler:^(NSData *data, NSURLResponse *response, NSError *err) {
+            __block NSError* error = err;
+            dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    lwError("json decode error: %@", error);
+                    lwError("post error: %@", error);
                     completionHandler(data, response, error);
                     return;
-                }
-                NSInteger code = [(NSHTTPURLResponse*)response statusCode];
-                if (code != 200) {
-                    lwError("post error: statusCode=%d", code);
-                    NSString *desc = [NSString stringWithFormat:@"http error: statusCode=%d", code];
-                    error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
+                } else {
+                    id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                    if (error) {
+                        lwError("json decode error: %@", error);
+                        completionHandler(data, response, error);
+                        return;
+                    }
+                    NSInteger code = [(NSHTTPURLResponse*)response statusCode];
+                    if (code != 200) {
+                        lwError("post error: statusCode=%ld", (long)code);
+                        NSString *desc = [NSString stringWithFormat:@"http error: statusCode=%ld", (long)code];
+                        error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
+                        completionHandler(jsonObj, response, error);
+                        return;
+                    }
                     completionHandler(jsonObj, response, error);
                     return;
                 }
-                completionHandler(jsonObj, response, error);
-                return;
-            }
+            });
         }];
     [task resume];
 }

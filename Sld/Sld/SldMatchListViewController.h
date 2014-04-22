@@ -14,8 +14,8 @@
 
 
 @interface Cell : UICollectionViewCell
-@property (strong, nonatomic) IBOutlet UIImageView *image;
-@property (strong, nonatomic) IBOutlet UIView *highlight;
+@property (weak, nonatomic) IBOutlet UIImageView *image;
+@property (weak, nonatomic) IBOutlet UIView *highlight;
 @end
 
 //@interface CollectionLayout : UICollectionViewFlowLayout

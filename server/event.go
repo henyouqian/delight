@@ -62,7 +62,8 @@ type Event struct {
 	EndTime         int64
 	BeginTimeString string
 	EndTimeString   string
-	IsFinished      bool
+	HasResult       bool
+	Thumb           string
 }
 
 type EventResult struct {
@@ -137,7 +138,7 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 	if _, ok := EVENT_TYPES[event.Type]; ok == false {
 		lwutil.SendError("err_match_type", "")
 	}
-	event.IsFinished = false
+	event.HasResult = false
 
 	//fill TimePoints
 	now := time.Now().Unix()
@@ -161,12 +162,20 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 		lwutil.SendError("err_time", "event.BeginTime >= event.EndTime")
 	}
 
-	//check pack
-	resp, err := ssdb.Do("hexists", H_PACK, event.PackId)
+	// //check pack
+	// resp, err := ssdb.Do("hexists", H_PACK, event.PackId)
+	// lwutil.CheckSsdbError(resp, err)
+	// if resp[1] == "0" {
+	// 	lwutil.SendError("err_pack", "pack not exist")
+	// }
+
+	//get pack
+	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
 	lwutil.CheckSsdbError(resp, err)
-	if resp[1] == "0" {
-		lwutil.SendError("err_pack", "pack not exist")
-	}
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	event.Thumb = pack.Thumb
 
 	//gen serial
 	event.Id = GenSerial(ssdb, EVENT_SERIAL)
@@ -696,7 +705,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	var event Event
 	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
-	if event.IsFinished {
+	if event.HasResult {
 		lwutil.SendError("err_event_finished", fmt.Sprintf("eventId=%d", in.EventId))
 	}
 

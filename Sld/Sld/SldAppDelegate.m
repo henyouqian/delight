@@ -7,13 +7,56 @@
 //
 
 #import "SldAppDelegate.h"
-#import "FISoundEngine.h"
 
 @implementation SldAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    //db
+    NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *dbFileName = @"db/sld.sqlite";
+    NSString *dbPath   = [docsPath stringByAppendingPathComponent:dbFileName];
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    [fileMgr createDirectoryAtPath:[docsPath stringByAppendingPathComponent:@"db"] withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    BOOL dbExist = [fileMgr fileExistsAtPath:dbPath];
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+    if (![db open]) {
+        lwError("fmdb open failed.%@", [db lastErrorMessage]);
+    }
+    
+    BOOL needUpdate = NO;
+    NSString *appVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    if (dbExist) {
+        FMResultSet *r = [db executeQuery:@"SELECT value FROM kv WHERE key=?", @"version"];
+        if ([r next]) {
+            NSString *dbVer = [r stringForColumnIndex:0];
+            if ([dbVer compare:appVer] != 0) {
+                needUpdate = YES;
+            }
+        } else {
+            needUpdate = YES;
+        }
+    } else {
+        needUpdate = YES;
+    }
+    
+    if (needUpdate) {
+        NSString *createSqlPath = [[NSBundle mainBundle] pathForResource:@"db/create.sql" ofType:nil];
+        NSString *fh = [NSString stringWithContentsOfFile:createSqlPath encoding:NSUTF8StringEncoding error:NULL];
+        for (NSString *l in [fh componentsSeparatedByString:@";\n"]) {
+            if ([l length] > 0) {
+                NSMutableString *line = [NSMutableString stringWithString:l];
+                [line appendString:@";"];
+                lwInfo("%@", line);
+                
+                [db executeUpdate:line];
+            }
+        }
+        [db executeUpdate:@"REPLACE INTO kv VALUES (?, ?)", @"version", appVer];
+    }
+    
     return YES;
 }
 							

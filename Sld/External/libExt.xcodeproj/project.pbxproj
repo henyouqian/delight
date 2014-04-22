@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B3C0AE9D1906662100CB4DFD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AE9C1906662100CB4DFD /* Foundation.framework */; };
+		B3C0AF37190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF13190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m */; };
+		B3C0AF38190667C300CB4DFD /* easing.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF14190667C300CB4DFD /* easing.c */; };
+		B3C0AF39190667C300CB4DFD /* FIError.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF1A190667C300CB4DFD /* FIError.m */; };
+		B3C0AF3A190667C300CB4DFD /* FISampleBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF1C190667C300CB4DFD /* FISampleBuffer.m */; };
+		B3C0AF3B190667C300CB4DFD /* FISampleDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF1E190667C300CB4DFD /* FISampleDecoder.m */; };
+		B3C0AF3C190667C300CB4DFD /* FISampleFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF20190667C300CB4DFD /* FISampleFormat.m */; };
+		B3C0AF3D190667C300CB4DFD /* FISound.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF22190667C300CB4DFD /* FISound.m */; };
+		B3C0AF3E190667C300CB4DFD /* FISoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF24190667C300CB4DFD /* FISoundContext.m */; };
+		B3C0AF3F190667C300CB4DFD /* FISoundDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF26190667C300CB4DFD /* FISoundDevice.m */; };
+		B3C0AF40190667C300CB4DFD /* FISoundEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF28190667C300CB4DFD /* FISoundEngine.m */; };
+		B3C0AF41190667C300CB4DFD /* FISoundSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF2A190667C300CB4DFD /* FISoundSource.m */; };
+		B3C0AF42190667C300CB4DFD /* dgif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF2D190667C300CB4DFD /* dgif_lib.c */; };
+		B3C0AF43190667C300CB4DFD /* egif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF2E190667C300CB4DFD /* egif_lib.c */; };
+		B3C0AF44190667C300CB4DFD /* gif_err.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF2F190667C300CB4DFD /* gif_err.c */; };
+		B3C0AF45190667C300CB4DFD /* gif_font.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF30190667C300CB4DFD /* gif_font.c */; };
+		B3C0AF46190667C300CB4DFD /* gif_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF31190667C300CB4DFD /* gif_hash.c */; };
+		B3C0AF47190667C300CB4DFD /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF35190667C300CB4DFD /* gifalloc.c */; };
+		B3C0AF48190667C300CB4DFD /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF36190667C300CB4DFD /* quantize.c */; };
+		B3C0AF4A1906680800CB4DFD /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF491906680800CB4DFD /* OpenAL.framework */; };
+		B3C0AF571906699400CB4DFD /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF4D1906699400CB4DFD /* FMDatabase.m */; };
+		B3C0AF581906699400CB4DFD /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF4F1906699400CB4DFD /* FMDatabaseAdditions.m */; };
+		B3C0AF591906699400CB4DFD /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF511906699400CB4DFD /* FMDatabasePool.m */; };
+		B3C0AF5A1906699400CB4DFD /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF531906699400CB4DFD /* FMDatabaseQueue.m */; };
+		B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF561906699400CB4DFD /* FMResultSet.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B3C0AE971906662100CB4DFD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		B3C0AE991906662100CB4DFD /* liblibExt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibExt.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3C0AE9C1906662100CB4DFD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B3C0AEA01906662100CB4DFD /* libExt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "libExt-Prefix.pch"; sourceTree = "<group>"; };
+		B3C0AEAA1906662100CB4DFD /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B3C0AEAD1906662100CB4DFD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		B3C0AF12190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAKeyframeAnimation+AHEasing.h"; sourceTree = "<group>"; };
+		B3C0AF13190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAKeyframeAnimation+AHEasing.m"; sourceTree = "<group>"; };
+		B3C0AF14190667C300CB4DFD /* easing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = easing.c; sourceTree = "<group>"; };
+		B3C0AF15190667C300CB4DFD /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
+		B3C0AF17190667C300CB4DFD /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
+		B3C0AF19190667C300CB4DFD /* FIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIError.h; sourceTree = "<group>"; };
+		B3C0AF1A190667C300CB4DFD /* FIError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIError.m; sourceTree = "<group>"; };
+		B3C0AF1B190667C300CB4DFD /* FISampleBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISampleBuffer.h; sourceTree = "<group>"; };
+		B3C0AF1C190667C300CB4DFD /* FISampleBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISampleBuffer.m; sourceTree = "<group>"; };
+		B3C0AF1D190667C300CB4DFD /* FISampleDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISampleDecoder.h; sourceTree = "<group>"; };
+		B3C0AF1E190667C300CB4DFD /* FISampleDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISampleDecoder.m; sourceTree = "<group>"; };
+		B3C0AF1F190667C300CB4DFD /* FISampleFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISampleFormat.h; sourceTree = "<group>"; };
+		B3C0AF20190667C300CB4DFD /* FISampleFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISampleFormat.m; sourceTree = "<group>"; };
+		B3C0AF21190667C300CB4DFD /* FISound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISound.h; sourceTree = "<group>"; };
+		B3C0AF22190667C300CB4DFD /* FISound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISound.m; sourceTree = "<group>"; };
+		B3C0AF23190667C300CB4DFD /* FISoundContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundContext.h; sourceTree = "<group>"; };
+		B3C0AF24190667C300CB4DFD /* FISoundContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundContext.m; sourceTree = "<group>"; };
+		B3C0AF25190667C300CB4DFD /* FISoundDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundDevice.h; sourceTree = "<group>"; };
+		B3C0AF26190667C300CB4DFD /* FISoundDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundDevice.m; sourceTree = "<group>"; };
+		B3C0AF27190667C300CB4DFD /* FISoundEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundEngine.h; sourceTree = "<group>"; };
+		B3C0AF28190667C300CB4DFD /* FISoundEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundEngine.m; sourceTree = "<group>"; };
+		B3C0AF29190667C300CB4DFD /* FISoundSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundSource.h; sourceTree = "<group>"; };
+		B3C0AF2A190667C300CB4DFD /* FISoundSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundSource.m; sourceTree = "<group>"; };
+		B3C0AF2B190667C300CB4DFD /* Lib-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Lib-Prefix.pch"; sourceTree = "<group>"; };
+		B3C0AF2D190667C300CB4DFD /* dgif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dgif_lib.c; sourceTree = "<group>"; };
+		B3C0AF2E190667C300CB4DFD /* egif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = egif_lib.c; sourceTree = "<group>"; };
+		B3C0AF2F190667C300CB4DFD /* gif_err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_err.c; sourceTree = "<group>"; };
+		B3C0AF30190667C300CB4DFD /* gif_font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_font.c; sourceTree = "<group>"; };
+		B3C0AF31190667C300CB4DFD /* gif_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_hash.c; sourceTree = "<group>"; };
+		B3C0AF32190667C300CB4DFD /* gif_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_hash.h; sourceTree = "<group>"; };
+		B3C0AF33190667C300CB4DFD /* gif_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib.h; sourceTree = "<group>"; };
+		B3C0AF34190667C300CB4DFD /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
+		B3C0AF35190667C300CB4DFD /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
+		B3C0AF36190667C300CB4DFD /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+		B3C0AF491906680800CB4DFD /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		B3C0AF4C1906699400CB4DFD /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		B3C0AF4D1906699400CB4DFD /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		B3C0AF4E1906699400CB4DFD /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		B3C0AF4F1906699400CB4DFD /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		B3C0AF501906699400CB4DFD /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		B3C0AF511906699400CB4DFD /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		B3C0AF521906699400CB4DFD /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		B3C0AF531906699400CB4DFD /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		B3C0AF541906699400CB4DFD /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		B3C0AF551906699400CB4DFD /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		B3C0AF561906699400CB4DFD /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B3C0AE961906662100CB4DFD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3C0AF4A1906680800CB4DFD /* OpenAL.framework in Frameworks */,
+				B3C0AE9D1906662100CB4DFD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B3C0AE901906662000CB4DFD = {
+			isa = PBXGroup;
+			children = (
+				B3C0AE9E1906662100CB4DFD /* libExt */,
+				B3C0AE9B1906662100CB4DFD /* Frameworks */,
+				B3C0AE9A1906662100CB4DFD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B3C0AE9A1906662100CB4DFD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AE991906662100CB4DFD /* liblibExt.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B3C0AE9B1906662100CB4DFD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF491906680800CB4DFD /* OpenAL.framework */,
+				B3C0AE9C1906662100CB4DFD /* Foundation.framework */,
+				B3C0AEAA1906662100CB4DFD /* XCTest.framework */,
+				B3C0AEAD1906662100CB4DFD /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B3C0AE9E1906662100CB4DFD /* libExt */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF4B1906699400CB4DFD /* fmdb */,
+				B3C0AF11190667C300CB4DFD /* AHEasing */,
+				B3C0AF16190667C300CB4DFD /* lw */,
+				B3C0AF18190667C300CB4DFD /* Finch */,
+				B3C0AF2C190667C300CB4DFD /* giflib */,
+				B3C0AE9F1906662100CB4DFD /* Supporting Files */,
+			);
+			path = libExt;
+			sourceTree = "<group>";
+		};
+		B3C0AE9F1906662100CB4DFD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AEA01906662100CB4DFD /* libExt-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B3C0AF11190667C300CB4DFD /* AHEasing */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF12190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.h */,
+				B3C0AF13190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m */,
+				B3C0AF14190667C300CB4DFD /* easing.c */,
+				B3C0AF15190667C300CB4DFD /* easing.h */,
+			);
+			path = AHEasing;
+			sourceTree = SOURCE_ROOT;
+		};
+		B3C0AF16190667C300CB4DFD /* lw */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF17190667C300CB4DFD /* lwLog.h */,
+			);
+			path = lw;
+			sourceTree = SOURCE_ROOT;
+		};
+		B3C0AF18190667C300CB4DFD /* Finch */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF19190667C300CB4DFD /* FIError.h */,
+				B3C0AF1A190667C300CB4DFD /* FIError.m */,
+				B3C0AF1B190667C300CB4DFD /* FISampleBuffer.h */,
+				B3C0AF1C190667C300CB4DFD /* FISampleBuffer.m */,
+				B3C0AF1D190667C300CB4DFD /* FISampleDecoder.h */,
+				B3C0AF1E190667C300CB4DFD /* FISampleDecoder.m */,
+				B3C0AF1F190667C300CB4DFD /* FISampleFormat.h */,
+				B3C0AF20190667C300CB4DFD /* FISampleFormat.m */,
+				B3C0AF21190667C300CB4DFD /* FISound.h */,
+				B3C0AF22190667C300CB4DFD /* FISound.m */,
+				B3C0AF23190667C300CB4DFD /* FISoundContext.h */,
+				B3C0AF24190667C300CB4DFD /* FISoundContext.m */,
+				B3C0AF25190667C300CB4DFD /* FISoundDevice.h */,
+				B3C0AF26190667C300CB4DFD /* FISoundDevice.m */,
+				B3C0AF27190667C300CB4DFD /* FISoundEngine.h */,
+				B3C0AF28190667C300CB4DFD /* FISoundEngine.m */,
+				B3C0AF29190667C300CB4DFD /* FISoundSource.h */,
+				B3C0AF2A190667C300CB4DFD /* FISoundSource.m */,
+				B3C0AF2B190667C300CB4DFD /* Lib-Prefix.pch */,
+			);
+			path = Finch;
+			sourceTree = SOURCE_ROOT;
+		};
+		B3C0AF2C190667C300CB4DFD /* giflib */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF2D190667C300CB4DFD /* dgif_lib.c */,
+				B3C0AF2E190667C300CB4DFD /* egif_lib.c */,
+				B3C0AF2F190667C300CB4DFD /* gif_err.c */,
+				B3C0AF30190667C300CB4DFD /* gif_font.c */,
+				B3C0AF31190667C300CB4DFD /* gif_hash.c */,
+				B3C0AF32190667C300CB4DFD /* gif_hash.h */,
+				B3C0AF33190667C300CB4DFD /* gif_lib.h */,
+				B3C0AF34190667C300CB4DFD /* gif_lib_private.h */,
+				B3C0AF35190667C300CB4DFD /* gifalloc.c */,
+				B3C0AF36190667C300CB4DFD /* quantize.c */,
+			);
+			path = giflib;
+			sourceTree = SOURCE_ROOT;
+		};
+		B3C0AF4B1906699400CB4DFD /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF4C1906699400CB4DFD /* FMDatabase.h */,
+				B3C0AF4D1906699400CB4DFD /* FMDatabase.m */,
+				B3C0AF4E1906699400CB4DFD /* FMDatabaseAdditions.h */,
+				B3C0AF4F1906699400CB4DFD /* FMDatabaseAdditions.m */,
+				B3C0AF501906699400CB4DFD /* FMDatabasePool.h */,
+				B3C0AF511906699400CB4DFD /* FMDatabasePool.m */,
+				B3C0AF521906699400CB4DFD /* FMDatabaseQueue.h */,
+				B3C0AF531906699400CB4DFD /* FMDatabaseQueue.m */,
+				B3C0AF541906699400CB4DFD /* FMDB.h */,
+				B3C0AF551906699400CB4DFD /* FMResultSet.h */,
+				B3C0AF561906699400CB4DFD /* FMResultSet.m */,
+			);
+			path = fmdb;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B3C0AE981906662100CB4DFD /* libExt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3C0AEBC1906662100CB4DFD /* Build configuration list for PBXNativeTarget "libExt" */;
+			buildPhases = (
+				B3C0AE951906662100CB4DFD /* Sources */,
+				B3C0AE961906662100CB4DFD /* Frameworks */,
+				B3C0AE971906662100CB4DFD /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libExt;
+			productName = libExt;
+			productReference = B3C0AE991906662100CB4DFD /* liblibExt.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B3C0AE911906662000CB4DFD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Wei Li";
+			};
+			buildConfigurationList = B3C0AE941906662000CB4DFD /* Build configuration list for PBXProject "libExt" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B3C0AE901906662000CB4DFD;
+			productRefGroup = B3C0AE9A1906662100CB4DFD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B3C0AE981906662100CB4DFD /* libExt */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B3C0AE951906662100CB4DFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3C0AF43190667C300CB4DFD /* egif_lib.c in Sources */,
+				B3C0AF571906699400CB4DFD /* FMDatabase.m in Sources */,
+				B3C0AF41190667C300CB4DFD /* FISoundSource.m in Sources */,
+				B3C0AF48190667C300CB4DFD /* quantize.c in Sources */,
+				B3C0AF591906699400CB4DFD /* FMDatabasePool.m in Sources */,
+				B3C0AF3E190667C300CB4DFD /* FISoundContext.m in Sources */,
+				B3C0AF38190667C300CB4DFD /* easing.c in Sources */,
+				B3C0AF46190667C300CB4DFD /* gif_hash.c in Sources */,
+				B3C0AF42190667C300CB4DFD /* dgif_lib.c in Sources */,
+				B3C0AF40190667C300CB4DFD /* FISoundEngine.m in Sources */,
+				B3C0AF3F190667C300CB4DFD /* FISoundDevice.m in Sources */,
+				B3C0AF3C190667C300CB4DFD /* FISampleFormat.m in Sources */,
+				B3C0AF44190667C300CB4DFD /* gif_err.c in Sources */,
+				B3C0AF37190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m in Sources */,
+				B3C0AF3A190667C300CB4DFD /* FISampleBuffer.m in Sources */,
+				B3C0AF39190667C300CB4DFD /* FIError.m in Sources */,
+				B3C0AF47190667C300CB4DFD /* gifalloc.c in Sources */,
+				B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */,
+				B3C0AF45190667C300CB4DFD /* gif_font.c in Sources */,
+				B3C0AF3B190667C300CB4DFD /* FISampleDecoder.m in Sources */,
+				B3C0AF5A1906699400CB4DFD /* FMDatabaseQueue.m in Sources */,
+				B3C0AF3D190667C300CB4DFD /* FISound.m in Sources */,
+				B3C0AF581906699400CB4DFD /* FMDatabaseAdditions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B3C0AEBA1906662100CB4DFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B3C0AEBB1906662100CB4DFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B3C0AEBD1906662100CB4DFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/libExt.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "libExt/libExt-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					.,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		B3C0AEBE1906662100CB4DFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/libExt.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "libExt/libExt-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					.,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B3C0AE941906662000CB4DFD /* Build configuration list for PBXProject "libExt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3C0AEBA1906662100CB4DFD /* Debug */,
+				B3C0AEBB1906662100CB4DFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3C0AEBC1906662100CB4DFD /* Build configuration list for PBXNativeTarget "libExt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3C0AEBD1906662100CB4DFD /* Debug */,
+				B3C0AEBE1906662100CB4DFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B3C0AE911906662000CB4DFD /* Project object */;
+}

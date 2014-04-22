@@ -8,8 +8,6 @@
 
 #import "SldGamePlay.h"
 #import "SldSprite.h"
-#import "FISoundEngine.h"
-#import "AHEasing/easing.h"
 
 static const float MOVE_DURATION = .1f;
 static const uint32_t DEFUALT_SLIDER_NUM = 6;

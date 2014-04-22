@@ -8,17 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B3024C5F18FE7EF600F9EEA3 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3024C5E18FE7EF600F9EEA3 /* audio */; };
-		B3024C7E18FE848900F9EEA3 /* FIError.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C6218FE848900F9EEA3 /* FIError.m */; };
-		B3024C7F18FE848900F9EEA3 /* FISampleBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C6418FE848900F9EEA3 /* FISampleBuffer.m */; };
-		B3024C8118FE848900F9EEA3 /* FISampleDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C6718FE848900F9EEA3 /* FISampleDecoder.m */; };
-		B3024C8318FE848900F9EEA3 /* FISampleFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C6A18FE848900F9EEA3 /* FISampleFormat.m */; };
-		B3024C8418FE848900F9EEA3 /* FISound.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C6C18FE848900F9EEA3 /* FISound.m */; };
-		B3024C8518FE848900F9EEA3 /* FISoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C6E18FE848900F9EEA3 /* FISoundContext.m */; };
-		B3024C8718FE848900F9EEA3 /* FISoundDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C7118FE848900F9EEA3 /* FISoundDevice.m */; };
-		B3024C8918FE848900F9EEA3 /* FISoundEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C7418FE848900F9EEA3 /* FISoundEngine.m */; };
-		B3024C8A18FE848900F9EEA3 /* FISoundSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C7618FE848900F9EEA3 /* FISoundSource.m */; };
-		B3024C9518FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.m in Sources */ = {isa = PBXBuildFile; fileRef = B3024C9218FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.m */; };
-		B3024C9618FF056E00F9EEA3 /* easing.c in Sources */ = {isa = PBXBuildFile; fileRef = B3024C9318FF056E00F9EEA3 /* easing.c */; };
 		B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7D618F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE7DA18F05BE60047E9FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7D918F05BE60047E9FD /* main.m */; };
 		B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */; };
@@ -31,13 +20,6 @@
 		B31EE7F718F05BE60047E9FD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CF18F05BE60047E9FD /* UIKit.framework */; };
 		B31EE7FF18F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE80118F05BE60047E9FD /* SldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80018F05BE60047E9FD /* SldTests.m */; };
-		B31EE81618F05D520047E9FD /* dgif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80C18F05D520047E9FD /* dgif_lib.c */; };
-		B31EE81718F05D530047E9FD /* egif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80D18F05D520047E9FD /* egif_lib.c */; };
-		B31EE81818F05D530047E9FD /* gif_err.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80E18F05D520047E9FD /* gif_err.c */; };
-		B31EE81918F05D530047E9FD /* gif_font.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80F18F05D520047E9FD /* gif_font.c */; };
-		B31EE81A18F05D530047E9FD /* gif_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81018F05D520047E9FD /* gif_hash.c */; };
-		B31EE81B18F05D530047E9FD /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81418F05D520047E9FD /* gifalloc.c */; };
-		B31EE81C18F05D530047E9FD /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = B31EE81518F05D520047E9FD /* quantize.c */; };
 		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
 		B3691E1C1900C36A0055C419 /* SldMatchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E1B1900C36A0055C419 /* SldMatchListViewController.m */; };
 		B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E3C190284DF0055C419 /* SldHttpSession.m */; };
@@ -45,7 +27,11 @@
 		B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27DC18F8087B00E5A38A /* SldSprite.m */; };
 		B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */; };
 		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
+		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
+		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
+		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
 		B3F517711902F56B00499209 /* testImg in Resources */ = {isa = PBXBuildFile; fileRef = B3F517701902F56B00499209 /* testImg */; };
+		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,34 +42,25 @@
 			remoteGlobalIDString = B31EE7C718F05BE60047E9FD;
 			remoteInfo = Sld;
 		};
+		B3C0AED2190666BF00CB4DFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B3C0AE991906662100CB4DFD;
+			remoteInfo = libExt;
+		};
+		B3C0AF0E190666E600CB4DFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B3C0AE981906662100CB4DFD;
+			remoteInfo = libExt;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B3024C5E18FE7EF600F9EEA3 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = res/audio; sourceTree = "<group>"; };
-		B3024C6118FE848900F9EEA3 /* FIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIError.h; sourceTree = "<group>"; };
-		B3024C6218FE848900F9EEA3 /* FIError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIError.m; sourceTree = "<group>"; };
-		B3024C6318FE848900F9EEA3 /* FISampleBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISampleBuffer.h; sourceTree = "<group>"; };
-		B3024C6418FE848900F9EEA3 /* FISampleBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISampleBuffer.m; sourceTree = "<group>"; };
-		B3024C6618FE848900F9EEA3 /* FISampleDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISampleDecoder.h; sourceTree = "<group>"; };
-		B3024C6718FE848900F9EEA3 /* FISampleDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISampleDecoder.m; sourceTree = "<group>"; };
-		B3024C6918FE848900F9EEA3 /* FISampleFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISampleFormat.h; sourceTree = "<group>"; };
-		B3024C6A18FE848900F9EEA3 /* FISampleFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISampleFormat.m; sourceTree = "<group>"; };
-		B3024C6B18FE848900F9EEA3 /* FISound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISound.h; sourceTree = "<group>"; };
-		B3024C6C18FE848900F9EEA3 /* FISound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISound.m; sourceTree = "<group>"; };
-		B3024C6D18FE848900F9EEA3 /* FISoundContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundContext.h; sourceTree = "<group>"; };
-		B3024C6E18FE848900F9EEA3 /* FISoundContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundContext.m; sourceTree = "<group>"; };
-		B3024C7018FE848900F9EEA3 /* FISoundDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundDevice.h; sourceTree = "<group>"; };
-		B3024C7118FE848900F9EEA3 /* FISoundDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundDevice.m; sourceTree = "<group>"; };
-		B3024C7318FE848900F9EEA3 /* FISoundEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundEngine.h; sourceTree = "<group>"; };
-		B3024C7418FE848900F9EEA3 /* FISoundEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundEngine.m; sourceTree = "<group>"; };
-		B3024C7518FE848900F9EEA3 /* FISoundSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FISoundSource.h; sourceTree = "<group>"; };
-		B3024C7618FE848900F9EEA3 /* FISoundSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FISoundSource.m; sourceTree = "<group>"; };
-		B3024C7C18FE848900F9EEA3 /* Lib-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Lib-Prefix.pch"; sourceTree = "<group>"; };
 		B3024C8E18FE857A00F9EEA3 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
-		B3024C9118FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAKeyframeAnimation+AHEasing.h"; sourceTree = "<group>"; };
-		B3024C9218FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAKeyframeAnimation+AHEasing.m"; sourceTree = "<group>"; };
-		B3024C9318FF056E00F9EEA3 /* easing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = easing.c; sourceTree = "<group>"; };
-		B3024C9418FF056E00F9EEA3 /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
 		B31EE7C818F05BE60047E9FD /* Sld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31EE7CB18F05BE60047E9FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -105,22 +82,11 @@
 		B31EE7FC18F05BE60047E9FD /* SldTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SldTests-Info.plist"; sourceTree = "<group>"; };
 		B31EE7FE18F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B31EE80018F05BE60047E9FD /* SldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldTests.m; sourceTree = "<group>"; };
-		B31EE80C18F05D520047E9FD /* dgif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dgif_lib.c; sourceTree = "<group>"; };
-		B31EE80D18F05D520047E9FD /* egif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = egif_lib.c; sourceTree = "<group>"; };
-		B31EE80E18F05D520047E9FD /* gif_err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_err.c; sourceTree = "<group>"; };
-		B31EE80F18F05D520047E9FD /* gif_font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_font.c; sourceTree = "<group>"; };
-		B31EE81018F05D520047E9FD /* gif_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_hash.c; sourceTree = "<group>"; };
-		B31EE81118F05D520047E9FD /* gif_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_hash.h; sourceTree = "<group>"; };
-		B31EE81218F05D520047E9FD /* gif_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib.h; sourceTree = "<group>"; };
-		B31EE81318F05D520047E9FD /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
-		B31EE81418F05D520047E9FD /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
-		B31EE81518F05D520047E9FD /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
 		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
 		B3691E1A1900C36A0055C419 /* SldMatchListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchListViewController.h; sourceTree = "<group>"; };
 		B3691E1B1900C36A0055C419 /* SldMatchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchListViewController.m; sourceTree = "<group>"; };
 		B3691E3B190284DF0055C419 /* SldHttpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldHttpSession.h; sourceTree = "<group>"; };
 		B3691E3C190284DF0055C419 /* SldHttpSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldHttpSession.m; sourceTree = "<group>"; };
-		B36C27D618F459A500E5A38A /* lwLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLog.h; sourceTree = "<group>"; };
 		B36C27D818F7D8A700E5A38A /* SldGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGameScene.h; sourceTree = "<group>"; };
 		B36C27D918F7D8A700E5A38A /* SldGameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGameScene.m; sourceTree = "<group>"; };
 		B36C27DB18F8087B00E5A38A /* SldSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldSprite.h; sourceTree = "<group>"; };
@@ -129,7 +95,12 @@
 		B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGamePlay.m; sourceTree = "<group>"; };
 		B37A9C3418F2E4850080E8F0 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		B37A9C3518F2E4850080E8F0 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
+		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
+		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		B3C0AF5E1906703200CB4DFD /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; name = db; path = res/db; sourceTree = "<group>"; };
 		B3F517701902F56B00499209 /* testImg */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testImg; path = res/testImg; sourceTree = "<group>"; };
+		B3F517721903B1BF00499209 /* SldLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldLoginViewController.h; sourceTree = "<group>"; };
+		B3F517731903B1BF00499209 /* SldLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +108,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */,
+				B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,50 +126,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B3024C6018FE848900F9EEA3 /* Finch */ = {
-			isa = PBXGroup;
-			children = (
-				B3024C6118FE848900F9EEA3 /* FIError.h */,
-				B3024C6218FE848900F9EEA3 /* FIError.m */,
-				B3024C6318FE848900F9EEA3 /* FISampleBuffer.h */,
-				B3024C6418FE848900F9EEA3 /* FISampleBuffer.m */,
-				B3024C6618FE848900F9EEA3 /* FISampleDecoder.h */,
-				B3024C6718FE848900F9EEA3 /* FISampleDecoder.m */,
-				B3024C6918FE848900F9EEA3 /* FISampleFormat.h */,
-				B3024C6A18FE848900F9EEA3 /* FISampleFormat.m */,
-				B3024C6B18FE848900F9EEA3 /* FISound.h */,
-				B3024C6C18FE848900F9EEA3 /* FISound.m */,
-				B3024C6D18FE848900F9EEA3 /* FISoundContext.h */,
-				B3024C6E18FE848900F9EEA3 /* FISoundContext.m */,
-				B3024C7018FE848900F9EEA3 /* FISoundDevice.h */,
-				B3024C7118FE848900F9EEA3 /* FISoundDevice.m */,
-				B3024C7318FE848900F9EEA3 /* FISoundEngine.h */,
-				B3024C7418FE848900F9EEA3 /* FISoundEngine.m */,
-				B3024C7518FE848900F9EEA3 /* FISoundSource.h */,
-				B3024C7618FE848900F9EEA3 /* FISoundSource.m */,
-				B3024C7C18FE848900F9EEA3 /* Lib-Prefix.pch */,
-			);
-			name = Finch;
-			path = External/Finch;
-			sourceTree = "<group>";
-		};
-		B3024C9018FF056E00F9EEA3 /* AHEasing */ = {
-			isa = PBXGroup;
-			children = (
-				B3024C9118FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.h */,
-				B3024C9218FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.m */,
-				B3024C9318FF056E00F9EEA3 /* easing.c */,
-				B3024C9418FF056E00F9EEA3 /* easing.h */,
-			);
-			name = AHEasing;
-			path = External/AHEasing;
-			sourceTree = "<group>";
-		};
 		B31EE7BF18F05BE50047E9FD = {
 			isa = PBXGroup;
 			children = (
+				B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */,
 				B31EE7D318F05BE60047E9FD /* Sld */,
-				B31EE80A18F05D3B0047E9FD /* External */,
 				B31EE7FA18F05BE60047E9FD /* SldTests */,
 				B31EE7CA18F05BE60047E9FD /* Frameworks */,
 				B31EE7C918F05BE60047E9FD /* Products */,
@@ -215,6 +149,7 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */,
 				B3024C8E18FE857A00F9EEA3 /* OpenAL.framework */,
 				B31EE7CB18F05BE60047E9FD /* Foundation.framework */,
 				B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */,
@@ -271,35 +206,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B31EE80A18F05D3B0047E9FD /* External */ = {
-			isa = PBXGroup;
-			children = (
-				B3024C9018FF056E00F9EEA3 /* AHEasing */,
-				B3024C6018FE848900F9EEA3 /* Finch */,
-				B36C27D518F459A500E5A38A /* lw */,
-				B31EE80B18F05D520047E9FD /* giflib */,
-			);
-			name = External;
-			sourceTree = "<group>";
-		};
-		B31EE80B18F05D520047E9FD /* giflib */ = {
-			isa = PBXGroup;
-			children = (
-				B31EE80C18F05D520047E9FD /* dgif_lib.c */,
-				B31EE80D18F05D520047E9FD /* egif_lib.c */,
-				B31EE80E18F05D520047E9FD /* gif_err.c */,
-				B31EE80F18F05D520047E9FD /* gif_font.c */,
-				B31EE81018F05D520047E9FD /* gif_hash.c */,
-				B31EE81118F05D520047E9FD /* gif_hash.h */,
-				B31EE81218F05D520047E9FD /* gif_lib.h */,
-				B31EE81318F05D520047E9FD /* gif_lib_private.h */,
-				B31EE81418F05D520047E9FD /* gifalloc.c */,
-				B31EE81518F05D520047E9FD /* quantize.c */,
-			);
-			name = giflib;
-			path = External/giflib;
-			sourceTree = "<group>";
-		};
 		B31EE81D18F060020047E9FD /* util */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +224,7 @@
 		B31EE82918F06F160047E9FD /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B3C0AF5E1906703200CB4DFD /* db */,
 				B3F517701902F56B00499209 /* testImg */,
 				B3024C5E18FE7EF600F9EEA3 /* audio */,
 				B31EE82A18F06F4D0047E9FD /* img */,
@@ -328,21 +235,14 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
+				B3F517731903B1BF00499209 /* SldLoginViewController.m */,
 				B3691E1A1900C36A0055C419 /* SldMatchListViewController.h */,
 				B3691E1B1900C36A0055C419 /* SldMatchListViewController.m */,
 				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 			);
 			name = controller;
-			sourceTree = "<group>";
-		};
-		B36C27D518F459A500E5A38A /* lw */ = {
-			isa = PBXGroup;
-			children = (
-				B36C27D618F459A500E5A38A /* lwLog.h */,
-			);
-			name = lw;
-			path = External/lw;
 			sourceTree = "<group>";
 		};
 		B36C27D718F7D85900E5A38A /* scene */ = {
@@ -352,6 +252,14 @@
 				B36C27D918F7D8A700E5A38A /* SldGameScene.m */,
 			);
 			name = scene;
+			sourceTree = "<group>";
+		};
+		B3C0AECE190666BE00CB4DFD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AED3190666BF00CB4DFD /* liblibExt.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,6 +276,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B3C0AF0F190666E600CB4DFD /* PBXTargetDependency */,
 			);
 			name = Sld;
 			productName = Sld;
@@ -418,6 +327,12 @@
 			mainGroup = B31EE7BF18F05BE50047E9FD;
 			productRefGroup = B31EE7C918F05BE60047E9FD /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = B3C0AECE190666BE00CB4DFD /* Products */;
+					ProjectRef = B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				B31EE7C718F05BE60047E9FD /* Sld */,
@@ -426,11 +341,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		B3C0AED3190666BF00CB4DFD /* liblibExt.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = liblibExt.a;
+			remoteRef = B3C0AED2190666BF00CB4DFD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		B31EE7C618F05BE60047E9FD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3C0AF5F1906703200CB4DFD /* db in Resources */,
 				B31EE82B18F06F4D0047E9FD /* img in Resources */,
 				B3024C5F18FE7EF600F9EEA3 /* audio in Resources */,
 				B3F517711902F56B00499209 /* testImg in Resources */,
@@ -458,31 +384,14 @@
 			files = (
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
-				B3024C8718FE848900F9EEA3 /* FISoundDevice.m in Sources */,
-				B3024C8918FE848900F9EEA3 /* FISoundEngine.m in Sources */,
-				B31EE81618F05D520047E9FD /* dgif_lib.c in Sources */,
+				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
-				B31EE81818F05D530047E9FD /* gif_err.c in Sources */,
-				B3024C7F18FE848900F9EEA3 /* FISampleBuffer.m in Sources */,
-				B3024C8A18FE848900F9EEA3 /* FISoundSource.m in Sources */,
-				B31EE81B18F05D530047E9FD /* gifalloc.c in Sources */,
-				B31EE81C18F05D530047E9FD /* quantize.c in Sources */,
-				B3024C9518FF056E00F9EEA3 /* CAKeyframeAnimation+AHEasing.m in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
-				B3024C9618FF056E00F9EEA3 /* easing.c in Sources */,
-				B3024C8118FE848900F9EEA3 /* FISampleDecoder.m in Sources */,
-				B3024C8318FE848900F9EEA3 /* FISampleFormat.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
-				B31EE81718F05D530047E9FD /* egif_lib.c in Sources */,
-				B31EE81A18F05D530047E9FD /* gif_hash.c in Sources */,
 				B3691E1C1900C36A0055C419 /* SldMatchListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
-				B31EE81918F05D530047E9FD /* gif_font.c in Sources */,
-				B3024C7E18FE848900F9EEA3 /* FIError.m in Sources */,
-				B3024C8518FE848900F9EEA3 /* FISoundContext.m in Sources */,
-				B3024C8418FE848900F9EEA3 /* FISound.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +410,11 @@
 			isa = PBXTargetDependency;
 			target = B31EE7C718F05BE60047E9FD /* Sld */;
 			targetProxy = B31EE7F818F05BE60047E9FD /* PBXContainerItemProxy */;
+		};
+		B3C0AF0F190666E600CB4DFD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libExt;
+			targetProxy = B3C0AF0E190666E600CB4DFD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

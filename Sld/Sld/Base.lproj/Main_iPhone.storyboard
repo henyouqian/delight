@@ -54,7 +54,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdT-OB-1NQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1990" y="94"/>
+            <point key="canvasLocation" x="1872" y="96"/>
         </scene>
         <!--Sld Game Controller-->
         <scene sceneID="CtS-rA-C9T">
@@ -86,29 +86,82 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="6N1-kv-Bwr"/>
+                    <keyCommands/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="btX-cZ-eVz" sceneMemberID="firstResponder"/>
                 <exit id="MLe-zq-Xhf" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2588" y="96"/>
+            <point key="canvasLocation" x="2306" y="96"/>
+        </scene>
+        <!--Sld Login View Controller-->
+        <scene sceneID="XIZ-kS-SiX">
+            <objects>
+                <viewController storyboardIdentifier="login" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hGO-Bw-qgY" customClass="SldLoginViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jRn-3e-uQ2"/>
+                        <viewControllerLayoutGuide type="bottom" id="CEs-ep-Hqf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aMd-hh-a3J">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b7w-XO-6lq">
+                                <rect key="frame" x="131" y="240" width="59" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onLogin:" destination="hGO-Bw-qgY" eventType="touchUpInside" id="BBy-RO-jWl"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="User name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="5UP-Xg-ycZ">
+                                <rect key="frame" x="34" y="108" width="253" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZmK-Ht-fAI">
+                                <rect key="frame" x="34" y="175" width="253" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="go" secureTextEntry="YES"/>
+                                <connections>
+                                    <action selector="onLogin:" destination="hGO-Bw-qgY" eventType="editingDidEndOnExit" id="92b-PS-lGU"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="UserNameInput" destination="5UP-Xg-ycZ" id="Xf9-Ki-bOV"/>
+                        <outlet property="passwordInput" destination="ZmK-Ht-fAI" id="fHy-09-wHl"/>
+                        <outlet property="userNameInput" destination="5UP-Xg-ycZ" id="5vt-gm-3sa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CyP-Wu-BWc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1450" y="774"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="4qO-55-FvR">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="s5O-JC-8zD" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="nav" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="s5O-JC-8zD" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="3nz-wG-bUZ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="4F5-kN-z2K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="G6w-0m-hNO" kind="relationship" relationship="rootViewController" id="0fE-QE-iBV"/>
+                        <segue destination="G6w-0m-hNO" kind="relationship" relationship="rootViewController" id="2vI-W3-OgN"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3n-DC-VaQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1464" y="94"/>
+            <point key="canvasLocation" x="1450" y="96"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

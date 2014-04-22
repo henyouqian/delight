@@ -15,5 +15,8 @@
     @import Foundation;
     @import SpriteKit;
     #import "lw/lwLog.h"
-    #import "Finch/Lib-Prefix.pch"
+    #import "libExt/libExt-Prefix.pch"
+    #import "fmdb/FMDB.h"
+    #import "Finch/FISoundEngine.h"
+    #import "AHEasing/easing.h"
 #endif

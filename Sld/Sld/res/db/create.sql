@@ -1,0 +1,2 @@
+CREATE TABLE "kv" ("key" VARCHAR(256) PRIMARY KEY  NOT NULL , "value" TEXT NOT NULL );
+CREATE TABLE "test" ("aa" DOUBLE, "gg" DOUBLE);
