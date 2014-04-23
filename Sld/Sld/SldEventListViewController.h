@@ -1,5 +1,5 @@
 //
-//  SldMatchListViewController.h
+//  SldEventListViewController.h
 //  Sld
 //
 //  Created by Wei Li on 14-4-18.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldMatchListViewController : UICollectionViewController
+@interface SldEventListViewController : UICollectionViewController
 
 @end
 

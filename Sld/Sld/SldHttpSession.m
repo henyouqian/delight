@@ -8,7 +8,8 @@
 
 #import "SldHttpSession.h"
 
-static NSString *defaultHost = @"http://192.168.2.55:9999";
+//static NSString *defaultHost = @"http://192.168.2.55:9999";
+static NSString *defaultHost = @"http://192.168.1.43:9999";
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
@@ -16,6 +17,15 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
 @end
 
 @implementation SldHttpSession
+
++ (instancetype)defaultSession {
+    static SldHttpSession *sharedSession = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedSession = [[self alloc] initWithHost:defaultHost];
+    });
+    return sharedSession;
+}
 
 + (instancetype)sessionWithHost:(NSString*)host {
     return [[SldHttpSession alloc] initWithHost:host];
@@ -26,7 +36,9 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
         self.baseUrl = [NSURL URLWithString:host];
         
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
-        self.session = [NSURLSession sessionWithConfiguration:conf];
+        //self.session = [NSURLSession sessionWithConfiguration:conf];
+        self.session = [NSURLSession sessionWithConfiguration:conf delegate:nil delegateQueue: [NSOperationQueue mainQueue]];
+        
     }
     
     return self;
@@ -48,43 +60,58 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
     }
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
-        completionHandler:^(NSData *data, NSURLResponse *response, NSError *err) {
-            __block NSError* error = err;
-            dispatch_async(dispatch_get_main_queue(), ^{
+        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                lwError("post error: %@", error);
+                completionHandler(data, response, error);
+                return;
+            } else {
+                id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error) {
-                    lwError("post error: %@", error);
+                    lwError("json decode error: %@", error);
                     completionHandler(data, response, error);
                     return;
-                } else {
-                    id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                    if (error) {
-                        lwError("json decode error: %@", error);
-                        completionHandler(data, response, error);
-                        return;
-                    }
-                    NSInteger code = [(NSHTTPURLResponse*)response statusCode];
-                    if (code != 200) {
-                        lwError("post error: statusCode=%ld", (long)code);
-                        NSString *desc = [NSString stringWithFormat:@"http error: statusCode=%ld", (long)code];
-                        error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
-                        completionHandler(jsonObj, response, error);
-                        return;
-                    }
+                }
+                NSInteger code = [(NSHTTPURLResponse*)response statusCode];
+                if (code != 200) {
+                    lwError("post error: statusCode=%ld", (long)code);
+                    NSString *desc = [NSString stringWithFormat:@"http error: statusCode=%ld", (long)code];
+                    error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
                     completionHandler(jsonObj, response, error);
                     return;
                 }
-            });
+                completionHandler(jsonObj, response, error);
+                return;
+            }
         }];
     [task resume];
 }
 
-+ (instancetype)defaultSession {
-    static SldHttpSession *sharedSession = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedSession = [[self alloc] initWithHost:defaultHost];
-    });
-    return sharedSession;
+- (void)downloadFromUrl:(NSString*)url
+                 toPath:(NSString*)path
+               withData:(id)data
+      completionHandler:(void (^)(NSURL *location, NSError *error, id data))completionHandler
+{
+    NSURL * nsurl = [NSURL URLWithString:url];
+    
+    NSURLSessionDownloadTask *task =[self.session downloadTaskWithURL:nsurl
+        completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+        if(error == nil) {
+            NSError *err = nil;
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSURL *destURL = [NSURL fileURLWithPath:path];
+            if ([fileManager moveItemAtURL:location
+                                       toURL:destURL
+                                       error: &err]) {
+                completionHandler(destURL, nil, data);
+            } else {
+                completionHandler(nil, err, data);
+            }
+        } else {
+            completionHandler(nil, error, data);
+        }
+    }];
+    [task resume];
 }
 
 @end

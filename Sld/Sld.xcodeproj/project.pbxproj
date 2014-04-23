@@ -21,7 +21,7 @@
 		B31EE7FF18F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE80118F05BE60047E9FD /* SldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80018F05BE60047E9FD /* SldTests.m */; };
 		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
-		B3691E1C1900C36A0055C419 /* SldMatchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E1B1900C36A0055C419 /* SldMatchListViewController.m */; };
+		B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E1B1900C36A0055C419 /* SldEventListViewController.m */; };
 		B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E3C190284DF0055C419 /* SldHttpSession.m */; };
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
 		B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27DC18F8087B00E5A38A /* SldSprite.m */; };
@@ -83,8 +83,8 @@
 		B31EE7FE18F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B31EE80018F05BE60047E9FD /* SldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldTests.m; sourceTree = "<group>"; };
 		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
-		B3691E1A1900C36A0055C419 /* SldMatchListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchListViewController.h; sourceTree = "<group>"; };
-		B3691E1B1900C36A0055C419 /* SldMatchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchListViewController.m; sourceTree = "<group>"; };
+		B3691E1A1900C36A0055C419 /* SldEventListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventListViewController.h; sourceTree = "<group>"; };
+		B3691E1B1900C36A0055C419 /* SldEventListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventListViewController.m; sourceTree = "<group>"; };
 		B3691E3B190284DF0055C419 /* SldHttpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldHttpSession.h; sourceTree = "<group>"; };
 		B3691E3C190284DF0055C419 /* SldHttpSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldHttpSession.m; sourceTree = "<group>"; };
 		B36C27D818F7D8A700E5A38A /* SldGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGameScene.h; sourceTree = "<group>"; };
@@ -237,8 +237,8 @@
 			children = (
 				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
 				B3F517731903B1BF00499209 /* SldLoginViewController.m */,
-				B3691E1A1900C36A0055C419 /* SldMatchListViewController.h */,
-				B3691E1B1900C36A0055C419 /* SldMatchListViewController.m */,
+				B3691E1A1900C36A0055C419 /* SldEventListViewController.h */,
+				B3691E1B1900C36A0055C419 /* SldEventListViewController.m */,
 				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 			);
@@ -390,7 +390,7 @@
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
-				B3691E1C1900C36A0055C419 /* SldMatchListViewController.m in Sources */,
+				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -32,6 +32,8 @@
 		B3C0AF591906699400CB4DFD /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF511906699400CB4DFD /* FMDatabasePool.m */; };
 		B3C0AF5A1906699400CB4DFD /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF531906699400CB4DFD /* FMDatabaseQueue.m */; };
 		B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF561906699400CB4DFD /* FMResultSet.m */; };
+		B3C0AF671906D69B00CB4DFD /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF641906D69A00CB4DFD /* SSKeychain.m */; };
+		B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -98,6 +100,11 @@
 		B3C0AF541906699400CB4DFD /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		B3C0AF551906699400CB4DFD /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
 		B3C0AF561906699400CB4DFD /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		B3C0AF621906D69A00CB4DFD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SSKeychain.strings; sourceTree = "<group>"; };
+		B3C0AF631906D69A00CB4DFD /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
+		B3C0AF641906D69A00CB4DFD /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
+		B3C0AF651906D69A00CB4DFD /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
+		B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +151,7 @@
 		B3C0AE9E1906662100CB4DFD /* libExt */ = {
 			isa = PBXGroup;
 			children = (
+				B3C0AF601906D69A00CB4DFD /* SSKeychain */,
 				B3C0AF4B1906699400CB4DFD /* fmdb */,
 				B3C0AF11190667C300CB4DFD /* AHEasing */,
 				B3C0AF16190667C300CB4DFD /* lw */,
@@ -242,6 +250,18 @@
 			path = fmdb;
 			sourceTree = SOURCE_ROOT;
 		};
+		B3C0AF601906D69A00CB4DFD /* SSKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0AF611906D69A00CB4DFD /* SSKeychain.strings */,
+				B3C0AF631906D69A00CB4DFD /* SSKeychain.h */,
+				B3C0AF641906D69A00CB4DFD /* SSKeychain.m */,
+				B3C0AF651906D69A00CB4DFD /* SSKeychainQuery.h */,
+				B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */,
+			);
+			path = SSKeychain;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -309,7 +329,9 @@
 				B3C0AF37190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m in Sources */,
 				B3C0AF3A190667C300CB4DFD /* FISampleBuffer.m in Sources */,
 				B3C0AF39190667C300CB4DFD /* FIError.m in Sources */,
+				B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */,
 				B3C0AF47190667C300CB4DFD /* gifalloc.c in Sources */,
+				B3C0AF671906D69B00CB4DFD /* SSKeychain.m in Sources */,
 				B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */,
 				B3C0AF45190667C300CB4DFD /* gif_font.c in Sources */,
 				B3C0AF3B190667C300CB4DFD /* FISampleDecoder.m in Sources */,
@@ -320,6 +342,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B3C0AF611906D69A00CB4DFD /* SSKeychain.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B3C0AF621906D69A00CB4DFD /* en */,
+			);
+			name = SSKeychain.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		B3C0AEBA1906662100CB4DFD /* Debug */ = {

@@ -185,7 +185,8 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
-	resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.EndTime)
+	//resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.EndTime)
+	resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.Id)
 	lwutil.CheckSsdbError(resp, err)
 
 	//init first round
@@ -269,8 +270,8 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-	if in.Limit > 20 {
-		in.Limit = 20
+	if in.Limit > 50 {
+		in.Limit = 50
 	}
 
 	var startId interface{}

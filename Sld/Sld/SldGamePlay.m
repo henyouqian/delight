@@ -328,6 +328,16 @@ static const float TRANS_DURATION = .3f;
         }];
     } else {
         self.touchEnable = YES;
+        [parent setAlpha:0];
+        float dur = 1.f;
+        SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+            CGFloat t = elapsedTime/dur;
+            t = CubicEaseOut(t);
+            [node setAlpha:t];
+        }];
+        [parent runAction:action completion:^{
+            
+        }];
     }
 }
 

@@ -7,42 +7,39 @@
 //
 
 #import "SldLoginViewController.h"
-#import "SldMatchListViewController.h"
+#import "SldEventListViewController.h"
 #import "SldHttpSession.h"
+#import "util.h"
+#import "SSKeychain/SSkeychain.h"
+
+static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
 @interface SldLoginViewController ()
-@property (weak, nonatomic) IBOutlet UITextField *userNameInput;
+@property (weak, nonatomic) IBOutlet UITextField *usernameInput;
 @property (weak, nonatomic) IBOutlet UITextField *passwordInput;
 @end
 
 @implementation SldLoginViewController
 
 - (IBAction)onLogin:(id)sender {
-    NSString *userName = self.userNameInput.text;
+    NSString *username = self.usernameInput.text;
     NSString *password = self.passwordInput.text;
-    if ([userName length] == 0 || [password length] == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Fill the blank."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+    if ([username length] == 0 || [password length] == 0) {
+        alert(@"Error", @"Fill the blank.");
         return;
     }
-    NSDictionary *body = @{@"Username":userName, @"Password":password};
+    NSDictionary *body = @{@"Username":username, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/login" body:body completionHandler:^(id data, NSURLResponse *response, NSError *error) {
         NSLog(@"data:%@\nerror:%@\n", data, error);
         if (!error) {
             //[self dismissViewControllerAnimated:YES completion:nil];
             [self.navigationController popViewControllerAnimated:YES];
+            
+            //save to keychain
+            [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:data[@"ErrorString"]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
+            alert(@"Error", data[@"ErrorString"]);
         }
     }];
 }
@@ -66,6 +63,14 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
+    if ([accounts count]) {
+        NSString *username = [accounts lastObject][@"acct"];
+        NSString *password = [SSKeychain passwordForService:KEYCHAIN_SERVICE account:username];
+        self.usernameInput.text = username;
+        self.passwordInput.text = password;
+    }
 }
 
 - (void)didReceiveMemoryWarning

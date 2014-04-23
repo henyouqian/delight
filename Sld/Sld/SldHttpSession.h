@@ -8,9 +8,17 @@
 
 @interface SldHttpSession : NSObject
 
-+ (instancetype)sessionWithHost:(NSString*)host;
-- (void)postToApi:(NSString*)api body:(id)body completionHandler:(void (^)(id data, NSURLResponse *response, NSError *error))completionHandler;
-
 + (instancetype)defaultSession;
++ (instancetype)sessionWithHost:(NSString*)host;
+- (void)postToApi:(NSString*)api
+             body:(id)body
+completionHandler:(void (^)(id data, NSURLResponse *response, NSError *error))completionHandler;
+
+- (void)downloadFromUrl:(NSString*)url
+                 toPath:(NSString*)path
+               withData:(id)data
+      completionHandler:(void (^)(NSURL *location, NSError *error, id data))completionHandler;
+
+
 
 @end

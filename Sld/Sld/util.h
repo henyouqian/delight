@@ -9,3 +9,5 @@
 #import <Foundation/Foundation.h>
 
 NSString* getResFullPath(NSString* fileName);
+NSString* makeDocPath(NSString* path);
+void alert(NSString *title, NSString *message);
