@@ -12,6 +12,12 @@
 
 @end
 
+@interface Event : NSObject
+@property (nonatomic) UInt64 id;
+@property (nonatomic) UInt64 packId;
+@property (nonatomic) NSString *thumb;
+@end
+
 
 @interface Cell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *image;

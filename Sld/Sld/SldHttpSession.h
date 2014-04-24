@@ -10,9 +10,10 @@
 
 + (instancetype)defaultSession;
 + (instancetype)sessionWithHost:(NSString*)host;
+
 - (void)postToApi:(NSString*)api
              body:(id)body
-completionHandler:(void (^)(id data, NSURLResponse *response, NSError *error))completionHandler;
+completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler;
 
 - (void)downloadFromUrl:(NSString*)url
                  toPath:(NSString*)path

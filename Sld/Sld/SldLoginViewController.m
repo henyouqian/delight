@@ -30,17 +30,15 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     }
     NSDictionary *body = @{@"Username":username, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"auth/login" body:body completionHandler:^(id data, NSURLResponse *response, NSError *error) {
-        NSLog(@"data:%@\nerror:%@\n", data, error);
-        if (!error) {
-            //[self dismissViewControllerAnimated:YES completion:nil];
-            [self.navigationController popViewControllerAnimated:YES];
-            
-            //save to keychain
-            [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
-        } else {
-            alert(@"Error", data[@"ErrorString"]);
+    [session postToApi:@"auth/login" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alert(@"Error", @"Http Error");
+            return;
         }
+        [self.navigationController popViewControllerAnimated:YES];
+        
+        //save to keychain
+        [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
     }];
 }
 

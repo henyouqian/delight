@@ -44,7 +44,7 @@ static NSString *defaultHost = @"http://192.168.1.43:9999";
     return self;
 }
 
-- (void)postToApi:(NSString*)api body:(id)body completionHandler:(void (^)(id data, NSURLResponse *response, NSError *error))completionHandler {
+- (void)postToApi:(NSString*)api body:(id)body completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler {
     NSURL * url = [NSURL URLWithString:api relativeToURL:self.baseUrl];
     NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
@@ -61,28 +61,13 @@ static NSString *defaultHost = @"http://192.168.1.43:9999";
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                lwError("post error: %@", error);
-                completionHandler(data, response, error);
-                return;
-            } else {
-                id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                if (error) {
-                    lwError("json decode error: %@", error);
-                    completionHandler(data, response, error);
-                    return;
-                }
-                NSInteger code = [(NSHTTPURLResponse*)response statusCode];
-                if (code != 200) {
-                    lwError("post error: statusCode=%ld", (long)code);
-                    NSString *desc = [NSString stringWithFormat:@"http error: statusCode=%ld", (long)code];
-                    error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
-                    completionHandler(jsonObj, response, error);
-                    return;
-                }
-                completionHandler(jsonObj, response, error);
-                return;
+            NSInteger code = [(NSHTTPURLResponse*)response statusCode];
+            if (!error && code != 200) {
+                lwError("post error: statusCode=%ld", (long)code);
+                NSString *desc = [NSString stringWithFormat:@"Http error: statusCode=%ld", (long)code];
+                error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
             }
+            completionHandler(data, response, error);
         }];
     [task resume];
 }

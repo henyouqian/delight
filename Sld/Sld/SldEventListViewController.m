@@ -8,10 +8,11 @@
 
 #import "SldEventListViewController.h"
 #import "SldHttpSession.h"
+#import "SldEventDetailViewController.h"
 #import "util.h"
+#import "config.h"
 
 NSString *CELL_ID = @"cellID";
-NSString *DATA_HOST = @"http://sliderpack.qiniudn.com";
 
 @implementation Cell
 
@@ -28,10 +29,6 @@ NSString *DATA_HOST = @"http://sliderpack.qiniudn.com";
 
 @end
 
-@interface Event : NSObject
-@property (nonatomic) UInt64 id;
-@property (nonatomic) NSString *thumb;
-@end
 
 @implementation Event
 @end
@@ -47,9 +44,6 @@ NSString *DATA_HOST = @"http://sliderpack.qiniudn.com";
     return [self.events count];
 }
 
-- (NSString*)makeImgCachePath:(NSString*)filename {
-    return makeDocPath([NSString stringWithFormat:@"imgCache/%@", filename]);
-}
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -63,20 +57,21 @@ NSString *DATA_HOST = @"http://sliderpack.qiniudn.com";
     }
     Event *event = [self.events objectAtIndex:idx];
     
-    //local
-    NSString *thumbPath = [self makeImgCachePath:event.thumb];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) {
+    //
+    Config *conf = [Config sharedConf];
+    NSString *thumbPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, event.thumb]);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) { //local
         UIImage *image = [UIImage imageWithContentsOfFile:thumbPath];
         cell.image.image = image;
-    } else { //fetch from server
+    } else { //server
         UIImage *image = [UIImage imageNamed:@"img/loading.png"];
         cell.image.image = image;
         
         //download
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", DATA_HOST, event.thumb]
+        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, event.thumb]
                           toPath:thumbPath
-                        withData:[NSNumber numberWithInt:idx] completionHandler:^(NSURL *location, NSError *error, id data)
+                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
         {
             [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
         }];
@@ -112,35 +107,41 @@ NSString *DATA_HOST = @"http://sliderpack.qiniudn.com";
 - (void)refreshList {
     NSDictionary *body = @{@"StartId":@0, @"Limit":@50};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"event/list" body:body completionHandler:^(id data, NSURLResponse *response, NSError *error) {
-        //NSLog(@"data:%@\nerror:%@\n", data, error);
-        //alert(@"Info", [NSString stringWithFormat:@"%@", data]);
-        if (!error) {
-            NSArray *resp = data;
-            NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
-            Event *firstEvent = nil;
-            if ([self.events count]) {
-                firstEvent = self.events[0];
-            }
-            for (int i = 0; i < [resp count]; ++i) {
-                Event *event = [[Event alloc] init];
-                NSDictionary *dict = resp[i];
-                event.id = (UInt64)dict[@"Id"];
-                event.thumb = dict[@"Thumb"];
-                
-                if (firstEvent && firstEvent.id == event.id) {
-                    break;
-                }
-        
-                [self.events insertObject:event atIndex:i];
-                [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0] ];
-            }
-            [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
-            
-        } else {
-            alert(@"Error", [NSString stringWithFormat:@"%@", error]);
-        }
+    [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    {
         [self.refreshControl endRefreshing];
+        
+        if (error) {
+            lwError("Http Error: event/list, error=%@", [error localizedDescription]);
+            return;
+        }
+        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error, error=%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
+        Event *firstEvent = nil;
+        if ([self.events count]) {
+            firstEvent = self.events[0];
+        }
+        for (int i = 0; i < [array count]; ++i) {
+            Event *event = [[Event alloc] init];
+            NSDictionary *dict = array[i];
+            event.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
+            event.thumb = dict[@"Thumb"];
+            event.packId = [(NSNumber*)dict[@"PackId"] unsignedLongLongValue];
+            
+            if (firstEvent && firstEvent.id == event.id) {
+                break;
+            }
+            
+            [self.events insertObject:event atIndex:i];
+            [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0] ];
+        }
+        [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
+        
     }];
 }
 
@@ -170,11 +171,13 @@ NSString *DATA_HOST = @"http://sliderpack.qiniudn.com";
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-}
- 
-- (IBAction)onGameExit:(UIStoryboardSegue *)segue {
-
+    NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
+    int row = selectedIndexPath.row;
+    if (row < [self.events count]) {
+        Event *event = self.events[row];
+        SldEventDetailViewController *detailController = [segue destinationViewController];
+        detailController.event = event;
+    }
 }
 
 

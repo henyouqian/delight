@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		B3024C5F18FE7EF600F9EEA3 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3024C5E18FE7EF600F9EEA3 /* audio */; };
+		B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */; };
+		B31CBEA419089EA700621165 /* SldDb.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA319089EA700621165 /* SldDb.m */; };
+		B31CBEA819094EE100621165 /* config.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA719094EE100621165 /* config.m */; };
 		B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7D618F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE7DA18F05BE60047E9FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7D918F05BE60047E9FD /* main.m */; };
 		B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */; };
@@ -61,6 +64,12 @@
 /* Begin PBXFileReference section */
 		B3024C5E18FE7EF600F9EEA3 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = res/audio; sourceTree = "<group>"; };
 		B3024C8E18FE857A00F9EEA3 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventDetailViewController.h; sourceTree = "<group>"; };
+		B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventDetailViewController.m; sourceTree = "<group>"; };
+		B31CBEA219089EA700621165 /* SldDb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldDb.h; sourceTree = "<group>"; };
+		B31CBEA319089EA700621165 /* SldDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldDb.m; sourceTree = "<group>"; };
+		B31CBEA619094EE100621165 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = Sld/config.h; sourceTree = "<group>"; };
+		B31CBEA719094EE100621165 /* config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = config.m; path = Sld/config.m; sourceTree = "<group>"; };
 		B31EE7C818F05BE60047E9FD /* Sld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31EE7CB18F05BE60047E9FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -129,6 +138,8 @@
 		B31EE7BF18F05BE50047E9FD = {
 			isa = PBXGroup;
 			children = (
+				B31CBEA619094EE100621165 /* config.h */,
+				B31CBEA719094EE100621165 /* config.m */,
 				B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */,
 				B31EE7D318F05BE60047E9FD /* Sld */,
 				B31EE7FA18F05BE60047E9FD /* SldTests */,
@@ -217,6 +228,8 @@
 				B37A9C3518F2E4850080E8F0 /* util.m */,
 				B3691E3B190284DF0055C419 /* SldHttpSession.h */,
 				B3691E3C190284DF0055C419 /* SldHttpSession.m */,
+				B31CBEA219089EA700621165 /* SldDb.h */,
+				B31CBEA319089EA700621165 /* SldDb.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -239,6 +252,8 @@
 				B3F517731903B1BF00499209 /* SldLoginViewController.m */,
 				B3691E1A1900C36A0055C419 /* SldEventListViewController.h */,
 				B3691E1B1900C36A0055C419 /* SldEventListViewController.m */,
+				B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */,
+				B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */,
 				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 			);
@@ -385,8 +400,11 @@
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
+				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
 				B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
+				B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */,
+				B31CBEA819094EE100621165 /* config.m in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,

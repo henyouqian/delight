@@ -6,8 +6,10 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 NSString* getResFullPath(NSString* fileName);
 NSString* makeDocPath(NSString* path);
-void alert(NSString *title, NSString *message);
+UIAlertView* alert(NSString *title, NSString *message);
+
+BOOL imageExist(NSString *imageKey);
+NSString* makeImagePath(NSString *imageKey);
+NSString* makeImageServerUrl(NSString *imageKey);

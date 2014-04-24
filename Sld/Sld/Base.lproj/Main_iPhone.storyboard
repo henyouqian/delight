@@ -4,6 +4,56 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
+        <!--Sld Event Detail View Controller-->
+        <scene sceneID="88A-CF-0ps">
+            <objects>
+                <viewController id="qXq-vD-jiE" customClass="SldEventDetailViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6zt-in-th0"/>
+                        <viewControllerLayoutGuide type="bottom" id="eEH-JD-RFT"/>
+                    </layoutGuides>
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="Zmg-Ux-FGO">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ySf-J4-Yqi">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lju-Aa-WUp">
+                                <rect key="frame" x="66" y="400" width="66" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Practice">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClickPractice:" destination="qXq-vD-jiE" eventType="touchUpInside" id="XC2-RH-bLL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sP7-Hu-Cuh">
+                                <rect key="frame" x="199" y="400" width="51" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Match">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClickMatch:" destination="qXq-vD-jiE" eventType="touchUpInside" id="sgq-Ck-eaK"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Duc-Dx-NIe"/>
+                    <connections>
+                        <outlet property="bgView" destination="ySf-J4-Yqi" id="70V-Xf-yuO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V7Z-rJ-iVl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1827" y="96"/>
+        </scene>
         <!--Sld Event List View Controller - Match list-->
         <scene sceneID="wq1-az-FiX">
             <objects>
@@ -41,7 +91,7 @@
                                 <connections>
                                     <outlet property="highlight" destination="SGa-yX-Itz" id="naX-QR-wWi"/>
                                     <outlet property="image" destination="I0U-P2-MHH" id="cLD-Qq-LGV"/>
-                                    <segue destination="LVB-YS-i5n" kind="push" id="KaZ-r6-26O"/>
+                                    <segue destination="qXq-vD-jiE" kind="push" id="C0N-Jj-DgG"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -54,12 +104,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdT-OB-1NQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1872" y="96"/>
+            <point key="canvasLocation" x="1366" y="96"/>
         </scene>
         <!--Sld Game Controller-->
         <scene sceneID="CtS-rA-C9T">
             <objects>
-                <viewController id="LVB-YS-i5n" customClass="SldGameController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="game" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LVB-YS-i5n" customClass="SldGameController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="TvN-0d-DFh"/>
                         <viewControllerLayoutGuide type="bottom" id="aVg-JY-jeM"/>
@@ -75,7 +125,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="MLe-zq-Xhf" kind="unwind" unwindAction="onGameExit:" id="tiT-Tq-T9K"/>
+                                    <segue destination="MLe-zq-Xhf" kind="unwind" unwindAction="onGameExit:" id="0KT-wE-dn3"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -155,12 +205,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="G6w-0m-hNO" kind="relationship" relationship="rootViewController" id="8Ti-I3-pBv"/>
+                        <segue destination="G6w-0m-hNO" kind="relationship" relationship="rootViewController" id="3Ip-W1-mvr"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3n-DC-VaQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1450" y="96"/>
+            <point key="canvasLocation" x="890" y="96"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import <SpriteKit/SpriteKit.h>
+#import "SldEventDetailViewController.h"
 
 @interface SldGameScene : SKScene
-
+@property (nonatomic, weak) PackInfo* packInfo;
 @end
