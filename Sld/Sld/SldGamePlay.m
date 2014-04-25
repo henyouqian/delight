@@ -45,6 +45,10 @@ static const float TRANS_DURATION = .3f;
     return [[SldGamePlay alloc] initWithScene:scene files:files];
 }
 
+-(void)dealloc {
+    
+}
+
 -(instancetype)initWithScene:(SKScene*)scene files:(NSArray *)files{
     if (self = [super init]) {
         for (NSString *filepath in files) {
@@ -54,6 +58,8 @@ static const float TRANS_DURATION = .3f;
                 break;
             }
         }
+        
+        [self.scene setUserInteractionEnabled:NO];
         
         self.files = files;
         self.scene = scene;
@@ -349,6 +355,7 @@ static const float TRANS_DURATION = .3f;
         }];
         [parent runAction:action completion:^{
             usleep(100000);
+            [self.scene setUserInteractionEnabled:YES];
         }];
     }
 //    [self.delegate onNextImageWithRotate:self.needRotate];
@@ -382,6 +389,7 @@ static const float TRANS_DURATION = .3f;
         return;
     }
     
+    //fixme
     CGPoint ptView = [touch locationInView:self.scene.view];
     if (ptView.x < 30 && ptView.y < 30) {
         [self nextImage];

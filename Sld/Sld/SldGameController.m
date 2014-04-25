@@ -30,7 +30,6 @@
     // Create and configure the scene.
     SldGameScene* scene = [SldGameScene sceneWithSize:skView.bounds.size packInfo:self.packInfo];
     scene.scaleMode = SKSceneScaleModeAspectFill;
-    scene.gamePlay.delegate = self;
     scene.navigationController = self.navigationController;
     
     // Present the scene.

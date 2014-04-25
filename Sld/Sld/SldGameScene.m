@@ -34,14 +34,14 @@
         //back button
         SldButton *button = [SldButton buttonWithImageNamed:@"btnBgWhite.png"];
         [button setLabelWithText:@"Back" color:[UIColor colorWithWhite:0.f alpha:1.f]];
-        [button setPosition:CGPointMake(50, 50)];
+        [button setPosition:CGPointMake(40, 40)];
         [button setAlpha:.5f];
         [button setScale:.5f];
         button.onClick = ^{
             [self.navigationController popViewControllerAnimated:YES];
         };
         [self addChild:button];
-        
+        //[self.view setAsynchronous:NO];
     }
     return self;
 }

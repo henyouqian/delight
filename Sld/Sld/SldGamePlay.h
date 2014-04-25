@@ -16,7 +16,7 @@
 @interface SldGamePlay : NSObject
 
 @property (nonatomic) uint32_t sliderNum;
-@property (nonatomic) id<SldGamePlayDelegate> delegate;
+@property (nonatomic, weak) id<SldGamePlayDelegate> delegate;
 
 + (instancetype)gamePlayWithScene:(SKScene*)scene files:(NSArray *)files;
 - (instancetype)initWithScene:(SKScene*)scene files:(NSArray *)files;

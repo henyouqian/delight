@@ -7,8 +7,7 @@
 //
 
 #import "SldEventDetailViewController.h"
-#import "SldGamePlay.h"
 
-@interface SldGameController : UIViewController<SldGamePlayDelegate>
+@interface SldGameController : UIViewController
 @property (nonatomic, weak) PackInfo* packInfo;
 @end
