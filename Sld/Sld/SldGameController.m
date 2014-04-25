@@ -9,6 +9,9 @@
 #import "SldGameController.h"
 #import "SldGameScene.h"
 
+@interface SldGameController()
+@end
+
 @implementation SldGameController
 
 - (BOOL)prefersStatusBarHidden {
@@ -25,9 +28,10 @@
     skView.showsNodeCount = YES;
     
     // Create and configure the scene.
-    SldGameScene* scene = [SldGameScene sceneWithSize:skView.bounds.size];
-    scene.packInfo = self.packInfo;
+    SldGameScene* scene = [SldGameScene sceneWithSize:skView.bounds.size packInfo:self.packInfo];
     scene.scaleMode = SKSceneScaleModeAspectFill;
+    scene.gamePlay.delegate = self;
+    scene.navigationController = self.navigationController;
     
     // Present the scene.
     [skView presentScene:scene];
@@ -67,6 +71,21 @@
 {
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [super viewWillDisappear:animated];
+}
+
+#pragma mark - SldGamePlayDelegate
+- (void)onNextImageWithRotate:(BOOL)rotate {
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:0.2];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    if (rotate) {
+//        self.backButton.transform = CGAffineTransformMakeRotation(M_PI_2);
+//    } else {
+//        self.backButton.transform = CGAffineTransformMakeRotation(0);
+//    }
+//    
+//    [UIView commitAnimations];
+    
 }
 
 @end

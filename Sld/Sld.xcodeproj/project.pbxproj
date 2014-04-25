@@ -11,6 +11,8 @@
 		B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */; };
 		B31CBEA419089EA700621165 /* SldDb.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA319089EA700621165 /* SldDb.m */; };
 		B31CBEA819094EE100621165 /* config.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA719094EE100621165 /* config.m */; };
+		B31CBEB0190A3CE200621165 /* btnBgWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = B31CBEAF190A3CE200621165 /* btnBgWhite.png */; };
+		B31CBEB3190AA47500621165 /* SldButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEB2190AA47500621165 /* SldButton.m */; };
 		B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7D618F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE7DA18F05BE60047E9FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7D918F05BE60047E9FD /* main.m */; };
 		B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */; };
@@ -33,7 +35,6 @@
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
 		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
-		B3F517711902F56B00499209 /* testImg in Resources */ = {isa = PBXBuildFile; fileRef = B3F517701902F56B00499209 /* testImg */; };
 		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,9 @@
 		B31CBEA319089EA700621165 /* SldDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldDb.m; sourceTree = "<group>"; };
 		B31CBEA619094EE100621165 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = Sld/config.h; sourceTree = "<group>"; };
 		B31CBEA719094EE100621165 /* config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = config.m; path = Sld/config.m; sourceTree = "<group>"; };
+		B31CBEAF190A3CE200621165 /* btnBgWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnBgWhite.png; sourceTree = "<group>"; };
+		B31CBEB1190AA47500621165 /* SldButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldButton.h; sourceTree = "<group>"; };
+		B31CBEB2190AA47500621165 /* SldButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldButton.m; sourceTree = "<group>"; };
 		B31EE7C818F05BE60047E9FD /* Sld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31EE7CB18F05BE60047E9FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -107,7 +111,6 @@
 		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
 		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		B3C0AF5E1906703200CB4DFD /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; name = db; path = res/db; sourceTree = "<group>"; };
-		B3F517701902F56B00499209 /* testImg */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testImg; path = res/testImg; sourceTree = "<group>"; };
 		B3F517721903B1BF00499209 /* SldLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldLoginViewController.h; sourceTree = "<group>"; };
 		B3F517731903B1BF00499209 /* SldLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,6 +138,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B31CBEAE190A3CE200621165 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				B31CBEAF190A3CE200621165 /* btnBgWhite.png */,
+			);
+			name = ui;
+			path = res/ui;
+			sourceTree = "<group>";
+		};
 		B31EE7BF18F05BE50047E9FD = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +242,8 @@
 				B3691E3C190284DF0055C419 /* SldHttpSession.m */,
 				B31CBEA219089EA700621165 /* SldDb.h */,
 				B31CBEA319089EA700621165 /* SldDb.m */,
+				B31CBEB1190AA47500621165 /* SldButton.h */,
+				B31CBEB2190AA47500621165 /* SldButton.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -237,8 +251,8 @@
 		B31EE82918F06F160047E9FD /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B31CBEAE190A3CE200621165 /* ui */,
 				B3C0AF5E1906703200CB4DFD /* db */,
-				B3F517701902F56B00499209 /* testImg */,
 				B3024C5E18FE7EF600F9EEA3 /* audio */,
 				B31EE82A18F06F4D0047E9FD /* img */,
 			);
@@ -374,11 +388,11 @@
 				B3C0AF5F1906703200CB4DFD /* db in Resources */,
 				B31EE82B18F06F4D0047E9FD /* img in Resources */,
 				B3024C5F18FE7EF600F9EEA3 /* audio in Resources */,
-				B3F517711902F56B00499209 /* testImg in Resources */,
 				B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */,
 				B31EE7E418F05BE60047E9FD /* Main_iPad.storyboard in Resources */,
 				B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */,
 				B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */,
+				B31CBEB0190A3CE200621165 /* btnBgWhite.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
+				B31CBEB3190AA47500621165 /* SldButton.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,

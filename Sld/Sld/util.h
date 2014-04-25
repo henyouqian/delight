@@ -13,3 +13,5 @@ UIAlertView* alert(NSString *title, NSString *message);
 BOOL imageExist(NSString *imageKey);
 NSString* makeImagePath(NSString *imageKey);
 NSString* makeImageServerUrl(NSString *imageKey);
+
+UIStoryboard* getStoryboard();

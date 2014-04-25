@@ -43,5 +43,11 @@ NSString* makeImageServerUrl(NSString *imageKey) {
     return [NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, imageKey];
 }
 
+UIStoryboard* getStoryboard() {
+    UIApplication *application = [UIApplication sharedApplication];
+    UIWindow *backWindow = application.windows[0];
+    return backWindow.rootViewController.storyboard;
+}
+
 
 

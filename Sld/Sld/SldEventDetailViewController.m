@@ -214,8 +214,5 @@
 ////    }
 //}
 
-- (IBAction)onGameExit:(UIStoryboardSegue *)segue {
-    
-}
 
 @end

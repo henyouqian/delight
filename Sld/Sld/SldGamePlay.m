@@ -173,6 +173,8 @@ static const float TRANS_DURATION = .3f;
     
     if (texW > texH) {
         self.needRotate = YES;
+    } else {
+        self.needRotate = NO;
     }
     
     __weak SKNode *parent = self.nextSliderParent;
@@ -288,7 +290,7 @@ static const float TRANS_DURATION = .3f;
         //
         for (NSUInteger i = 0; i < self.sliderNum; i++) {
             NSUInteger idx = [idxs[i] unsignedIntegerValue];
-            float uvY = uvY0+uvh*(self.sliderNum-i-1);
+            float uvY = uvY0+uvh*idx;
             
             SKTexture *texture = [SKTexture textureWithRect:CGRectMake(uvX0/texW, uvY/texH, uvW/texW, uvh/texH) inTexture:sprite.texture];
             Slider *slider = [Slider spriteNodeWithTexture:texture size:CGSizeMake(sliderW, sliderH)];
@@ -302,14 +304,24 @@ static const float TRANS_DURATION = .3f;
     
     //transition
     if (parent == self.nextSliderParent) {
-        [parent setPosition:CGPointMake(screenW, 0)];
+        if (self.needRotate) {
+            [parent setPosition:CGPointMake(-screenH, 0)];
+        } else {
+            [parent setPosition:CGPointMake(0, screenW)];
+        }
+        
         [parent setAlpha:0];
         
         SKAction *action = [SKAction customActionWithDuration:TRANS_DURATION actionBlock:^(SKNode *node, CGFloat elapsedTime) {
             CGFloat t = elapsedTime/TRANS_DURATION;
             t = QuarticEaseOut(t);
             
-            [node setPosition:CGPointMake(screenW + t*(-screenW), 0)];
+            if (self.needRotate) {
+                [node setPosition:CGPointMake(0, -(screenH + t*(-screenH)))];
+            } else {
+                [node setPosition:CGPointMake(screenW + t*(-screenW), 0)];
+            }
+            
             [node setAlpha:t];
         }];
         
@@ -336,9 +348,10 @@ static const float TRANS_DURATION = .3f;
             [node setAlpha:t];
         }];
         [parent runAction:action completion:^{
-            
+            usleep(100000);
         }];
     }
+//    [self.delegate onNextImageWithRotate:self.needRotate];
 }
 
 -(void)update {
@@ -453,7 +466,8 @@ static const float TRANS_DURATION = .3f;
             
             //check finished
             NSUInteger idx = 0;
-            for (Slider *slider in self.sliderParent.children) {
+            NSArray *sliders = self.sliderParent.children;
+            for (Slider *slider in sliders) {
                 if (slider.idx != idx) {
                     break;
                 }

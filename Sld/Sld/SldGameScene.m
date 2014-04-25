@@ -7,30 +7,41 @@
 //
 
 #import "SldGameScene.h"
-#import "SldGamePlay.h"
 #import "util.h"
+#import "SldButton.h"
 
 @interface SldGameScene()
-@property (strong, nonatomic) SldGamePlay *gamePlay;
 @end
 
 @implementation SldGameScene
 
--(id)initWithSize:(CGSize)size {
++ (instancetype)sceneWithSize:(CGSize)size packInfo:(PackInfo*)packInfo {
+    SldGameScene* inst = [[SldGameScene alloc] initWithSize:size packInfo:packInfo];
+    return inst;
+}
+
+- (instancetype)initWithSize:(CGSize)size packInfo:(PackInfo*)packInfo {
     if (self = [super initWithSize:size]) {
-        NSMutableArray *files = [NSMutableArray arrayWithCapacity:6];
+        self.packInfo = packInfo;
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:[self.packInfo.images count]];
         
-        [files addObject:getResFullPath(@"img/a.gif")];
-        [files addObject:getResFullPath(@"img/b.gif")];
-        [files addObject:getResFullPath(@"img/c.gif")];
-        [files addObject:getResFullPath(@"img/x.gif")];
-        [files addObject:getResFullPath(@"img/y.gif")];
-        [files addObject:getResFullPath(@"img/z.gif")];
-        [files addObject:getResFullPath(@"img/1.jpg")];
-        [files addObject:getResFullPath(@"img/2.jpg")];
-        [files addObject:getResFullPath(@"img/3.jpg")];
+        for (NSString *img in packInfo.images) {
+            [files addObject:makeImagePath(img)];
+        }
         
         self.gamePlay = [SldGamePlay gamePlayWithScene:self files:files];
+        
+        //back button
+        SldButton *button = [SldButton buttonWithImageNamed:@"btnBgWhite.png"];
+        [button setLabelWithText:@"Back" color:[UIColor colorWithWhite:0.f alpha:1.f]];
+        [button setPosition:CGPointMake(50, 50)];
+        [button setAlpha:.5f];
+        [button setScale:.5f];
+        button.onClick = ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        };
+        [self addChild:button];
+        
     }
     return self;
 }
