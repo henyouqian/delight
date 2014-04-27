@@ -26,6 +26,7 @@
     packInfo.title = dict[@"Title"];
     packInfo.thumb = dict[@"Thumb"];
     packInfo.cover = dict[@"Cover"];
+    packInfo.coverBlur = dict[@"CoverBlur"];
     NSArray *imgs = dict[@"Images"];
     if (error) {
         lwError("Json error:%@", [error localizedDescription]);
@@ -109,14 +110,18 @@
 
 - (void)loadBackground {
     Config *conf = [Config sharedConf];
-    NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, self.packInfo.cover]);
+    NSString *bgFile = self.packInfo.cover;
+    if ([self.packInfo.coverBlur length]) {
+        bgFile = self.packInfo.coverBlur;
+    }
+    NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, bgFile]);
     if ([[NSFileManager defaultManager] fileExistsAtPath:bgPath]) { //local
         UIImage *image = [UIImage imageWithContentsOfFile:bgPath];
         self.bgView.image = image;
     } else { //server
         //download
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, self.packInfo.cover]
+        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, bgFile]
                           toPath:bgPath
                         withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
          {

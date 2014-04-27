@@ -14,6 +14,7 @@
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *cover;
+@property (nonatomic) NSString *coverBlur;
 @property (nonatomic) NSArray *images;
 
 + (instancetype)packWithDictionary:(NSDictionary*)dict;

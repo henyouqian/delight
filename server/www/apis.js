@@ -40,8 +40,9 @@ function Controller($scope, $http) {
 					"data": {
 						"Title":"",
 						"Text":"",
-						"Thumb":"qiniuThumb=.jpg",
-						"Cover":"qiniuImage=.jpg",
+						"Thumb":"thumbImage=.jpg",
+						"Cover":"coverImage=.jpg",
+						"CoverBlur":"coverBlurImage=.jpg",
 						"Images":[
 							{
 								"File": "aaa.jpg",

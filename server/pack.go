@@ -30,15 +30,16 @@ type Image struct {
 }
 
 type Pack struct {
-	Id       uint64
-	AuthorId uint64
-	Time     string
-	Title    string
-	Text     string
-	Thumb    string
-	Cover    string
-	Images   []Image
-	Tags     []string
+	Id        uint64
+	AuthorId  uint64
+	Time      string
+	Title     string
+	Text      string
+	Thumb     string
+	Cover     string
+	CoverBlur string
+	Images    []Image
+	Tags      []string
 }
 
 func init() {

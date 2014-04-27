@@ -80,13 +80,14 @@ type Image struct {
 }
 
 type Pack struct {
-	Id     uint64
-	Title  string
-	Text   string
-	Cover  string
-	Thumb  string
-	Images []Image
-	Tags   []string
+	Id        uint64
+	Title     string
+	Text      string
+	Cover     string
+	CoverBlur string
+	Thumb     string
+	Images    []Image
+	Tags      []string
 }
 
 type Account struct {
@@ -127,6 +128,8 @@ func newPack() {
 					pack.Thumb = path
 				} else if parts[0] == "cover" {
 					pack.Cover = path
+				} else if parts[0] == "coverBlur" {
+					pack.CoverBlur = path
 				} else {
 					key := genImageKey(path)
 
@@ -157,26 +160,39 @@ func newPack() {
 		return
 	}
 
-	//gen thumb key
-	thumbKey := genImageKey(pack.Thumb)
-
 	//check cover
 	if pack.Cover == "" {
 		glog.Errorln("Need cover")
 		return
 	}
 
+	//check cover blur
+	if pack.CoverBlur == "" {
+		glog.Errorln("Need cover blur")
+		return
+	}
+
 	//upload to qiniu
 	glog.Info("upload begin")
 
-	///check file exists
+	///append thumb image
 	uploadImgs := pack.Images
+	thumbKey := genImageKey(pack.Thumb)
 	thumbImg := Image{
 		File: pack.Thumb,
 		Key:  thumbKey,
 	}
 	uploadImgs = append(uploadImgs, thumbImg)
 
+	///append coverBlur image
+	coverBlurKey := genImageKey(pack.CoverBlur)
+	coverBlurImg := Image{
+		File: pack.CoverBlur,
+		Key:  coverBlurKey,
+	}
+	uploadImgs = append(uploadImgs, coverBlurImg)
+
+	///upload
 	rsCli := qiniurs.New(nil)
 	imgNum := len(uploadImgs)
 	entryPathes := make([]qiniurs.EntryPath, imgNum)
@@ -218,9 +234,12 @@ func newPack() {
 	//add new pack to server
 	pack.Thumb = thumbKey
 	pack.Cover = genImageKey(pack.Cover)
+	pack.CoverBlur = coverBlurKey
 
 	packjs, err := json.Marshal(pack)
 	checkErr(err)
+
+	glog.Infof("%s", string(packjs))
 
 	packBytes := postReq("pack/new", packjs)
 
