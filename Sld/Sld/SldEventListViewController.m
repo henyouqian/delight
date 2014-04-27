@@ -132,6 +132,13 @@ NSString *CELL_ID = @"cellID";
             event.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
             event.thumb = dict[@"Thumb"];
             event.packId = [(NSNumber*)dict[@"PackId"] unsignedLongLongValue];
+            event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
+            event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
+            
+            //lwInfo("%@", event.endTime);
+            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:event.endTime];
+
+            lwInfo("%@", components);
             
             if (firstEvent && firstEvent.id == event.id) {
                 break;

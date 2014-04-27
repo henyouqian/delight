@@ -16,6 +16,8 @@
 @property (nonatomic) UInt64 id;
 @property (nonatomic) UInt64 packId;
 @property (nonatomic) NSString *thumb;
+@property (nonatomic) NSDate *beginTime;
+@property (nonatomic) NSDate *endTime;
 @end
 
 

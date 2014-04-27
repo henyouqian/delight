@@ -37,7 +37,14 @@ static const float TRANS_DURATION = .3f;
 @property (nonatomic) FISound *sndFinish;
 @property (nonatomic) BOOL hasFinished;
 @property (nonatomic) BOOL touchEnable;
+@property (nonatomic) NSMutableArray *dots;
+@property (nonatomic) SKSpriteNode *highlightDot;
 @end
+
+static float DOT_ALPHA_NORMAL = .5f;
+static float DOT_ALPHA_HIGHLIGHT = 1.f;
+static float DOT_SCALE_NORMAL = .6f;
+static float DOT_SCALE_HIGHLIGHT = .75f;
 
 @implementation SldGamePlay
 
@@ -83,6 +90,27 @@ static const float TRANS_DURATION = .3f;
         NSAssert(self.sndSuccess, @"self.sndSuccess: error:%@", [error localizedDescription]);
         self.sndFinish = [engine soundNamed:@"audio/finish.wav" maxPolyphony:1 error:&error];
         NSAssert(self.sndSuccess, @"self.sndFinish: error:%@", [error localizedDescription]);
+        
+        //dots
+        self.dots = [NSMutableArray arrayWithCapacity:[self.files count]];
+        float dx = scene.size.width / [self.files count];
+        float dotY = scene.size.height-15.f;
+        for (int i = 0; i < [self.files count]; ++i) {
+            SKSpriteNode *dot = [SKSpriteNode spriteNodeWithImageNamed:@"ui/dot24.png"];
+            [dot setAlpha:DOT_ALPHA_NORMAL];
+            [dot setScale:DOT_SCALE_NORMAL];
+            [dot setPosition:CGPointMake((i+.5f)*dx, dotY)];
+            [dot setZPosition:10.f];
+            [scene addChild:dot];
+            [self.dots addObject:dot];
+        }
+        self.highlightDot = [SKSpriteNode spriteNodeWithImageNamed:@"ui/dot24.png"];
+        [self.highlightDot setAlpha:DOT_ALPHA_HIGHLIGHT];
+        [self.highlightDot setScale:DOT_SCALE_HIGHLIGHT];
+        [self.highlightDot setPosition:CGPointMake((0+.5f)*dx, dotY)];
+        [self.highlightDot setZPosition:10.f];
+        [scene addChild:self.highlightDot];
+        [self.dots addObject:self.highlightDot];
     }
     
     return self;
@@ -138,6 +166,15 @@ static const float TRANS_DURATION = .3f;
     self.touchEnable = NO;
     self.imgIdx++;
     
+    //dots
+    if (self.imgIdx > 0) {
+        float dx = self.scene.size.width / [self.files count];
+        SKAction *action = [SKAction moveToX:(self.imgIdx+.5f)*dx duration:.2f];
+        action.timingMode = SKActionTimingEaseInEaseOut;
+        [self.highlightDot runAction:action];
+    }
+    
+    //
     if (self.imgIdx >= (NSInteger)[self.files count]) {
         lwError("idx >= [self.files count]: self.imgIdx=%d", self.imgIdx);
         return;
