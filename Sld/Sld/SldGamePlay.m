@@ -24,7 +24,7 @@ static const float TRANS_DURATION = .3f;
 @interface SldGamePlay()
 @property (nonatomic, weak) SKScene *scene;
 @property (nonatomic) NSArray *files;
-@property (nonatomic) NSUInteger imgIdx;
+@property (nonatomic) NSInteger imgIdx;
 @property (nonatomic) NSMutableArray *sprites;
 @property (nonatomic) SKNode *sliderParent;
 @property (nonatomic) SKNode *nextSliderParent;
@@ -163,6 +163,12 @@ static float DOT_SCALE_HIGHLIGHT = .75f;
 }
 
 -(void)nextImage {
+    if (self.imgIdx >= (NSInteger)[self.files count]-1) {
+        lwError("idx >= [self.files count]-1: self.imgIdx=%d", self.imgIdx);
+        return;
+    }
+    
+    //
     self.touchEnable = NO;
     self.imgIdx++;
     
@@ -172,12 +178,6 @@ static float DOT_SCALE_HIGHLIGHT = .75f;
         SKAction *action = [SKAction moveToX:(self.imgIdx+.5f)*dx duration:.2f];
         action.timingMode = SKActionTimingEaseInEaseOut;
         [self.highlightDot runAction:action];
-    }
-    
-    //
-    if (self.imgIdx >= (NSInteger)[self.files count]) {
-        lwError("idx >= [self.files count]: self.imgIdx=%d", self.imgIdx);
-        return;
     }
     
     self.hasFinished = NO;
