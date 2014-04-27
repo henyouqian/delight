@@ -14,4 +14,6 @@ BOOL imageExist(NSString *imageKey);
 NSString* makeImagePath(NSString *imageKey);
 NSString* makeImageServerUrl(NSString *imageKey);
 
+UIColor* makeUIColor(int r, int g, int b, int a);
+
 UIStoryboard* getStoryboard();

@@ -43,6 +43,10 @@ NSString* makeImageServerUrl(NSString *imageKey) {
     return [NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, imageKey];
 }
 
+UIColor* makeUIColor(int r, int g, int b, int a) {
+    return [UIColor colorWithRed:r/255.f green:g/255.f blue:b/255.f alpha:a/255.f];
+}
+
 UIStoryboard* getStoryboard() {
     UIApplication *application = [UIApplication sharedApplication];
     UIWindow *backWindow = application.windows[0];

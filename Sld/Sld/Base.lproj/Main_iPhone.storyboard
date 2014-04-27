@@ -54,7 +54,7 @@
             </objects>
             <point key="canvasLocation" x="1827" y="96"/>
         </scene>
-        <!--Sld Event List View Controller - Match list-->
+        <!--Sld Event List View Controller - Matches-->
         <scene sceneID="wq1-az-FiX">
             <objects>
                 <viewController id="G6w-0m-hNO" customClass="SldEventListViewController" sceneMemberID="viewController">
@@ -100,7 +100,7 @@
                             <outlet property="delegate" destination="G6w-0m-hNO" id="YZe-fl-qqP"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Match list" id="eWu-jD-vqF"/>
+                    <navigationItem key="navigationItem" title="Matches" id="eWu-jD-vqF"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdT-OB-1NQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

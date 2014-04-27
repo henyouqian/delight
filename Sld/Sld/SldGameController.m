@@ -72,19 +72,5 @@
     [super viewWillDisappear:animated];
 }
 
-#pragma mark - SldGamePlayDelegate
-- (void)onNextImageWithRotate:(BOOL)rotate {
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.2];
-//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-//    if (rotate) {
-//        self.backButton.transform = CGAffineTransformMakeRotation(M_PI_2);
-//    } else {
-//        self.backButton.transform = CGAffineTransformMakeRotation(0);
-//    }
-//    
-//    [UIView commitAnimations];
-    
-}
 
 @end

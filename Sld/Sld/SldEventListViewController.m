@@ -100,8 +100,8 @@ NSString *CELL_ID = @"cellID";
     //login view
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
     UIViewController* controller = [storyboard instantiateViewControllerWithIdentifier:@"login"];
-    [self.navigationController pushViewController:controller animated:NO];
-    //[self presentViewController:controller animated:YES completion:^(void) {}];
+    //[self.navigationController pushViewController:controller animated:NO];
+    [self presentViewController:controller animated:NO completion:nil];
 }
 
 - (void)refreshList {

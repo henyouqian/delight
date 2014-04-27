@@ -17,6 +17,7 @@ typedef void(^OnButtonClickBlock)(void);
 
 + (instancetype)buttonWithImageNamed:(NSString*)imageName;
 - (void)setBackgroundAlpha:(float)alpha;
-- (void)setLabelWithText:(NSString*)text color:(UIColor*)color;
+- (void)setBackgroundColor:(UIColor*)color;
+- (void)setLabelWithText:(NSString*)text color:(UIColor*)color fontSize:(float)fontSize;
 
 @end

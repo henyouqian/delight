@@ -9,7 +9,7 @@
 #import "SldEventDetailViewController.h"
 #import "SldGamePlay.h"
 
-@interface SldGameScene : SKScene
+@interface SldGameScene : SKScene<SldGamePlayDelegate>
 @property (nonatomic, weak) PackInfo* packInfo;
 @property (strong, nonatomic) SldGamePlay *gamePlay;
 @property (weak, nonatomic) UINavigationController *navigationController;

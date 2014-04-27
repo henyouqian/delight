@@ -128,6 +128,12 @@ static const float TRANS_DURATION = .3f;
     }
 }
 
+- (void)next {
+    if (self.hasFinished) {
+        [self nextImage];
+    }
+}
+
 -(void)nextImage {
     self.touchEnable = NO;
     self.imgIdx++;
@@ -319,15 +325,12 @@ static const float TRANS_DURATION = .3f;
         [parent setAlpha:0];
         
         SKAction *action = [SKAction customActionWithDuration:TRANS_DURATION actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-            CGFloat t = elapsedTime/TRANS_DURATION;
-            t = QuarticEaseOut(t);
-            
+            float t = QuarticEaseOut(elapsedTime/TRANS_DURATION);
             if (self.needRotate) {
                 [node setPosition:CGPointMake(0, -(screenH + t*(-screenH)))];
             } else {
                 [node setPosition:CGPointMake(screenW + t*(-screenW), 0)];
             }
-            
             [node setAlpha:t];
         }];
         
@@ -358,7 +361,7 @@ static const float TRANS_DURATION = .3f;
             [self.scene setUserInteractionEnabled:YES];
         }];
     }
-//    [self.delegate onNextImageWithRotate:self.needRotate];
+    [self.delegate onNextImageWithRotate:self.needRotate];
 }
 
 -(void)update {
@@ -482,17 +485,33 @@ static const float TRANS_DURATION = .3f;
                 idx++;
             }
             if (idx == [self.sliderParent.children count]) {
+                self.hasFinished = YES;
+                
+                //get next image rotation
+                BOOL nextRotate = NO;
+                if ([self.sprites count] >= 2 && [self.sprites[1] isKindOfClass:[SldSprite class]]) {
+                    SldSprite *spt = self.sprites[1];
+                    CGSize size = spt.texture.size;
+                    if (size.width > size.height) {
+                        nextRotate = YES;
+                    }
+                }
+                
                 if (self.imgIdx == [self.files count]-1) {
                     [self.sndFinish play];
+                    [self.delegate onPackFinish:nextRotate];
                 } else {
                     [self.sndSuccess play];
+                    [self.delegate onImageFinish:nextRotate];
                 }
-                self.hasFinished = YES;
+                
             }
             break;
         }
         i++;
     }
 }
+
+
 
 @end

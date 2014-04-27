@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @protocol SldGamePlayDelegate <NSObject>
-@optional
+@required
+- (void)onImageFinish:(BOOL)rotate;
+- (void)onPackFinish:(BOOL)rotate;
 - (void)onNextImageWithRotate:(BOOL)rotate;
 @end
 
@@ -20,6 +22,7 @@
 
 + (instancetype)gamePlayWithScene:(SKScene*)scene files:(NSArray *)files;
 - (instancetype)initWithScene:(SKScene*)scene files:(NSArray *)files;
+- (void)next;
 
 - (void)update;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;

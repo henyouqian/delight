@@ -35,7 +35,8 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
             alert(@"Error", @"Http Error");
             return;
         }
-        [self.navigationController popViewControllerAnimated:YES];
+        //[self.navigationController popViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
         
         //save to keychain
         [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
