@@ -50,7 +50,7 @@ NSString *CELL_ID = @"cellID";
     Cell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELL_ID forIndexPath:indexPath];
     
     //
-    int idx = indexPath.row;
+    NSInteger idx = indexPath.row;
     if (idx >= [self.events count]) {
         lwError("Out of range.");
         return cell;
@@ -179,7 +179,7 @@ NSString *CELL_ID = @"cellID";
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
-    int row = selectedIndexPath.row;
+    NSInteger row = selectedIndexPath.row;
     if (row < [self.events count]) {
         Event *event = self.events[row];
         SldEventDetailViewController *detailController = [segue destinationViewController];

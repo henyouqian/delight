@@ -168,29 +168,42 @@ func newPack() {
 
 	//check cover blur
 	if pack.CoverBlur == "" {
-		glog.Errorln("Need cover blur")
-		return
+		glog.Warning("No cover blur")
 	}
 
 	//upload to qiniu
 	glog.Info("upload begin")
 
-	///append thumb image
 	uploadImgs := pack.Images
+
+	///append cover image
+	coverKey := genImageKey(pack.Cover)
+	coverImg := Image{
+		File: pack.Cover,
+		Key:  coverKey,
+	}
+	uploadImgs = append(uploadImgs, coverImg)
+	pack.Cover = coverKey
+
+	///append thumb image
 	thumbKey := genImageKey(pack.Thumb)
 	thumbImg := Image{
 		File: pack.Thumb,
 		Key:  thumbKey,
 	}
 	uploadImgs = append(uploadImgs, thumbImg)
+	pack.Thumb = thumbKey
 
 	///append coverBlur image
-	coverBlurKey := genImageKey(pack.CoverBlur)
-	coverBlurImg := Image{
-		File: pack.CoverBlur,
-		Key:  coverBlurKey,
+	if len(pack.CoverBlur) != 0 {
+		coverBlurKey := genImageKey(pack.CoverBlur)
+		coverBlurImg := Image{
+			File: pack.CoverBlur,
+			Key:  coverBlurKey,
+		}
+		uploadImgs = append(uploadImgs, coverBlurImg)
+		pack.CoverBlur = coverBlurKey
 	}
-	uploadImgs = append(uploadImgs, coverBlurImg)
 
 	///upload
 	rsCli := qiniurs.New(nil)
@@ -232,14 +245,8 @@ func newPack() {
 	glog.Info("upload complete")
 
 	//add new pack to server
-	pack.Thumb = thumbKey
-	pack.Cover = genImageKey(pack.Cover)
-	pack.CoverBlur = coverBlurKey
-
 	packjs, err := json.Marshal(pack)
 	checkErr(err)
-
-	glog.Infof("%s", string(packjs))
 
 	packBytes := postReq("pack/new", packjs)
 

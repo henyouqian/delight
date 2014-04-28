@@ -29,8 +29,8 @@
 		B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E3C190284DF0055C419 /* SldHttpSession.m */; };
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
 		B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27DC18F8087B00E5A38A /* SldSprite.m */; };
+		B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */ = {isa = PBXBuildFile; fileRef = B36DACD4190EC36500435EF4 /* TouchPriority.m */; };
 		B3789F10190D7A39002E4127 /* btnBgWhite90.png in Resources */ = {isa = PBXBuildFile; fileRef = B3789F0F190D7A39002E4127 /* btnBgWhite90.png */; };
-		B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */; };
 		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
 		B3815E79190C0D7A003AF183 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3815E78190C0D7A003AF183 /* ui */; };
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
@@ -104,9 +104,9 @@
 		B36C27D918F7D8A700E5A38A /* SldGameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGameScene.m; sourceTree = "<group>"; };
 		B36C27DB18F8087B00E5A38A /* SldSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldSprite.h; sourceTree = "<group>"; };
 		B36C27DC18F8087B00E5A38A /* SldSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldSprite.m; sourceTree = "<group>"; };
+		B36DACD3190EC36500435EF4 /* TouchPriority.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchPriority.h; sourceTree = "<group>"; };
+		B36DACD4190EC36500435EF4 /* TouchPriority.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchPriority.m; sourceTree = "<group>"; };
 		B3789F0F190D7A39002E4127 /* btnBgWhite90.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnBgWhite90.png; sourceTree = "<group>"; };
-		B37A9C2F18F133CF0080E8F0 /* SldGamePlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGamePlay.h; sourceTree = "<group>"; };
-		B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGamePlay.m; sourceTree = "<group>"; };
 		B37A9C3418F2E4850080E8F0 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		B37A9C3518F2E4850080E8F0 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		B3815E78190C0D7A003AF183 /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ui; path = res/ui; sourceTree = "<group>"; };
@@ -225,8 +225,8 @@
 		B31EE81D18F060020047E9FD /* util */ = {
 			isa = PBXGroup;
 			children = (
-				B37A9C2F18F133CF0080E8F0 /* SldGamePlay.h */,
-				B37A9C3018F133CF0080E8F0 /* SldGamePlay.m */,
+				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
+				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
 				B36C27DB18F8087B00E5A38A /* SldSprite.h */,
 				B36C27DC18F8087B00E5A38A /* SldSprite.m */,
 				B37A9C3418F2E4850080E8F0 /* util.h */,
@@ -420,7 +420,7 @@
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
-				B37A9C3118F133CF0080E8F0 /* SldGamePlay.m in Sources */,
+				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */,
 				B31CBEA819094EE100621165 /* config.m in Sources */,

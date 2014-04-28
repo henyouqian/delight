@@ -19,4 +19,5 @@
     #import "fmdb/FMDB.h"
     #import "Finch/FISoundEngine.h"
     #import "AHEasing/easing.h"
+    #import "TouchPriority.h"
 #endif

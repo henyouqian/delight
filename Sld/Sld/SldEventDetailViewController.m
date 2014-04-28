@@ -159,7 +159,7 @@
 - (void)loadPacks {
     NSArray *imageKeys = self.packInfo.images;
     __block int localNum = 0;
-    int totalNum = [imageKeys count];
+    NSUInteger totalNum = [imageKeys count];
     for (NSString *imageKey in imageKeys) {
         if (imageExist(imageKey)) {
             localNum++;
