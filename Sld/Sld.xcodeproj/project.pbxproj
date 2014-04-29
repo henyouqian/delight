@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B3024C5F18FE7EF600F9EEA3 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3024C5E18FE7EF600F9EEA3 /* audio */; };
+		B308AFD0190FC1620021BE9C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B308AFCF190FC1620021BE9C /* MediaPlayer.framework */; };
+		B308AFD1190FC1750021BE9C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD22190FA67700435EF4 /* CFNetwork.framework */; };
 		B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */; };
 		B31CBEA419089EA700621165 /* SldDb.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA319089EA700621165 /* SldDb.m */; };
 		B31CBEA819094EE100621165 /* config.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA719094EE100621165 /* config.m */; };
@@ -30,12 +32,19 @@
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
 		B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27DC18F8087B00E5A38A /* SldSprite.m */; };
 		B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */ = {isa = PBXBuildFile; fileRef = B36DACD4190EC36500435EF4 /* TouchPriority.m */; };
+		B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B36DAD16190F99F900435EF4 /* SldStreamPlayer.m */; };
+		B36DAD25190FA68900435EF4 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD24190FA68900435EF4 /* MobileCoreServices.framework */; };
+		B36DAD27190FA6DA00435EF4 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD26190FA6DA00435EF4 /* Accelerate.framework */; };
+		B36DAD28190FAFA200435EF4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD18190FA50100435EF4 /* AudioToolbox.framework */; };
+		B36DAD2A190FB46900435EF4 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD1E190FA59600435EF4 /* CoreAudio.framework */; };
+		B36DAD2B190FB46F00435EF4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD1A190FA50B00435EF4 /* AVFoundation.framework */; };
 		B3789F10190D7A39002E4127 /* btnBgWhite90.png in Resources */ = {isa = PBXBuildFile; fileRef = B3789F0F190D7A39002E4127 /* btnBgWhite90.png */; };
 		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
 		B3815E79190C0D7A003AF183 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3815E78190C0D7A003AF183 /* ui */; };
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
 		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
+		B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D054601910084C00CEFCBE /* SldMusicViewController.m */; };
 		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +75,7 @@
 /* Begin PBXFileReference section */
 		B3024C5E18FE7EF600F9EEA3 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = res/audio; sourceTree = "<group>"; };
 		B3024C8E18FE857A00F9EEA3 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		B308AFCF190FC1620021BE9C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventDetailViewController.h; sourceTree = "<group>"; };
 		B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventDetailViewController.m; sourceTree = "<group>"; };
 		B31CBEA219089EA700621165 /* SldDb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldDb.h; sourceTree = "<group>"; };
@@ -106,6 +116,16 @@
 		B36C27DC18F8087B00E5A38A /* SldSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldSprite.m; sourceTree = "<group>"; };
 		B36DACD3190EC36500435EF4 /* TouchPriority.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchPriority.h; sourceTree = "<group>"; };
 		B36DACD4190EC36500435EF4 /* TouchPriority.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchPriority.m; sourceTree = "<group>"; };
+		B36DAD15190F99F900435EF4 /* SldStreamPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldStreamPlayer.h; sourceTree = "<group>"; };
+		B36DAD16190F99F900435EF4 /* SldStreamPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldStreamPlayer.m; sourceTree = "<group>"; };
+		B36DAD18190FA50100435EF4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		B36DAD1A190FA50B00435EF4 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B36DAD1C190FA51600435EF4 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		B36DAD1E190FA59600435EF4 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		B36DAD22190FA67700435EF4 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		B36DAD24190FA68900435EF4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		B36DAD26190FA6DA00435EF4 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B3789F0F190D7A39002E4127 /* btnBgWhite90.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnBgWhite90.png; sourceTree = "<group>"; };
 		B37A9C3418F2E4850080E8F0 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		B37A9C3518F2E4850080E8F0 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
@@ -113,6 +133,8 @@
 		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
 		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		B3C0AF5E1906703200CB4DFD /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; name = db; path = res/db; sourceTree = "<group>"; };
+		B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMusicViewController.h; sourceTree = "<group>"; };
+		B3D054601910084C00CEFCBE /* SldMusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMusicViewController.m; sourceTree = "<group>"; };
 		B3F517721903B1BF00499209 /* SldLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldLoginViewController.h; sourceTree = "<group>"; };
 		B3F517731903B1BF00499209 /* SldLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,6 +144,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B308AFD1190FC1750021BE9C /* CFNetwork.framework in Frameworks */,
+				B308AFD0190FC1620021BE9C /* MediaPlayer.framework in Frameworks */,
+				B36DAD2B190FB46F00435EF4 /* AVFoundation.framework in Frameworks */,
+				B36DAD2A190FB46900435EF4 /* CoreAudio.framework in Frameworks */,
+				B36DAD28190FAFA200435EF4 /* AudioToolbox.framework in Frameworks */,
+				B36DAD27190FA6DA00435EF4 /* Accelerate.framework in Frameworks */,
+				B36DAD25190FA68900435EF4 /* MobileCoreServices.framework in Frameworks */,
 				B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */,
 				B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */,
 			);
@@ -165,6 +194,15 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B308AFCF190FC1620021BE9C /* MediaPlayer.framework */,
+				B36DAD26190FA6DA00435EF4 /* Accelerate.framework */,
+				B36DAD24190FA68900435EF4 /* MobileCoreServices.framework */,
+				B36DAD22190FA67700435EF4 /* CFNetwork.framework */,
+				B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */,
+				B36DAD1E190FA59600435EF4 /* CoreAudio.framework */,
+				B36DAD1C190FA51600435EF4 /* AudioUnit.framework */,
+				B36DAD1A190FA50B00435EF4 /* AVFoundation.framework */,
+				B36DAD18190FA50100435EF4 /* AudioToolbox.framework */,
 				B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */,
 				B3024C8E18FE857A00F9EEA3 /* OpenAL.framework */,
 				B31EE7CB18F05BE60047E9FD /* Foundation.framework */,
@@ -225,8 +263,8 @@
 		B31EE81D18F060020047E9FD /* util */ = {
 			isa = PBXGroup;
 			children = (
-				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
-				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
+				B36DAD15190F99F900435EF4 /* SldStreamPlayer.h */,
+				B36DAD16190F99F900435EF4 /* SldStreamPlayer.m */,
 				B36C27DB18F8087B00E5A38A /* SldSprite.h */,
 				B36C27DC18F8087B00E5A38A /* SldSprite.m */,
 				B37A9C3418F2E4850080E8F0 /* util.h */,
@@ -237,6 +275,8 @@
 				B31CBEA319089EA700621165 /* SldDb.m */,
 				B31CBEB1190AA47500621165 /* SldButton.h */,
 				B31CBEB2190AA47500621165 /* SldButton.m */,
+				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
+				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -256,6 +296,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */,
+				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
 				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
 				B3F517731903B1BF00499209 /* SldLoginViewController.m */,
 				B3691E1A1900C36A0055C419 /* SldEventListViewController.h */,
@@ -343,6 +385,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Wei Li";
 				TargetAttributes = {
+					B31EE7C718F05BE60047E9FD = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
+					};
 					B31EE7F218F05BE60047E9FD = {
 						TestTargetID = B31EE7C718F05BE60047E9FD;
 					};
@@ -421,6 +470,7 @@
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
+				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */,
 				B31CBEA819094EE100621165 /* config.m in Sources */,
@@ -429,6 +479,7 @@
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
 				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
+				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,6 +627,7 @@
 					./External,
 				);
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				WRAPPER_EXTENSION = app;
@@ -595,6 +647,7 @@
 					./External,
 				);
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				WRAPPER_EXTENSION = app;

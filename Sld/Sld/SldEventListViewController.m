@@ -178,12 +178,14 @@ NSString *CELL_ID = @"cellID";
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
-    NSInteger row = selectedIndexPath.row;
-    if (row < [self.events count]) {
-        Event *event = self.events[row];
-        SldEventDetailViewController *detailController = [segue destinationViewController];
-        detailController.event = event;
+    if ([segue.identifier compare:@"eventDetail"] == 0) {
+        NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
+        NSInteger row = selectedIndexPath.row;
+        if (row < [self.events count]) {
+            Event *event = self.events[row];
+            SldEventDetailViewController *detailController = [segue destinationViewController];
+            detailController.event = event;
+        }
     }
 }
 

@@ -174,7 +174,7 @@
         return;
     } else if (localNum < totalNum) {
         NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Loading"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download..."
                                                         message:msg
                                                        delegate:nil
                                               cancelButtonTitle:nil

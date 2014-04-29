@@ -48,6 +48,7 @@
 @property (nonatomic) SKSpriteNode *curtainBelt;
 @property (nonatomic) SKLabelNode *curtainLabel;
 @property (nonatomic) BOOL inCurtain;
+@property (nonatomic) SKLabelNode *timerLabel;
 @end
 
 static float BUTTON_ALPHA = .7f;
@@ -221,6 +222,24 @@ static const float TRANS_DURATION = .3f;
         [self.curtainBelt setPosition:CGPointMake(self.size.width*.5f, self.size.height*.5f)];
         [self addChild:self.curtainBelt];
         [self.curtainBelt addChild:self.curtainLabel];
+        
+        //timer
+//        self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+//        [self.timerLabel setFontColor:[UIColor whiteColor]];
+//        [self.timerLabel setFontSize:30];
+//        [self.timerLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
+//        [self.timerLabel setPosition:CGPointMake(self.size.width*.5f, self.size.height-30.f)];
+//        [self.timerLabel setText:@"00:35.127"];
+//        [self.timerLabel setZPosition:1.f];
+//        [self addChild:self.timerLabel];
+//        //timer shadow
+//        SKLabelNode *timerShadow = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+//        [self.timerLabel setFontColor:[UIColor whiteColor]];
+//        [self.timerLabel setFontSize:30];
+//        [self.timerLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
+//        [self.timerLabel setPosition:CGPointMake(self.size.width*.5f, self.size.height-30.f)];
+//        [self.timerLabel setText:@"00:35.127"];
+//        [self.timerLabel setZPosition:1.f];
     }
     return self;
 }

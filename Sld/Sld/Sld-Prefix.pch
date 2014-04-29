@@ -20,4 +20,7 @@
     #import "Finch/FISoundEngine.h"
     #import "AHEasing/easing.h"
     #import "TouchPriority.h"
+    #import "DOUAudioStreamer/NSData+DOUMappedFile.h"
+    #import "DOUAudioStreamer/DOUAudioStreamer.h"
+    #import "DOUAudioStreamer/DOUAudioStreamer+Options.h"
 #endif

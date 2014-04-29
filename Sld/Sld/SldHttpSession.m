@@ -38,7 +38,6 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
         //self.session = [NSURLSession sessionWithConfiguration:conf];
         self.session = [NSURLSession sessionWithConfiguration:conf delegate:nil delegateQueue: [NSOperationQueue mainQueue]];
-        
     }
     
     return self;
