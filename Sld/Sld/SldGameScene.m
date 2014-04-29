@@ -27,7 +27,7 @@
 @property (nonatomic) SldButton *btnNext;
 
 @property (nonatomic) uint32_t sliderNum;
-@property (nonatomic) NSArray *files;
+@property (nonatomic) NSMutableArray *files;
 @property (nonatomic) NSInteger imgIdx;
 @property (nonatomic) NSMutableArray *sprites;
 @property (nonatomic) SKNode *sliderParent;
@@ -140,7 +140,15 @@ static const float TRANS_DURATION = .3f;
         //
         [self.scene setUserInteractionEnabled:NO];
         
-        self.files = files;
+        //shuffle files
+        NSUInteger fileCount = [files count];
+        NSMutableArray* idxs = [self shuffle:fileCount more:NO];
+        self.files = [NSMutableArray arrayWithCapacity:fileCount];
+        for (int i = 0; i < fileCount; ++i) {
+            [self.files addObject:files[[idxs[i] unsignedIntegerValue]]];
+        }
+        
+        //
         self.imgIdx = -1;
         self.sprites = [NSMutableArray arrayWithCapacity:3];
         self.sliderNum = DEFUALT_SLIDER_NUM;
@@ -185,7 +193,8 @@ static const float TRANS_DURATION = .3f;
         
         //curtain
         self.inCurtain = YES;
-        UIColor *colorCtBg = makeUIColor(130, 124, 105, 255);
+        //UIColor *colorCtBg = makeUIColor(130, 124, 105, 255);
+        UIColor *colorCtBg = makeUIColor(125, 120, 105, 255);
         UIColor *colorCtBelt = makeUIColor(147, 40, 17, 255);
         UIColor *colorCtText = makeUIColor(222, 222, 222, 255);
         
@@ -378,7 +387,7 @@ static float lerpf(float a, float b, float t) {
     [self loadImage];
 }
 
-- (NSMutableArray*)shuffle:(NSUInteger)num {
+- (NSMutableArray*)shuffle:(NSUInteger)num more:(BOOL)more {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:num];
     for (NSUInteger i = 0; i < num; ++i) {
         array[i] = [NSNumber numberWithUnsignedInteger:i];
@@ -390,11 +399,14 @@ static float lerpf(float a, float b, float t) {
         NSInteger n = arc4random_uniform((u_int32_t)nElements) + i;
         [array exchangeObjectAtIndex:i withObjectAtIndex:n];
     }
-    for (NSUInteger i = 1; i < count; ++i) {
-        if ([array[i-1] integerValue] + 1 == [array[i] integerValue]) {
-            [array exchangeObjectAtIndex:i withObjectAtIndex:i-1];
+    if (more) {
+        for (NSUInteger i = 1; i < count; ++i) {
+            if ([array[i-1] integerValue] + 1 == [array[i] integerValue]) {
+                [array exchangeObjectAtIndex:i withObjectAtIndex:i-1];
+            }
         }
     }
+    
     return array;
 }
 
@@ -423,7 +435,7 @@ static float lerpf(float a, float b, float t) {
     };
     
     //shuffle sliders
-    NSMutableArray* idxs = [self shuffle:self.sliderNum];
+    NSMutableArray* idxs = [self shuffle:self.sliderNum more:YES];
     
     if (self.needRotate) {
         float tmp = texW;

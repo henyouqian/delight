@@ -152,6 +152,10 @@
     [self loadPacks];
 }
 
+- (IBAction)onClickBattle:(id)sender {
+    [self loadPacks];
+}
+
 - (IBAction)onClickMatch:(id)sender {
     [self loadPacks];
 }
