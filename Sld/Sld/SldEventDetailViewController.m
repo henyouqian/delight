@@ -10,8 +10,10 @@
 #import "SldDb.h"
 #import "SldGameController.h"
 #import "SldHttpSession.h"
+#import "SldGameScene.h"
 #import "util.h"
 #import "config.h"
+#import "UIImage+animatedGIF.h"
 
 @implementation PackInfo
 + (instancetype)packWithDictionary:(NSDictionary*)dict {
@@ -44,6 +46,11 @@
 
 @interface SldEventDetailViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *bgView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bestRecordLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
+@property (weak, nonatomic) NSTimer *timer;
+@property (nonatomic) enum GameMode gameMode;
 @end
 
 @implementation SldEventDetailViewController
@@ -80,6 +87,7 @@
         self.packInfo = [PackInfo packWithDictionary:dict];
         
         [self loadBackground];
+        [self reloadData];
     } else { //server
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"Id":@(self.event.packId)};
@@ -104,8 +112,38 @@
             }
             
             [self loadBackground];
+            [self reloadData];
         }];
     }
+
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [_timer invalidate];
+}
+
+- (void)onTimer {
+    NSTimeInterval intv = [_event.endTime timeIntervalSinceNow];
+    int sec = (int)intv;
+    int hour = sec / 3600;
+    int minute = (sec % 3600)/60;
+    sec = (sec % 60);
+    _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
+}
+
+- (void)reloadData {
+    _titleLabel.text = _packInfo.title;
+    
+    [self onTimer];
+    //NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
+    //_event.endTime;
 }
 
 - (void)loadBackground {
@@ -116,7 +154,13 @@
     }
     NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, bgFile]);
     if ([[NSFileManager defaultManager] fileExistsAtPath:bgPath]) { //local
-        UIImage *image = [UIImage imageWithContentsOfFile:bgPath];
+        UIImage *image = nil;
+        if ([[[bgPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
+            NSURL *url = [NSURL fileURLWithPath:bgPath];
+            image = [UIImage animatedImageWithAnimatedGIFURL:url];
+        } else {
+            image = [UIImage imageWithContentsOfFile:bgPath];
+        }
         self.bgView.image = image;
     } else { //server
         //download
@@ -145,18 +189,17 @@
 
 #pragma mark - Button callback
 - (IBAction)onClickPractice:(id)sender {
-//    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-//    controller.packInfo = self.packInfo;
-//    [self.navigationController pushViewController:controller animated:YES];
-    
+    _gameMode = PRACTICE;
     [self loadPacks];
 }
 
 - (IBAction)onClickBattle:(id)sender {
+    _gameMode = BATTLE;
     [self loadPacks];
 }
 
 - (IBAction)onClickMatch:(id)sender {
+    _gameMode = MATCH;
     [self loadPacks];
 }
 
@@ -164,6 +207,9 @@
     NSArray *imageKeys = self.packInfo.images;
     __block int localNum = 0;
     NSUInteger totalNum = [imageKeys count];
+    if (totalNum == 0) {
+        return;
+    }
     for (NSString *imageKey in imageKeys) {
         if (imageExist(imageKey)) {
             localNum++;
@@ -176,8 +222,8 @@
         NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download..."
                                                         message:msg
-                                                       delegate:nil
-                                              cancelButtonTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
                                               otherButtonTitles:nil];
         [alert show];
         
@@ -207,10 +253,40 @@
     }
 }
 
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    [[SldHttpSession defaultSession] cancelAllTask];
+}
+
 - (void)enterGame {
-    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    controller.packInfo = self.packInfo;
-    [self.navigationController pushViewController:controller animated:YES];
+    void (^startGame)(NSString *) = ^(NSString *matchSecret){
+        SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
+        controller.packInfo = self.packInfo;
+        controller.gameMode = _gameMode;
+        controller.matchSecret = matchSecret;
+        [self.navigationController pushViewController:controller animated:YES];
+    };
+    
+    if (_gameMode == MATCH) {
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"EventId":@(_event.id)};
+        [session postToApi:@"event/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertServerError(error, data);
+            } else {
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error) {
+                    alert(@"Json error", [error localizedDescription]);
+                    return;
+                }
+                NSString *matchSecret = [dict objectForKey:@"Secret"];
+                startGame(matchSecret);
+            }
+        }];
+        
+    } else {
+        startGame(nil);
+    }
+    
 }
 
 #pragma mark - Navigation

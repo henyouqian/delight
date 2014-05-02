@@ -7,11 +7,12 @@
 //
 
 #import "SldEventDetailViewController.h"
+#import "SldGameController.h"
 
 @interface SldGameScene : SKScene
-@property (nonatomic, weak) PackInfo* packInfo;
 @property (weak, nonatomic) UINavigationController *navigationController;
+@property (weak, nonatomic) SldGameController *gameController;
 
-+ (instancetype)sceneWithSize:(CGSize)size packInfo:(PackInfo*)packInfo;
-- (instancetype)initWithSize:(CGSize)size packInfo:(PackInfo*)packInfo;
++ (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller;
+- (instancetype)initWithSize:(CGSize)size controller:(SldGameController*)controller;
 @end

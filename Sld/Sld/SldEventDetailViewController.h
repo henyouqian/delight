@@ -20,7 +20,7 @@
 + (instancetype)packWithDictionary:(NSDictionary*)dict;
 @end
 
-@interface SldEventDetailViewController : UIViewController
+@interface SldEventDetailViewController : UIViewController<UIAlertViewDelegate>
 @property (nonatomic, weak) Event* event;
 @property (nonatomic) PackInfo* packInfo;
 @end

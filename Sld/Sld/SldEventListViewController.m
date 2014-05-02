@@ -11,10 +11,12 @@
 #import "SldEventDetailViewController.h"
 #import "util.h"
 #import "config.h"
+#import "SldStreamPlayer.h"
+#import "UIImage+animatedGIF.h"
 
 NSString *CELL_ID = @"cellID";
 
-@implementation Cell
+@implementation EventCell
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -34,8 +36,10 @@ NSString *CELL_ID = @"cellID";
 @end
 
 @interface SldEventListViewController ()
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *musicButton;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) NSMutableArray *events;
+@property (nonatomic) UIImage *loadingImage;
 @end
 
 @implementation SldEventListViewController
@@ -47,7 +51,7 @@ NSString *CELL_ID = @"cellID";
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    Cell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELL_ID forIndexPath:indexPath];
+    EventCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELL_ID forIndexPath:indexPath];
     
     //
     NSInteger idx = indexPath.row;
@@ -62,10 +66,16 @@ NSString *CELL_ID = @"cellID";
     NSString *thumbPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, event.thumb]);
     if ([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) { //local
         UIImage *image = [UIImage imageWithContentsOfFile:thumbPath];
+//        UIImage *image = nil;
+//        if ([[[thumbPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
+//            NSURL *url = [NSURL fileURLWithPath:thumbPath];
+//            image = [UIImage animatedImageWithAnimatedGIFURL:url];
+//        } else {
+//            image = [UIImage imageWithContentsOfFile:thumbPath];
+//        }
         cell.image.image = image;
     } else { //server
-        UIImage *image = [UIImage imageNamed:@"img/loading.png"];
-        cell.image.image = image;
+        cell.image.image = _loadingImage;
         
         //download
         SldHttpSession *session = [SldHttpSession defaultSession];
@@ -102,6 +112,15 @@ NSString *CELL_ID = @"cellID";
     UIViewController* controller = [storyboard instantiateViewControllerWithIdentifier:@"login"];
     //[self.navigationController pushViewController:controller animated:NO];
     [self presentViewController:controller animated:NO completion:nil];
+    
+    //
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(didBecomeActiveNotification)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+    
+    //
+    _loadingImage = [UIImage imageNamed:@"img/loading.png"];
 }
 
 - (void)refreshList {
@@ -160,8 +179,25 @@ NSString *CELL_ID = @"cellID";
     if ([self.events count] == 0) {
         [self refreshList];
     }
+    
+    [self didBecomeActiveNotification];
 }
 
+- (void)didBecomeActiveNotification {
+    UIView *view = [_musicButton valueForKey:@"view"];
+    if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
+        CABasicAnimation* rotationAnimation;
+        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+        rotationAnimation.duration = 2.f;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = 10000000;
+        
+        [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    } else {
+        [view.layer removeAllAnimations];
+    }
+}
 
 - (void)refershControlAction {
     [self refreshList];

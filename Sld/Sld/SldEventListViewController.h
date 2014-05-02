@@ -21,7 +21,7 @@
 @end
 
 
-@interface Cell : UICollectionViewCell
+@interface EventCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIView *highlight;
 @end

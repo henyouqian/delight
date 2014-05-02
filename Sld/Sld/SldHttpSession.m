@@ -36,11 +36,16 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
         self.baseUrl = [NSURL URLWithString:host];
         
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
-        //self.session = [NSURLSession sessionWithConfiguration:conf];
         self.session = [NSURLSession sessionWithConfiguration:conf delegate:nil delegateQueue: [NSOperationQueue mainQueue]];
     }
     
     return self;
+}
+
+- (void)cancelAllTask {
+    [_session invalidateAndCancel];
+    NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
+    _session = [NSURLSession sessionWithConfiguration:conf delegate:nil delegateQueue: [NSOperationQueue mainQueue]];
 }
 
 - (void)postToApi:(NSString*)api body:(id)body completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler {
@@ -96,6 +101,51 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
         }
     }];
     [task resume];
+}
+
+BOOL isServerError(NSError *error) {
+    if (!error) {
+        return NO;
+    }
+    return (error.code == 400 || error.code == 500);
+}
+
+NSString* getServerErrorType(NSData *data) {
+    NSError *jsonErr;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonErr];
+    if (jsonErr) {
+        alert(@"Json error", [jsonErr localizedDescription]);
+        return @"err_local_json_parse";
+    }
+    NSString *errorType = [dict objectForKey:@"Error"];
+    if (errorType) {
+        return errorType;
+    } else {
+        return @"err_local_json_type";
+    }
+}
+
+void alertServerError(NSError *error, NSData *data) {
+    if (!error) return;
+    if (error.code == 400 || error.code == 500) {
+        NSError *jsonErr;
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonErr];
+        if (jsonErr) {
+            alert(@"Json error", [jsonErr localizedDescription]);
+            return;
+        }
+        NSString *errorType = [dict objectForKey:@"Error"];
+        NSString *errorString = [dict objectForKey:@"ErrorString"];
+        if (errorType && errorString) {
+            alert(errorType, errorString);
+            return;
+        } else {
+            alert(@"Error format error", [error localizedDescription]);
+            return;
+        }
+    }
+    
+    alert(@"HTTP error", [error localizedDescription]);
 }
 
 @end

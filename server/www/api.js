@@ -164,13 +164,13 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}
 				},{
-					"name": "getResult",
+					"name": "get",
 					"method": "POST",
-					"data": {"EventId": 1}
+					"data": {"EventId": 0}
 				},{
-					"name": "getMyResult",
+					"name": "getUserPlay",
 					"method": "POST",
-					"data": {"EventId": 1}
+					"data": {"EventId": 1, "UserId": 1}
 				},{
 					"name": "playBegin",
 					"method": "POST",
@@ -179,18 +179,6 @@ function Controller($scope, $http) {
 					"name": "playEnd",
 					"method": "POST",
 					"data": {"EventId": 1, "Secret": "", "Score": 100}
-				},{
-					"name": "freePlay",
-					"method": "POST",
-					"data": {"EventId": 1, "Score": 0}
-				},{
-					"name": "info",
-					"method": "POST",
-					"data": {"EventId": 0}
-				},{
-					"name": "topTen",
-					"method": "POST",
-					"data": {"EventId": 1, "RoundIdx": 0, "TeamIds": [11,12,13]}
 				},{
 					"name": "getRanks",
 					"method": "POST",

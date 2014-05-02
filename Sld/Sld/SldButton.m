@@ -48,7 +48,7 @@
     [self.sprite setColor:color];
 }
 
-- (void)setLabelWithText:(NSString*)text color:(UIColor*)color fontSize:(float)fontSize{
+- (void)setLabelWithText:(NSString*)text color:(UIColor*)color fontSize:(float)fontSize {
     if (self.label == nil) {
         self.label = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
         self.label.fontSize = fontSize;
@@ -57,6 +57,10 @@
     }
     [self.label setText:text];
     [self.label setFontColor:color];
+}
+
+- (void)setFontColor:(UIColor*)color {
+    self.label.fontColor = color;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

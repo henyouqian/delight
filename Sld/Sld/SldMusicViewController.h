@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldMusicViewController : UIViewController
+@interface SldMusicViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate>
 
 @end

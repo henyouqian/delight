@@ -9,22 +9,29 @@
 #import "SldStreamPlayer.h"
 #import "SldHttpSession.h"
 
-NSString *listSongUrl = @"http://www.douban.com/j/app/radio/people";
+//NSString *listSongUrl = @"http://www.douban.com/j/app/radio/people";
+NSString *listSongUrl = @"http://douban.fm/j/mine/playlist";
 static void *kStatusKVOKey = &kStatusKVOKey;
 static void *kDurationKVOKey = &kDurationKVOKey;
 static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
+
 
 @implementation Song
 
 @end
 
 @interface SldStreamPlayer()
-@property (nonatomic) int channel;
 @property (nonatomic) DOUAudioStreamer *streamer;
-@property (nonatomic) BOOL playing;
-@property (nonatomic) NSMutableArray *songs;
-@property (nonatomic) int songIdx;
 @property (nonatomic) NSURLSession *session;
+@property (weak, nonatomic) NSTimer *timer;
+@property (nonatomic) BOOL fadeout;
+@property (strong, nonatomic) FadeoutBlock fadeoutBlock;
+@property (nonatomic) BOOL inFadeoutBlock;
+
+@property (nonatomic) int savedChannelId;
+@property (nonatomic) NSMutableArray *savedSongs;
+@property (nonatomic) int savedSongIdx;
+
 @end
 
 @implementation SldStreamPlayer
@@ -41,26 +48,50 @@ static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _channel = -1;
+        _channelId = -1;
         _playing = NO;
+        _paused = NO;
         _streamer = nil;
         _songs = [NSMutableArray arrayWithCapacity:10];
+        _savedSongs = nil;
         _songIdx = -1;
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
         _session = [NSURLSession sessionWithConfiguration:conf delegate:nil delegateQueue: [NSOperationQueue mainQueue]];
+        _timer = nil;
+        _fadeout = NO;
+        _fadeoutBlock = nil;
+        _inFadeoutBlock = NO;
     }
     return self;
 }
 
-- (void)setChannel:(int)channel {
-    if (channel == _channel) return;
+- (void)dealloc {
     
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@?version=100&app_name=radio_desktop_win&channel=%d&type=n", listSongUrl, channel];
+}
+
+- (void)onTimer {
+    if (_fadeout && _streamer && _streamer.volume > 0.01f) {
+        _streamer.volume -= .05f;
+        if ( _streamer.volume <= 0.f) {
+            _streamer.volume = 0.f;
+            [self stop];
+            [_timer invalidate];
+            _timer = nil;
+        }
+    }
+}
+
+- (void)setChannel:(int)channel {
+    if (channel == _channelId) return;
+    _channelId = channel;
+    [self stop];
+    
+//    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@?version=100&app_name=radio_desktop_win&channel=%d&type=n", listSongUrl, channel];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@?from=mainsite&kbps=128&channel=%d&type=n", listSongUrl, channel];
     NSURL *url = [NSURL URLWithString:urlString];
     
     NSURLSessionDataTask * task = [_session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!error) {
-            _channel = channel;
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
             [_songs removeAllObjects];
             for (NSDictionary *songDict in [dict objectForKey:@"song"]) {
@@ -79,15 +110,84 @@ static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
 }
 
 - (void)play {
-    if (_playing) return;
+    if (_playing) {
+        return;
+    }
     _playing = YES;
+    _paused = NO;
+    _fadeout = NO;
+    [_streamer setVolume:1.0f];
     [_streamer play];
+    
+    [self cancelTimer];
 }
 
 - (void)stop {
     if (!_playing) return;
+    _streamer.volume = 0.f;
     _playing = NO;
+    _paused = NO;
     [_streamer stop];
+    
+    [self cancelTimer];
+}
+
+- (void)pause {
+    if (!_playing || _paused) return;
+    _playing = NO;
+    _paused = YES;
+    [_streamer pause];
+    
+    [self cancelTimer];
+}
+
+- (void)cancelTimer {
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+        if (!_inFadeoutBlock) {
+            _fadeoutBlock = nil;
+        }
+    }
+}
+
+- (void)fadeoutAndStop {
+    if (_timer == nil) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:.05f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+    }
+    _fadeout = YES;
+}
+
+- (void)fadeoutWithCompletionBlock:(FadeoutBlock)block {
+    //if (_fadoutBlock) return;
+    if (!_playing) {
+        _inFadeoutBlock = YES;
+        block();
+        _inFadeoutBlock = NO;
+        _fadeoutBlock = nil;
+        return;
+    }
+    
+    _fadeoutBlock = block;
+    if (_timer == nil) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:.05f target:self selector:@selector(onFadeoutBlock) userInfo:nil repeats:YES];
+    }
+    _fadeout = YES;
+}
+
+- (void)onFadeoutBlock {
+    if (_fadeout && _streamer && _streamer.volume > 0.01f) {
+        _streamer.volume -= .03f;
+        if ( _streamer.volume <= 0.f) {
+            _streamer.volume = 0.f;
+            _inFadeoutBlock = YES;
+            _fadeoutBlock();
+            _inFadeoutBlock = NO;
+            [_timer invalidate];
+            _timer = nil;
+            _fadeoutBlock = nil;
+        }
+    }
 }
 
 - (void)resetStreamer {
@@ -95,22 +195,18 @@ static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
         return;
     }
     
-    @try {
-        [self stop];
-        if (_streamer) {
-            [_streamer removeObserver:self forKeyPath:@"status"];
-        }
-        _streamer = [DOUAudioStreamer streamerWithAudioFile:_songs[_songIdx]];
-        [_streamer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:kStatusKVOKey];
-        [self play];
+    [self stop];
+    if (_streamer) {
+        [_streamer removeObserver:self forKeyPath:@"status"];
     }
-    @catch(NSException* ex) {
-        NSLog(@"Bug captured");
-    }
-    
+    _streamer = [DOUAudioStreamer streamerWithAudioFile:_songs[_songIdx]];
+    [_streamer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:kStatusKVOKey];
+    [self play];
 }
 
 - (void)next {
+    if ([_songs count] == 0) return;
+    
     [self stop];
     
     if (_songIdx < [_songs count]-1) {
@@ -119,11 +215,9 @@ static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
         return;
     }
     
-    //
-    if ([_songs count] == 0) return;
-    
     Song *lastSong = [_songs lastObject];
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@?version=100&app_name=radio_desktop_win&channel=%d&type=p&sid=%d", listSongUrl, _channel, [lastSong.sid intValue]];
+//    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@?version=100&app_name=radio_desktop_win&channel=%d&type=p&sid=%d", listSongUrl, _channel, [lastSong.sid intValue]];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@?from=mainsite&kbps=128&channel=%d&sid=%d&type=n", listSongUrl, _channelId, [lastSong.sid intValue]];
     NSURL *url = [NSURL URLWithString:urlString];
     
     NSURLSessionDataTask * task = [_session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -143,6 +237,21 @@ static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
         }
     }];
     [task resume];
+}
+
+- (void)save {
+    _savedSongs = [NSMutableArray arrayWithArray:_songs];
+    _savedChannelId = _channelId;
+    _savedSongIdx = _songIdx;
+}
+
+- (void)load {
+    if (_savedSongs) {
+        _songs = [NSMutableArray arrayWithArray:_savedSongs];
+        _channelId = _savedChannelId;
+        _songIdx = _savedSongIdx;
+        [self resetStreamer];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

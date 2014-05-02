@@ -10,6 +10,7 @@
 #import "util.h"
 #import "SldButton.h"
 #import "SldSprite.h"
+#import "SldStreamPlayer.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -40,7 +41,7 @@
 @property (nonatomic) FISound *sndSuccess;
 @property (nonatomic) FISound *sndFinish;
 @property (nonatomic) BOOL hasFinished;
-@property (nonatomic) BOOL touchEnable;
+@property (nonatomic) BOOL isLoaded;
 @property (nonatomic) NSMutableArray *dots;
 @property (nonatomic) SKSpriteNode *highlightDot;
 @property (nonatomic) SKSpriteNode *curtainTop;
@@ -49,6 +50,7 @@
 @property (nonatomic) SKLabelNode *curtainLabel;
 @property (nonatomic) BOOL inCurtain;
 @property (nonatomic) SKLabelNode *timerLabel;
+@property (nonatomic) BOOL packHasFinished;
 @end
 
 static float BUTTON_ALPHA = .7f;
@@ -67,26 +69,42 @@ static const float MOVE_DURATION = .1f;
 static const uint32_t DEFUALT_SLIDER_NUM = 6;
 static const float TRANS_DURATION = .3f;
 
+UIColor *BUTTON_COLOR_RED = nil;
+UIColor *BUTTON_COLOR_GREEN = nil;
+
 
 @implementation SldGameScene
 
-+ (instancetype)sceneWithSize:(CGSize)size packInfo:(PackInfo*)packInfo {
-    SldGameScene* inst = [[SldGameScene alloc] initWithSize:size packInfo:packInfo];
++ (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller {
+    SldGameScene* inst = [[SldGameScene alloc] initWithSize:size controller:controller];
     return inst;
 }
 
-- (instancetype)initWithSize:(CGSize)size packInfo:(PackInfo*)packInfo {
+- (instancetype)initWithSize:(CGSize)size controller:(SldGameController*)controller {
     if (self = [super initWithSize:size]) {
-        self.packInfo = packInfo;
-        NSMutableArray *files = [NSMutableArray arrayWithCapacity:[self.packInfo.images count]];
+        _gameController = controller;
         
-        for (NSString *img in packInfo.images) {
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:[_gameController.packInfo.images count]];
+        for (NSString *img in _gameController.packInfo.images) {
             [files addObject:makeImagePath(img)];
         }
+        
+        _imgIdx = -1;
+        _sprites = [NSMutableArray arrayWithCapacity:3];
+        _sliderNum = DEFUALT_SLIDER_NUM;
+        _needRotate = NO;
+        _sliderParent = [SKNode node];
+        [self.scene addChild:self.sliderParent];
+        _nextSliderParent = [SKNode node];
+        [self.scene addChild:self.nextSliderParent];
+        _isLoaded = false;
+        
         
         __weak typeof(self) weakSelf = self;
         
         UIColor *fontColorDark = makeUIColor(30, 30, 30, 255);
+        BUTTON_COLOR_RED = makeUIColor(255, 59, 48, 255);
+        BUTTON_COLOR_GREEN = makeUIColor(76, 217, 100, 255);
         
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];
@@ -105,7 +123,7 @@ static const float TRANS_DURATION = .3f;
         self.btnYes = [SldButton buttonWithImageNamed:BUTTON_BG];
         [self.btnYes setLabelWithText:@"Yes" color:[UIColor whiteColor] fontSize:BUTTON_FONT_SIZE];
         [self.btnYes setPosition:BUTTON_POS_HIDE];
-        [self.btnYes setBackgroundColor:makeUIColor(255, 59, 48, 255)];
+        [self.btnYes setBackgroundColor:BUTTON_COLOR_RED];
         [self.btnYes setAlpha:0.f];
         self.btnYes.onClick = ^{
             [weakSelf onBackYes];
@@ -130,7 +148,7 @@ static const float TRANS_DURATION = .3f;
         self.btnNext = [SldButton buttonWithImageNamed:BUTTON_BG];
         [self.btnNext setLabelWithText:@"Next" color:[UIColor whiteColor] fontSize:BUTTON_FONT_SIZE];
         [self.btnNext setPosition:BUTTON_POS_HIDE];
-        [self.btnNext setBackgroundColor:makeUIColor(76, 217, 100, 255)];
+        [self.btnNext setBackgroundColor:BUTTON_COLOR_GREEN];
         [self.btnNext setAlpha:0.f];
         self.btnNext.onClick = ^{
             [weakSelf next];
@@ -148,18 +166,6 @@ static const float TRANS_DURATION = .3f;
         for (int i = 0; i < fileCount; ++i) {
             [self.files addObject:files[[idxs[i] unsignedIntegerValue]]];
         }
-        
-        //
-        self.imgIdx = -1;
-        self.sprites = [NSMutableArray arrayWithCapacity:3];
-        self.sliderNum = DEFUALT_SLIDER_NUM;
-        self.needRotate = NO;
-        self.sliderParent = [SKNode node];
-        [self.scene addChild:self.sliderParent];
-        self.nextSliderParent = [SKNode node];
-        [self.scene addChild:self.nextSliderParent];
-        self.touchEnable = false;
-        [self nextImage];
         
         //audio
         NSError *error = nil;
@@ -191,6 +197,7 @@ static const float TRANS_DURATION = .3f;
         [self.highlightDot setZPosition:10.f];
         [self addChild:self.highlightDot];
         [self.dots addObject:self.highlightDot];
+        _packHasFinished = NO;
         
         //curtain
         self.inCurtain = YES;
@@ -223,6 +230,9 @@ static const float TRANS_DURATION = .3f;
         [self addChild:self.curtainBelt];
         [self.curtainBelt addChild:self.curtainLabel];
         
+        //load image
+        [self nextImage];
+        
         //timer
 //        self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
 //        [self.timerLabel setFontColor:[UIColor whiteColor]];
@@ -240,6 +250,7 @@ static const float TRANS_DURATION = .3f;
 //        [self.timerLabel setPosition:CGPointMake(self.size.width*.5f, self.size.height-30.f)];
 //        [self.timerLabel setText:@"00:35.127"];
 //        [self.timerLabel setZPosition:1.f];
+        
     }
     return self;
 }
@@ -253,6 +264,11 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onExit {
+    if (_packHasFinished) {
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
+    
     float dur = .2f;
     
     //btnYes
@@ -381,7 +397,7 @@ static float lerpf(float a, float b, float t) {
     }
     
     //
-    self.touchEnable = NO;
+    _isLoaded = NO;
     self.imgIdx++;
     
     //dots
@@ -597,16 +613,15 @@ static float lerpf(float a, float b, float t) {
             [self.nextSliderParent removeAllChildren];
             [self.sprites removeObjectAtIndex:0];
             [self loadImage];
-            self.touchEnable = YES;
+            _isLoaded = YES;
         }];
-    } else {
-        self.touchEnable = YES;
-        [parent setAlpha:0];
-        float dur = 1.f;
+    } else { //first image loaded
+        //[parent setAlpha:0];
+        float dur = .6f;
         SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
             CGFloat t = elapsedTime/dur;
             t = CubicEaseOut(t);
-            [node setAlpha:t];
+            //[node setAlpha:t];
         }];
         [parent runAction:action completion:^{
             usleep(100000);
@@ -616,8 +631,10 @@ static float lerpf(float a, float b, float t) {
             SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
                 float t = QuarticEaseOut(elapsedTime/dur);
                 [node setYScale:lerpf(0.f, 1.f, t)];
+                [node setXScale:2.0-lerpf(0.f, 1.f, t)];
             }];
             [self.curtainLabel runAction:action];
+            _isLoaded = YES;
         }];
     }
     [self onNextImageWithRotate:self.needRotate];
@@ -639,7 +656,7 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (!self.touchEnable) {
+    if (!_isLoaded) {
         return;
     }
     
@@ -669,6 +686,9 @@ static float lerpf(float a, float b, float t) {
             down.timingMode = SKActionTimingEaseIn;
             [self.curtainBottom runAction:down];
         }];
+        
+//        SldStreamPlayer *player = [SldStreamPlayer defautPlayer];
+//        [player play];
     }
     
     //slider
@@ -686,7 +706,7 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (!self.touchEnable) {
+    if (!_isLoaded) {
         return;
     }
     
@@ -733,7 +753,7 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (!self.touchEnable) {
+    if (!_isLoaded) {
         return;
     }
     
@@ -814,7 +834,9 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onPackFinish:(BOOL)rotate {
-    
+    _packHasFinished = YES;
+    [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
+    [_btnExit setFontColor:[UIColor whiteColor]];
 }
 
 - (void)onNextImageWithRotate:(BOOL)rotate {
@@ -827,16 +849,19 @@ static float lerpf(float a, float b, float t) {
     }
     
     [self.btnNext setUserInteractionEnabled:NO];
-    SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-        float t = QuarticEaseOut(elapsedTime/dur);
-        [node setAlpha:lerpf(BUTTON_ALPHA, 0.f, t)];
-        if (rotate) {
-            [node setPosition:CGPointMake(BUTTON_POS3.x, lerpf(BUTTON_POS3.y, BUTTON_POS3.y+50.f, t))];
-        } else {
-            [node setPosition:CGPointMake(lerpf(BUTTON_POS3.x, BUTTON_POS3.x-50.f, t), BUTTON_POS3.y)];
-        }
-    }];
-    [self.btnNext runAction:action];
+    
+    if (_imgIdx > 0) {
+        SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+            float t = QuarticEaseOut(elapsedTime/dur);
+            [node setAlpha:lerpf(BUTTON_ALPHA, 0.f, t)];
+            if (rotate) {
+                [node setPosition:CGPointMake(BUTTON_POS3.x, lerpf(BUTTON_POS3.y, BUTTON_POS3.y+50.f, t))];
+            } else {
+                [node setPosition:CGPointMake(lerpf(BUTTON_POS3.x, BUTTON_POS3.x-50.f, t), BUTTON_POS3.y)];
+            }
+        }];
+        [self.btnNext runAction:action];
+    }
 }
 
 @end

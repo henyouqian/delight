@@ -19,5 +19,6 @@ typedef void(^OnButtonClickBlock)(void);
 - (void)setBackgroundAlpha:(float)alpha;
 - (void)setBackgroundColor:(UIColor*)color;
 - (void)setLabelWithText:(NSString*)text color:(UIColor*)color fontSize:(float)fontSize;
+- (void)setFontColor:(UIColor*)color;
 
 @end

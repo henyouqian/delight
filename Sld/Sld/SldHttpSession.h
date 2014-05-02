@@ -6,6 +6,8 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
+#import "util.h"
+
 @interface SldHttpSession : NSObject
 
 + (instancetype)defaultSession;
@@ -20,6 +22,10 @@ completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *erro
                withData:(id)data
       completionHandler:(void (^)(NSURL *location, NSError *error, id data))completionHandler;
 
-
+- (void)cancelAllTask;
 
 @end
+
+BOOL isServerError(NSError *error);
+NSString* getServerErrorType(NSData *data);
+void alertServerError(NSError *error, NSData *data);

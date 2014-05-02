@@ -15,13 +15,27 @@
 @property (nonatomic, strong) NSNumber *sid;
 @end
 
+typedef void (^FadeoutBlock) ();
+
 @interface SldStreamPlayer : NSObject
+
+@property (nonatomic) int channelId;
+@property (nonatomic) BOOL playing;
+@property (nonatomic) BOOL paused;
+@property (nonatomic) NSMutableArray *songs;
+@property (nonatomic) int songIdx;
 
 + (instancetype)defautPlayer;
 
 - (void)setChannel:(int)channel;
 - (void)play;
 - (void)stop;
+- (void)pause;
 - (void)next;
+- (void)fadeoutAndStop;
+- (void)fadeoutWithCompletionBlock:(FadeoutBlock)block;
+
+- (void)save;
+- (void)load;
 
 @end
