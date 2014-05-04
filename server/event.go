@@ -22,15 +22,15 @@ const (
 	H_EVENT                     = "H_EVENT"
 	Z_EVENT                     = "Z_EVENT"
 	H_EVENT_PLAYER_RECORD       = "H_EVENT_PLAYER_RECORD"
-	Z_EVENT_LEADERBOARD_PRE     = "Z_EVENT_LEADERBOARD_PRE"
+	RDS_Z_EVENT_LEADERBOARD_PRE = "RDS_Z_EVENT_LEADERBOARD_PRE"
 	EVENT_SERIAL                = "EVENT_SERIAL"
 	TRY_COST_MONEY              = 100
 	TRY_EXPIRE_SECONDS          = 600
 	TEAM_CHAMPIONSHIP_ROUND_NUM = 6
 )
 
-func makeLeaderboardKey(evnetId uint64) string {
-	return fmt.Sprintf("%s/%d", Z_EVENT_LEADERBOARD_PRE, evnetId)
+func makeRedisLeaderboardKey(evnetId uint64) string {
+	return fmt.Sprintf("%s/%d", RDS_Z_EVENT_LEADERBOARD_PRE, evnetId)
 }
 
 var (
@@ -315,7 +315,7 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 	defer rc.Close()
 
 	//get rank
-	eventLbLey := makeLeaderboardKey(in.EventId)
+	eventLbLey := makeRedisLeaderboardKey(in.EventId)
 	rc.Send("ZREVRANK", eventLbLey, in.UserId)
 	rc.Send("ZCARD", eventLbLey)
 	err = rc.Flush()
@@ -326,11 +326,26 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//
+	type Out struct {
+		HighScore int32
+		Trys      uint32
+		Rank      uint32
+		RankNum   uint32
+	}
+
+	//
 	recordKey := fmt.Sprintf("%d/%d", in.EventId, in.UserId)
 	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] != "ok" {
-		lwutil.SendError("err_not_played", fmt.Sprintf("event not played: recordKey=%s", recordKey))
+		out := Out{
+			int32(0),
+			uint32(0),
+			uint32(0),
+			uint32(0),
+		}
+		lwutil.WriteResponse(w, out)
+		return
 	}
 
 	record := EventPlayerRecord{}
@@ -338,12 +353,7 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//out
-	out := struct {
-		HighScore int32
-		Trys      uint32
-		Rank      uint32
-		RankNum   uint32
-	}{
+	out := Out{
 		record.HighScore,
 		record.Trys,
 		uint32(rank + 1),
@@ -482,7 +492,7 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	defer rc.Close()
 
 	//event leaderboard
-	eventLbLey := makeLeaderboardKey(in.EventId)
+	eventLbLey := makeRedisLeaderboardKey(in.EventId)
 	if scoreUpdate {
 		_, err = rc.Do("ZADD", eventLbLey, record.HighScore, session.Userid)
 		lwutil.CheckError(err, "")
@@ -538,8 +548,8 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
-	if in.Limit > 20 {
-		in.Limit = 20
+	if in.Limit > 30 {
+		in.Limit = 30
 	}
 
 	//check event id
@@ -557,31 +567,73 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	defer rc.Close()
 
 	//get rank
-	eventLbLey := makeLeaderboardKey(in.EventId)
+	eventLbLey := makeRedisLeaderboardKey(in.EventId)
 	values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, in.Offset, in.Offset+in.Limit-1, "WITHSCORES"))
 	lwutil.CheckError(err, "")
 
-	num := len(values) / 2
-	userIds := make([]uint64, num)
-	scores := make([]int32, num)
-	for i, v := range values {
-		if i%2 == 0 {
-			userIds[i/2], err = redisUint64(v, nil)
-			lwutil.CheckError(err, "")
-		} else {
-			scores[i/2], err = redisInt32(v, nil)
-			lwutil.CheckError(err, "")
-		}
+	type RankInfo struct {
+		Rank     uint32
+		UserId   uint64
+		Score    int32
+		UserName string
+		Time     int64
+		Trys     uint32
 	}
 
-	out := struct {
+	type Out struct {
 		EventId uint64
-		UserIds []uint64
-		Scores  []int32
-	}{
+		Ranks   []RankInfo
+	}
+
+	num := len(values) / 2
+	if num == 0 {
+		out := Out{
+			in.EventId,
+			[]RankInfo{},
+		}
+		lwutil.WriteResponse(w, out)
+		return
+	}
+	ranks := make([]RankInfo, num)
+
+	currRank := in.Offset + 1
+	for i := 0; i < num; i++ {
+		ranks[i].Rank = currRank
+		currRank++
+		ranks[i].UserId, err = redisUint64(values[i*2], nil)
+		lwutil.CheckError(err, "")
+		ranks[i].Score, err = redisInt32(values[i*2+1], nil)
+		lwutil.CheckError(err, "")
+	}
+
+	//get player info
+	cmds := make([]interface{}, 0, num+2)
+	cmds = append(cmds, "multi_hget")
+	cmds = append(cmds, H_EVENT_PLAYER_RECORD)
+	for _, rank := range ranks {
+		recordKey := fmt.Sprintf("%d/%d", in.EventId, rank.UserId)
+		cmds = append(cmds, recordKey)
+	}
+	resp, err = ssdb.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	if num*2 != len(resp) {
+		lwutil.SendError("err_data_missing", "")
+	}
+	var record EventPlayerRecord
+	for i := range ranks {
+		err = json.Unmarshal([]byte(resp[i*2+1]), &record)
+		lwutil.CheckError(err, "")
+		ranks[i].UserName = record.PlayerName
+		ranks[i].Time = record.HighScoreTime
+		ranks[i].Trys = record.Trys
+	}
+
+	//out
+	out := Out{
 		in.EventId,
-		userIds,
-		scores,
+		ranks,
 	}
 
 	lwutil.WriteResponse(w, out)

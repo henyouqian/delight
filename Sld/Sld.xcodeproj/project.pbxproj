@@ -26,6 +26,7 @@
 		B31EE7FF18F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE80118F05BE60047E9FD /* SldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80018F05BE60047E9FD /* SldTests.m */; };
 		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
+		B33121F819165A10003E05DB /* SldRankController.m in Sources */ = {isa = PBXBuildFile; fileRef = B33121F719165A10003E05DB /* SldRankController.m */; };
 		B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E1B1900C36A0055C419 /* SldEventListViewController.m */; };
 		B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E3C190284DF0055C419 /* SldHttpSession.m */; };
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
@@ -39,6 +40,9 @@
 		B36DAD2B190FB46F00435EF4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD1A190FA50B00435EF4 /* AVFoundation.framework */; };
 		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
 		B38110401913FC750093F321 /* config.m in Sources */ = {isa = PBXBuildFile; fileRef = B381103F1913FC750093F321 /* config.m */; };
+		B38110431914CAF10093F321 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38110421914CAF10093F321 /* GameKit.framework */; };
+		B38110461914D8F30093F321 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B38110451914D8F30093F321 /* GameKitHelper.m */; };
+		B38110491914F5B00093F321 /* SldNevigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B38110481914F5B00093F321 /* SldNevigationController.m */; };
 		B3815E79190C0D7A003AF183 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3815E78190C0D7A003AF183 /* ui */; };
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
@@ -120,6 +124,8 @@
 		B31EE7FE18F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B31EE80018F05BE60047E9FD /* SldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldTests.m; sourceTree = "<group>"; };
 		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
+		B33121F619165A10003E05DB /* SldRankController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldRankController.h; sourceTree = "<group>"; };
+		B33121F719165A10003E05DB /* SldRankController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldRankController.m; sourceTree = "<group>"; };
 		B3691E1A1900C36A0055C419 /* SldEventListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventListViewController.h; sourceTree = "<group>"; };
 		B3691E1B1900C36A0055C419 /* SldEventListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventListViewController.m; sourceTree = "<group>"; };
 		B3691E3B190284DF0055C419 /* SldHttpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldHttpSession.h; sourceTree = "<group>"; };
@@ -144,6 +150,11 @@
 		B37A9C3518F2E4850080E8F0 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		B381103E1913FC750093F321 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		B381103F1913FC750093F321 /* config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = config.m; sourceTree = "<group>"; };
+		B38110421914CAF10093F321 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		B38110441914D8F30093F321 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
+		B38110451914D8F30093F321 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
+		B38110471914F5B00093F321 /* SldNevigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldNevigationController.h; sourceTree = "<group>"; };
+		B38110481914F5B00093F321 /* SldNevigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldNevigationController.m; sourceTree = "<group>"; };
 		B3815E78190C0D7A003AF183 /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ui; path = res/ui; sourceTree = "<group>"; };
 		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
 		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
@@ -186,6 +197,7 @@
 				B36DAD25190FA68900435EF4 /* MobileCoreServices.framework in Frameworks */,
 				B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */,
 				B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */,
+				B38110431914CAF10093F321 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +237,7 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B38110421914CAF10093F321 /* GameKit.framework */,
 				B308AFCF190FC1620021BE9C /* MediaPlayer.framework */,
 				B36DAD26190FA6DA00435EF4 /* Accelerate.framework */,
 				B36DAD24190FA68900435EF4 /* MobileCoreServices.framework */,
@@ -310,6 +323,8 @@
 				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
 				B3C1BB8C191159EF0062D50C /* UIImage+animatedGIF.h */,
 				B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */,
+				B38110441914D8F30093F321 /* GameKitHelper.h */,
+				B38110451914D8F30093F321 /* GameKitHelper.m */,
 				B381103E1913FC750093F321 /* config.h */,
 				B381103F1913FC750093F321 /* config.m */,
 			);
@@ -331,6 +346,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				B38110471914F5B00093F321 /* SldNevigationController.h */,
+				B38110481914F5B00093F321 /* SldNevigationController.m */,
 				B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */,
 				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
 				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
@@ -341,6 +358,8 @@
 				B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */,
 				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
+				B33121F619165A10003E05DB /* SldRankController.h */,
+				B33121F719165A10003E05DB /* SldRankController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -436,9 +455,13 @@
 				ORGANIZATIONNAME = "Wei Li";
 				TargetAttributes = {
 					B31EE7C718F05BE60047E9FD = {
+						DevelopmentTeam = H3SSTE2WW4;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
+							};
+							com.apple.GameCenter = {
+								enabled = 1;
 							};
 						};
 					};
@@ -535,6 +558,7 @@
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
+				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */,
@@ -545,7 +569,9 @@
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
 				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
+				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
+				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -685,6 +711,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -695,6 +723,7 @@
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -705,6 +734,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -715,6 +746,7 @@
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				WRAPPER_EXTENSION = app;
 			};

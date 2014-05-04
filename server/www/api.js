@@ -170,7 +170,7 @@ function Controller($scope, $http) {
 				},{
 					"name": "getUserPlay",
 					"method": "POST",
-					"data": {"EventId": 1, "UserId": 1}
+					"data": {"EventId": 1, "UserId": 0}
 				},{
 					"name": "playBegin",
 					"method": "POST",

@@ -214,7 +214,7 @@ NSString *CELL_ID = @"cellID";
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier compare:@"eventDetail"] == 0) {
+    if (segue.identifier && [segue.identifier compare:@"eventDetail"] == 0) {
         NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
         NSInteger row = selectedIndexPath.row;
         if (row < [self.events count]) {

@@ -29,6 +29,9 @@
     packInfo.thumb = dict[@"Thumb"];
     packInfo.cover = dict[@"Cover"];
     packInfo.coverBlur = dict[@"CoverBlur"];
+    if ([packInfo.coverBlur length] == 0) {
+        packInfo.coverBlur = packInfo.cover;
+    }
     NSArray *imgs = dict[@"Images"];
     if (error) {
         lwError("Json error:%@", [error localizedDescription]);
@@ -49,33 +52,34 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bestRecordLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rankLabel;
+@property (weak, nonatomic) IBOutlet UILabel *beatLabel;
 @property (weak, nonatomic) NSTimer *timer;
 @property (nonatomic) enum GameMode gameMode;
 @end
 
+static SldEventDetailViewController *g_eventDetailViewController = nil;
+
 @implementation SldEventDetailViewController
+
++ (instancetype)getInstance {
+    return g_eventDetailViewController;
+}
 
 -(void)dealloc {
     
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
+    g_eventDetailViewController = self;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:self.event.packId]];
+    SldHttpSession *session = [SldHttpSession defaultSession];
     if ([rs next]) { //local
         NSString *data = [rs stringForColumnIndex:0];
         NSError *error = nil;
@@ -89,7 +93,6 @@
         [self loadBackground];
         [self reloadData];
     } else { //server
-        SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"Id":@(self.event.packId)};
         [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
@@ -116,7 +119,77 @@
         }];
     }
 
+    //get play result
+    NSDictionary *body = @{@"EventId":@(_event.id), @"UserId":@0};
+    [session postToApi:@"event/getUserPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertServerError(error, data);
+            return;
+        }
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSNumber *highScore = [dict objectForKey:@"HighScore"];
+        NSNumber *rank = [dict objectForKey:@"Rank"];
+        NSNumber *rankNum = [dict objectForKey:@"RankNum"];
+        [self setPlayRecordWithHighscore:highScore rank:rank rankNum:rankNum];
+    }];
+}
+
+- (void)setPlayRecordWithHighscore:(NSNumber*)highScore rank:(NSNumber*)nRank rankNum:(NSNumber*)nRankNum {
+    if (highScore) {
+        if (_highScore == nil || [highScore intValue] > [_highScore intValue]) {
+            _highScore = highScore;
+            int msec = -[highScore intValue];
+            if (msec == 0) {
+                _highScoreStr = @"无记录";
+            } else {
+                int sec = msec/1000;
+                
+                int min = sec / 60;
+                sec = sec % 60;
+                msec = msec % 1000;
+                _highScoreStr = [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
+            }
+            
+            [UIView animateWithDuration:.3f animations:^{
+                _bestRecordLabel.alpha = 0.f;
+            } completion:^(BOOL finished) {
+                _bestRecordLabel.text = _highScoreStr;
+                [UIView animateWithDuration:.3f animations:^{
+                    _bestRecordLabel.alpha = 1.f;
+                }];
+            }];
+        }
+    }
     
+    //rank
+    int rank = 0;
+    if (nRank) {
+        rank = [nRank intValue];
+        if (rank) {
+            _rankLabel.text = [NSString stringWithFormat:@"第%d名", rank];
+            _rankStr = [NSString stringWithFormat:@"%d", rank];
+        }
+    }
+    
+    //beat
+    if (rank && nRankNum) {
+        int rankNum = [nRankNum intValue];
+        if (rankNum) {
+            int beatNum = rankNum-rank;
+            float beatRate = 0.f;
+            if (rankNum <= 1) {
+                beatNum = 0;
+            } else {
+                beatRate = (float)(rankNum-rank)/(float)(rankNum-1)*100.f;
+            }
+            _beatLabel.text = [NSString stringWithFormat:@"击败了%d人(%.1f%%)", beatNum, beatRate];
+        }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -263,13 +336,16 @@
         controller.packInfo = self.packInfo;
         controller.gameMode = _gameMode;
         controller.matchSecret = matchSecret;
+        controller.event = _event;
         [self.navigationController pushViewController:controller animated:YES];
     };
     
     if (_gameMode == MATCH) {
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"EventId":@(_event.id)};
+        self.view.userInteractionEnabled = NO;
         [session postToApi:@"event/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            self.view.userInteractionEnabled = YES;
             if (error) {
                 alertServerError(error, data);
             } else {
@@ -282,7 +358,6 @@
                 startGame(matchSecret);
             }
         }];
-        
     } else {
         startGame(nil);
     }

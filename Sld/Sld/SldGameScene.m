@@ -11,6 +11,7 @@
 #import "SldButton.h"
 #import "SldSprite.h"
 #import "SldStreamPlayer.h"
+#import "SldHttpSession.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -66,7 +67,7 @@ static const float DOT_ALPHA_HIGHLIGHT = 1.f;
 static const float DOT_SCALE_NORMAL = .6f;
 static const float DOT_SCALE_HIGHLIGHT = .75f;
 static const float MOVE_DURATION = .1f;
-static const uint32_t DEFUALT_SLIDER_NUM = 6;
+static const uint32_t DEFUALT_SLIDER_NUM = 2;
 static const float TRANS_DURATION = .3f;
 
 UIColor *BUTTON_COLOR_RED = nil;
@@ -74,6 +75,8 @@ UIColor *BUTTON_COLOR_GREEN = nil;
 
 
 @implementation SldGameScene
+
+NSDate *_gameBeginTime;
 
 + (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller {
     SldGameScene* inst = [[SldGameScene alloc] initWithSize:size controller:controller];
@@ -684,7 +687,10 @@ static float lerpf(float a, float b, float t) {
             
             SKAction *down = [SKAction moveToY:0.f duration:dur];
             down.timingMode = SKActionTimingEaseIn;
-            [self.curtainBottom runAction:down];
+            [self.curtainBottom runAction:down completion:^{
+                //game begin
+                _gameBeginTime = [NSDate dateWithTimeIntervalSinceNow:0];
+            }];
         }];
         
 //        SldStreamPlayer *player = [SldStreamPlayer defautPlayer];
@@ -837,6 +843,41 @@ static float lerpf(float a, float b, float t) {
     _packHasFinished = YES;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];
+    
+    
+    //
+    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
+    int score = -(int)(dt*1000);
+    alert(@"Time", [NSString stringWithFormat:@"%f", dt]);
+    if (_gameController.gameMode == MATCH) {
+        [_btnExit setHidden:YES];
+        
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"EventId":@(_gameController.event.id),
+                               @"Secret":_gameController.matchSecret,
+                               @"Score":@(score)};
+        [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertServerError(error, data);
+            } else {
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error) {
+                    alert(@"Json error", [error localizedDescription]);
+                    return;
+                }
+                alert(@"My result", [NSString stringWithFormat:@"%@", dict]);
+                
+                //update detail vc
+                SldEventDetailViewController *detailVC = [SldEventDetailViewController getInstance];
+                NSNumber *highScore = [NSNumber numberWithInt:score];
+                NSNumber *rank = [dict objectForKey:@"Rank"];
+                NSNumber *rankNum = [dict objectForKey:@"RankNum"];
+                [detailVC setPlayRecordWithHighscore:highScore rank:rank rankNum:rankNum];
+            }
+        }];
+        [_btnExit setHidden:NO];
+    }
 }
 
 - (void)onNextImageWithRotate:(BOOL)rotate {

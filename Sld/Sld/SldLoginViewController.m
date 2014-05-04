@@ -32,7 +32,12 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/login" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            alert(@"Error", @"Http Error");
+            NSString *errType = getServerErrorType(data);
+            if ([errType compare:@"err_not_match"] == 0) {
+                alert(@"Error", @"Username and password dismatch.");
+            } else {
+                alertServerError(error, data);
+            }
             return;
         }
         //[self.navigationController popViewControllerAnimated:YES];
@@ -40,6 +45,25 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         
         //save to keychain
         [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
+    }];
+}
+
+- (IBAction)onSignUp:(id)sender {
+    NSString *username = self.usernameInput.text;
+    NSString *password = self.passwordInput.text;
+    if ([username length] == 0 || [password length] == 0) {
+        alert(@"Error", @"Fill the blank.");
+        return;
+    }
+    NSDictionary *body = @{@"Username":username, @"Password":password};
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"auth/register" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertServerError(error, data);
+            return;
+        }
+        
+        alert(@"Message", @"Sign up succeed. Please login.");
     }];
 }
 

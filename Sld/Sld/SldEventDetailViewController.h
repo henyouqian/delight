@@ -21,8 +21,15 @@
 @end
 
 @interface SldEventDetailViewController : UIViewController<UIAlertViewDelegate>
-@property (nonatomic, weak) Event* event;
-@property (nonatomic) PackInfo* packInfo;
+@property (nonatomic, weak) Event *event;
+@property (nonatomic) PackInfo *packInfo;
+@property (nonatomic) NSNumber *highScore;
+@property (nonatomic) NSNumber *rank;
+@property (nonatomic) NSString *highScoreStr;
+@property (nonatomic) NSString *rankStr;
+
++ (instancetype)getInstance;
+- (void)setPlayRecordWithHighscore:(NSNumber*)highscore rank:(NSNumber*)rank rankNum:(NSNumber*)rankNum;
 @end
 
 
