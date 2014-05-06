@@ -12,6 +12,7 @@
 #import "SldSprite.h"
 #import "SldStreamPlayer.h"
 #import "SldHttpSession.h"
+#import "SldGameData.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -67,7 +68,7 @@ static const float DOT_ALPHA_HIGHLIGHT = 1.f;
 static const float DOT_SCALE_NORMAL = .6f;
 static const float DOT_SCALE_HIGHLIGHT = .75f;
 static const float MOVE_DURATION = .1f;
-static const uint32_t DEFUALT_SLIDER_NUM = 2;
+static const uint32_t DEFUALT_SLIDER_NUM = 7;
 static const float TRANS_DURATION = .3f;
 
 UIColor *BUTTON_COLOR_RED = nil;
@@ -78,6 +79,7 @@ UIColor *BUTTON_COLOR_GREEN = nil;
 
 NSDate *_gameBeginTime;
 
+
 + (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller {
     SldGameScene* inst = [[SldGameScene alloc] initWithSize:size controller:controller];
     return inst;
@@ -87,8 +89,10 @@ NSDate *_gameBeginTime;
     if (self = [super initWithSize:size]) {
         _gameController = controller;
         
-        NSMutableArray *files = [NSMutableArray arrayWithCapacity:[_gameController.packInfo.images count]];
-        for (NSString *img in _gameController.packInfo.images) {
+        SldGameData *gameData = [SldGameData getInstance];
+        
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:[gameData.packInfo.images count]];
+        for (NSString *img in gameData.packInfo.images) {
             [files addObject:makeImagePath(img)];
         }
         
@@ -854,7 +858,8 @@ static float lerpf(float a, float b, float t) {
         [_btnExit setHidden:YES];
         
         SldHttpSession *session = [SldHttpSession defaultSession];
-        NSDictionary *body = @{@"EventId":@(_gameController.event.id),
+        SldGameData *gameData = [SldGameData getInstance];
+        NSDictionary *body = @{@"EventId":@(gameData.eventInfo.id),
                                @"Secret":_gameController.matchSecret,
                                @"Score":@(score)};
         [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {

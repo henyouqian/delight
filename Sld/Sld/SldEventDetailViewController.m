@@ -7,48 +7,19 @@
 //
 
 #import "SldEventDetailViewController.h"
+#import "SldEventListViewController.h"
+#import "SldEventViewHubController.h"
 #import "SldDb.h"
 #import "SldGameController.h"
 #import "SldHttpSession.h"
 #import "SldGameScene.h"
+#import "SldGameData.h"
 #import "util.h"
 #import "config.h"
 #import "UIImage+animatedGIF.h"
 
-@implementation PackInfo
-+ (instancetype)packWithDictionary:(NSDictionary*)dict {
-    PackInfo *packInfo = [[PackInfo alloc] init];
-    NSError *error = nil;
-//    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
-//    if (error) {
-//        lwError("Json error:%@", [error localizedDescription]);
-//        return packInfo;
-//    }
-    packInfo.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
-    packInfo.title = dict[@"Title"];
-    packInfo.thumb = dict[@"Thumb"];
-    packInfo.cover = dict[@"Cover"];
-    packInfo.coverBlur = dict[@"CoverBlur"];
-    if ([packInfo.coverBlur length] == 0) {
-        packInfo.coverBlur = packInfo.cover;
-    }
-    NSArray *imgs = dict[@"Images"];
-    if (error) {
-        lwError("Json error:%@", [error localizedDescription]);
-        return packInfo;
-    }
-    NSMutableArray *images = [NSMutableArray arrayWithCapacity:[imgs count]];
-    for (NSDictionary *img in imgs) {
-        [images addObject:img[@"Key"]];
-    }
-    packInfo.images = images;
-    
-    return packInfo;
-}
-@end
 
 @interface SldEventDetailViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *bgView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bestRecordLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
@@ -56,9 +27,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *beatLabel;
 @property (weak, nonatomic) NSTimer *timer;
 @property (nonatomic) enum GameMode gameMode;
+@property (nonatomic) SldGameData *gamedata;
 @end
 
-static SldEventDetailViewController *g_eventDetailViewController = nil;
+static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
 
 @implementation SldEventDetailViewController
 
@@ -72,28 +44,31 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
 
 - (void)viewDidLoad
 {
-    g_eventDetailViewController = self;
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    g_eventDetailViewController = self;
+    
+    _gamedata = [SldGameData getInstance];
+    
+    self.view.backgroundColor = [UIColor clearColor];
     
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
-    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:self.event.packId]];
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:_gamedata.eventInfo.packId]];
     SldHttpSession *session = [SldHttpSession defaultSession];
     if ([rs next]) { //local
         NSString *data = [rs stringForColumnIndex:0];
         NSError *error = nil;
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
-            if (error) {
-                lwError("Json error:%@", [error localizedDescription]);
-                return;
-            }
-        self.packInfo = [PackInfo packWithDictionary:dict];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        _gamedata.packInfo = [PackInfo packWithDictionary:dict];
         
-        [self loadBackground];
+        [[SldEventViewHubController getInstance] loadBackground];
         [self reloadData];
     } else { //server
-        NSDictionary *body = @{@"Id":@(self.event.packId)};
+        NSDictionary *body = @{@"Id":@(_gamedata.eventInfo.packId)};
         [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 lwError("Http error:%@", [error localizedDescription]);
@@ -105,7 +80,7 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
                 lwError("Json error:%@", [error localizedDescription]);
                 return;
             }
-            self.packInfo = [PackInfo packWithDictionary:dict];
+            _gamedata.packInfo = [PackInfo packWithDictionary:dict];
             
             //save to db
             BOOL ok = [db executeUpdate:@"REPLACE INTO pack (id, data) VALUES(?, ?)", dict[@"Id"], data];
@@ -114,13 +89,13 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
                 return;
             }
             
-            [self loadBackground];
+            [[SldEventViewHubController getInstance] loadBackground];
             [self reloadData];
         }];
     }
 
     //get play result
-    NSDictionary *body = @{@"EventId":@(_event.id), @"UserId":@0};
+    NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id), @"UserId":@0};
     [session postToApi:@"event/getUserPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertServerError(error, data);
@@ -141,14 +116,13 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
 
 - (void)setPlayRecordWithHighscore:(NSNumber*)highScore rank:(NSNumber*)nRank rankNum:(NSNumber*)nRankNum {
     if (highScore) {
-        if (_highScore == nil || [highScore intValue] > [_highScore intValue]) {
+        if (_highScore == nil || [_highScore intValue] == 0 || [highScore intValue] > [_highScore intValue]) {
             _highScore = highScore;
             int msec = -[highScore intValue];
             if (msec == 0) {
                 _highScoreStr = @"无记录";
             } else {
                 int sec = msec/1000;
-                
                 int min = sec / 60;
                 sec = sec % 60;
                 msec = msec % 1000;
@@ -173,6 +147,10 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
         if (rank) {
             _rankLabel.text = [NSString stringWithFormat:@"第%d名", rank];
             _rankStr = [NSString stringWithFormat:@"%d", rank];
+            
+//            NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:rankText];
+//            [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(1,[rankText length]-2)];
+//            _rankLabel.attributedText=string;
         }
     }
     
@@ -185,10 +163,19 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
             if (rankNum <= 1) {
                 beatNum = 0;
             } else {
-                beatRate = (float)(rankNum-rank)/(float)(rankNum-1)*100.f;
+                beatRate = (float)(rankNum-rank)/(float)(rankNum-1);
             }
-            _beatLabel.text = [NSString stringWithFormat:@"击败了%d人(%.1f%%)", beatNum, beatRate];
+            _beatLabel.text = [NSString stringWithFormat:@"击败了%d人(%.1f%%)", beatNum, beatRate*100];
+            
+            float sat1 = 0;
+            float sat2 = 0.65;
+            float sat = sat1 + (sat2-sat1)*beatRate;
+            UIColor *color = [UIColor colorWithHue:136.f/355.f saturation:sat brightness:1.f alpha:1.f];
+            _rankLabel.textColor = color;
+            _beatLabel.textColor = color;
         }
+        
+        
     }
 }
 
@@ -203,7 +190,7 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
 }
 
 - (void)onTimer {
-    NSTimeInterval intv = [_event.endTime timeIntervalSinceNow];
+    NSTimeInterval intv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
     int sec = (int)intv;
     int hour = sec / 3600;
     int minute = (sec % 3600)/60;
@@ -212,46 +199,11 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
 }
 
 - (void)reloadData {
-    _titleLabel.text = _packInfo.title;
+    _titleLabel.text = _gamedata.packInfo.title;
     
     [self onTimer];
     //NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     //_event.endTime;
-}
-
-- (void)loadBackground {
-    Config *conf = [Config sharedConf];
-    NSString *bgFile = self.packInfo.cover;
-    if ([self.packInfo.coverBlur length]) {
-        bgFile = self.packInfo.coverBlur;
-    }
-    NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, bgFile]);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:bgPath]) { //local
-        UIImage *image = nil;
-        if ([[[bgPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
-            NSURL *url = [NSURL fileURLWithPath:bgPath];
-            image = [UIImage animatedImageWithAnimatedGIFURL:url];
-        } else {
-            image = [UIImage imageWithContentsOfFile:bgPath];
-        }
-        self.bgView.image = image;
-    } else { //server
-        //download
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, bgFile]
-                          toPath:bgPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
-         {
-             UIImage *image = [UIImage imageWithContentsOfFile:bgPath];
-             self.bgView.image = image;
-             
-             self.bgView.alpha = 0.0;
-             [UIView beginAnimations:@"fade in" context:nil];
-             [UIView setAnimationDuration:1.0];
-             self.bgView.alpha = 1.0;
-             [UIView commitAnimations];
-         }];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -277,7 +229,7 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
 }
 
 - (void)loadPacks {
-    NSArray *imageKeys = self.packInfo.images;
+    NSArray *imageKeys = _gamedata.packInfo.images;
     __block int localNum = 0;
     NSUInteger totalNum = [imageKeys count];
     if (totalNum == 0) {
@@ -333,16 +285,15 @@ static SldEventDetailViewController *g_eventDetailViewController = nil;
 - (void)enterGame {
     void (^startGame)(NSString *) = ^(NSString *matchSecret){
         SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-        controller.packInfo = self.packInfo;
         controller.gameMode = _gameMode;
         controller.matchSecret = matchSecret;
-        controller.event = _event;
-        [self.navigationController pushViewController:controller animated:YES];
+        
+        [[SldEventViewHubController getInstance].navigationController pushViewController:controller animated:YES];
     };
     
     if (_gameMode == MATCH) {
         SldHttpSession *session = [SldHttpSession defaultSession];
-        NSDictionary *body = @{@"EventId":@(_event.id)};
+        NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id)};
         self.view.userInteractionEnabled = NO;
         [session postToApi:@"event/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             self.view.userInteractionEnabled = YES;

@@ -15,8 +15,6 @@ enum GameMode{
 };
 
 @interface SldGameController : UIViewController
-@property (nonatomic, weak) PackInfo* packInfo;
 @property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) NSString *matchSecret;
-@property (nonatomic) Event *event;
 @end

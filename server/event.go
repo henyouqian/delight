@@ -242,6 +242,7 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 		cmds[2+i] = resp[i*2]
 	}
 	resp, err = ssdb.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
 
 	//out

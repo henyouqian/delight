@@ -230,9 +230,13 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 
 	// reply
 	out := struct {
-		Token string
+		Token  string
+		Now    int64
+		UserId uint64
 	}{
 		usertoken,
+		lwutil.GetRedisTimeUnix(),
+		userId,
 	}
 	lwutil.WriteResponse(w, out)
 }

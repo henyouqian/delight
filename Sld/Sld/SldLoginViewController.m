@@ -11,6 +11,7 @@
 #import "SldHttpSession.h"
 #import "util.h"
 #import "SSKeychain/SSkeychain.h"
+#import "SldGameData.h"
 
 static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
@@ -45,6 +46,24 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         
         //save to keychain
         [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
+        
+        //update game data
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        SldGameData *gameData = [SldGameData getInstance];
+        gameData.userName = username;
+        NSNumber *nUserId = [dict objectForKey:@"UserId"];
+        if (nUserId) {
+            gameData.userId = [nUserId unsignedLongLongValue];
+        }
+        NSNumber *nNow = [dict objectForKey:@"Now"];
+        if (nNow) {
+            setServerNow([nNow longLongValue]);
+        }
     }];
 }
 

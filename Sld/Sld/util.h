@@ -17,3 +17,6 @@ NSString* makeImageServerUrl(NSString *imageKey);
 UIColor* makeUIColor(int r, int g, int b, int a);
 
 UIStoryboard* getStoryboard();
+
+void setServerNow(SInt64 now);
+NSDate* getServerNow();

@@ -9,12 +9,20 @@
 #import "SldEventListViewController.h"
 #import "SldHttpSession.h"
 #import "SldEventDetailViewController.h"
+#import "SldGameData.h"
 #import "util.h"
 #import "config.h"
 #import "SldStreamPlayer.h"
 #import "UIImage+animatedGIF.h"
 
 NSString *CELL_ID = @"cellID";
+
+@interface EventCell()
+@property (weak, nonatomic) IBOutlet UIImageView *image;
+@property (weak, nonatomic) IBOutlet UIView *highlight;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+
+@end
 
 @implementation EventCell
 
@@ -32,20 +40,24 @@ NSString *CELL_ID = @"cellID";
 @end
 
 
-@implementation Event
-@end
-
 @interface SldEventListViewController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *musicButton;
 @property (nonatomic) UIRefreshControl *refreshControl;
-@property (nonatomic) NSMutableArray *events;
 @property (nonatomic) UIImage *loadingImage;
+@property (nonatomic) SldGameData *gameData;
 @end
+
+static __weak SldEventListViewController *g_inst = nil;
+
 
 @implementation SldEventListViewController
 
++ (instancetype)getInstance {
+    return g_inst;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.events count];
+    return [_gameData.eventInfos count];
 }
 
 
@@ -55,16 +67,18 @@ NSString *CELL_ID = @"cellID";
     
     //
     NSInteger idx = indexPath.row;
-    if (idx >= [self.events count]) {
+    if (idx >= [_gameData.eventInfos count]) {
         lwError("Out of range.");
         return cell;
     }
-    Event *event = [self.events objectAtIndex:idx];
+    EventInfo *event = [_gameData.eventInfos objectAtIndex:idx];
     
     //
     Config *conf = [Config sharedConf];
     NSString *thumbPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, event.thumb]);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) { //local
+    
+    //from local
+    if ([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) {
         UIImage *image = [UIImage imageWithContentsOfFile:thumbPath];
 //        UIImage *image = nil;
 //        if ([[[thumbPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
@@ -74,7 +88,9 @@ NSString *CELL_ID = @"cellID";
 //            image = [UIImage imageWithContentsOfFile:thumbPath];
 //        }
         cell.image.image = image;
-    } else { //server
+    }
+    //from server
+    else {
         cell.image.image = _loadingImage;
         
         //download
@@ -87,19 +103,34 @@ NSString *CELL_ID = @"cellID";
         }];
     }
     
+    //check finished
+    NSDate *now = getServerNow();
+    if ([event.beginTime compare:now] == NSOrderedAscending && [now compare:event.endTime] == NSOrderedAscending) {
+        [cell.statusLabel setHidden:NO];
+        cell.statusLabel.text = @"进行中";
+        //cell.statusLabel.backgroundColor = makeUIColor(91, 212, 62, 180);
+        cell.statusLabel.backgroundColor = makeUIColor(71, 186, 43, 180);
+    } else if ([now compare:event.beginTime] == NSOrderedAscending) {
+        [cell.statusLabel setHidden:NO];
+        cell.statusLabel.text = @"即将开启";
+        cell.statusLabel.backgroundColor = makeUIColor(212, 62, 91, 180);
+    } else {
+        [cell.statusLabel setHidden:YES];
+    }
+    
     return cell;
 }
 
 - (void)viewDidLoad
 {
+    g_inst = self;
     [super viewDidLoad];
+    
+    _gameData = [SldGameData getInstance];
     
     //creat image cache dir
     NSString *imgCacheDir = makeDocPath(@"imgCache");
     [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    //
-    self.events = [NSMutableArray arrayWithCapacity:20];
     
     //refresh control
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -141,12 +172,12 @@ NSString *CELL_ID = @"cellID";
         }
         
         NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
-        Event *firstEvent = nil;
-        if ([self.events count]) {
-            firstEvent = self.events[0];
+        EventInfo *firstEvent = nil;
+        if ([_gameData.eventInfos count]) {
+            firstEvent = _gameData.eventInfos[0];
         }
         for (int i = 0; i < [array count]; ++i) {
-            Event *event = [[Event alloc] init];
+            EventInfo *event = [[EventInfo alloc] init];
             NSDictionary *dict = array[i];
             event.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
             event.thumb = dict[@"Thumb"];
@@ -154,16 +185,15 @@ NSString *CELL_ID = @"cellID";
             event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
             event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
             
-            //lwInfo("%@", event.endTime);
-            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:event.endTime];
+//            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:event.endTime];
 
-            lwInfo("%@", components);
+            //lwInfo("%@", components);
             
             if (firstEvent && firstEvent.id == event.id) {
                 break;
             }
             
-            [self.events insertObject:event atIndex:i];
+            [_gameData.eventInfos insertObject:event atIndex:i];
             [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0] ];
         }
         [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
@@ -176,7 +206,7 @@ NSString *CELL_ID = @"cellID";
     
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     
-    if ([self.events count] == 0) {
+    if ([_gameData.eventInfos count] == 0) {
         [self refreshList];
     }
     
@@ -214,13 +244,11 @@ NSString *CELL_ID = @"cellID";
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if (segue.identifier && [segue.identifier compare:@"eventDetail"] == 0) {
+    if (segue.identifier && [segue.identifier compare:@"toEventHub"] == 0) {
         NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
         NSInteger row = selectedIndexPath.row;
-        if (row < [self.events count]) {
-            Event *event = self.events[row];
-            SldEventDetailViewController *detailController = [segue destinationViewController];
-            detailController.event = event;
+        if (row < [_gameData.eventInfos count]) {
+            _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:row];
         }
     }
 }

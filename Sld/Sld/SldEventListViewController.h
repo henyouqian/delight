@@ -8,22 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldEventListViewController : UICollectionViewController
-
-@end
-
-@interface Event : NSObject
-@property (nonatomic) UInt64 id;
-@property (nonatomic) UInt64 packId;
-@property (nonatomic) NSString *thumb;
-@property (nonatomic) NSDate *beginTime;
-@property (nonatomic) NSDate *endTime;
-@end
-
 
 @interface EventCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *image;
-@property (weak, nonatomic) IBOutlet UIView *highlight;
+@end
+
+@interface SldEventListViewController : UICollectionViewController
++ (instancetype)getInstance;
 @end
 
 //@interface CollectionLayout : UICollectionViewFlowLayout

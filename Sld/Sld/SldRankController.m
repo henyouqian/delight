@@ -8,6 +8,7 @@
 
 #import "SldRankController.h"
 #import "SldEventDetailViewController.h"
+#import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "config.h"
 #import "util.h"
@@ -34,28 +35,35 @@
 
 
 @interface SldRankController ()
-
+@property (nonatomic) NSMutableArray *rankInfos;
 @end
 
 @implementation SldRankController
 
-NSMutableArray *_rankInfos;
+- (void)dealloc {
+    
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    SldEventDetailViewController *detailVc = [SldEventDetailViewController getInstance];
-    [self loadBackground:detailVc.packInfo.coverBlur];
-    
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(updateRanks) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl.tintColor = [UIColor whiteColor];
+}
+
+- (void)updateRanks {
+    SldGameData *gameData = [SldGameData getInstance];
     self.tableView.tableFooterView = [[UIView alloc] init];
     
     //get ranks
     _rankInfos = [NSMutableArray array];
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"EventId":@(detailVc.event.id), @"Offset":@0, @"Limit":@25};
+    NSDictionary *body = @{@"EventId":@(gameData.eventInfo.id), @"Offset":@0, @"Limit":@25};
     [session postToApi:@"event/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [self.refreshControl endRefreshing];
         if (error) {
             alertServerError(error, data);
             return;
@@ -88,52 +96,9 @@ NSMutableArray *_rankInfos;
             }
             [_rankInfos addObject:rankInfo];
         }
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]  withRowAnimation:UITableViewRowAnimationFade];
+        //[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]  withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
     }];
-}
-
-- (void)loadBackground:(NSString*)bgKey{
-    Config *conf = [Config sharedConf];
-    
-    NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, bgKey]);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:bgPath]) { //local
-        UIImage *image = nil;
-        if ([[[bgPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
-            NSURL *url = [NSURL fileURLWithPath:bgPath];
-            image = [UIImage animatedImageWithAnimatedGIFURL:url];
-        } else {
-            image = [UIImage imageWithContentsOfFile:bgPath];
-        }
-        
-        UIImageView *bgView = [[UIImageView alloc] initWithImage:image];
-        bgView.contentMode = UIViewContentModeScaleAspectFill;
-        self.tableView.backgroundView = bgView;
-        
-        UIView *coverView = [[UIView alloc] initWithFrame:bgView.frame];
-        coverView.contentMode = UIViewContentModeScaleToFill;
-        coverView.backgroundColor = [UIColor blackColor];
-        coverView.alpha = .5f;
-        [bgView addSubview:coverView];
-        
-    } else { //server
-        //download
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, bgKey]
-                          toPath:bgPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
-         {
-             UIImage *image = [UIImage imageWithContentsOfFile:bgPath];
-             UIImageView *bgView = [[UIImageView alloc] initWithImage:image];
-             bgView.contentMode = UIViewContentModeScaleAspectFill;
-             self.tableView.backgroundView = bgView;
-             
-             bgView.alpha = 0.0;
-             [UIView beginAnimations:@"fade in" context:nil];
-             [UIView setAnimationDuration:1.0];
-             bgView.alpha = 1.0;
-             [UIView commitAnimations];
-         }];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -162,7 +127,7 @@ NSMutableArray *_rankInfos;
     
     SldEventDetailViewController *detailVc = [SldEventDetailViewController getInstance];
     UIColor *meColor = makeUIColor(255, 197, 131, 255);
-    cell.rankLabel.text = [NSString stringWithFormat:@"%d", indexPath.row];
+    cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
     if (indexPath.section == 0) {
         cell.userNameLabel.text = @"我";
         cell.rankLabel.text = detailVc.rankStr;

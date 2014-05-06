@@ -53,5 +53,18 @@ UIStoryboard* getStoryboard() {
     return backWindow.rootViewController.storyboard;
 }
 
+static NSTimeInterval serverTimeCorrect = 0;
+void setServerNow(SInt64 now) {
+    NSDate *nowDate = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval dt = [nowDate timeIntervalSince1970];
+    serverTimeCorrect = now - dt;
+    serverTimeCorrect = floor(serverTimeCorrect);
+}
+
+NSDate *getServerNow() {
+    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:serverTimeCorrect];
+    return now;
+}
+
 
 
