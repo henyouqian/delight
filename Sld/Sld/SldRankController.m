@@ -18,10 +18,20 @@
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-
 @end
 
 @implementation RankCell
+- (void)reset {
+    self.backgroundColor = [UIColor clearColor];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+@end
+
+@interface BottomCell : UITableViewCell
+@end
+
+@implementation BottomCell
+
 @end
 
 @interface RankInfo : NSObject
@@ -36,6 +46,7 @@
 
 @interface SldRankController ()
 @property (nonatomic) NSMutableArray *rankInfos;
+@property (nonatomic) BOOL loadingRank;
 @end
 
 @implementation SldRankController
@@ -51,19 +62,37 @@
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(updateRanks) forControlEvents:UIControlEventValueChanged];
     self.refreshControl.tintColor = [UIColor whiteColor];
+    
+    self.tableView.tableFooterView = [[UIView alloc] init];
+    _loadingRank = NO;
 }
 
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//    NSInteger currentOffset = scrollView.contentOffset.y;
+//    NSInteger maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+//    
+//    if (maximumOffset - currentOffset <= -20) {
+//        [self appendRanks];
+//    }
+//}
+
 - (void)updateRanks {
+    if (_loadingRank) {
+        return;
+    }
+    
     SldGameData *gameData = [SldGameData getInstance];
-    self.tableView.tableFooterView = [[UIView alloc] init];
     
     //get ranks
     _rankInfos = [NSMutableArray array];
     
     SldHttpSession *session = [SldHttpSession defaultSession];
     NSDictionary *body = @{@"EventId":@(gameData.eventInfo.id), @"Offset":@0, @"Limit":@25};
+    
+    _loadingRank = YES;
     [session postToApi:@"event/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [self.refreshControl endRefreshing];
+        _loadingRank = NO;
         if (error) {
             alertServerError(error, data);
             return;
@@ -101,6 +130,67 @@
     }];
 }
 
+- (IBAction)onAppendRanksButton:(id)sender {
+    [self appendRanks];
+}
+
+- (void)appendRanks {
+    if (_loadingRank) {
+        return;
+    }
+    SldGameData *gameData = [SldGameData getInstance];
+    int offset = [_rankInfos count];
+    if (offset == 0) {
+        return;
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"EventId":@(gameData.eventInfo.id), @"Offset":[NSNumber numberWithInt:offset], @"Limit":@25};
+    _loadingRank = YES;
+    [session postToApi:@"event/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _loadingRank = NO;
+        if (error) {
+            alertServerError(error, data);
+            return;
+        }
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSArray *rankArray = [dict objectForKey:@"Ranks"];
+        if (!rankArray) {
+            lwError("http format error");
+            return;
+        }
+        int num = [rankArray count];
+        if (num == 0) {
+            return;
+        }
+        
+        NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:num];
+        for (NSDictionary *rankDict in rankArray) {
+            RankInfo *rankInfo = [[RankInfo alloc] init];
+            rankInfo.rank = [rankDict objectForKey:@"Rank"];
+            rankInfo.userName = [rankDict objectForKey:@"UserName"];
+            NSNumber *score = [rankDict objectForKey:@"Score"];
+            rankInfo.score = @"0";
+            if (score) {
+                int msec = -[score intValue];
+                int sec = msec/1000;
+                int min = sec / 60;
+                sec = sec % 60;
+                msec = msec % 1000;
+                rankInfo.score = [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
+            }
+            [insertIndexPaths addObject: [NSIndexPath indexPathForRow:[_rankInfos count] inSection:1]];
+            [_rankInfos addObject:rankInfo];
+        }
+        [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+    }];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -117,18 +207,18 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) return 1;
-    return [_rankInfos count];
+    return [_rankInfos count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor clearColor];
-    
     SldEventDetailViewController *detailVc = [SldEventDetailViewController getInstance];
     UIColor *meColor = makeUIColor(255, 197, 131, 255);
-    cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
+    UIColor *normalColor = [UIColor whiteColor];
     if (indexPath.section == 0) {
+        RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
+        [cell reset];
+        cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
         cell.userNameLabel.text = @"我";
         cell.rankLabel.text = detailVc.rankStr;
         cell.scoreLabel.text = detailVc.highScoreStr;
@@ -136,23 +226,54 @@
         [cell.rankLabel setTextColor:meColor];
         [cell.userNameLabel setTextColor:meColor];
         [cell.scoreLabel setTextColor:meColor];
-    } else {
-        RankInfo *rankInfo = [_rankInfos objectAtIndex:indexPath.row];
-        if (rankInfo) {
-            cell.rankLabel.text = [NSString stringWithFormat:@"%d", [rankInfo.rank intValue]];
-            cell.userNameLabel.text = rankInfo.userName;
-            cell.scoreLabel.text = rankInfo.score;
-            if (detailVc.rankStr && [detailVc.rankStr compare:cell.rankLabel.text] == 0) {
-                cell.userNameLabel.text = @"我";
-                [cell.rankLabel setTextColor:meColor];
-                [cell.userNameLabel setTextColor:meColor];
-                [cell.scoreLabel setTextColor:meColor];
+        return cell;
+    } else if (indexPath.section == 1) {
+        if (indexPath.row < [_rankInfos count]) {
+            RankInfo *rankInfo = [_rankInfos objectAtIndex:indexPath.row];
+            if (rankInfo) {
+                RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
+                [cell reset];
+                cell.rankLabel.text = [NSString stringWithFormat:@"%d", [rankInfo.rank intValue]];
+                cell.userNameLabel.text = rankInfo.userName;
+                cell.scoreLabel.text = rankInfo.score;
+                if (detailVc.rankStr && [detailVc.rankStr compare:cell.rankLabel.text] == 0) {
+                    cell.userNameLabel.text = @"我";
+                    [cell.rankLabel setTextColor:meColor];
+                    [cell.userNameLabel setTextColor:meColor];
+                    [cell.scoreLabel setTextColor:meColor];
+                } else {
+                    [cell.rankLabel setTextColor:normalColor];
+                    [cell.userNameLabel setTextColor:normalColor];
+                    [cell.scoreLabel setTextColor:normalColor];
+                }
+                return cell;
             }
+        } else if (indexPath.row == [_rankInfos count]) {
+            BottomCell *bottomCell = [tableView dequeueReusableCellWithIdentifier:@"bottomCell" forIndexPath:indexPath];
+            
+            
+//            UITableViewCell *bottomCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+//            //bottomCell.textLabel.text = @"  Tap to load more";
+//            bottomCell.textLabel.textColor = [UIColor whiteColor];
+//            bottomCell.backgroundColor = [UIColor clearColor];
+//            bottomCell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+//            [button setTitle:@"Tap to load more" forState:UIControlStateNormal|UIControlStateHighlighted];
+//            [bottomCell addSubview:button];
+            return bottomCell;
         }
     }
-    // Configure the cell...
-    
-    return cell;
+    return [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
+}
+
+-(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    return [[UIView alloc] initWithFrame:CGRectZero];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

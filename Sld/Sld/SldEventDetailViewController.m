@@ -218,11 +218,6 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     [self loadPacks];
 }
 
-- (IBAction)onClickBattle:(id)sender {
-    _gameMode = BATTLE;
-    [self loadPacks];
-}
-
 - (IBAction)onClickMatch:(id)sender {
     _gameMode = MATCH;
     [self loadPacks];

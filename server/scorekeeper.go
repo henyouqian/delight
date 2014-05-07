@@ -7,6 +7,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
+	"runtime"
 	"time"
 )
 
@@ -16,23 +17,31 @@ func init() {
 
 func checkError(err error) {
 	if err != nil {
-		panic(err)
+		_, file, line, _ := runtime.Caller(1)
+		e := fmt.Sprintf("[%s:%d]%v", file, line, err)
+		panic(e)
 	}
 }
 
 func checkSsdbError(resp []string, err error) {
-	if err != nil {
-		panic(err)
-	}
 	if resp[0] != "ok" {
-		err := errors.New(fmt.Sprintf("ssdb error: %s", resp[0]))
-		panic(err)
+		err = errors.New(fmt.Sprintf("ssdb error: %s", resp[0]))
+	}
+	if err != nil {
+		_, file, line, _ := runtime.Caller(1)
+		e := fmt.Sprintf("[%s:%d]%v", file, line, err)
+		panic(e)
 	}
 }
 
 func handleError() {
 	if r := recover(); r != nil {
-		glog.Errorln(r)
+		_, file, line, _ := runtime.Caller(2)
+		glog.Error(r, file, line)
+
+		buf := make([]byte, 2048)
+		runtime.Stack(buf, false)
+		glog.Errorf("%s", buf)
 	}
 }
 
@@ -61,32 +70,75 @@ func scoreKeeper() {
 	for i := 0; i < keyNum; i++ {
 		cmds[2+i] = resp[i*2]
 	}
-	resp, err = ssdb.Do(cmds...)
-	checkSsdbError(resp, err)
-	resp = resp[1:]
+	eventResp, err := ssdb.Do(cmds...)
+	checkSsdbError(eventResp, err)
+	eventResp = eventResp[1:]
 
-	eventNum := len(resp) / 2
-	//events := make([]Event, 0, eventNum)
+	eventNum := len(eventResp) / 2
 	for i := 0; i < eventNum; i++ {
 		var event Event
-		err = json.Unmarshal([]byte(resp[i*2+1]), &event)
+		err = json.Unmarshal([]byte(eventResp[i*2+1]), &event)
 		checkError(err)
 
 		now := lwutil.GetRedisTimeUnix()
 		if event.HasResult || now < event.EndTime {
-			continue
+			//continue
 		}
+
+		glog.Infof("event begin: id=%d", event.Id)
 
 		//get ranks
 		eventLbLey := makeRedisLeaderboardKey(event.Id)
 		rankNum, err := redis.Int(rc.Do("ZCARD", eventLbLey))
 		checkError(err)
 		numPerBatch := 1000
-		for i := 0; i < rankNum/numPerBatch+1; i++ {
-			offset := i * numPerBatch
+		currRank := uint32(1)
+		for iBatch := 0; iBatch < rankNum/numPerBatch+1; iBatch++ {
+			offset := iBatch * numPerBatch
 			values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, offset, offset+numPerBatch-1, "WITHSCORES"))
 			checkError(err)
+
+			num := len(values) / 2
+			if num == 0 {
+				continue
+			}
+
+			for i := 0; i < num; i++ {
+				rank := currRank
+				currRank++
+				userId, err := redisUint64(values[i*2], nil)
+				checkError(err)
+				// score, err := redisInt32(values[i*2+1], nil)
+				// checkError(err)
+
+				//set to event player record
+				recordKey := fmt.Sprintf("%d/%d", event.Id, userId)
+				resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+				checkSsdbError(resp, err)
+				record := EventPlayerRecord{}
+				err = json.Unmarshal([]byte(resp[1]), &record)
+				checkError(err)
+				record.FinalRank = rank
+				js, err := json.Marshal(record)
+				checkError(err)
+				resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, recordKey, js)
+				checkSsdbError(resp, err)
+
+				//save to H_EVENT_RANK
+				key := makeHashEventRankKey(event.Id)
+				resp, err = ssdb.Do("hset", key, rank, userId)
+				checkSsdbError(resp, err)
+			}
 		}
+
+		//event finished
+		event.HasResult = true
+		jsEvent, err := json.Marshal(event)
+		checkError(err)
+		resp, err = ssdb.Do("hset", H_EVENT, event.Id, jsEvent)
+		checkSsdbError(resp, err)
+
+		glog.Infof("event end")
 	}
 }
 

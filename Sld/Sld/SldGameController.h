@@ -10,7 +10,7 @@
 
 enum GameMode{
     PRACTICE,
-    BATTLE,
+    //BATTLE,
     MATCH,
 };
 

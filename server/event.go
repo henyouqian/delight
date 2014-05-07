@@ -11,6 +11,7 @@ import (
 	// "io/ioutil"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -23,6 +24,7 @@ const (
 	Z_EVENT                     = "Z_EVENT"
 	H_EVENT_PLAYER_RECORD       = "H_EVENT_PLAYER_RECORD"
 	RDS_Z_EVENT_LEADERBOARD_PRE = "RDS_Z_EVENT_LEADERBOARD_PRE"
+	H_EVENT_RANK                = "H_EVENT_RANK" //key:(uint32)rank value:(uint64)userId
 	EVENT_SERIAL                = "EVENT_SERIAL"
 	TRY_COST_MONEY              = 100
 	TRY_EXPIRE_SECONDS          = 600
@@ -31,6 +33,10 @@ const (
 
 func makeRedisLeaderboardKey(evnetId uint64) string {
 	return fmt.Sprintf("%s/%d", RDS_Z_EVENT_LEADERBOARD_PRE, evnetId)
+}
+
+func makeHashEventRankKey(evnetId uint64) string {
+	return fmt.Sprintf("%s/%d", H_EVENT_RANK, evnetId)
 }
 
 var (
@@ -63,13 +69,6 @@ type Event struct {
 	Thumb           string
 }
 
-type GameRecord struct {
-	PlayerId   uint64
-	PlayerName string
-	Score      int32
-	Time       int64
-}
-
 type EventPlayerRecord struct {
 	PlayerName    string
 	Secret        string
@@ -77,6 +76,7 @@ type EventPlayerRecord struct {
 	Trys          uint32
 	HighScore     int32
 	HighScoreTime int64
+	FinalRank     uint32
 }
 
 type FreePlayRecord struct {
@@ -559,19 +559,8 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	var event Event
 	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
-	if event.HasResult {
-		lwutil.SendError("err_event_finished", fmt.Sprintf("eventId=%d", in.EventId))
-	}
 
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	//get rank
-	eventLbLey := makeRedisLeaderboardKey(in.EventId)
-	values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, in.Offset, in.Offset+in.Limit-1, "WITHSCORES"))
-	lwutil.CheckError(err, "")
-
+	//
 	type RankInfo struct {
 		Rank     uint32
 		UserId   uint64
@@ -586,7 +575,59 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		Ranks   []RankInfo
 	}
 
-	num := len(values) / 2
+	//get ranks
+	var ranks []RankInfo
+
+	if event.HasResult {
+
+		cmds := make([]interface{}, in.Limit+2)
+		cmds[0] = "multi_hget"
+		cmds[1] = makeHashEventRankKey(event.Id)
+		for i := uint32(0); i < in.Limit; i++ {
+			rank := i + in.Offset + 1
+			cmds[i+2] = rank
+		}
+
+		resp, err := ssdb.Do(cmds...)
+		lwutil.CheckSsdbError(resp, err)
+		resp = resp[1:]
+
+		num := len(resp) / 2
+		ranks = make([]RankInfo, num)
+
+		for i := 0; i < num; i++ {
+			rank, err := strconv.ParseUint(resp[i*2], 10, 32)
+			lwutil.CheckError(err, "")
+			ranks[i].Rank = uint32(rank)
+			ranks[i].UserId, err = strconv.ParseUint(resp[i*2+1], 10, 64)
+			lwutil.CheckError(err, "")
+		}
+
+	} else {
+		//redis
+		rc := redisPool.Get()
+		defer rc.Close()
+
+		//get ranks from redis
+		eventLbLey := makeRedisLeaderboardKey(in.EventId)
+		values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, in.Offset, in.Offset+in.Limit-1))
+		lwutil.CheckError(err, "")
+
+		num := len(values)
+		if num > 0 {
+			ranks := make([]RankInfo, num)
+
+			currRank := in.Offset + 1
+			for i := 0; i < num; i++ {
+				ranks[i].Rank = currRank
+				currRank++
+				ranks[i].UserId, err = redisUint64(values[i], nil)
+				lwutil.CheckError(err, "")
+			}
+		}
+	}
+
+	num := len(ranks)
 	if num == 0 {
 		out := Out{
 			in.EventId,
@@ -595,19 +636,8 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		lwutil.WriteResponse(w, out)
 		return
 	}
-	ranks := make([]RankInfo, num)
 
-	currRank := in.Offset + 1
-	for i := 0; i < num; i++ {
-		ranks[i].Rank = currRank
-		currRank++
-		ranks[i].UserId, err = redisUint64(values[i*2], nil)
-		lwutil.CheckError(err, "")
-		ranks[i].Score, err = redisInt32(values[i*2+1], nil)
-		lwutil.CheckError(err, "")
-	}
-
-	//get player info
+	//get event player record
 	cmds := make([]interface{}, 0, num+2)
 	cmds = append(cmds, "multi_hget")
 	cmds = append(cmds, H_EVENT_PLAYER_RECORD)
@@ -626,6 +656,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	for i := range ranks {
 		err = json.Unmarshal([]byte(resp[i*2+1]), &record)
 		lwutil.CheckError(err, "")
+		ranks[i].Score = record.HighScore
 		ranks[i].UserName = record.PlayerName
 		ranks[i].Time = record.HighScoreTime
 		ranks[i].Trys = record.Trys

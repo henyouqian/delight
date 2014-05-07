@@ -16,11 +16,7 @@
 + (instancetype)packWithDictionary:(NSDictionary*)dict {
     PackInfo *packInfo = [[PackInfo alloc] init];
     NSError *error = nil;
-    //    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
-    //    if (error) {
-    //        lwError("Json error:%@", [error localizedDescription]);
-    //        return packInfo;
-    //    }
+
     packInfo.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
     packInfo.title = dict[@"Title"];
     packInfo.thumb = dict[@"Thumb"];

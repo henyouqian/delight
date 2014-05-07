@@ -21,6 +21,7 @@ NSString *CELL_ID = @"cellID";
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIView *highlight;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 
 @end
 
@@ -118,6 +119,16 @@ static __weak SldEventListViewController *g_inst = nil;
         [cell.statusLabel setHidden:YES];
     }
     
+    //datelabel
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
+    NSString *strDate = [dateFormatter stringFromDate:event.beginTime];
+    NSArray *comps = [strDate componentsSeparatedByString:@","];
+    cell.dateLabel.text = [comps objectAtIndex:0];
+    
     return cell;
 }
 
@@ -172,9 +183,9 @@ static __weak SldEventListViewController *g_inst = nil;
         }
         
         NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
-        EventInfo *firstEvent = nil;
+        EventInfo *oldLatestEvent = nil;
         if ([_gameData.eventInfos count]) {
-            firstEvent = _gameData.eventInfos[0];
+            oldLatestEvent = _gameData.eventInfos[0];
         }
         for (int i = 0; i < [array count]; ++i) {
             EventInfo *event = [[EventInfo alloc] init];
@@ -185,11 +196,7 @@ static __weak SldEventListViewController *g_inst = nil;
             event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
             event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
             
-//            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:event.endTime];
-
-            //lwInfo("%@", components);
-            
-            if (firstEvent && firstEvent.id == event.id) {
+            if (oldLatestEvent && oldLatestEvent.id == event.id) {
                 break;
             }
             

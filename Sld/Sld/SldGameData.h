@@ -22,7 +22,7 @@
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *cover;
 @property (nonatomic) NSString *coverBlur;
-@property (nonatomic) NSArray *images;
+@property (nonatomic) NSMutableArray *images;
 
 + (instancetype)packWithDictionary:(NSDictionary*)dict;
 @end
