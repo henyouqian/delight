@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/garyburd/redigo/redis"
 	"github.com/golang/glog"
+	"github.com/henyouqian/lwutil"
 	"time"
 )
 
@@ -42,8 +44,12 @@ func scoreKeeper() {
 	checkError(err)
 	defer ssdb.Close()
 
+	//redis
+	rc := redisPool.Get()
+	defer rc.Close()
+
 	//zrscan
-	resp, err := ssdb.Do("zrscan", Z_EVENT, "", "", "", 10)
+	resp, err := ssdb.Do("zrscan", Z_EVENT, "", "", "", 20)
 	checkSsdbError(resp, err)
 	resp = resp[1:]
 
@@ -60,12 +66,28 @@ func scoreKeeper() {
 	resp = resp[1:]
 
 	eventNum := len(resp) / 2
-	events := make([]Event, eventNum)
+	//events := make([]Event, 0, eventNum)
 	for i := 0; i < eventNum; i++ {
-		err = json.Unmarshal([]byte(resp[i*2+1]), &events[i])
+		var event Event
+		err = json.Unmarshal([]byte(resp[i*2+1]), &event)
 		checkError(err)
-	}
 
+		now := lwutil.GetRedisTimeUnix()
+		if event.HasResult || now < event.EndTime {
+			continue
+		}
+
+		//get ranks
+		eventLbLey := makeRedisLeaderboardKey(event.Id)
+		rankNum, err := redis.Int(rc.Do("ZCARD", eventLbLey))
+		checkError(err)
+		numPerBatch := 1000
+		for i := 0; i < rankNum/numPerBatch+1; i++ {
+			offset := i * numPerBatch
+			values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, offset, offset+numPerBatch-1, "WITHSCORES"))
+			checkError(err)
+		}
+	}
 }
 
 func scoreKeeperMain() {
