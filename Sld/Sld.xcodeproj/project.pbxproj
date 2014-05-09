@@ -48,6 +48,13 @@
 		B38110461914D8F30093F321 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B38110451914D8F30093F321 /* GameKitHelper.m */; };
 		B38110491914F5B00093F321 /* SldNevigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B38110481914F5B00093F321 /* SldNevigationController.m */; };
 		B3815E79190C0D7A003AF183 /* ui in Resources */ = {isa = PBXBuildFile; fileRef = B3815E78190C0D7A003AF183 /* ui */; };
+		B383536D191ACA4700D259F5 /* SldLobbyController.m in Sources */ = {isa = PBXBuildFile; fileRef = B383536C191ACA4700D259F5 /* SldLobbyController.m */; };
+		B3835371191AD68400D259F5 /* glyphicons_245_chat.png in Resources */ = {isa = PBXBuildFile; fileRef = B383536F191AD68400D259F5 /* glyphicons_245_chat.png */; };
+		B3835372191AD68400D259F5 /* glyphicons_245_chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3835370191AD68400D259F5 /* glyphicons_245_chat@2x.png */; };
+		B3835375191AD83500D259F5 /* glyphicons_150_edit.png in Resources */ = {isa = PBXBuildFile; fileRef = B3835373191AD83500D259F5 /* glyphicons_150_edit.png */; };
+		B3835376191AD83500D259F5 /* glyphicons_150_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3835374191AD83500D259F5 /* glyphicons_150_edit@2x.png */; };
+		B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E446F191BEDB600CBB247 /* SldCommentController.m */; };
+		B39E4473191D6CBE00CBB247 /* SldActivityController.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E4472191D6CBD00CBB247 /* SldActivityController.m */; };
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
 		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
@@ -167,6 +174,16 @@
 		B38110471914F5B00093F321 /* SldNevigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldNevigationController.h; sourceTree = "<group>"; };
 		B38110481914F5B00093F321 /* SldNevigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldNevigationController.m; sourceTree = "<group>"; };
 		B3815E78190C0D7A003AF183 /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ui; path = res/ui; sourceTree = "<group>"; };
+		B383536B191ACA4700D259F5 /* SldLobbyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldLobbyController.h; sourceTree = "<group>"; };
+		B383536C191ACA4700D259F5 /* SldLobbyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldLobbyController.m; sourceTree = "<group>"; };
+		B383536F191AD68400D259F5 /* glyphicons_245_chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glyphicons_245_chat.png; sourceTree = "<group>"; };
+		B3835370191AD68400D259F5 /* glyphicons_245_chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glyphicons_245_chat@2x.png"; sourceTree = "<group>"; };
+		B3835373191AD83500D259F5 /* glyphicons_150_edit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glyphicons_150_edit.png; sourceTree = "<group>"; };
+		B3835374191AD83500D259F5 /* glyphicons_150_edit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glyphicons_150_edit@2x.png"; sourceTree = "<group>"; };
+		B39E446E191BEDB600CBB247 /* SldCommentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldCommentController.h; sourceTree = "<group>"; };
+		B39E446F191BEDB600CBB247 /* SldCommentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldCommentController.m; sourceTree = "<group>"; };
+		B39E4471191D6CBD00CBB247 /* SldActivityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldActivityController.h; sourceTree = "<group>"; };
+		B39E4472191D6CBD00CBB247 /* SldActivityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldActivityController.m; sourceTree = "<group>"; };
 		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
 		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		B3C0AF5E1906703200CB4DFD /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; name = db; path = res/db; sourceTree = "<group>"; };
@@ -377,6 +394,12 @@
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				B33121F619165A10003E05DB /* SldRankController.h */,
 				B33121F719165A10003E05DB /* SldRankController.m */,
+				B383536B191ACA4700D259F5 /* SldLobbyController.h */,
+				B383536C191ACA4700D259F5 /* SldLobbyController.m */,
+				B39E446E191BEDB600CBB247 /* SldCommentController.h */,
+				B39E446F191BEDB600CBB247 /* SldCommentController.m */,
+				B39E4471191D6CBD00CBB247 /* SldActivityController.h */,
+				B39E4472191D6CBD00CBB247 /* SldActivityController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -393,6 +416,10 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				B3835373191AD83500D259F5 /* glyphicons_150_edit.png */,
+				B3835374191AD83500D259F5 /* glyphicons_150_edit@2x.png */,
+				B383536F191AD68400D259F5 /* glyphicons_245_chat.png */,
+				B3835370191AD68400D259F5 /* glyphicons_245_chat@2x.png */,
 				B33121FA1916D02C003E05DB /* thumbDarker.png */,
 				B3C1BB6C1910D8BE0062D50C /* btnBgWhite50.png */,
 				B3C1BB8A191137400062D50C /* btnBgGray90.png */,
@@ -532,6 +559,7 @@
 				B3C1BB801910D8BE0062D50C /* glyphicons_177_fast_forward.png in Resources */,
 				B3C1BB851910D8BE0062D50C /* pause.png in Resources */,
 				B3815E79190C0D7A003AF183 /* ui in Resources */,
+				B3835375191AD83500D259F5 /* glyphicons_150_edit.png in Resources */,
 				B3C1BB831910D8BE0062D50C /* glyphicons_178_step_forward@2x.png in Resources */,
 				B3C1BB89191133910062D50C /* btnBgBlack90.png in Resources */,
 				B3C1BB7D1910D8BE0062D50C /* glyphicons_173_play@2x.png in Resources */,
@@ -539,10 +567,13 @@
 				B3C0AF5F1906703200CB4DFD /* db in Resources */,
 				B3C1BB821910D8BE0062D50C /* glyphicons_178_step_forward.png in Resources */,
 				B3C1BB811910D8BE0062D50C /* glyphicons_177_fast_forward@2x.png in Resources */,
+				B3835376191AD83500D259F5 /* glyphicons_150_edit@2x.png in Resources */,
 				B3C1BB7C1910D8BE0062D50C /* glyphicons_173_play.png in Resources */,
 				B31EE82B18F06F4D0047E9FD /* img in Resources */,
 				B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */,
+				B3835372191AD68400D259F5 /* glyphicons_245_chat@2x.png in Resources */,
 				B3024C5F18FE7EF600F9EEA3 /* audio in Resources */,
+				B3835371191AD68400D259F5 /* glyphicons_245_chat.png in Resources */,
 				B3C1BB871910D8BE0062D50C /* stop.png in Resources */,
 				B3C1BB841910D8BE0062D50C /* next.png in Resources */,
 				B3C1BB861910D8BE0062D50C /* play.png in Resources */,
@@ -571,13 +602,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B39E4473191D6CBE00CBB247 /* SldActivityController.m in Sources */,
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
 				B374C57B19177B2F00E5C6A2 /* SldGameData.m in Sources */,
 				B31CBEB3190AA47500621165 /* SldButton.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
+				B383536D191ACA4700D259F5 /* SldLobbyController.m in Sources */,
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
+				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,

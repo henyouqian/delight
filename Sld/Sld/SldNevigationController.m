@@ -15,6 +15,10 @@
 
 @implementation SldNevigationController
 
++ (float) getBottomY {
+    return 64.f;
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -26,6 +30,7 @@
     
     [[GameKitHelper sharedGameKitHelper] authenticateLocalPlayer];
     //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+    
 }
 
 - (void)showAuthenticationViewController

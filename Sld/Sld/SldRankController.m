@@ -10,6 +10,7 @@
 #import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
+#import "SldNevigationController.h"
 #import "config.h"
 #import "util.h"
 #import "UIImage+animatedGIF.h"
@@ -59,22 +60,49 @@
 {
     [super viewDidLoad];
     
+    _loadingRank = NO;
+    
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(updateRanks) forControlEvents:UIControlEventValueChanged];
     self.refreshControl.tintColor = [UIColor whiteColor];
     
-    self.tableView.tableFooterView = [[UIView alloc] init];
-    _loadingRank = NO;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake([SldNevigationController getBottomY], 0, 0, 0);
 }
 
 //- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//    NSInteger currentOffset = scrollView.contentOffset.y;
-//    NSInteger maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+////    NSInteger currentOffset = scrollView.contentOffset.y;
+////    NSInteger maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+////    
+////    if (maximumOffset - currentOffset <= -20) {
+////        //[self appendRanks];
+////        lwInfo("%d, %d", currentOffset, maximumOffset);
+////    }
 //    
-//    if (maximumOffset - currentOffset <= -20) {
-//        [self appendRanks];
+//    CGPoint offset = scrollView.contentOffset;
+//    CGRect bounds = scrollView.bounds;
+//    CGSize size = scrollView.contentSize;
+//    UIEdgeInsets inset = scrollView.contentInset;
+//    float y = offset.y + bounds.size.height - inset.bottom;
+//    float h = size.height;
+//    // NSLog(@"offset: %f", offset.y);
+//    // NSLog(@"content.height: %f", size.height);
+//    // NSLog(@"bounds.height: %f", bounds.size.height);
+//    // NSLog(@"inset.top: %f", inset.top);
+//    // NSLog(@"inset.bottom: %f", inset.bottom);
+//    // NSLog(@"pos: %f of %f", y, h);
+//    
+//    float reload_distance = 10;
+//    if(y > h + reload_distance) {
+//        NSLog(@"%f, %f", y, h);
 //    }
 //}
+
+- (void)onViewShown {
+    if (_rankInfos == nil) {
+        [self updateRanks];
+    }
+}
 
 - (void)updateRanks {
     if (_loadingRank) {

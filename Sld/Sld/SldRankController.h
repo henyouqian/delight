@@ -10,6 +10,6 @@
 
 @interface SldRankController : UITableViewController
 
-- (void)updateRanks;
+- (void)onViewShown;
 
 @end

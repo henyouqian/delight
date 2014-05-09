@@ -24,6 +24,9 @@ completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *erro
 
 - (void)cancelAllTask;
 
+- (void)loadImageFromUrl:(NSString*)url
+            completionHandler:(void (^)(NSString* localPath, NSError *error))completionHandler;
+
 @end
 
 BOOL isServerError(NSError *error);

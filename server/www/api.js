@@ -57,6 +57,7 @@ function Controller($scope, $http) {
 					"name": "mod",
 					"method": "POST",
 					"data": {
+						"Id": 0,
 						"Title":"",
 						"Text":"",
 						"Thumb":"qiniuThumb=.jpg",
@@ -91,6 +92,10 @@ function Controller($scope, $http) {
 					"name": "get",
 					"method": "POST",
 					"data": {"Id": 1}
+				},{
+					"name": "getComments",
+					"method": "POST",
+					"data": {"PackId": 0, "Key": 0, "Limit": 20}
 				}
 			]
 		},{
@@ -183,6 +188,10 @@ function Controller($scope, $http) {
 					"name": "getRanks",
 					"method": "POST",
 					"data": {"EventId": 1, "Offset": 0, "Limit": 20}
+				},{
+					"name": "getActivities",
+					"method": "POST",
+					"data": {"PackId": 0, "Key": 0, "Limit": 20}
 				}
 			]
 		}

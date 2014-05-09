@@ -14,6 +14,7 @@
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSDate *beginTime;
 @property (nonatomic) NSDate *endTime;
+@property (nonatomic) BOOL hasResult;
 @end
 
 @interface PackInfo : NSObject

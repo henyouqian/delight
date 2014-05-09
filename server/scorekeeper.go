@@ -82,7 +82,7 @@ func scoreKeeper() {
 
 		now := lwutil.GetRedisTimeUnix()
 		if event.HasResult || now < event.EndTime {
-			//continue
+			continue
 		}
 
 		glog.Infof("event begin: id=%d", event.Id)

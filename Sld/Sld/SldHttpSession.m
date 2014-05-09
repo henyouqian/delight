@@ -7,6 +7,7 @@
 //
 
 #import "SldHttpSession.h"
+#import "util.h"
 
 static NSString *defaultHost = @"http://192.168.2.55:9999";
 //static NSString *defaultHost = @"http://192.168.1.43:9999";
@@ -100,6 +101,40 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
             completionHandler(nil, error, data);
         }
     }];
+    [task resume];
+}
+
+- (void)loadImageFromUrl:(NSString*)url
+       completionHandler:(void (^)(NSString* localPath, NSError *error))completionHandler
+{
+    NSString *localPath = makeImagePathFromUrl(url);
+    
+    //complete if exist in local
+    if ([[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(localPath, nil);
+        });
+        return;
+    }
+    
+    NSURL* nsurl = [NSURL URLWithString:url];
+    NSURLSessionDownloadTask *task =[self.session downloadTaskWithURL:nsurl
+        completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+            if(error == nil) {
+                NSError *err = nil;
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSURL *destURL = [NSURL fileURLWithPath:localPath];
+                if ([fileManager moveItemAtURL:location
+                                         toURL:destURL
+                                         error: &err]) {
+                    completionHandler(localPath, nil);
+                } else {
+                    completionHandler(nil, err);
+                }
+            } else {
+                completionHandler(nil, error);
+            }
+        }];
     [task resume];
 }
 

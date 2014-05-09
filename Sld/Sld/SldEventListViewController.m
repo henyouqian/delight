@@ -106,7 +106,9 @@ static __weak SldEventListViewController *g_inst = nil;
     
     //check finished
     NSDate *now = getServerNow();
-    if ([event.beginTime compare:now] == NSOrderedAscending && [now compare:event.endTime] == NSOrderedAscending) {
+    if (event.hasResult) {
+        [cell.statusLabel setHidden:YES];
+    } else if ([event.beginTime compare:now] == NSOrderedAscending && [now compare:event.endTime] == NSOrderedAscending) {
         [cell.statusLabel setHidden:NO];
         cell.statusLabel.text = @"进行中";
         //cell.statusLabel.backgroundColor = makeUIColor(91, 212, 62, 180);
@@ -195,6 +197,7 @@ static __weak SldEventListViewController *g_inst = nil;
             event.packId = [(NSNumber*)dict[@"PackId"] unsignedLongLongValue];
             event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
             event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
+            event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
             
             if (oldLatestEvent && oldLatestEvent.id == event.id) {
                 break;

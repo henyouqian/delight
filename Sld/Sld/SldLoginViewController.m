@@ -18,11 +18,35 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 @interface SldLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *usernameInput;
 @property (weak, nonatomic) IBOutlet UITextField *passwordInput;
+@property (weak, nonatomic) IBOutlet UIButton *okButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
 @end
 
 @implementation SldLoginViewController
+- (IBAction)onTouchView:(id)sender {
+    [self.view endEditing:YES];
+}
+- (IBAction)onChangeMode:(id)sender {
+    if ([_seg selectedSegmentIndex] == 0) {
+        [_okButton setTitle:@"Login" forState:UIControlStateNormal];
+    } else {
+        [_okButton setTitle:@"Sign up" forState:UIControlStateNormal];
+    }
+}
+- (IBAction)onOkButton:(id)sender {
+    if ([_seg selectedSegmentIndex] == 0) {
+        [self login];
+    } else {
+        [self signUp];
+    }
+}
 
-- (IBAction)onLogin:(id)sender {
+- (IBAction)onCancelButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)login {
     NSString *username = self.usernameInput.text;
     NSString *password = self.passwordInput.text;
     if ([username length] == 0 || [password length] == 0) {
@@ -67,7 +91,7 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     }];
 }
 
-- (IBAction)onSignUp:(id)sender {
+- (void)signUp {
     NSString *username = self.usernameInput.text;
     NSString *password = self.passwordInput.text;
     if ([username length] == 0 || [password length] == 0) {
@@ -90,15 +114,7 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    [_usernameInput becomeFirstResponder];
 }
 
 - (void)viewDidLoad
@@ -113,6 +129,36 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         self.usernameInput.text = username;
         self.passwordInput.text = password;
     }
+    
+    //button round corner
+    CALayer *btnLayer = [_okButton layer];
+    [btnLayer setMasksToBounds:YES];
+    [btnLayer setCornerRadius:5.0f];
+    btnLayer = [_cancelButton layer];
+    [btnLayer setMasksToBounds:YES];
+    [btnLayer setCornerRadius:5.0f];
+    
+    //
+    [_usernameInput setDelegate:self];
+    
+    //
+    SldGameData *gameData = [SldGameData getInstance];
+    if (gameData.userName == nil) {
+        [_cancelButton setEnabled:NO];
+        _cancelButton.alpha = .2f;
+    } else {
+        [_cancelButton setEnabled:YES];
+        _cancelButton.alpha = 1.f;
+    }
+    
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField*)textField;
+{
+    if (textField == _usernameInput) {
+        [_passwordInput becomeFirstResponder];
+    }
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning

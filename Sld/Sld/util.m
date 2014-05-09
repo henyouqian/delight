@@ -8,6 +8,7 @@
 
 #import "util.h"
 #import "config.h"
+#import <CommonCrypto/CommonHMAC.h>
 
 NSString* getResFullPath(NSString* fileName) {
     return [[NSBundle mainBundle] pathForResource:fileName ofType:nil];
@@ -38,6 +39,11 @@ NSString* makeImagePath(NSString *imageKey) {
     return makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, imageKey]);
 }
 
+NSString* makeImagePathFromUrl(NSString *imageUrl) {
+    NSString *imageName = sha256(imageUrl, @"");
+    return makeImagePath(imageName);
+}
+
 NSString* makeImageServerUrl(NSString *imageKey) {
     Config *conf = [Config sharedConf];
     return [NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, imageKey];
@@ -64,6 +70,22 @@ void setServerNow(SInt64 now) {
 NSDate *getServerNow() {
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:serverTimeCorrect];
     return now;
+}
+
+NSString* sha256(NSString* data, NSString *salt) {
+    const char *cKey  = [salt cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];
+    unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
+    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+    
+    NSString *hash;
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", cHMAC[i]];
+    hash = output;
+    return hash;
+    
 }
 
 

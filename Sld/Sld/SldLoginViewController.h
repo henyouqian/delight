@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldLoginViewController : UIViewController
+@interface SldLoginViewController : UIViewController<UITextFieldDelegate>
 
 @end

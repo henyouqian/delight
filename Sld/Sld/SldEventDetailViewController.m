@@ -181,7 +181,9 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+    if (!_gamedata.eventInfo.hasResult) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -191,11 +193,15 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
 
 - (void)onTimer {
     NSTimeInterval intv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
-    int sec = (int)intv;
-    int hour = sec / 3600;
-    int minute = (sec % 3600)/60;
-    sec = (sec % 60);
-    _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
+    if (intv < 0 || _gamedata.eventInfo.hasResult) {
+        _timeRemainLabel.text = @"活动已结束";
+    } else {
+        int sec = (int)intv;
+        int hour = sec / 3600;
+        int minute = (sec % 3600)/60;
+        sec = (sec % 60);
+        _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
+    }
 }
 
 - (void)reloadData {

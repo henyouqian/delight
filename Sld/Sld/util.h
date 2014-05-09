@@ -1,4 +1,4 @@
-//
+;//
 //  util.h
 //  Sld
 //
@@ -12,6 +12,7 @@ UIAlertView* alert(NSString *title, NSString *message);
 
 BOOL imageExist(NSString *imageKey);
 NSString* makeImagePath(NSString *imageKey);
+NSString* makeImagePathFromUrl(NSString *imageUrl);
 NSString* makeImageServerUrl(NSString *imageKey);
 
 UIColor* makeUIColor(int r, int g, int b, int a);
@@ -20,3 +21,5 @@ UIStoryboard* getStoryboard();
 
 void setServerNow(SInt64 now);
 NSDate* getServerNow();
+
+NSString* sha256(NSString* data, NSString *salt);
