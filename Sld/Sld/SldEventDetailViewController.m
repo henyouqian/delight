@@ -255,6 +255,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         
         //download
         SldHttpSession *session = [SldHttpSession defaultSession];
+        [session cancelAllTask];
         for (NSString *imageKey in imageKeys) {
             if (!imageExist(imageKey)) {
                 [session downloadFromUrl:makeImageServerUrl(imageKey)

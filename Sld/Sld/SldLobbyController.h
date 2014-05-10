@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SldLobbyController : UIViewController
-
+- (void)onViewShown;
 @end

@@ -11,6 +11,18 @@
 #import "SldHttpSession.h"
 #import "SldGameData.h"
 
+
+//CommentHeaderCell
+@interface CommentHeaderCell : UITableViewCell
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
+@end
+
+@implementation CommentHeaderCell
+
+@end
+
+
 //CommentCell
 @interface CommentCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UITextView *textView;
@@ -56,6 +68,8 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *commentDatas;
 @property (nonatomic) UITableViewController *tableViewController;
+@property (nonatomic) int imageLoadedNum;
+@property (nonatomic) BOOL ready;
 @end
 
 @implementation SldCommentController
@@ -64,6 +78,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _imageLoadedNum = 0;
+    _ready = NO;
     
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -84,8 +100,16 @@
     _tableViewController.refreshControl = refreshControl;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [self updateComments];
+- (void)onViewShown {
+    if (_commentDatas == nil) {
+        [self updateComments];
+    } else {
+        SldGameData *gameData = [SldGameData getInstance];
+        if (_imageLoadedNum < gameData.packInfo.images.count) {
+            [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }
+    _ready = YES;
 }
 
 - (void)updateComments {
@@ -128,7 +152,76 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"descCell" forIndexPath:indexPath];
+        SldGameData *gameData = [SldGameData getInstance];
+        _imageLoadedNum = 0;
+        
+        CommentHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentImageCell" forIndexPath:indexPath];
+        if (!_ready) {
+            return cell;
+        }
+        [cell.scrollView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        cell.scrollView.delegate = self;
+        cell.pageControl.currentPage = 0;
+        NSMutableArray *images = gameData.packInfo.images;
+        cell.pageControl.numberOfPages = [images count];
+        
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        int i = 0;
+        for(NSString *imageKey in images) {
+            CGRect frame;
+            frame.origin.x = cell.scrollView.frame.size.width * i;
+            frame.origin.y = 0;
+            frame.size = cell.frame.size;
+            //frame = CGRectInset(frame, 10.0, 10.0);
+            
+            
+            if (!imageExist(imageKey)) {
+                [session downloadFromUrl:makeImageServerUrl(imageKey)
+                                  toPath:makeImagePath(imageKey)
+                                withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                 {
+                     if (error) {
+                         lwError("Download error: %@", error.localizedDescription);
+                         return;
+                     }
+                     
+                     UIImageView *imageView = [cell.scrollView.subviews objectAtIndex:i];
+                     if (imageView) {
+                         imageView.image = [UIImage imageWithContentsOfFile:[location path]];
+                     }
+                     [imageView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+                     _imageLoadedNum++;
+                 }];
+            } else {
+                _imageLoadedNum++;
+            }
+            UIImage *image = [UIImage imageWithContentsOfFile:makeImagePath(imageKey)];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+            imageView.frame = frame;
+            [cell.scrollView addSubview:imageView];
+            if (image == nil) {
+                UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+                aiView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
+                    | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+                
+                [aiView sizeToFit];
+                [aiView startAnimating];
+                aiView.center = CGPointMake(imageView.frame.size.width / 2, imageView.frame.size.height / 2);
+                
+                [imageView addSubview:aiView];
+            }
+            
+            i++;
+        }
+        CGSize pageScrollViewSize = cell.scrollView.frame.size;
+        cell.scrollView.contentSize = CGSizeMake(pageScrollViewSize.width * images.count, pageScrollViewSize.height);
+        
+        //tap gesture
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
+        singleTap.cancelsTouchesInView = NO;
+        [cell.scrollView addGestureRecognizer:singleTap];
+        
         return cell;
     } else if (indexPath.section == 1) {
         if (indexPath.row >= [_commentDatas count]) {
@@ -210,6 +303,27 @@
             break;
     }
     return sectionName;
+}
+
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    CGFloat pageWidth = cell.frame.size.width;
+    // 在滚动超过页面宽度的50%的时候，切换到新的页面
+    int page = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth) ;
+    cell.pageControl.currentPage = page;
+}
+
+- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
+    
+}
+
+- (IBAction)sendComment:(UIStoryboardSegue *)segue {
+    
+}
+
+- (IBAction)cancelComment:(UIStoryboardSegue *)segue {
+    
 }
 
 @end

@@ -1,0 +1,800 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Int",
+				"Int64	int64, error ƒ"
+			],
+			[
+				"ui",
+				"UnixNano	int64 ƒ"
+			],
+			[
+				"co",
+				"StatusCode	int ν"
+			],
+			[
+				"h",
+				"HighScoreTime	int64 ν"
+			],
+			[
+				"rou",
+				"Round	struct ʈ"
+			],
+			[
+				"mar",
+				"Marshal	[]byte, error ƒ"
+			],
+			[
+				"sprint",
+				"Sprintf	string ƒ"
+			],
+			[
+				"new",
+				"NewErrStr	error ƒ"
+			],
+			[
+				"Info",
+				"Infoln	 ƒ"
+			],
+			[
+				"spri",
+				"Sprintf	string ƒ"
+			],
+			[
+				"pars",
+				"ParseUint	n uint64, err error ƒ"
+			],
+			[
+				"events",
+				"events	[]Event ν"
+			],
+			[
+				"loc",
+				"Local	*time.Location ν"
+			],
+			[
+				"d",
+				"Day	int ƒ"
+			],
+			[
+				"Event",
+				"EventPlayerRecord	struct ʈ"
+			],
+			[
+				"beg",
+				"RoundBegin	[]int64 ν"
+			],
+			[
+				"after",
+				"AfterFunc	*time.Timer ƒ"
+			],
+			[
+				"update",
+				"updateRound	 ƒ"
+			],
+			[
+				"Fa",
+				"Fatalf	 ƒ"
+			],
+			[
+				"sta",
+				"StatusCode	int ν"
+			],
+			[
+				"Mat",
+				"MatchKey	string ν"
+			],
+			[
+				"format",
+				"FormatUint	string ƒ"
+			],
+			[
+				"F",
+				"Fatalf	 ƒ"
+			],
+			[
+				"ADMIN",
+				"ADMIN_PASSWORD	 Ɩ"
+			],
+			[
+				"spr",
+				"Sprintln	string ƒ"
+			],
+			[
+				"fa",
+				"Fatalln	 ƒ"
+			],
+			[
+				"par",
+				"ParseUint	n uint64, err error ƒ"
+			],
+			[
+				"Fat",
+				"Fatalln	 ƒ"
+			],
+			[
+				"AD",
+				"ADMIN_PASSWORD	 Ɩ"
+			],
+			[
+				"Sprint",
+				"Sprintf	string ƒ"
+			],
+			[
+				"p",
+				"Println	n int, err error ƒ"
+			],
+			[
+				"pi",
+				"ParseUint	n uint64, err error ƒ"
+			],
+			[
+				"Err",
+				"Errorf	 ƒ"
+			],
+			[
+				"Sta",
+				"StatusCode	int ν"
+			],
+			[
+				"spi",
+				"Sprintf	string ƒ"
+			],
+			[
+				"Inf",
+				"Infoln	 ƒ"
+			],
+			[
+				"In",
+				"Infoln	 ƒ"
+			],
+			[
+				"Scan",
+				"Sscanf	n int, err error ƒ"
+			],
+			[
+				"Parse",
+				"ParseUint	n uint64, err error ƒ"
+			],
+			[
+				"pa",
+				"ParseUint	n uint64, err error ƒ"
+			],
+			[
+				"P",
+				"Println	n int, err error ƒ"
+			],
+			[
+				"in",
+				"Info	 ƒ"
+			],
+			[
+				"input",
+				"inputText"
+			],
+			[
+				"Get",
+				"GetRedisTimeUnix	int64 ƒ"
+			],
+			[
+				"Set",
+				"Set	 ƒ"
+			],
+			[
+				"D",
+				"NewDecoder	*json.Decoder ƒ"
+			],
+			[
+				"Er",
+				"Errorln	 ƒ"
+			],
+			[
+				"redis",
+				"redisPool	*redis.Pool ν"
+			],
+			[
+				"check",
+				"checkError"
+			],
+			[
+				"chec",
+				"checkError"
+			],
+			[
+				"poin",
+				"pointerCount"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.go",
+			"settings":
+			{
+				"buffer_size": 790,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "event.go",
+			"settings":
+			{
+				"buffer_size": 14295,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "www/api.js",
+			"settings":
+			{
+				"buffer_size": 7404,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "player.go",
+			"settings":
+			{
+				"buffer_size": 2570,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pref",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pa",
+				"Project: Add Folder"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 146.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/weili/Documents/projects/2014/delight/server/www/apis.js",
+		"/Users/weili/Documents/projects/2014/delight/server/booker/main.go",
+		"/Users/weili/Documents/projects/2014/delight/server/booker/booker",
+		"/Users/weili/Documents/projects/2014/delight/client/Classes/collectionListScene.cpp",
+		"/Users/weili/Documents/projects/2014/delight/ssdb/runMatch.sh",
+		"/Users/weili/Documents/projects/2014/delight/ssdb/runAuth.sh",
+		"/Users/weili/Documents/projects/2014/delight/server/tools/packUploader/main.go",
+		"/Users/weili/Documents/projects/2014/delight/server/db.go",
+		"/Users/weili/Documents/projects/2014/delight/server/pack.go",
+		"/Users/weili/Documents/projects/2014/delight/server/util.go",
+		"/Users/weili/Documents/projects/2014/delight/server/main.go",
+		"/Users/weili/Library/Application Support/Sublime Text 2/Packages/GoSublime/CHANGELOG.md",
+		"/Users/weili/Documents/projects/2014/delight/server/tools/packUploader/樋口可南子/1/pack.js",
+		"/Users/weili/Documents/projects/2014/delight/server/tools/packUploader/conf.json",
+		"/Users/weili/Documents/projects/2014/delight/server/tools/packUploader/samplePack/pack.js",
+		"/Users/weili/Documents/projects/2014/delight/server/auth.go",
+		"/Users/weili/Documents/projects/2014/delight/server/userPack.go",
+		"/Users/weili/Documents/projects/2014/delight/html5/slider/src/jxs.js",
+		"/Users/weili/Documents/projects/2014/delight/html5/slider/src/myApp.js",
+		"/Users/weili/Documents/projects/2014/delight/client/tools/qiniu-devtools-darwin_amd64-v2.6.20131230/conf.json",
+		"/usr/local/etc/redis.conf",
+		"/Users/weili/Documents/projects/2014/delight/server/www/js/util.js",
+		"/Users/weili/Documents/projects/2014/delight/server/br",
+		"/Users/weili/Documents/projects/2014/delight/client/publish/2014/Jan/1/樋口可南子.json",
+		"/Users/weili/Documents/projects/2014/delight/client/publish/2014/Jan/1/index.json",
+		"/Users/weili/Documents/projects/2014/delight/client/publish/2014/Jan/1/iwdrm.json",
+		"/Users/weili/Documents/projects/2013/cdgm/golang/util.go",
+		"/Users/weili/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/weili/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/weili/go/src/github.com/henyouqian/lvdbTest/main.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/client/main.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/server/lvdbSvr.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/server/main.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/lvdbDef.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/lvdbCli.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/server/lvdb.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/lvdb.go",
+		"/Users/weili/go/src/github.com/henyouqian/lvdb/lvdb/lvdb.go",
+		"/Users/weili/go/src/github.com/henyouqian/rpc/client/r",
+		"/Users/weili/go/src/github.com/henyouqian/rpc/client/br",
+		"/Users/weili/go/src/github.com/henyouqian/hello/hello.go",
+		"/Users/weili/Library/Application Support/Sublime Text 2/Packages/User/GoSublime.sublime-settings",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/assets/a.wav",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/jni/Android.mk",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/未命名文件夹/android/build.xml",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/build.xml",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/changeName.md",
+		"/Users/weili/Documents/projects/2013/lwfk/libraries/PVR/Tools/OGLES2/Build/Android/Android.mk",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/jni/app/Android.mk",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/run.sh",
+		"/Users/Shared/Imagination/PowerVR/GraphicsSDK/SDK_3.1/Tools/OGLES2/Build/Android/Android.mk",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/jni/Application.mk",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/project.properties",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/local.properties",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/AndroidManifest.xml",
+		"/Users/weili/Documents/projects/2013/lwfkSample/sliders/build/android/build.sh",
+		"/Users/weili/Downloads/hiragino_kaku_gothic_pron_w3_20.zfi",
+		"/Users/weili/Downloads/hiragino_kaku_gothic_pron_w3_20.lua",
+		"/Users/weili/Documents/projects/2013/deprecated/lwfk1/samples/dev/resource/font/a.fnt",
+		"/Users/weili/Downloads/hiragino_kaku_gothic_pron_w3_20.fnt",
+		"/Users/weili/Documents/projects/2013/cdgm/golang/static/util.js",
+		"/Users/weili/go/src/github.com/henyouqian/matches/static/apis.html",
+		"/Users/weili/go/src/github.com/henyouqian/matches/static/apis.js",
+		"/Users/weili/Documents/projects/2013/cdgm/golang/static/apis.js",
+		"/Users/weili/Documents/projects/2013/cdgm/zone.py",
+		"/Users/weili/Documents/projects/2013/cdgm/pvp.py",
+		"/Users/weili/Documents/projects/2013/cdgm/player.py",
+		"/Users/weili/Documents/projects/2013/cdgm/www/admin.js",
+		"/Users/weili/Documents/projects/2013/cdgm/www/admin.html",
+		"/Users/weili/go/src/github.com/henyouqian/matches/kv.go",
+		"/Users/weili/go/src/github.com/henyouqian/matches/static/console.js",
+		"/Users/weili/go/src/github.com/henyouqian/matches/static/console.html",
+		"/Users/weili/go/src/github.com/henyouqian/matches/static/leaderboard.js",
+		"/Users/weili/go/src/github.com/henyouqian/matches/static/leaderboard.html",
+		"/Users/weili/Downloads/jquery-2.0.3.min.map",
+		"/Users/weili/go/src/github.com/henyouqian/matches/matches.sublime-project",
+		"/private/var/folders/0_/hxdnty8x27dcn_y92tm86ylw0000gn/T/auth.WeitekiMacBook-Air.weili.log.INFO.20130829-223339.712",
+		"/Users/weili/go/src/github.com/henyouqian/matches/bench.go",
+		"/Users/weili/go/src/github.com/henyouqian/matches/run",
+		"/Users/weili/Documents/tmp/leaderboard/b.go",
+		"/Users/weili/Documents/tmp/leaderboard/a.go",
+		"/Users/weili/Documents/bak/lwbak/dev2012/arrow3/arrow3/data/font/a_2x.fnt",
+		"/Users/weili/Documents/projects/2013/lwfk/lwfk/lwApp.cpp",
+		"/Users/weili/Documents/projects/2013/cdgm/brukva/client.py",
+		"/Users/weili/Documents/projects/2013/lwfk/samples/dev/build/android/jni/dev/Android副本.mk",
+		"/Users/Shared/Imagination/PowerVR/GraphicsSDK/SDK_3.1/Examples/Advanced/ExampleUI/OGLES2/Build/Android/jni/Android.mk",
+		"/Users/weili/Documents/projects/2013/hanzi/server/hanzid.py",
+		"/Users/weili/Documents/projects/2013/cdgm/wh.py",
+		"/Users/weili/Documents/projects/2013/hanzi/server/tool/pack/pack.py",
+		"/Users/weili/Documents/projects/2013/hanzi/server/static/js/main.js",
+		"/Users/weili/Documents/projects/2013/hanzi/server/static/main.js",
+		"/Users/weili/Documents/projects/2013/hanzi/server/static/js/jquery.fileupload.js",
+		"/Users/weili/Documents/projects/2013/hanzi/server/static/util.js",
+		"/Users/weili/Documents/projects/2013/hanzi/server/static/upload.js",
+		"/Users/weili/Documents/projects/2013/hanzi/server/adb.py",
+		"/Users/weili/Documents/projects/2013/hanzi/hanzi/config.py"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"<open folders>",
+			"/Users/weili/Documents/projects/2014/delight/html5/slider",
+			"/Users/weili/go/src/github.com/henyouqian/matches",
+			"/Users/weili/Documents/projects/2013/cdgm",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"getUserPlay",
+			"playEnd",
+			"ssdb.Do",
+			"H_EVENT_PLAYER_RECORD",
+			"EventPlayerRecord",
+			"CheckSsdbError",
+			"for",
+			"for(",
+			"for (",
+			"getUserPlay",
+			"makeLeaderboardKey",
+			"makeRedisLeaderboardKey",
+			"makeLeaderboardKey",
+			"Z_EVENT_LEADERBOARD_PRE",
+			"H_EVENT_PLAYER_RECORD",
+			"listEvent",
+			"APIs",
+			"api",
+			"H_EVENT_RESULT",
+			"TeamId",
+			"GameRecord",
+			"Z_EVENT_TEAM_LEADERBOARD_PRE",
+			"makeLeaderboardKey",
+			"Z_EVENT_LEADERBOARD_PRE",
+			"makeLeaderboardKey",
+			"getuser",
+			"_redisInt",
+			"session.Userid",
+			"ge't",
+			"H_EVENT_PLAYER_RECORD",
+			"TEAM_CHAMPIONSHIP_ROUND_NUM",
+			"TRY_EXPIRE_SECONDS",
+			"TRY_COST_MONEY",
+			"EVENT_SERIAL",
+			"H_FREEPLAY_RECORD",
+			"Z_FREEPLAY_LEADERBOARD_PRE",
+			"H_EVENT_ROUND_TEAM_TOPTEN",
+			"topTen",
+			"getuser",
+			"Z_EVENT_TEAM_LEADERBOARD_PRE",
+			"Z_EVENT_LEADERBOARD_PRE",
+			"getUserResult",
+			"getuserr",
+			"getmyr",
+			"ssdb.",
+			"Pack",
+			"pack.Th",
+			"loadPack",
+			"newPack",
+			"newPacknewPack",
+			"newPack",
+			"newPack\n",
+			"zset",
+			"H_PACK",
+			"_sptLoader",
+			"32",
+			"redisUnt64",
+			"h_event",
+			"Event",
+			"redis",
+			"do(",
+			"findSession",
+			"time",
+			"H_EVENT_PLAYER_RECORD",
+			"H_PACK",
+			"ADMIN_USERID",
+			"USER_PACK_BUCKET",
+			"newevent",
+			"CurrRound",
+			"TimePoints",
+			"eventStrs",
+			"Z_CLOSED_EVENT",
+			"updateRound",
+			"matchFreePlay",
+			"Z_CLOSED_EVENT",
+			"IsClosed",
+			"BeginTimeString",
+			"EndTimeString",
+			"BeginTimeString\n",
+			"Z_EVENT\nZ_EVENT",
+			"Z_EVENT",
+			"Z_CLOSED_EVENT",
+			"play",
+			"strings",
+			"GameRecord",
+			"H_EVENT_ROUND_TEAM_TOPTEN",
+			"H_EVENT_ROUND_TEAM_TOPTEN\nH_EVENT_ROUND_TEAM_TOPTEN\nH_EVENT_ROUND_TEAM_TOPTEN",
+			"H_EVENT_ROUND_TEAM_TOPTEN\nH_EVENT_ROUND_TEAM_TOPTEN",
+			"H_EVENT_ROUND_TEAM_TOPTEN",
+			"match",
+			"EventPlayerRecord",
+			"GameRecord",
+			"H_EVENT_ROUND_TEAM_TOPTEN",
+			"H_EVENT_ROUND_TEAM_TOPTEN\nH_EVENT_ROUND_TEAM_TOPTEN",
+			"H_EVENT_ROUND_TEAM_TOPTEN",
+			"GameRecord",
+			"topTens",
+			"updateRound0",
+			"EventPlayerRecord",
+			"topTen",
+			"GameRecord",
+			"_getPlayerInfo",
+			"TEAM_MAP",
+			"H_PLAYER_INFO_PRE",
+			"json",
+			"EventPlayerRecord",
+			"GameRecord",
+			"EventPlayerRecord",
+			".TeamId",
+			"TeamId",
+			".TeamId",
+			"TeamId",
+			"record",
+			"topTen",
+			"GameRecord",
+			"H_EVENT_ROUND_TEAM_TOPTEN",
+			"getTopTen",
+			"zonerank",
+			"_redisInt",
+			"TEAM_MAP",
+			"TEAM_IDS",
+			"begin",
+			"rc",
+			"getEventResult",
+			"body.close",
+			"close",
+			"listEvent",
+			"hasNextRound"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"findSession(w, r, nil)",
+			"findSession(w, r, ssdb)",
+			"SESSION_UPDATE_SEC",
+			"SESSION_LIFE_SEC",
+			"EVENT_SERIAL",
+			"Z_EVENT",
+			"H_EVENT",
+			"http://fragment.oss-cn-hangzhou.aliyuncs.com/2014/julien%20douvier/Promenade/",
+			"http://fragment.oss-cn-hangzhou.aliyuncs.com/2014/julien%20douvier/Mixed%20theme/",
+			"http://fragment.oss-cn-hangzhou.aliyuncs.com/2014/julien%20douvier/Escalators/",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.go",
+					"settings":
+					{
+						"buffer_size": 790,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "event.go",
+					"settings":
+					{
+						"buffer_size": 14295,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11672,
+								11672
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 11688.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "www/api.js",
+					"settings":
+					{
+						"buffer_size": 7404,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3462,
+								3462
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3292.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "player.go",
+					"settings":
+					{
+						"buffer_size": 2570,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								954,
+								1033
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 625.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 38.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.9o:///Users/weili/Documents/projects/2013/cdgm/golang":
+	{
+		"height": 118.0
+	},
+	"output.9o:///Users/weili/Documents/projects/2014/delight/robot":
+	{
+		"height": 142.0
+	},
+	"output.9o:///Users/weili/Documents/projects/2014/delight/server":
+	{
+		"height": 142.0
+	},
+	"output.9o:///Users/weili/Documents/projects/2014/delight/server/booker":
+	{
+		"height": 142.0
+	},
+	"output.9o:///Users/weili/Documents/projects/2014/delight/server/tools/packUploader":
+	{
+		"height": 142.0
+	},
+	"output.9o:///Users/weili/go/src/github.com/henyouqian/hello":
+	{
+		"height": 193.0
+	},
+	"output.9o:///Users/weili/go/src/github.com/henyouqian/lvdb":
+	{
+		"height": 166.0
+	},
+	"output.9o:///Users/weili/go/src/github.com/henyouqian/lvdb/client":
+	{
+		"height": 118.0
+	},
+	"output.9o:///Users/weili/go/src/github.com/henyouqian/lvdb/server":
+	{
+		"height": 118.0
+	},
+	"output.9o:///Users/weili/go/src/github.com/henyouqian/lwutil":
+	{
+		"height": 118.0
+	},
+	"output.9o:///Users/weili/go/src/github.com/henyouqian/rpc/client":
+	{
+		"height": 118.0
+	},
+	"output.GoSublime-main-output":
+	{
+		"height": 142.0
+	},
+	"output.GsDoc-output-output":
+	{
+		"height": 118.0
+	},
+	"output.exec":
+	{
+		"height": 118.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"db",
+				"db.go"
+			],
+			[
+				"db.",
+				"db.go"
+			],
+			[
+				"db.g",
+				"db.go"
+			],
+			[
+				"main",
+				"main.go"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 200.0,
+	"status_bar_visible": true
+}

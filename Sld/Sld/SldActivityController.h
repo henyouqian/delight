@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SldActivityController : UIViewController<UITableViewDataSource, UITableViewDelegate>
-
+- (void)onViewShown;
 @end

@@ -10,6 +10,7 @@
 #import "SldHttpSession.h"
 #import "SldEventDetailViewController.h"
 #import "SldGameData.h"
+#import "SldLoginViewController.h"
 #import "util.h"
 #import "config.h"
 #import "SldStreamPlayer.h"
@@ -152,10 +153,7 @@ static __weak SldEventListViewController *g_inst = nil;
     [self.refreshControl addTarget:self action:@selector(refershControlAction) forControlEvents:UIControlEventValueChanged];
     
     //login view
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
-    UIViewController* controller = [storyboard instantiateViewControllerWithIdentifier:@"login"];
-    //[self.navigationController pushViewController:controller animated:NO];
-    [self presentViewController:controller animated:NO completion:nil];
+    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
     
     //
     [[NSNotificationCenter defaultCenter]addObserver:self
@@ -164,10 +162,12 @@ static __weak SldEventListViewController *g_inst = nil;
                                               object:nil];
     
     //
-    _loadingImage = [UIImage imageNamed:@"img/loading.png"];
+    _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
 }
 
 - (void)refreshList {
+    //todo: offline mode
+    
     NSDictionary *body = @{@"StartId":@0, @"Limit":@50};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)

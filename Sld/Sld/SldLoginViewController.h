@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SldLoginViewController : UIViewController<UITextFieldDelegate>
-
++ (void)createAndPresentWithCurrentController:(UIViewController*)currController animated:(BOOL)animated;
 @end

@@ -82,8 +82,10 @@
     _tableViewController.refreshControl = refreshControl;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [self updateActivitys];
+- (void)onViewShown {
+    if (_activityDatas == nil) {
+        [self updateActivitys];
+    }
 }
 
 - (void)updateActivitys {

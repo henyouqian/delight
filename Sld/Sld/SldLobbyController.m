@@ -7,10 +7,14 @@
 //
 
 #import "SldLobbyController.h"
+#import "SldCommentController.h"
+#import "SldActivityController.h"
 
 @interface SldLobbyController ()
 @property (weak, nonatomic) IBOutlet UIView *commentView;
 @property (weak, nonatomic) IBOutlet UIView *activityView;
+@property (weak, nonatomic) SldCommentController *commentController;
+@property (weak, nonatomic) SldActivityController *activityController;
 
 @end
 
@@ -21,9 +25,25 @@
     if ([seg selectedSegmentIndex] == 0) {
         _commentView.hidden = NO;
         _activityView.hidden = YES;
+        [_commentController onViewShown];
     } else {
         _commentView.hidden = YES;
         _activityView.hidden = NO;
+        [_activityController onViewShown];
+    }
+}
+
+- (void)onViewShown {
+    [_commentController onViewShown];
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"commentController"]) {
+        _commentController = (SldCommentController*) [segue destinationViewController];
+    } else if ([segueName isEqualToString: @"activityController"]) {
+        _activityController = (SldActivityController*) [segue destinationViewController];
     }
 }
 

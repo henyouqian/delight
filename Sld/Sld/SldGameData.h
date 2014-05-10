@@ -36,6 +36,7 @@
 
 @property (nonatomic) UInt64 userId;
 @property (nonatomic) NSString *userName;
+@property (nonatomic) BOOL offline;
 
 + (instancetype)getInstance;
 

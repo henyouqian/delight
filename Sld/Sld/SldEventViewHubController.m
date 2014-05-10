@@ -65,7 +65,7 @@ static __weak SldEventViewHubController* g_inst = nil;
     _lobbyController.view.hidden = YES;
     _rankController.view.hidden = YES;
     
-    //
+    //motion effect
     UIInterpolatingMotionEffect *verticalMotionEffect =
     [[UIInterpolatingMotionEffect alloc]
      initWithKeyPath:@"center.y"
@@ -108,6 +108,7 @@ static __weak SldEventViewHubController* g_inst = nil;
             _eventDetailController.view.hidden = YES;
             _lobbyController.view.hidden = NO;
             _rankController.view.hidden = YES;
+            [_lobbyController onViewShown];
             break;
     }
     

@@ -19,11 +19,18 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 @property (weak, nonatomic) IBOutlet UITextField *usernameInput;
 @property (weak, nonatomic) IBOutlet UITextField *passwordInput;
 @property (weak, nonatomic) IBOutlet UIButton *okButton;
-@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
+@property (weak, nonatomic) IBOutlet UIButton *offlineButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
 @end
 
 @implementation SldLoginViewController
+
++ (void)createAndPresentWithCurrentController:(UIViewController*)currController animated:(BOOL)animated{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
+    UIViewController* controller = [storyboard instantiateViewControllerWithIdentifier:@"login"];
+    [currController presentViewController:controller animated:animated completion:nil];
+}
+
 - (IBAction)onTouchView:(id)sender {
     [self.view endEditing:YES];
 }
@@ -42,8 +49,9 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     }
 }
 
-- (IBAction)onCancelButton:(id)sender {
+- (IBAction)onOfflineButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+    [SldGameData getInstance].offline = YES;
 }
 
 - (void)login {
@@ -65,8 +73,11 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
             }
             return;
         }
-        //[self.navigationController popViewControllerAnimated:YES];
+        
+        SldGameData *gameData = [SldGameData getInstance];
+        
         [self dismissViewControllerAnimated:YES completion:nil];
+        gameData.offline = NO;
         
         //save to keychain
         [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
@@ -78,7 +89,6 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
             return;
         }
         
-        SldGameData *gameData = [SldGameData getInstance];
         gameData.userName = username;
         NSNumber *nUserId = [dict objectForKey:@"UserId"];
         if (nUserId) {
@@ -113,7 +123,6 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
     [_usernameInput becomeFirstResponder];
 }
 
@@ -134,23 +143,13 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     CALayer *btnLayer = [_okButton layer];
     [btnLayer setMasksToBounds:YES];
     [btnLayer setCornerRadius:5.0f];
-    btnLayer = [_cancelButton layer];
+    
+    btnLayer = [_offlineButton layer];
     [btnLayer setMasksToBounds:YES];
     [btnLayer setCornerRadius:5.0f];
     
     //
     [_usernameInput setDelegate:self];
-    
-    //
-    SldGameData *gameData = [SldGameData getInstance];
-    if (gameData.userName == nil) {
-        [_cancelButton setEnabled:NO];
-        _cancelButton.alpha = .2f;
-    } else {
-        [_cancelButton setEnabled:YES];
-        _cancelButton.alpha = 1.f;
-    }
-    
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField*)textField;
@@ -161,21 +160,5 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     return NO;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
