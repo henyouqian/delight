@@ -23,4 +23,5 @@
     #import "DOUAudioStreamer/NSData+DOUMappedFile.h"
     #import "DOUAudioStreamer/DOUAudioStreamer.h"
     #import "DOUAudioStreamer/DOUAudioStreamer+Options.h"
+    #import "MWPhotoBrowser/Classes/MWPhotoBrowser.h"
 #endif

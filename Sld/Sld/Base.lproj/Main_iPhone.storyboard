@@ -111,7 +111,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cellID" id="684-8D-4jq" customClass="EventCell">
+                            <collectionViewCell clipsSubviews="YES" contentMode="center" reuseIdentifier="cellID" id="684-8D-4jq" customClass="EventCell">
                                 <rect key="frame" x="0.0" y="44" width="159" height="159"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -121,6 +121,9 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I0U-P2-MHH">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                            </accessibility>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="thumbDarker.png" translatesAutoresizingMaskIntoConstraints="NO" id="9pQ-Yo-UhS" userLabel="Image darker">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
@@ -141,21 +144,24 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SGa-yX-Itz" userLabel="highlight">
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BaK-M1-00U">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
-                                        </view>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <segue destination="isa-6f-dJh" kind="push" identifier="toEventHub" id="aMK-4p-cYK"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="dateLabel" destination="559-AE-NdV" id="7hG-gb-YFv"/>
-                                    <outlet property="highlight" destination="SGa-yX-Itz" id="naX-QR-wWi"/>
-                                    <outlet property="image" destination="I0U-P2-MHH" id="cLD-Qq-LGV"/>
+                                    <outlet property="imageView" destination="I0U-P2-MHH" id="31s-3O-egf"/>
                                     <outlet property="statusLabel" destination="0cE-kH-Pav" id="0UO-Kt-qYf"/>
-                                    <segue destination="isa-6f-dJh" kind="push" identifier="toEventHub" id="NSy-Pl-ByB"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -361,7 +367,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bYe-ev-Ep2">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Logout" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bYe-ev-Ep2">
                                                     <rect key="frame" x="20" y="11" width="54" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -663,10 +669,10 @@
             </objects>
             <point key="canvasLocation" x="1596" y="753"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Sld Nevigation Controller-->
         <scene sceneID="4qO-55-FvR">
             <objects>
-                <navigationController storyboardIdentifier="nav" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="s5O-JC-8zD" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="nav" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="s5O-JC-8zD" customClass="SldNevigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="3nz-wG-bUZ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="4F5-kN-z2K">
@@ -709,16 +715,21 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BnB-RE-Ikz">
-                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="149"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 </scrollView>
                                                 <pageControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="XU5-Ba-bIG">
                                                     <rect key="frame" x="140" y="112" width="39" height="37"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="37" id="0GK-l0-whY"/>
+                                                        <constraint firstAttribute="width" constant="39" id="3YL-ZO-pTt"/>
+                                                    </constraints>
                                                 </pageControl>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="BnB-RE-Ikz" firstAttribute="leading" secondItem="9dw-cK-F5W" secondAttribute="leading" id="3ZC-lW-cL3"/>
+                                                <constraint firstItem="XU5-Ba-bIG" firstAttribute="leading" secondItem="9dw-cK-F5W" secondAttribute="leading" constant="140" id="4Fb-xo-qSs"/>
                                                 <constraint firstItem="BnB-RE-Ikz" firstAttribute="top" secondItem="9dw-cK-F5W" secondAttribute="top" id="LgE-kX-fPn"/>
                                                 <constraint firstAttribute="bottom" secondItem="BnB-RE-Ikz" secondAttribute="bottom" id="OdL-hG-OVK"/>
                                                 <constraint firstItem="BnB-RE-Ikz" firstAttribute="bottom" secondItem="XU5-Ba-bIG" secondAttribute="bottom" id="Zfi-rp-u4i"/>
@@ -747,7 +758,7 @@
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cEc-D7-1rV">
-                                                    <rect key="frame" x="10" y="10" width="48" height="48"/>
+                                                    <rect key="frame" x="8" y="8" width="48" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.55590439189999996" green="0.70449810719999995" blue="0.79562043800000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
@@ -842,7 +853,7 @@
                                 <rect key="frame" x="0.0" y="44" width="320" height="524"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.49138659283592617" green="0.57532882042699318" blue="0.62750912408759119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

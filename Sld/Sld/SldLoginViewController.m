@@ -120,6 +120,10 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     }];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

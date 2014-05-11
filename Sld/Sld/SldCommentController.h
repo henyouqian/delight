@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldCommentController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
+@interface SldCommentController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MWPhotoBrowserDelegate>
 - (void)onViewShown;
 @end

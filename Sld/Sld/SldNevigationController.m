@@ -22,28 +22,36 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(showAuthenticationViewController)
-               name:PresentAuthenticationViewController
-             object:nil];
-    
-    [[GameKitHelper sharedGameKitHelper] authenticateLocalPlayer];
+//    [[NSNotificationCenter defaultCenter]
+//        addObserver:self
+//           selector:@selector(showAuthenticationViewController)
+//               name:PresentAuthenticationViewController
+//             object:nil];
+//    
+//    [[GameKitHelper sharedGameKitHelper] authenticateLocalPlayer];
     //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
     
 }
 
-- (void)showAuthenticationViewController
-{
-    GameKitHelper *gameKitHelper = [GameKitHelper sharedGameKitHelper];
-    [self.topViewController presentViewController:gameKitHelper.authenticationViewController
-                                         animated:YES
-                                       completion:nil];
+//- (void)showAuthenticationViewController
+//{
+//    GameKitHelper *gameKitHelper = [GameKitHelper sharedGameKitHelper];
+//    [self.topViewController presentViewController:gameKitHelper.authenticationViewController
+//                                         animated:YES
+//                                       completion:nil];
+//}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

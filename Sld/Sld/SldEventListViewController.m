@@ -14,13 +14,13 @@
 #import "util.h"
 #import "config.h"
 #import "SldStreamPlayer.h"
-#import "UIImage+animatedGIF.h"
+#import "UIImageView+sldAsyncLoad.h"
 
 NSString *CELL_ID = @"cellID";
 
 @interface EventCell()
-@property (weak, nonatomic) IBOutlet UIImageView *image;
-@property (weak, nonatomic) IBOutlet UIView *highlight;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+//@property (weak, nonatomic) IBOutlet UIView *highlight;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 
@@ -34,10 +34,10 @@ NSString *CELL_ID = @"cellID";
     }
     return self;
 }
-
-- (void)setHighlighted:(BOOL)highlighted {
-    [self.highlight setHidden:!highlighted];
-}
+//
+//- (void)setHighlighted:(BOOL)highlighted {
+//    [self.highlight setHidden:!highlighted];
+//}
 
 @end
 
@@ -75,35 +75,8 @@ static __weak SldEventListViewController *g_inst = nil;
     }
     EventInfo *event = [_gameData.eventInfos objectAtIndex:idx];
     
-    //
-    Config *conf = [Config sharedConf];
-    NSString *thumbPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, event.thumb]);
-    
-    //from local
-    if ([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) {
-        UIImage *image = [UIImage imageWithContentsOfFile:thumbPath];
-//        UIImage *image = nil;
-//        if ([[[thumbPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
-//            NSURL *url = [NSURL fileURLWithPath:thumbPath];
-//            image = [UIImage animatedImageWithAnimatedGIFURL:url];
-//        } else {
-//            image = [UIImage imageWithContentsOfFile:thumbPath];
-//        }
-        cell.image.image = image;
-    }
-    //from server
-    else {
-        cell.image.image = _loadingImage;
-        
-        //download
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, event.thumb]
-                          toPath:thumbPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
-        {
-            [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
-        }];
-    }
+    cell.imageView.image = _loadingImage;
+    [cell.imageView asyncLoadImageWithKey:event.thumb showIndicator:NO completion:nil];
     
     //check finished
     NSDate *now = getServerNow();
@@ -255,11 +228,18 @@ static __weak SldEventListViewController *g_inst = nil;
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (segue.identifier && [segue.identifier compare:@"toEventHub"] == 0) {
-        NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
-        NSInteger row = selectedIndexPath.row;
-        if (row < [_gameData.eventInfos count]) {
-            _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:row];
+//        NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
+//        NSInteger row = selectedIndexPath.row;
+//        if (row < [_gameData.eventInfos count]) {
+//            _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:row];
+//        }
+        UIButton *button = sender;
+        UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        if (indexPath.row < [_gameData.eventInfos count]) {
+            _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:indexPath.row];
         }
+
     }
 }
 

@@ -10,7 +10,7 @@
 #import "SldNevigationController.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
-
+#import "UIImageView+sldAsyncLoad.h"
 
 //CommentHeaderCell
 @interface CommentHeaderCell : UITableViewCell
@@ -19,7 +19,9 @@
 @end
 
 @implementation CommentHeaderCell
-
+- (void)dealloc {
+    
+}
 @end
 
 
@@ -28,7 +30,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIImageView *iconView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
-
 @end
 
 @implementation CommentCell
@@ -63,23 +64,47 @@
 }
 @end
 
+//
+@interface PhotoBrowserNavController : UINavigationController
+
+@end
+
+@implementation PhotoBrowserNavController
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+@end
+
 //SldCommentController
 @interface SldCommentController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *commentDatas;
 @property (nonatomic) UITableViewController *tableViewController;
-@property (nonatomic) int imageLoadedNum;
 @property (nonatomic) BOOL ready;
+@property (nonatomic) NSMutableDictionary *photos;
+@property (weak, nonatomic) SldGameData *gameData;
+@property (nonatomic) int currImagePage;
+@property (nonatomic) CommentHeaderCell *imageSlideCell;
 @end
 
 @implementation SldCommentController
 
+- (void)dealloc {
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    _imageLoadedNum = 0;
+    
+    _gameData = [SldGameData getInstance];
     _ready = NO;
+    _photos = [NSMutableDictionary dictionary];
+    _currImagePage = 0;
     
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -103,12 +128,8 @@
 - (void)onViewShown {
     if (_commentDatas == nil) {
         [self updateComments];
-    } else {
-        SldGameData *gameData = [SldGameData getInstance];
-        if (_imageLoadedNum < gameData.packInfo.images.count) {
-            [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-        }
     }
+    
     _ready = YES;
 }
 
@@ -153,66 +174,38 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         SldGameData *gameData = [SldGameData getInstance];
-        _imageLoadedNum = 0;
         
         CommentHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentImageCell" forIndexPath:indexPath];
         if (!_ready) {
             return cell;
         }
-        [cell.scrollView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+        if (_imageSlideCell) {
+            for ( UIImageView *imageView in _imageSlideCell.scrollView.subviews) {
+                [imageView startAnimating];
+            }
+            return _imageSlideCell;
+        }
+        _imageSlideCell = cell;
         cell.scrollView.delegate = self;
         cell.pageControl.currentPage = 0;
         NSMutableArray *images = gameData.packInfo.images;
         cell.pageControl.numberOfPages = [images count];
         
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        int i = 0;
+        int imageIndex = 0;
         for(NSString *imageKey in images) {
             CGRect frame;
-            frame.origin.x = cell.scrollView.frame.size.width * i;
+            frame.origin.x = (cell.scrollView.frame.size.width) * imageIndex;
             frame.origin.y = 0;
             frame.size = cell.frame.size;
-            //frame = CGRectInset(frame, 10.0, 10.0);
+            //frame = CGRectInset(frame, 5.0, 0.0);
             
-            
-            if (!imageExist(imageKey)) {
-                [session downloadFromUrl:makeImageServerUrl(imageKey)
-                                  toPath:makeImagePath(imageKey)
-                                withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
-                 {
-                     if (error) {
-                         lwError("Download error: %@", error.localizedDescription);
-                         return;
-                     }
-                     
-                     UIImageView *imageView = [cell.scrollView.subviews objectAtIndex:i];
-                     if (imageView) {
-                         imageView.image = [UIImage imageWithContentsOfFile:[location path]];
-                     }
-                     [imageView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-                     _imageLoadedNum++;
-                 }];
-            } else {
-                _imageLoadedNum++;
-            }
-            UIImage *image = [UIImage imageWithContentsOfFile:makeImagePath(imageKey)];
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:nil];
             imageView.contentMode = UIViewContentModeScaleAspectFit;
             imageView.frame = frame;
             [cell.scrollView addSubview:imageView];
-            if (image == nil) {
-                UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-                aiView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
-                    | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-                
-                [aiView sizeToFit];
-                [aiView startAnimating];
-                aiView.center = CGPointMake(imageView.frame.size.width / 2, imageView.frame.size.height / 2);
-                
-                [imageView addSubview:aiView];
-            }
+            [imageView asyncLoadImageWithKey:imageKey showIndicator:YES completion:nil];
             
-            i++;
+            imageIndex++;
         }
         CGSize pageScrollViewSize = cell.scrollView.frame.size;
         cell.scrollView.contentSize = CGSizeMake(pageScrollViewSize.width * images.count, pageScrollViewSize.height);
@@ -233,22 +226,10 @@
         
         CommentData* commentData = [_commentDatas objectAtIndex:indexPath.row];
         cell.textView.text = commentData.text;
-        cell.iconView.image = nil;
         cell.userNameLabel.text = commentData.userName;
         
-        
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        //NSString *imgPath = makeImagePath([NSString stringWithFormat:@"icon%d.png", indexPath.row]);
-        [session loadImageFromUrl:[NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", commentData.userId] completionHandler:^(NSString *localPath, NSError *error)
-         {
-             if (error == nil) {
-                 CommentCell *cell = (CommentCell*)[tableView cellForRowAtIndexPath:indexPath];
-                 if (cell) {
-                     UIImage *image = [UIImage imageWithContentsOfFile:localPath];
-                     cell.iconView.image = image;
-                 }
-             }
-         }];
+        NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", commentData.userId];
+        [cell.iconView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
         
         return cell;
     }
@@ -309,14 +290,30 @@
 {
     CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     CGFloat pageWidth = cell.frame.size.width;
-    // 在滚动超过页面宽度的50%的时候，切换到新的页面
-    int page = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth) ;
-    cell.pageControl.currentPage = page;
+    _currImagePage = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth) ;
+    cell.pageControl.currentPage = _currImagePage;
 }
 
 - (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
     
-}
+    // Set options
+    browser.displayActionButton = YES; // Show action button to allow sharing, copying, etc (defaults to YES)
+    browser.displayNavArrows = NO; // Whether to display left and right nav arrows on toolbar (defaults to NO)
+    browser.displaySelectionButtons = NO; // Whether selection buttons are shown on each image (defaults to NO)
+    browser.zoomPhotosToFill = NO; // Images that almost fill the screen will be initially zoomed to fill (defaults to YES)
+    browser.alwaysShowControls = NO; // Allows to control whether the bars and controls are always visible or whether they fade away to show the photo full (defaults to NO)
+    browser.enableGrid = NO; // Whether to allow the viewing of all the photo thumbnails on a grid (defaults to YES)
+    browser.startOnGrid = NO; // Whether to start on the grid of thumbnails instead of the first photo (defaults to NO)
+    
+    // Optionally set the current visible photo before displaying
+    [browser setCurrentPhotoIndex:_currImagePage];
+    
+    // Present
+    //[self.navigationController pushViewController:browser animated:YES];
+    PhotoBrowserNavController *nc = [[PhotoBrowserNavController alloc] initWithRootViewController:browser];
+    nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:nc animated:YES completion:nil];}
 
 - (IBAction)sendComment:(UIStoryboardSegue *)segue {
     
@@ -325,5 +322,41 @@
 - (IBAction)cancelComment:(UIStoryboardSegue *)segue {
     
 }
+
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return _gameData.packInfo.images.count;
+}
+
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+//    id obj = [_photos objectForKey:@(index)];
+//    if (obj == [NSNull null]) {
+//        return nil;
+//    }
+//    return obj;
+    
+    NSString *imageKey = [_gameData.packInfo.images objectAtIndex:index];
+    if (!imageKey) {
+        return nil;
+    }
+    NSString *localPath = makeImagePath(imageKey);
+    MWPhoto *photo = [MWPhoto photoWithURL:[NSURL fileURLWithPath:localPath]];
+    return photo;
+}
+
+- (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
+    CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    if (cell) {
+        [cell.pageControl setCurrentPage:index];
+    }
+    
+    CGRect frame = cell.scrollView.frame;
+    frame.origin.x = cell.scrollView.frame.size.width * index;
+    frame.origin.y = 0;
+    [cell.scrollView scrollRectToVisible:frame animated:NO];
+}
+
+//- (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index {
+//    
+//}
 
 @end

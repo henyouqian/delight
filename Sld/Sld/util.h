@@ -23,3 +23,7 @@ void setServerNow(SInt64 now);
 NSDate* getServerNow();
 
 NSString* sha256(NSString* data, NSString *salt);
+
+@interface SldUtil : NSObject
++ (NSString*)sha1WithData:(NSString*)data salt:(NSString*)salt;
+@end

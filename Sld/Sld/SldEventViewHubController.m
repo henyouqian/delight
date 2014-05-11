@@ -14,6 +14,8 @@
 #import "SldGameData.h"
 #import "config.h"
 #import "util.h"
+#import "UIImageView+sldAsyncLoad.h"
+#import "UIImage+animatedGIF.h"
 
 @interface SldEventViewHubController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
@@ -123,34 +125,33 @@ static __weak SldEventViewHubController* g_inst = nil;
 
 - (void)loadBackground{
     NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
-    Config *conf = [Config sharedConf];
     
-    NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, bgKey]);
-    
-    void (^addBg)(BOOL fadein) = ^(BOOL fadein){
-        UIImage *image = [UIImage imageWithContentsOfFile:bgPath];
-        
-        UIImageView *bgView = [[UIImageView alloc] initWithImage:image];
-        bgView.contentMode = UIViewContentModeScaleAspectFill;
-        bgView.frame = self.view.frame;
-        [self.view insertSubview:bgView atIndex:0];
-        
-        _coverView = [[UIView alloc] initWithFrame:bgView.frame];
-        _coverView.contentMode = UIViewContentModeScaleToFill;
-        _coverView.backgroundColor = makeUIColor(100, 100, 100, 255);
-        _coverView.alpha = .5f;
-        [bgView insertSubview:_coverView atIndex:1];
-        
-        if (fadein) {
+    UIImageView *bgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+    bgView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.view insertSubview:bgView atIndex:0];
+    BOOL imageExistLocal = imageExist(bgKey);
+    [bgView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+        if (!imageExistLocal || bgView.animationImages) {
             bgView.alpha = 0.0;
             [UIView beginAnimations:@"fade in" context:nil];
             [UIView setAnimationDuration:1.0];
             bgView.alpha = 1.0;
             [UIView commitAnimations];
         }
-    };
+    }];
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:bgPath]) { //local
+    _coverView = [[UIView alloc] initWithFrame:bgView.frame];
+    _coverView.contentMode = UIViewContentModeScaleToFill;
+    _coverView.backgroundColor = makeUIColor(100, 100, 100, 255);
+    _coverView.alpha = .5f;
+    [bgView insertSubview:_coverView atIndex:1];
+
+    
+//    NSString *bgPath = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, bgKey]);
+//    
+//    void (^addBg)(BOOL fadein) = ^(BOOL fadein){
+//        //UIImage *image = [UIImage imageWithContentsOfFile:bgPath];
+//        
 //        UIImage *image = nil;
 //        if ([[[bgPath pathExtension] lowercaseString] compare:@"gif"] == 0) {
 //            NSURL *url = [NSURL fileURLWithPath:bgPath];
@@ -158,18 +159,40 @@ static __weak SldEventViewHubController* g_inst = nil;
 //        } else {
 //            image = [UIImage imageWithContentsOfFile:bgPath];
 //        }
-        addBg(NO);
-        
-    } else { //server
-        //download
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, bgKey]
-                          toPath:bgPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
-         {
-             addBg(YES);
-         }];
-    }
+//        
+//        UIImageView *bgView = [[UIImageView alloc] initWithImage:image];
+//        bgView.contentMode = UIViewContentModeScaleAspectFill;
+//        bgView.frame = self.view.frame;
+//        [self.view insertSubview:bgView atIndex:0];
+//        
+//        _coverView = [[UIView alloc] initWithFrame:bgView.frame];
+//        _coverView.contentMode = UIViewContentModeScaleToFill;
+//        _coverView.backgroundColor = makeUIColor(100, 100, 100, 255);
+//        _coverView.alpha = .5f;
+//        [bgView insertSubview:_coverView atIndex:1];
+//        
+//        if (fadein) {
+//            bgView.alpha = 0.0;
+//            [UIView beginAnimations:@"fade in" context:nil];
+//            [UIView setAnimationDuration:1.0];
+//            bgView.alpha = 1.0;
+//            [UIView commitAnimations];
+//        }
+//    };
+//    
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:bgPath]) { //local
+//        addBg(NO);
+//        
+//    } else { //server
+//        //download
+//        SldHttpSession *session = [SldHttpSession defaultSession];
+//        [session downloadFromUrl:[NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, bgKey]
+//                          toPath:bgPath
+//                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+//         {
+//             addBg(YES);
+//         }];
+//    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -40,7 +40,7 @@ NSString* makeImagePath(NSString *imageKey) {
 }
 
 NSString* makeImagePathFromUrl(NSString *imageUrl) {
-    NSString *imageName = sha256(imageUrl, @"");
+    NSString *imageName = [SldUtil sha1WithData:imageUrl salt:@""];
     return makeImagePath(imageName);
 }
 
@@ -85,8 +85,33 @@ NSString* sha256(NSString* data, NSString *salt) {
         [output appendFormat:@"%02x", cHMAC[i]];
     hash = output;
     return hash;
-    
 }
+
+
+
+@implementation SldUtil
+
++ (NSString*)sha1WithData:(NSString*)data salt:(NSString*)salt {
+    const char *cKey  = [salt cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];
+    unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
+    CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+    
+    NSString *hash;
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", cHMAC[i]];
+    hash = output;
+    return hash;
+}
+
+@end
+
+
+
+
+
 
 
 

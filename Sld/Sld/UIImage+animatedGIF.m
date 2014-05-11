@@ -67,17 +67,45 @@ static int vectorGCD(size_t const count, int const *const values) {
     return gcd;
 }
 
-static NSArray *frameArray(size_t const count, CGImageRef const images[count], int const delayCentiseconds[count], int const totalDurationCentiseconds) {
+static UIImage* preloadImage(UIImage *uiImage) {
+    CGImageRef image = uiImage.CGImage;
+    
+    // make a bitmap context of a suitable size to draw to, forcing decode
+    size_t width = CGImageGetWidth(image);
+    size_t height = CGImageGetHeight(image);
+    
+    CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef imageContext =  CGBitmapContextCreate(NULL, width, height, 8, width * 4, colourSpace,
+                                                       kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
+    CGColorSpaceRelease(colourSpace);
+    
+    // draw the image to the context, release it
+    CGContextDrawImage(imageContext, CGRectMake(0, 0, width, height), image);
+    
+    // now get an image ref from the context
+    CGImageRef outputImage = CGBitmapContextCreateImage(imageContext);
+    
+    UIImage *cachedImage = [UIImage imageWithCGImage:outputImage];
+    
+    // clean up
+    CGImageRelease(outputImage);
+    CGContextRelease(imageContext);
+    
+    return cachedImage;
+}
+
+static NSMutableArray *frameArray(size_t const count, CGImageRef const images[count], int const delayCentiseconds[count], int const totalDurationCentiseconds) {
     int const gcd = vectorGCD(count, delayCentiseconds);
     size_t const frameCount = totalDurationCentiseconds / gcd;
     UIImage *frames[frameCount];
     for (size_t i = 0, f = 0; i < count; ++i) {
-        UIImage *const frame = [UIImage imageWithCGImage:images[i]];
+        UIImage * frame = [UIImage imageWithCGImage:images[i]];
+        frame = preloadImage(frame);
         for (size_t j = delayCentiseconds[i] / gcd; j > 0; --j) {
             frames[f++] = frame;
         }
     }
-    return [NSArray arrayWithObjects:frames count:frameCount];
+    return [NSMutableArray arrayWithObjects:frames count:frameCount];
 }
 
 static void releaseImages(size_t const count, CGImageRef const images[count]) {
@@ -98,6 +126,18 @@ static UIImage *animatedImageWithAnimatedGIFImageSource(CGImageSourceRef const s
     return animation;
 }
 
+static NSMutableArray *createFrames(CGImageSourceRef const source) {
+    size_t const count = CGImageSourceGetCount(source);
+    CGImageRef images[count];
+    int delayCentiseconds[count]; // in centiseconds
+    createImagesAndDelays(source, count, images, delayCentiseconds);
+    int const totalDurationCentiseconds = sum(count, delayCentiseconds);
+    NSMutableArray *frames = frameArray(count, images, delayCentiseconds, totalDurationCentiseconds);
+    [frames addObject:[NSNumber numberWithDouble:(totalDurationCentiseconds / 100.0)]];
+    releaseImages(count, images);
+    return frames;
+}
+
 static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRef CF_RELEASES_ARGUMENT source) {
     if (source) {
         UIImage *const image = animatedImageWithAnimatedGIFImageSource(source);
@@ -114,6 +154,17 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
 
 + (UIImage *)animatedImageWithAnimatedGIFURL:(NSURL *)url {
     return animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceCreateWithURL(toCF url, NULL));
+}
+
++ (NSMutableArray *)imageArrayWithAnimatedGIFURL:(NSURL *)url {
+    CGImageSourceRef const source = CGImageSourceCreateWithURL(toCF url, NULL);
+    if (source) {
+        NSMutableArray *frames = createFrames(source);
+        CFRelease(source);
+        return frames;
+    } else {
+        return nil;
+    }
 }
 
 @end

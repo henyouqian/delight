@@ -61,6 +61,10 @@
 		B39E447E191E794800CBB247 /* glyphicons_017_music.png in Resources */ = {isa = PBXBuildFile; fileRef = B39E447A191E794800CBB247 /* glyphicons_017_music.png */; };
 		B39E447F191E794800CBB247 /* glyphicons_017_music@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B39E447B191E794800CBB247 /* glyphicons_017_music@2x.png */; };
 		B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E4485191E9E6D00CBB247 /* SldUserController.m */; };
+		B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B39E450D191ED0BB00CBB247 /* MWPhotoBrowser.bundle */; };
+		B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E4514191FB72400CBB247 /* MSWeakTimer.m */; };
+		B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */; };
+		B39E452B192028F100CBB247 /* SldGifImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E452A192028F100CBB247 /* SldGifImageView.m */; };
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
 		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
@@ -198,6 +202,13 @@
 		B39E447B191E794800CBB247 /* glyphicons_017_music@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glyphicons_017_music@2x.png"; sourceTree = "<group>"; };
 		B39E4484191E9E6D00CBB247 /* SldUserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldUserController.h; sourceTree = "<group>"; };
 		B39E4485191E9E6D00CBB247 /* SldUserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserController.m; sourceTree = "<group>"; };
+		B39E450D191ED0BB00CBB247 /* MWPhotoBrowser.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = MWPhotoBrowser.bundle; path = ../External/MWPhotoBrowser/MWPhotoBrowser.bundle; sourceTree = "<group>"; };
+		B39E4513191FB72300CBB247 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
+		B39E4514191FB72400CBB247 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
+		B39E452619201C1A00CBB247 /* UIImageView+sldAsyncLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+sldAsyncLoad.h"; sourceTree = "<group>"; };
+		B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+sldAsyncLoad.m"; sourceTree = "<group>"; };
+		B39E4529192028F100CBB247 /* SldGifImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGifImageView.h; sourceTree = "<group>"; };
+		B39E452A192028F100CBB247 /* SldGifImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGifImageView.m; sourceTree = "<group>"; };
 		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
 		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		B3C0AF5E1906703200CB4DFD /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; name = db; path = res/db; sourceTree = "<group>"; };
@@ -363,14 +374,20 @@
 				B31CBEB2190AA47500621165 /* SldButton.m */,
 				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
 				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
+				B39E4529192028F100CBB247 /* SldGifImageView.h */,
+				B39E452A192028F100CBB247 /* SldGifImageView.m */,
 				B3C1BB8C191159EF0062D50C /* UIImage+animatedGIF.h */,
 				B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */,
+				B39E452619201C1A00CBB247 /* UIImageView+sldAsyncLoad.h */,
+				B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */,
 				B38110441914D8F30093F321 /* GameKitHelper.h */,
 				B38110451914D8F30093F321 /* GameKitHelper.m */,
 				B381103E1913FC750093F321 /* config.h */,
 				B381103F1913FC750093F321 /* config.m */,
 				B374C57D1919026900E5C6A2 /* SldCollectionView.h */,
 				B374C57E1919026900E5C6A2 /* SldCollectionView.m */,
+				B39E4513191FB72300CBB247 /* MSWeakTimer.h */,
+				B39E4514191FB72400CBB247 /* MSWeakTimer.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -378,6 +395,7 @@
 		B31EE82918F06F160047E9FD /* res */ = {
 			isa = PBXGroup;
 			children = (
+				B39E450D191ED0BB00CBB247 /* MWPhotoBrowser.bundle */,
 				B3789F0E190D7A39002E4127 /* uikit */,
 				B3815E78190C0D7A003AF183 /* ui */,
 				B3C0AF5E1906703200CB4DFD /* db */,
@@ -577,6 +595,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */,
 				B3C1BB7B1910D8BE0062D50C /* btnBgWhite90.png in Resources */,
 				B3C1BB801910D8BE0062D50C /* glyphicons_177_fast_forward.png in Resources */,
 				B39E447E191E794800CBB247 /* glyphicons_017_music.png in Resources */,
@@ -640,12 +659,14 @@
 				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
+				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */,
 				B38110401913FC750093F321 /* config.m in Sources */,
 				B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */,
+				B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
 				B374C57F1919026900E5C6A2 /* SldCollectionView.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
@@ -653,6 +674,7 @@
 				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
+				B39E452B192028F100CBB247 /* SldGifImageView.m in Sources */,
 				B374C5781916E2F900E5C6A2 /* SldEventViewHubController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,

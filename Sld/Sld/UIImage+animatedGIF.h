@@ -29,4 +29,6 @@
 */
 + (UIImage *)animatedImageWithAnimatedGIFURL:(NSURL *)theURL;
 
++ (NSMutableArray *)imageArrayWithAnimatedGIFURL:(NSURL *)url;
+
 @end
