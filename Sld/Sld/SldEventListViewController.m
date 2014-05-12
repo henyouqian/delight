@@ -233,6 +233,7 @@ static __weak SldEventListViewController *g_inst = nil;
 //        if (row < [_gameData.eventInfos count]) {
 //            _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:row];
 //        }
+        
         UIButton *button = sender;
         UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
@@ -243,5 +244,29 @@ static __weak SldEventListViewController *g_inst = nil;
     }
 }
 
-
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

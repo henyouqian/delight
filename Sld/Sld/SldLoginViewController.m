@@ -12,6 +12,7 @@
 #import "util.h"
 #import "SSKeychain/SSkeychain.h"
 #import "SldGameData.h"
+#import "MMPickerView.h"
 
 static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
@@ -41,6 +42,7 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         [_okButton setTitle:@"Sign up" forState:UIControlStateNormal];
     }
 }
+
 - (IBAction)onOkButton:(id)sender {
     if ([_seg selectedSegmentIndex] == 0) {
         [self login];
@@ -52,6 +54,34 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 - (IBAction)onOfflineButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
     [SldGameData getInstance].offline = YES;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
+    if ([accounts count]) {
+        NSString *username = [accounts lastObject][@"acct"];
+        NSString *password = [SSKeychain passwordForService:KEYCHAIN_SERVICE account:username];
+        self.usernameInput.text = username;
+        self.passwordInput.text = password;
+    }
+    
+    //button round corner
+    CALayer *btnLayer = [_okButton layer];
+    [btnLayer setMasksToBounds:YES];
+    [btnLayer setCornerRadius:5.0f];
+    
+    btnLayer = [_offlineButton layer];
+    [btnLayer setMasksToBounds:YES];
+    [btnLayer setCornerRadius:5.0f];
+    
+    //
+    [_usernameInput setDelegate:self];
+    
+    [self onChangeMode:_seg];
 }
 
 - (void)login {
@@ -128,32 +158,6 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 {
     [super viewWillAppear:animated];
     [_usernameInput becomeFirstResponder];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
-    if ([accounts count]) {
-        NSString *username = [accounts lastObject][@"acct"];
-        NSString *password = [SSKeychain passwordForService:KEYCHAIN_SERVICE account:username];
-        self.usernameInput.text = username;
-        self.passwordInput.text = password;
-    }
-    
-    //button round corner
-    CALayer *btnLayer = [_okButton layer];
-    [btnLayer setMasksToBounds:YES];
-    [btnLayer setCornerRadius:5.0f];
-    
-    btnLayer = [_offlineButton layer];
-    [btnLayer setMasksToBounds:YES];
-    [btnLayer setCornerRadius:5.0f];
-    
-    //
-    [_usernameInput setDelegate:self];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField*)textField;

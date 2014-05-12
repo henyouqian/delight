@@ -28,6 +28,14 @@
 		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
 		B33121F819165A10003E05DB /* SldRankController.m in Sources */ = {isa = PBXBuildFile; fileRef = B33121F719165A10003E05DB /* SldRankController.m */; };
 		B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */ = {isa = PBXBuildFile; fileRef = B33121FA1916D02C003E05DB /* thumbDarker.png */; };
+		B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B33DD3821921132A006B8ACD /* MMPickerView.m */; };
+		B33DD388192124BE006B8ACD /* qqBlack36.png in Resources */ = {isa = PBXBuildFile; fileRef = B33DD384192124BE006B8ACD /* qqBlack36.png */; };
+		B33DD389192124BE006B8ACD /* qqBlack36@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B33DD385192124BE006B8ACD /* qqBlack36@2x.png */; };
+		B33DD38A192124BE006B8ACD /* weiboBlack36.png in Resources */ = {isa = PBXBuildFile; fileRef = B33DD386192124BE006B8ACD /* weiboBlack36.png */; };
+		B33DD38B192124BE006B8ACD /* weiboBlack36@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B33DD387192124BE006B8ACD /* weiboBlack36@2x.png */; };
+		B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = B34D52A61921695B00277EBC /* SldUserInfoController.m */; };
+		B34D52AF1921886000277EBC /* blackDisk90.png in Resources */ = {isa = PBXBuildFile; fileRef = B34D52AD1921886000277EBC /* blackDisk90.png */; };
+		B34D52B01921886000277EBC /* blackDisk90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B34D52AE1921886000277EBC /* blackDisk90@2x.png */; };
 		B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E1B1900C36A0055C419 /* SldEventListViewController.m */; };
 		B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E3C190284DF0055C419 /* SldHttpSession.m */; };
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
@@ -87,6 +95,7 @@
 		B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */; };
 		B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D054601910084C00CEFCBE /* SldMusicViewController.m */; };
 		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
+		B3FB76C31920ACAE000E67B2 /* black32.png in Resources */ = {isa = PBXBuildFile; fileRef = B3FB76C21920ACAE000E67B2 /* black32.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +157,16 @@
 		B33121F619165A10003E05DB /* SldRankController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldRankController.h; sourceTree = "<group>"; };
 		B33121F719165A10003E05DB /* SldRankController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldRankController.m; sourceTree = "<group>"; };
 		B33121FA1916D02C003E05DB /* thumbDarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumbDarker.png; sourceTree = "<group>"; };
+		B33DD3811921132A006B8ACD /* MMPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPickerView.h; sourceTree = "<group>"; };
+		B33DD3821921132A006B8ACD /* MMPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPickerView.m; sourceTree = "<group>"; };
+		B33DD384192124BE006B8ACD /* qqBlack36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qqBlack36.png; sourceTree = "<group>"; };
+		B33DD385192124BE006B8ACD /* qqBlack36@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qqBlack36@2x.png"; sourceTree = "<group>"; };
+		B33DD386192124BE006B8ACD /* weiboBlack36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weiboBlack36.png; sourceTree = "<group>"; };
+		B33DD387192124BE006B8ACD /* weiboBlack36@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "weiboBlack36@2x.png"; sourceTree = "<group>"; };
+		B34D52A51921695B00277EBC /* SldUserInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldUserInfoController.h; sourceTree = "<group>"; };
+		B34D52A61921695B00277EBC /* SldUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserInfoController.m; sourceTree = "<group>"; };
+		B34D52AD1921886000277EBC /* blackDisk90.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackDisk90.png; sourceTree = "<group>"; };
+		B34D52AE1921886000277EBC /* blackDisk90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackDisk90@2x.png"; sourceTree = "<group>"; };
 		B3691E1A1900C36A0055C419 /* SldEventListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventListViewController.h; sourceTree = "<group>"; };
 		B3691E1B1900C36A0055C419 /* SldEventListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventListViewController.m; sourceTree = "<group>"; };
 		B3691E3B190284DF0055C419 /* SldHttpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldHttpSession.h; sourceTree = "<group>"; };
@@ -234,6 +253,7 @@
 		B3D054601910084C00CEFCBE /* SldMusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMusicViewController.m; sourceTree = "<group>"; };
 		B3F517721903B1BF00499209 /* SldLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldLoginViewController.h; sourceTree = "<group>"; };
 		B3F517731903B1BF00499209 /* SldLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldLoginViewController.m; sourceTree = "<group>"; };
+		B3FB76C21920ACAE000E67B2 /* black32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black32.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,6 +408,8 @@
 				B374C57E1919026900E5C6A2 /* SldCollectionView.m */,
 				B39E4513191FB72300CBB247 /* MSWeakTimer.h */,
 				B39E4514191FB72400CBB247 /* MSWeakTimer.m */,
+				B33DD3811921132A006B8ACD /* MMPickerView.h */,
+				B33DD3821921132A006B8ACD /* MMPickerView.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -414,6 +436,8 @@
 				B38110481914F5B00093F321 /* SldNevigationController.m */,
 				B39E4484191E9E6D00CBB247 /* SldUserController.h */,
 				B39E4485191E9E6D00CBB247 /* SldUserController.m */,
+				B34D52A51921695B00277EBC /* SldUserInfoController.h */,
+				B34D52A61921695B00277EBC /* SldUserInfoController.m */,
 				B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */,
 				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
 				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
@@ -452,6 +476,13 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				B34D52AD1921886000277EBC /* blackDisk90.png */,
+				B34D52AE1921886000277EBC /* blackDisk90@2x.png */,
+				B33DD384192124BE006B8ACD /* qqBlack36.png */,
+				B33DD385192124BE006B8ACD /* qqBlack36@2x.png */,
+				B33DD386192124BE006B8ACD /* weiboBlack36.png */,
+				B33DD387192124BE006B8ACD /* weiboBlack36@2x.png */,
+				B3FB76C21920ACAE000E67B2 /* black32.png */,
 				B39E4478191E794800CBB247 /* glyphicons_003_user.png */,
 				B39E4479191E794800CBB247 /* glyphicons_003_user@2x.png */,
 				B39E447A191E794800CBB247 /* glyphicons_017_music.png */,
@@ -598,6 +629,7 @@
 				B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */,
 				B3C1BB7B1910D8BE0062D50C /* btnBgWhite90.png in Resources */,
 				B3C1BB801910D8BE0062D50C /* glyphicons_177_fast_forward.png in Resources */,
+				B34D52B01921886000277EBC /* blackDisk90@2x.png in Resources */,
 				B39E447E191E794800CBB247 /* glyphicons_017_music.png in Resources */,
 				B3C1BB851910D8BE0062D50C /* pause.png in Resources */,
 				B3815E79190C0D7A003AF183 /* ui in Resources */,
@@ -606,7 +638,11 @@
 				B3C1BB89191133910062D50C /* btnBgBlack90.png in Resources */,
 				B3C1BB7D1910D8BE0062D50C /* glyphicons_173_play@2x.png in Resources */,
 				B39E447C191E794800CBB247 /* glyphicons_003_user.png in Resources */,
+				B34D52AF1921886000277EBC /* blackDisk90.png in Resources */,
 				B3C1BB7A1910D8BE0062D50C /* btnBgWhite50.png in Resources */,
+				B3FB76C31920ACAE000E67B2 /* black32.png in Resources */,
+				B33DD38B192124BE006B8ACD /* weiboBlack36@2x.png in Resources */,
+				B33DD38A192124BE006B8ACD /* weiboBlack36.png in Resources */,
 				B3C0AF5F1906703200CB4DFD /* db in Resources */,
 				B3C1BB821910D8BE0062D50C /* glyphicons_178_step_forward.png in Resources */,
 				B3C1BB811910D8BE0062D50C /* glyphicons_177_fast_forward@2x.png in Resources */,
@@ -625,7 +661,9 @@
 				B3C1BB7E1910D8BE0062D50C /* glyphicons_175_stop.png in Resources */,
 				B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */,
 				B3C1BB8B191137400062D50C /* btnBgGray90.png in Resources */,
+				B33DD389192124BE006B8ACD /* qqBlack36@2x.png in Resources */,
 				B31EE7E418F05BE60047E9FD /* Main_iPad.storyboard in Resources */,
+				B33DD388192124BE006B8ACD /* qqBlack36.png in Resources */,
 				B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */,
 				B3C1BB7F1910D8BE0062D50C /* glyphicons_175_stop@2x.png in Resources */,
 				B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */,
@@ -658,6 +696,7 @@
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
 				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
+				B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
@@ -675,6 +714,7 @@
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
 				B39E452B192028F100CBB247 /* SldGifImageView.m in Sources */,
+				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,
 				B374C5781916E2F900E5C6A2 /* SldEventViewHubController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,

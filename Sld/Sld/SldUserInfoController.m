@@ -1,61 +1,103 @@
 //
-//  SldUserController.m
+//  SldUserInfoController.m
 //  Sld
 //
-//  Created by Wei Li on 14-5-11.
+//  Created by Wei Li on 14-5-13.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldUserController.h"
-#import "SldLoginViewController.h"
+#import "SldUserInfoController.h"
+#import "MMPickerView.h"
 
-@interface SldUserController ()
-@property (weak, nonatomic) IBOutlet UITableViewCell *logoutCell;
+@interface SldUserInfoController ()
+@property (weak, nonatomic) IBOutlet UITextField *nameInput;
+@property (weak, nonatomic) IBOutlet UITextField *genderInput;
+@property (weak, nonatomic) IBOutlet UITextField *teamInput;
+@property (weak, nonatomic) IBOutlet UIButton *avatarImageView;
 
 @end
 
-@implementation SldUserController
+@implementation SldUserInfoController
 
-
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     // Uncomment the following line to preserve selection between presentations.
-    self.clearsSelectionOnViewWillAppear = YES;
+    // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didReceiveMemoryWarning
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (cell == _logoutCell) {
-        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)onGenderButton:(id)sender {
+    [self.view endEditing:YES];
+    NSArray *strings = @[@"男", @"女", @"其他"];
+    
+    NSDictionary *options = nil;
+    if ([strings indexOfObject:_genderInput.text] != NSNotFound ) {
+        options = @{MMselectedObject:_genderInput.text};
     }
-}
-
-- (IBAction)saveUserInfo:(UIStoryboardSegue *)segue {
     
+    [MMPickerView showPickerViewInView:self.navigationController.view
+                           withStrings:strings
+                           withOptions:options
+                            completion:^(NSString *selectedString) {
+                                _genderInput.text = selectedString;
+                            }];
 }
 
-- (IBAction)cancelUserInfo:(UIStoryboardSegue *)segue {
+- (IBAction)onTeamButton:(id)sender {
+    [self.view endEditing:YES];
+    NSArray *strings = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西族",@"贵州",@"海南",@"河北",@"黑龙江",@"河南",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
     
+    NSDictionary *options = nil;
+    if ([strings indexOfObject:_teamInput.text] != NSNotFound ) {
+        options = @{MMselectedObject:_teamInput.text};
+    }
+    
+    [MMPickerView showPickerViewInView:self.navigationController.view
+                           withStrings:strings
+                           withOptions:options
+                            completion:^(NSString *selectedString) {
+                                _teamInput.text = selectedString;
+                            }];
 }
 
+- (IBAction)onSave:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
+- (IBAction)onCancel:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 #pragma mark - Table view data source
 
 //- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 //{
-//    return 0;
+//
+//    return 1;
 //}
 //
 //- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 //{
-//    return 0;
+//
+//    return 2;
 //}
 
 /*

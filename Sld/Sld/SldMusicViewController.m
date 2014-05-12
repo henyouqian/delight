@@ -141,6 +141,8 @@ NSArray *_channels = nil;
     NSString *thumbLocal = makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, localFileName]);
     if ([[NSFileManager defaultManager] fileExistsAtPath:thumbLocal]) { //local
         UIImage *image = [UIImage imageWithContentsOfFile:thumbLocal];
+        //image = [image imageWithGradientTintColor:[UIColor colorWithRed:0.3 green:0.3 blue:0 alpha:.5]];
+        //image = [image imageWithTintColor:[UIColor colorWithRed:0.3 green:0.3 blue:0.2 alpha:.5] blendMode:kCGBlendModeMultiply];
         //image = [self setImage:image alpha:.5f];
         cell.imageView.image = image;
         
@@ -251,7 +253,7 @@ static NSString *animKey = @"cellRotationAnimation";
     if (!anim) {
         anim = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         anim.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
-        anim.duration = 2.f;
+        anim.duration = 60.f/33.33f;
         anim.cumulative = NO;
         anim.repeatCount = 10000000;
         
@@ -267,6 +269,8 @@ static NSString *animKey = @"cellRotationAnimation";
     }
     
     _rotatingCell = cell;
+    
+    cell.coverView.hidden = YES;
 }
 
 - (void)stopRotateCell:(ChannelCell*)cell {
@@ -276,6 +280,8 @@ static NSString *animKey = @"cellRotationAnimation";
     layer.speed = 0.0;
     layer.timeOffset = pausedTime;
     _rotatingCell = nil;
+    
+    cell.coverView.hidden = NO;
 }
 
 - (void)didBecomeActiveNotification {
