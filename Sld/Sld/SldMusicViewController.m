@@ -147,7 +147,7 @@ NSArray *_channels = nil;
         cell.imageView.image = image;
         
         CALayer* maskLayer = [CALayer layer];
-        maskLayer.frame = CGRectMake(3, 3, 74, 74);
+        maskLayer.frame = CGRectMake(2, 2, 74, 74);
         maskLayer.contents = (__bridge id)[[UIImage imageNamed:@"btnBgWhite90.png"] CGImage];
         cell.imageView.layer.mask = maskLayer;
         
