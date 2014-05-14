@@ -7,13 +7,22 @@
 //
 
 #import "SldMusicViewController.h"
-#import "SldStreamPlayer.h"
 #import "SldHttpSession.h"
 #import "config.h"
 #import "util.h"
+#import "MarqueeLabel.h"
 
 NSString *listChannelUrl = @"http://douban.fm/j/explore/hot_channels";
 NSArray *_channels = nil;
+
+//SldMusicHeaderView
+@interface SldMusicHeaderView : UICollectionReusableView
+@property (weak, nonatomic) IBOutlet MarqueeLabel *label;
+@end
+
+@implementation SldMusicHeaderView
+@end
+
 
 //#pragma mark - ChannelCell
 
@@ -32,6 +41,8 @@ NSArray *_channels = nil;
 @interface SldMusicViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) ChannelCell *rotatingCell;
+
+@property (nonatomic) MarqueeLabel *headerLabel;
 @end
 
 @implementation SldMusicViewController
@@ -65,7 +76,7 @@ NSArray *_channels = nil;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     //_collectionView.contentOffset = CGPointMake(0.f, 40.f);
-    _collectionView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+    //_collectionView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
     
     //get channel list
     if (_channels == nil) {
@@ -87,6 +98,8 @@ NSArray *_channels = nil;
                                             selector:@selector(didBecomeActiveNotification)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    
+    [SldStreamPlayer defautPlayer].delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -237,6 +250,34 @@ static NSString *animKey = @"cellRotationAnimation";
 //    }
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    if (kind == UICollectionElementKindSectionHeader) {
+        SldMusicHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"musicHeaderView" forIndexPath:indexPath];
+        
+        _headerLabel = headerView.label;
+        _headerLabel.text = @"请选择电台";
+        _headerLabel.textColor = [UIColor whiteColor];
+        _headerLabel.marqueeType = MLContinuous;
+        _headerLabel.continuousMarqueeExtraBuffer = 100;
+        _headerLabel.fadeLength = 20;
+        
+        //
+        SldStreamPlayer *player = [SldStreamPlayer defautPlayer];
+        if (player.songs.count) {
+            Song *song = [player.songs objectAtIndex:player.songIdx];
+            if (song) {
+                [self onSongChangeWithTitle:song.title artist:song.artist];
+            }
+        }
+        
+        return headerView;
+    }
+    
+    
+    return nil;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
 //    NSDictionary *channel = [_channels objectAtIndex:indexPath.row];
 //    if (channel && [[channel objectForKey:@"id"] intValue] == [SldStreamPlayer defautPlayer].channelId) {
@@ -296,4 +337,16 @@ static NSString *animKey = @"cellRotationAnimation";
     }
 }
 
+- (void)onSongChangeWithTitle:(NSString*)title artist:(NSString*)artist {
+    if (_headerLabel) {
+        _headerLabel.text = [NSString stringWithFormat:@"%@【%@】", title, artist];
+        [_headerLabel restartLabel];
+    }
+}
+
 @end
+
+
+
+
+

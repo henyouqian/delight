@@ -10,6 +10,7 @@
 #import "SldNevigationController.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
+#import "UIImageView+sldAsyncLoad.h"
 
 //CommentCell
 @interface ActivityCell : UITableViewCell
@@ -134,19 +135,9 @@
     cell.iconView.image = nil;
     cell.userNameLabel.text = activityData.userName;
     
-    
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    //NSString *imgPath = makeImagePath([NSString stringWithFormat:@"icon%d.png", indexPath.row]);
-    [session loadImageFromUrl:[NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", activityData.userId] completionHandler:^(NSString *localPath, NSError *error)
-     {
-         if (error == nil) {
-             ActivityCell *cell = (ActivityCell*)[tableView cellForRowAtIndexPath:indexPath];
-             if (cell) {
-                 UIImage *image = [UIImage imageWithContentsOfFile:localPath];
-                 cell.iconView.image = image;
-             }
-         }
-     }];
+    cell.iconView.image = nil;
+    NSString *avatarUrl = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", activityData.userId];
+    [cell.iconView asyncLoadImageWithUrl:avatarUrl showIndicator:NO completion:nil];
     
     return cell;
 }

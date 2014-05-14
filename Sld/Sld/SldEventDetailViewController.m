@@ -98,7 +98,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id), @"UserId":@0};
     [session postToApi:@"event/getUserPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            alertServerError(error, data);
+            alertHTTPError(error, data);
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -300,7 +300,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         [session postToApi:@"event/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             self.view.userInteractionEnabled = YES;
             if (error) {
-                alertServerError(error, data);
+                alertHTTPError(error, data);
             } else {
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error) {

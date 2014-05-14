@@ -36,6 +36,7 @@
 		B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = B34D52A61921695B00277EBC /* SldUserInfoController.m */; };
 		B34D52AF1921886000277EBC /* blackDisk90.png in Resources */ = {isa = PBXBuildFile; fileRef = B34D52AD1921886000277EBC /* blackDisk90.png */; };
 		B34D52B01921886000277EBC /* blackDisk90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B34D52AE1921886000277EBC /* blackDisk90@2x.png */; };
+		B34D52B51923648100277EBC /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B34D52B41923648100277EBC /* MarqueeLabel.m */; };
 		B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E1B1900C36A0055C419 /* SldEventListViewController.m */; };
 		B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B3691E3C190284DF0055C419 /* SldHttpSession.m */; };
 		B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C27D918F7D8A700E5A38A /* SldGameScene.m */; };
@@ -49,7 +50,6 @@
 		B36DAD2B190FB46F00435EF4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD1A190FA50B00435EF4 /* AVFoundation.framework */; };
 		B374C5781916E2F900E5C6A2 /* SldEventViewHubController.m in Sources */ = {isa = PBXBuildFile; fileRef = B374C5771916E2F900E5C6A2 /* SldEventViewHubController.m */; };
 		B374C57B19177B2F00E5C6A2 /* SldGameData.m in Sources */ = {isa = PBXBuildFile; fileRef = B374C57A19177B2F00E5C6A2 /* SldGameData.m */; };
-		B374C57F1919026900E5C6A2 /* SldCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B374C57E1919026900E5C6A2 /* SldCollectionView.m */; };
 		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
 		B38110401913FC750093F321 /* config.m in Sources */ = {isa = PBXBuildFile; fileRef = B381103F1913FC750093F321 /* config.m */; };
 		B38110431914CAF10093F321 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38110421914CAF10093F321 /* GameKit.framework */; };
@@ -72,7 +72,6 @@
 		B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B39E450D191ED0BB00CBB247 /* MWPhotoBrowser.bundle */; };
 		B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E4514191FB72400CBB247 /* MSWeakTimer.m */; };
 		B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */; };
-		B39E452B192028F100CBB247 /* SldGifImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E452A192028F100CBB247 /* SldGifImageView.m */; };
 		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
 		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
@@ -167,6 +166,8 @@
 		B34D52A61921695B00277EBC /* SldUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserInfoController.m; sourceTree = "<group>"; };
 		B34D52AD1921886000277EBC /* blackDisk90.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackDisk90.png; sourceTree = "<group>"; };
 		B34D52AE1921886000277EBC /* blackDisk90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackDisk90@2x.png"; sourceTree = "<group>"; };
+		B34D52B31923648100277EBC /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarqueeLabel.h; sourceTree = "<group>"; };
+		B34D52B41923648100277EBC /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarqueeLabel.m; sourceTree = "<group>"; };
 		B3691E1A1900C36A0055C419 /* SldEventListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventListViewController.h; sourceTree = "<group>"; };
 		B3691E1B1900C36A0055C419 /* SldEventListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventListViewController.m; sourceTree = "<group>"; };
 		B3691E3B190284DF0055C419 /* SldHttpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldHttpSession.h; sourceTree = "<group>"; };
@@ -191,8 +192,6 @@
 		B374C5771916E2F900E5C6A2 /* SldEventViewHubController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventViewHubController.m; sourceTree = "<group>"; };
 		B374C57919177B2F00E5C6A2 /* SldGameData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGameData.h; sourceTree = "<group>"; };
 		B374C57A19177B2F00E5C6A2 /* SldGameData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGameData.m; sourceTree = "<group>"; };
-		B374C57D1919026900E5C6A2 /* SldCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldCollectionView.h; sourceTree = "<group>"; };
-		B374C57E1919026900E5C6A2 /* SldCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldCollectionView.m; sourceTree = "<group>"; };
 		B37A9C3418F2E4850080E8F0 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		B37A9C3518F2E4850080E8F0 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		B381103E1913FC750093F321 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
@@ -226,8 +225,6 @@
 		B39E4514191FB72400CBB247 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
 		B39E452619201C1A00CBB247 /* UIImageView+sldAsyncLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+sldAsyncLoad.h"; sourceTree = "<group>"; };
 		B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+sldAsyncLoad.m"; sourceTree = "<group>"; };
-		B39E4529192028F100CBB247 /* SldGifImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGifImageView.h; sourceTree = "<group>"; };
-		B39E452A192028F100CBB247 /* SldGifImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGifImageView.m; sourceTree = "<group>"; };
 		B3C0AECD190666BE00CB4DFD /* libExt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libExt.xcodeproj; path = External/libExt.xcodeproj; sourceTree = "<group>"; };
 		B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		B3C0AF5E1906703200CB4DFD /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; name = db; path = res/db; sourceTree = "<group>"; };
@@ -382,34 +379,21 @@
 				B374C57A19177B2F00E5C6A2 /* SldGameData.m */,
 				B36DAD15190F99F900435EF4 /* SldStreamPlayer.h */,
 				B36DAD16190F99F900435EF4 /* SldStreamPlayer.m */,
-				B36C27DB18F8087B00E5A38A /* SldSprite.h */,
-				B36C27DC18F8087B00E5A38A /* SldSprite.m */,
 				B37A9C3418F2E4850080E8F0 /* util.h */,
 				B37A9C3518F2E4850080E8F0 /* util.m */,
 				B3691E3B190284DF0055C419 /* SldHttpSession.h */,
 				B3691E3C190284DF0055C419 /* SldHttpSession.m */,
+				B36C27DB18F8087B00E5A38A /* SldSprite.h */,
+				B36C27DC18F8087B00E5A38A /* SldSprite.m */,
 				B31CBEA219089EA700621165 /* SldDb.h */,
 				B31CBEA319089EA700621165 /* SldDb.m */,
 				B31CBEB1190AA47500621165 /* SldButton.h */,
 				B31CBEB2190AA47500621165 /* SldButton.m */,
-				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
-				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
-				B39E4529192028F100CBB247 /* SldGifImageView.h */,
-				B39E452A192028F100CBB247 /* SldGifImageView.m */,
-				B3C1BB8C191159EF0062D50C /* UIImage+animatedGIF.h */,
-				B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */,
 				B39E452619201C1A00CBB247 /* UIImageView+sldAsyncLoad.h */,
 				B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */,
-				B38110441914D8F30093F321 /* GameKitHelper.h */,
-				B38110451914D8F30093F321 /* GameKitHelper.m */,
 				B381103E1913FC750093F321 /* config.h */,
 				B381103F1913FC750093F321 /* config.m */,
-				B374C57D1919026900E5C6A2 /* SldCollectionView.h */,
-				B374C57E1919026900E5C6A2 /* SldCollectionView.m */,
-				B39E4513191FB72300CBB247 /* MSWeakTimer.h */,
-				B39E4514191FB72400CBB247 /* MSWeakTimer.m */,
-				B33DD3811921132A006B8ACD /* MMPickerView.h */,
-				B33DD3821921132A006B8ACD /* MMPickerView.m */,
+				B363AD671923D21C001CD6D6 /* thirdParty */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -427,6 +411,25 @@
 			name = res;
 			sourceTree = "<group>";
 		};
+		B363AD671923D21C001CD6D6 /* thirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
+				B36DACD4190EC36500435EF4 /* TouchPriority.m */,
+				B3C1BB8C191159EF0062D50C /* UIImage+animatedGIF.h */,
+				B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */,
+				B38110441914D8F30093F321 /* GameKitHelper.h */,
+				B38110451914D8F30093F321 /* GameKitHelper.m */,
+				B39E4513191FB72300CBB247 /* MSWeakTimer.h */,
+				B39E4514191FB72400CBB247 /* MSWeakTimer.m */,
+				B33DD3811921132A006B8ACD /* MMPickerView.h */,
+				B33DD3821921132A006B8ACD /* MMPickerView.m */,
+				B34D52B31923648100277EBC /* MarqueeLabel.h */,
+				B34D52B41923648100277EBC /* MarqueeLabel.m */,
+			);
+			name = thirdParty;
+			sourceTree = "<group>";
+		};
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -434,14 +437,14 @@
 				B31EE7E218F05BE60047E9FD /* Main_iPad.storyboard */,
 				B38110471914F5B00093F321 /* SldNevigationController.h */,
 				B38110481914F5B00093F321 /* SldNevigationController.m */,
+				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
+				B3F517731903B1BF00499209 /* SldLoginViewController.m */,
 				B39E4484191E9E6D00CBB247 /* SldUserController.h */,
 				B39E4485191E9E6D00CBB247 /* SldUserController.m */,
 				B34D52A51921695B00277EBC /* SldUserInfoController.h */,
 				B34D52A61921695B00277EBC /* SldUserInfoController.m */,
 				B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */,
 				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
-				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
-				B3F517731903B1BF00499209 /* SldLoginViewController.m */,
 				B3691E1A1900C36A0055C419 /* SldEventListViewController.h */,
 				B3691E1B1900C36A0055C419 /* SldEventListViewController.m */,
 				B374C5761916E2F900E5C6A2 /* SldEventViewHubController.h */,
@@ -692,6 +695,7 @@
 				B37A9C3618F2E4850080E8F0 /* util.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
+				B34D52B51923648100277EBC /* MarqueeLabel.m in Sources */,
 				B383536D191ACA4700D259F5 /* SldLobbyController.m in Sources */,
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
 				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
@@ -707,13 +711,11 @@
 				B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */,
 				B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
-				B374C57F1919026900E5C6A2 /* SldCollectionView.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
 				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
-				B39E452B192028F100CBB247 /* SldGifImageView.m in Sources */,
 				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,
 				B374C5781916E2F900E5C6A2 /* SldEventViewHubController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,

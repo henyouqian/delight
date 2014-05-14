@@ -14,11 +14,15 @@
 #import "config.h"
 #import "util.h"
 #import "UIImage+animatedGIF.h"
+#import "UIImageView+sldAsyncLoad.h"
 
 @interface RankCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+@property (weak, nonatomic) IBOutlet UILabel *teamLabel;
+@property (weak, nonatomic) IBOutlet UILabel *likeLabel;
 @end
 
 @implementation RankCell
@@ -37,8 +41,10 @@
 
 @interface RankInfo : NSObject
 @property (nonatomic) NSNumber *rank;
+@property (nonatomic) UInt64 userId;
 @property (nonatomic) NSString *userName;
 @property (nonatomic) NSString *score;
+@property (nonatomic) NSString *teamName;
 @end
 
 @implementation RankInfo
@@ -122,7 +128,7 @@
         [self.refreshControl endRefreshing];
         _loadingRank = NO;
         if (error) {
-            alertServerError(error, data);
+            alertHTTPError(error, data);
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -178,7 +184,7 @@
     [session postToApi:@"event/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _loadingRank = NO;
         if (error) {
-            alertServerError(error, data);
+            alertHTTPError(error, data);
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -243,17 +249,30 @@
     SldEventDetailViewController *detailVc = [SldEventDetailViewController getInstance];
     UIColor *meColor = makeUIColor(255, 197, 131, 255);
     UIColor *normalColor = [UIColor whiteColor];
+    
+    void (^setLabelColor)(RankCell*, UIColor*) = ^(RankCell *cell, UIColor *color){
+        [cell.rankLabel setTextColor:color];
+        [cell.userNameLabel setTextColor:color];
+        [cell.scoreLabel setTextColor:color];
+        [cell.teamLabel setTextColor:color];
+        [cell.likeLabel setTextColor:color];
+    };
+    
     if (indexPath.section == 0) {
         RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
         [cell reset];
         cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
-        cell.userNameLabel.text = @"我";
+        cell.userNameLabel.text = [SldGameData getInstance].userName;
         cell.rankLabel.text = detailVc.rankStr;
         cell.scoreLabel.text = detailVc.highScoreStr;
         
-        [cell.rankLabel setTextColor:meColor];
-        [cell.userNameLabel setTextColor:meColor];
-        [cell.scoreLabel setTextColor:meColor];
+        setLabelColor(cell, meColor);
+        
+        //avatar
+        cell.avatarImageView.image = nil;
+        NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=96", detailVc.rankStr];
+        [cell.avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+        
         return cell;
     } else if (indexPath.section == 1) {
         if (indexPath.row < [_rankInfos count]) {
@@ -264,30 +283,23 @@
                 cell.rankLabel.text = [NSString stringWithFormat:@"%d", [rankInfo.rank intValue]];
                 cell.userNameLabel.text = rankInfo.userName;
                 cell.scoreLabel.text = rankInfo.score;
+                cell.teamLabel.text = rankInfo.teamName;
+                
                 if (detailVc.rankStr && [detailVc.rankStr compare:cell.rankLabel.text] == 0) {
-                    cell.userNameLabel.text = @"我";
-                    [cell.rankLabel setTextColor:meColor];
-                    [cell.userNameLabel setTextColor:meColor];
-                    [cell.scoreLabel setTextColor:meColor];
+                    setLabelColor(cell, meColor);
                 } else {
-                    [cell.rankLabel setTextColor:normalColor];
-                    [cell.userNameLabel setTextColor:normalColor];
-                    [cell.scoreLabel setTextColor:normalColor];
+                    setLabelColor(cell, normalColor);
                 }
+                
+                //avatar
+                cell.avatarImageView.image = nil;
+                NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=96", rankInfo.rank];
+                [cell.avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+                
                 return cell;
             }
         } else if (indexPath.row == [_rankInfos count]) {
             BottomCell *bottomCell = [tableView dequeueReusableCellWithIdentifier:@"bottomCell" forIndexPath:indexPath];
-            
-            
-//            UITableViewCell *bottomCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-//            //bottomCell.textLabel.text = @"  Tap to load more";
-//            bottomCell.textLabel.textColor = [UIColor whiteColor];
-//            bottomCell.backgroundColor = [UIColor clearColor];
-//            bottomCell.selectionStyle = UITableViewCellSelectionStyleNone;
-//            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-//            [button setTitle:@"Tap to load more" forState:UIControlStateNormal|UIControlStateHighlighted];
-//            [bottomCell addSubview:button];
             return bottomCell;
         }
     }
@@ -321,6 +333,15 @@
             break;
     }
     return sectionName;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return 62;
+    } else if (indexPath.section == 1) {
+        return 62;
+    }
+    return 0;
 }
 
 /*

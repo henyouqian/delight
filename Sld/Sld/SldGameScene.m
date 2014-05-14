@@ -864,7 +864,7 @@ static float lerpf(float a, float b, float t) {
                                @"Score":@(score)};
         [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
-                alertServerError(error, data);
+                alertHTTPError(error, data);
             } else {
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error) {

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SldStreamPlayer.h"
 
-@interface SldMusicViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface SldMusicViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate, SldStreamPlayerDelegate>
 
 @end

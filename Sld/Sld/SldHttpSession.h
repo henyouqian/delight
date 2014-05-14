@@ -13,6 +13,8 @@
 + (instancetype)defaultSession;
 + (instancetype)sessionWithHost:(NSString*)host;
 
+- (void)logoutWithComplete:(void(^)(void))complete;
+
 - (void)postToApi:(NSString*)api
              body:(id)body
 completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler;
@@ -31,4 +33,4 @@ completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *erro
 
 BOOL isServerError(NSError *error);
 NSString* getServerErrorType(NSData *data);
-void alertServerError(NSError *error, NSData *data);
+void alertHTTPError(NSError *error, NSData *data);

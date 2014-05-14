@@ -15,6 +15,11 @@
 @property (nonatomic, strong) NSNumber *sid;
 @end
 
+@protocol SldStreamPlayerDelegate <NSObject>
+@required
+- (void)onSongChangeWithTitle:(NSString*)title artist:(NSString*)artist;
+@end
+
 typedef void (^FadeoutBlock) ();
 
 @interface SldStreamPlayer : NSObject
@@ -24,6 +29,7 @@ typedef void (^FadeoutBlock) ();
 @property (nonatomic) BOOL paused;
 @property (nonatomic) NSMutableArray *songs;
 @property (nonatomic) int songIdx;
+@property (weak, nonatomic) id <SldStreamPlayerDelegate> delegate;
 
 + (instancetype)defautPlayer;
 

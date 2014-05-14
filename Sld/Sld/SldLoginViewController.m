@@ -13,6 +13,7 @@
 #import "SSKeychain/SSkeychain.h"
 #import "SldGameData.h"
 #import "MMPickerView.h"
+#import "SldUserInfoController.h"
 
 static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
@@ -28,8 +29,14 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
 + (void)createAndPresentWithCurrentController:(UIViewController*)currController animated:(BOOL)animated{
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
-    UIViewController* controller = [storyboard instantiateViewControllerWithIdentifier:@"login"];
-    [currController presentViewController:controller animated:animated completion:nil];
+    SldLoginViewController* controller = (SldLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"login"];
+    UIViewController *vc = currController.navigationController;
+    if (vc) {
+        [vc presentViewController:controller animated:animated completion:nil];
+    } else {
+        [currController presentViewController:controller animated:animated completion:nil];
+    }
+    controller.shouldDismiss = NO;
 }
 
 - (IBAction)onTouchView:(id)sender {
@@ -88,26 +95,33 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     NSString *username = self.usernameInput.text;
     NSString *password = self.passwordInput.text;
     if ([username length] == 0 || [password length] == 0) {
-        alert(@"Error", @"Fill the blank.");
+        alert(@"Fill the blank.", nil);
         return;
     }
+    
+    UIAlertView *loginAlert = [[UIAlertView alloc] initWithTitle:@"Login ..."
+                                                  message:nil
+                                                 delegate:nil
+                                        cancelButtonTitle:nil
+                                        otherButtonTitles:nil];
+    [loginAlert show];
+    
     NSDictionary *body = @{@"Username":username, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/login" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [loginAlert dismissWithClickedButtonIndex:0 animated:YES];
+        
         if (error) {
             NSString *errType = getServerErrorType(data);
             if ([errType compare:@"err_not_match"] == 0) {
-                alert(@"Error", @"Username and password dismatch.");
+                alert(@"Username and password dismatch.", nil);
             } else {
-                alertServerError(error, data);
+                alertHTTPError(error, data);
             }
             return;
         }
         
         SldGameData *gameData = [SldGameData getInstance];
-        
-        [self dismissViewControllerAnimated:YES completion:nil];
-        gameData.offline = NO;
         
         //save to keychain
         [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
@@ -128,6 +142,30 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         if (nNow) {
             setServerNow([nNow longLongValue]);
         }
+        
+        //get player info
+        UIAlertView *getUserInfoAlert = [[UIAlertView alloc] initWithTitle:@"Fetching user infos ..."
+                                                                   message:nil
+                                                                  delegate:nil
+                                                         cancelButtonTitle:nil
+                                                         otherButtonTitles:nil];
+        [getUserInfoAlert show];
+        [session postToApi:@"player/getInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [getUserInfoAlert dismissWithClickedButtonIndex:0 animated:YES];
+            if (error) {
+                if (isServerError(error)) {
+                    //show player setting page
+                    [SldUserInfoController createAndPresentFromController:self cancelable:NO];
+                } else {
+                    alertHTTPError(error, data);
+                }
+                
+            } else {
+                gameData.offline = NO;
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+            
+        }];
     }];
 }
 
@@ -142,7 +180,7 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/register" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            alertServerError(error, data);
+            alertHTTPError(error, data);
             return;
         }
         
@@ -154,10 +192,12 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [_usernameInput becomeFirstResponder];
+- (void)viewDidAppear:(BOOL)animated {
+    if (self.shouldDismiss) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [_usernameInput becomeFirstResponder];
+    }
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField*)textField;

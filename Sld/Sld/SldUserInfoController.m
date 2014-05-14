@@ -8,25 +8,40 @@
 
 #import "SldUserInfoController.h"
 #import "MMPickerView.h"
+#import "SldLoginViewController.h"
+#import "util.h"
 
 @interface SldUserInfoController ()
 @property (weak, nonatomic) IBOutlet UITextField *nameInput;
 @property (weak, nonatomic) IBOutlet UITextField *genderInput;
 @property (weak, nonatomic) IBOutlet UITextField *teamInput;
 @property (weak, nonatomic) IBOutlet UIButton *avatarImageView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 
 @end
 
 @implementation SldUserInfoController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
++ (void)createAndPresentFromController:(UIViewController*)srcController cancelable:(BOOL)cancelable {
+    UINavigationController* navVc = (UINavigationController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"playerSetting"];
+    
+    SldUserInfoController* userInfoVc = (SldUserInfoController*)(navVc.topViewController);
+    
+    if (srcController.navigationController) {
+        srcController = srcController.navigationController;
     }
-    return self;
+    [srcController presentViewController:navVc animated:YES completion:nil];
+    userInfoVc.cancelButton.enabled = cancelable;
 }
+
+//- (id)initWithStyle:(UITableViewStyle)style
+//{
+//    self = [super initWithStyle:style];
+//    if (self) {
+//        // Custom initialization
+//    }
+//    return self;
+//}
 
 - (void)viewDidLoad
 {
@@ -81,10 +96,16 @@
 
 - (IBAction)onSave:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if (self.presentingViewController.class == SldLoginViewController.class) {
+        SldLoginViewController *vc = (SldLoginViewController *)self.presentingViewController;
+        vc.shouldDismiss = YES;
+    }
 }
 
 - (IBAction)onCancel:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 #pragma mark - Table view data source
 

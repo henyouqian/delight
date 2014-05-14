@@ -199,7 +199,11 @@ static void *kBufferingRatioKVOKey = &kBufferingRatioKVOKey;
     if (_streamer) {
         [_streamer removeObserver:self forKeyPath:@"status"];
     }
-    _streamer = [DOUAudioStreamer streamerWithAudioFile:_songs[_songIdx]];
+    Song *song = _songs[_songIdx];
+    _streamer = [DOUAudioStreamer streamerWithAudioFile:song];
+    if (_delegate) {
+        [_delegate onSongChangeWithTitle:song.title artist:song.artist];
+    }
     [_streamer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:kStatusKVOKey];
     [self play];
 }

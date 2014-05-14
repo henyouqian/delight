@@ -228,6 +228,7 @@
         cell.textView.text = commentData.text;
         cell.userNameLabel.text = commentData.userName;
         
+        cell.iconView.image = nil;
         NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", commentData.userId];
         [cell.iconView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
         

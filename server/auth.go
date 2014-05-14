@@ -23,6 +23,10 @@ const (
 	H_USER_TOKEN       = "H_USER_TOKEN" //key:appid/userid, value:token
 )
 
+var (
+	ADMIN_SET = map[string]bool{"admin": true}
+)
+
 type Session struct {
 	Userid   uint64
 	Username string
@@ -75,7 +79,7 @@ func newSession(w http.ResponseWriter, userid uint64, username string, appid uin
 }
 
 func checkAdmin(session *Session) {
-	if session.Username != "admin" {
+	if !ADMIN_SET[session.Username] {
 		lwutil.SendError("err_denied", "")
 	}
 }

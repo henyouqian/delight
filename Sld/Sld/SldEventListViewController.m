@@ -58,6 +58,36 @@ static __weak SldEventListViewController *g_inst = nil;
     return g_inst;
 }
 
+- (void)viewDidLoad
+{
+    g_inst = self;
+    [super viewDidLoad];
+    
+    _gameData = [SldGameData getInstance];
+    
+    //creat image cache dir
+    NSString *imgCacheDir = makeDocPath(@"imgCache");
+    [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    //refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.collectionView.alwaysBounceVertical = YES;
+    [self.collectionView addSubview:self.refreshControl];
+    [self.refreshControl addTarget:self action:@selector(refershControlAction) forControlEvents:UIControlEventValueChanged];
+    
+    //login view
+    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
+    
+    //
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(didBecomeActiveNotification)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+    
+    //
+    _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return [_gameData.eventInfos count];
 }
@@ -65,7 +95,7 @@ static __weak SldEventListViewController *g_inst = nil;
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    EventCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELL_ID forIndexPath:indexPath];
+    __weak EventCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELL_ID forIndexPath:indexPath];
     
     //
     NSInteger idx = indexPath.row;
@@ -106,36 +136,6 @@ static __weak SldEventListViewController *g_inst = nil;
     cell.dateLabel.text = [comps objectAtIndex:0];
     
     return cell;
-}
-
-- (void)viewDidLoad
-{
-    g_inst = self;
-    [super viewDidLoad];
-    
-    _gameData = [SldGameData getInstance];
-    
-    //creat image cache dir
-    NSString *imgCacheDir = makeDocPath(@"imgCache");
-    [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    //refresh control
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    self.collectionView.alwaysBounceVertical = YES;
-    [self.collectionView addSubview:self.refreshControl];
-    [self.refreshControl addTarget:self action:@selector(refershControlAction) forControlEvents:UIControlEventValueChanged];
-    
-    //login view
-    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-    
-    //
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(didBecomeActiveNotification)
-                                                name:UIApplicationDidBecomeActiveNotification
-                                              object:nil];
-    
-    //
-    _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
 }
 
 - (void)refreshList {

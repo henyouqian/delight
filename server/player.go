@@ -10,6 +10,7 @@ import (
 	"net/http"
 	// "strconv"
 	//"strings"
+	"errors"
 	"time"
 )
 
@@ -31,26 +32,23 @@ func init() {
 }
 
 type PlayerInfo struct {
-	Name   string
-	TeamId uint32
+	Name            string
+	TeamName        string
+	CustomAvatarKey string
+	GravatarKey     string
 }
 
-func _getPlayerInfo(ssdb *ssdb.Client, session *Session, playerInfo *PlayerInfo) {
+func _getPlayerInfo(ssdb *ssdb.Client, session *Session, playerInfo *PlayerInfo) (err error) {
 	resp, err := ssdb.Do("hget", H_PLAYER_INFO, session.Userid)
 	lwutil.CheckError(err, "err_ssdb")
 
 	if resp[0] == "not_found" {
-		playerInfo.Name = session.Username
-		playerInfo.TeamId = 0
-
-		js, err := json.Marshal(playerInfo)
-		lwutil.CheckError(err, "")
-		resp, err := ssdb.Do("hset", H_PLAYER_INFO, session.Userid, js)
-		lwutil.CheckSsdbError(resp, err)
+		return errors.New("not_found")
 	} else {
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
 		lwutil.CheckError(err, "")
 	}
+	return nil
 }
 
 func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +66,8 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	//get info
 	var playerInfo PlayerInfo
-	_getPlayerInfo(ssdb, session, &playerInfo)
+	err = _getPlayerInfo(ssdb, session, &playerInfo)
+	lwutil.CheckError(err, "")
 
 	//out
 	out := struct {
@@ -93,27 +92,16 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	var in PlayerInfo
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-	if TEAM_MAP[in.TeamId] == false {
-		lwutil.SendError("err_team", "")
+
+	//check playerInfo
+	if in.Name == "" || in.TeamName == "" || (in.GravatarKey == "" && in.CustomAvatarKey == "") {
+		lwutil.SendError("err_info_incomplete", "")
 	}
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
-
-	//get player info
-	if in.Name == "" || in.TeamId == 0 {
-		var playerInfo PlayerInfo
-		_getPlayerInfo(ssdb, session, &playerInfo)
-
-		if in.Name == "" {
-			in.Name = playerInfo.Name
-		}
-		if in.TeamId == 0 {
-			in.TeamId = playerInfo.TeamId
-		}
-	}
 
 	//set
 	js, err := json.Marshal(in)

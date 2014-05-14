@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SldUserInfoController : UITableViewController
-
++ (void)createAndPresentFromController:(UIViewController*)srcController cancelable:(BOOL)cancelable;
 @end

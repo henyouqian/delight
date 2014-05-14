@@ -43,6 +43,14 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
     return self;
 }
 
+- (void)logoutWithComplete:(void(^)(void))complete{
+    [_session resetWithCompletionHandler:^{
+        if (complete) {
+            complete();
+        }
+    }];
+}
+
 - (void)cancelAllTask {
     [_session invalidateAndCancel];
     NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -149,18 +157,17 @@ NSString* getServerErrorType(NSData *data) {
     NSError *jsonErr;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonErr];
     if (jsonErr) {
-        alert(@"Json error", [jsonErr localizedDescription]);
-        return @"err_local_json_parse";
+        return @"err_not_server_error";
     }
     NSString *errorType = [dict objectForKey:@"Error"];
     if (errorType) {
         return errorType;
     } else {
-        return @"err_local_json_type";
+        return @"err_not_server_error";
     }
 }
 
-void alertServerError(NSError *error, NSData *data) {
+void alertHTTPError(NSError *error, NSData *data) {
     if (!error) return;
     if (error.code == 400 || error.code == 500) {
         NSError *jsonErr;

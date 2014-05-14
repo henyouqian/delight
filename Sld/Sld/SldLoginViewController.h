@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SldLoginViewController : UIViewController<UITextFieldDelegate>
+@property (nonatomic) BOOL shouldDismiss;
 + (void)createAndPresentWithCurrentController:(UIViewController*)currController animated:(BOOL)animated;
 @end

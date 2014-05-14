@@ -7,7 +7,7 @@ function Controller($scope, $http) {
 				{
 					"name": "login",
 					"method": "POST",
-					"data": {"Username":"admin", "Password":"admin", "Appsecret":"I3iKFfHISplalqqVvOsCcA=="}
+					"data": {"Username":"aa", "Password":"aa"}
 				},{
 					"name": "logout",
 					"method": "POST",
@@ -146,7 +146,7 @@ function Controller($scope, $http) {
 				},{
 					"name": "setInfo",
 					"method": "POST",
-					"data": {"Name":"", "TeamId": 11}
+					"data": {"Name":"", "TeamName":"上海", "CustomAvatarKey":"", "GravatarKey":""}
 				}
 			]
 		},{

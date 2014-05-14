@@ -8,6 +8,7 @@
 
 #import "SldUserController.h"
 #import "SldLoginViewController.h"
+#import "SldHttpSession.h"
 
 @interface SldUserController ()
 @property (weak, nonatomic) IBOutlet UITableViewCell *logoutCell;
@@ -15,8 +16,6 @@
 @end
 
 @implementation SldUserController
-
-
 
 - (void)viewDidLoad
 {
@@ -37,12 +36,12 @@
     }
 }
 
-- (IBAction)saveUserInfo:(UIStoryboardSegue *)segue {
-    
-}
-
-- (IBAction)cancelUserInfo:(UIStoryboardSegue *)segue {
-    
+- (IBAction)onLogoutButton:(id)sender {
+    [[SldHttpSession defaultSession] logoutWithComplete:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+        });
+    }];
 }
 
 
