@@ -18,7 +18,7 @@
     
     inst.IMG_CACHE_DIR = @"imgCache";
     inst.DATA_HOST = @"http://sliderpack.qiniudn.com";
-    
+    inst.KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     return inst;
 }
 @end

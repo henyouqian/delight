@@ -26,6 +26,9 @@
 		B308B04B190FC4810021BE9C /* DOUMPMediaLibraryAssetLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = B308B036190FC4810021BE9C /* DOUMPMediaLibraryAssetLoader.m */; };
 		B308B04C190FC4810021BE9C /* DOUSimpleHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B308B038190FC4810021BE9C /* DOUSimpleHTTPRequest.m */; };
 		B308B04D190FC4810021BE9C /* NSData+DOUMappedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B308B03A190FC4810021BE9C /* NSData+DOUMappedFile.m */; };
+		B363AD721925270C001CD6D6 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B363AD6D1925270C001CD6D6 /* RIButtonItem.m */; };
+		B363AD731925270C001CD6D6 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B363AD6F1925270C001CD6D6 /* UIActionSheet+Blocks.m */; };
+		B363AD741925270C001CD6D6 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B363AD711925270C001CD6D6 /* UIAlertView+Blocks.m */; };
 		B39E44E5191EB91000CBB247 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E448A191EB91000CBB247 /* DACircularProgressView.m */; };
 		B39E44E6191EB91000CBB247 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E448D191EB91000CBB247 /* MBProgressHUD.m */; };
 		B39E44E7191EB91000CBB247 /* MWCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E4492191EB91000CBB247 /* MWCaptionView.m */; };
@@ -148,6 +151,14 @@
 		B308B038190FC4810021BE9C /* DOUSimpleHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DOUSimpleHTTPRequest.m; sourceTree = "<group>"; };
 		B308B039190FC4810021BE9C /* NSData+DOUMappedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+DOUMappedFile.h"; sourceTree = "<group>"; };
 		B308B03A190FC4810021BE9C /* NSData+DOUMappedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+DOUMappedFile.m"; sourceTree = "<group>"; };
+		B363AD6A1925270C001CD6D6 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		B363AD6B1925270C001CD6D6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		B363AD6C1925270C001CD6D6 /* RIButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RIButtonItem.h; sourceTree = "<group>"; };
+		B363AD6D1925270C001CD6D6 /* RIButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RIButtonItem.m; sourceTree = "<group>"; };
+		B363AD6E1925270C001CD6D6 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
+		B363AD6F1925270C001CD6D6 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		B363AD701925270C001CD6D6 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Blocks.h"; sourceTree = "<group>"; };
+		B363AD711925270C001CD6D6 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Blocks.m"; sourceTree = "<group>"; };
 		B39E4489191EB91000CBB247 /* DACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DACircularProgressView.h; sourceTree = "<group>"; };
 		B39E448A191EB91000CBB247 /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
 		B39E448C191EB91000CBB247 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -354,6 +365,21 @@
 			path = DOUAudioStreamer;
 			sourceTree = SOURCE_ROOT;
 		};
+		B363AD691925270C001CD6D6 /* UIAlertView-Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				B363AD6A1925270C001CD6D6 /* LICENSE */,
+				B363AD6B1925270C001CD6D6 /* README.md */,
+				B363AD6C1925270C001CD6D6 /* RIButtonItem.h */,
+				B363AD6D1925270C001CD6D6 /* RIButtonItem.m */,
+				B363AD6E1925270C001CD6D6 /* UIActionSheet+Blocks.h */,
+				B363AD6F1925270C001CD6D6 /* UIActionSheet+Blocks.m */,
+				B363AD701925270C001CD6D6 /* UIAlertView+Blocks.h */,
+				B363AD711925270C001CD6D6 /* UIAlertView+Blocks.m */,
+			);
+			path = "UIAlertView-Blocks";
+			sourceTree = SOURCE_ROOT;
+		};
 		B39E4488191EB91000CBB247 /* DACircularProgress */ = {
 			isa = PBXGroup;
 			children = (
@@ -522,6 +548,7 @@
 		B3C0AE9E1906662100CB4DFD /* libExt */ = {
 			isa = PBXGroup;
 			children = (
+				B363AD691925270C001CD6D6 /* UIAlertView-Blocks */,
 				B39E4488191EB91000CBB247 /* DACircularProgress */,
 				B39E448B191EB91000CBB247 /* MBProgressHUD */,
 				B39E448F191EB91000CBB247 /* MWPhotoBrowser */,
@@ -707,6 +734,7 @@
 				B39E4502191EB91000CBB247 /* SDWebImageDownloader.m in Sources */,
 				B3C0AF48190667C300CB4DFD /* quantize.c in Sources */,
 				B3C0AF591906699400CB4DFD /* FMDatabasePool.m in Sources */,
+				B363AD741925270C001CD6D6 /* UIAlertView+Blocks.m in Sources */,
 				B39E44F7191EB91000CBB247 /* PSTCollectionViewUpdateItem.m in Sources */,
 				B39E44F1191EB91000CBB247 /* PSTCollectionViewCell.m in Sources */,
 				B39E44FB191EB91000CBB247 /* PSTGridLayoutSection.m in Sources */,
@@ -733,6 +761,7 @@
 				B3C0AF44190667C300CB4DFD /* gif_err.c in Sources */,
 				B39E44E6191EB91000CBB247 /* MBProgressHUD.m in Sources */,
 				B39E44FF191EB91000CBB247 /* SDImageCache.m in Sources */,
+				B363AD731925270C001CD6D6 /* UIActionSheet+Blocks.m in Sources */,
 				B308B049190FC4810021BE9C /* DOUEAGL1View.m in Sources */,
 				B39E44F9191EB91000CBB247 /* PSTGridLayoutItem.m in Sources */,
 				B3C0AF37190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m in Sources */,
@@ -741,6 +770,7 @@
 				B3C0AF3A190667C300CB4DFD /* FISampleBuffer.m in Sources */,
 				B3C0AF39190667C300CB4DFD /* FIError.m in Sources */,
 				B39E44F6191EB91000CBB247 /* PSTCollectionViewLayout.m in Sources */,
+				B363AD721925270C001CD6D6 /* RIButtonItem.m in Sources */,
 				B39E44E7191EB91000CBB247 /* MWCaptionView.m in Sources */,
 				B39E44F2191EB91000CBB247 /* PSTCollectionViewController.m in Sources */,
 				B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */,

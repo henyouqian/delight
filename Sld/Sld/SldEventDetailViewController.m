@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *beatLabel;
+@property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) NSTimer *timer;
 @property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) SldGameData *gamedata;
@@ -195,6 +196,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     NSTimeInterval intv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
     if (intv < 0 || _gamedata.eventInfo.hasResult) {
         _timeRemainLabel.text = @"活动已结束";
+        _matchButton.enabled = NO;
     } else {
         int sec = (int)intv;
         int hour = sec / 3600;

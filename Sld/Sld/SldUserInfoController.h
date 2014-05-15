@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldUserInfoController : UITableViewController
+@interface SldUserInfoController : UITableViewController <UITextFieldDelegate>
 + (void)createAndPresentFromController:(UIViewController*)srcController cancelable:(BOOL)cancelable;
+- (void)setGravartarWithKey:(NSString*)key url:(NSString*)url;
+@end
+
+@interface SldAvatarSelectController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate>
+@property (weak, nonatomic) SldUserInfoController *userInfoController;
 @end

@@ -26,4 +26,5 @@ NSString* sha256(NSString* data, NSString *salt);
 
 @interface SldUtil : NSObject
 + (NSString*)sha1WithData:(NSString*)data salt:(NSString*)salt;
++ (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width;
 @end

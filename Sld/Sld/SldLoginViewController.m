@@ -10,12 +10,11 @@
 #import "SldEventListViewController.h"
 #import "SldHttpSession.h"
 #import "util.h"
-#import "SSKeychain/SSkeychain.h"
 #import "SldGameData.h"
 #import "MMPickerView.h"
 #import "SldUserInfoController.h"
+#import "config.h"
 
-static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
 @interface SldLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *usernameInput;
@@ -60,18 +59,18 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
 
 - (IBAction)onOfflineButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
-    [SldGameData getInstance].offline = YES;
+    [SldGameData getInstance].online = NO;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
+    Config *conf = [Config sharedConf];
+    NSArray *accounts = [SSKeychain accountsForService:conf.KEYCHAIN_SERVICE];
     if ([accounts count]) {
         NSString *username = [accounts lastObject][@"acct"];
-        NSString *password = [SSKeychain passwordForService:KEYCHAIN_SERVICE account:username];
+        NSString *password = [SSKeychain passwordForService:conf.KEYCHAIN_SERVICE account:username];
         self.usernameInput.text = username;
         self.passwordInput.text = password;
     }
@@ -124,7 +123,7 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         SldGameData *gameData = [SldGameData getInstance];
         
         //save to keychain
-        [SSKeychain setPassword:password forService:KEYCHAIN_SERVICE account:username];
+        [SSKeychain setPassword:password forService:[Config sharedConf].KEYCHAIN_SERVICE account:username];
         
         //update game data
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -161,10 +160,16 @@ static NSString *KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
                 }
                 
             } else {
-                gameData.offline = NO;
+                gameData.online = YES;
                 [self dismissViewControllerAnimated:YES completion:nil];
+                
+                //update game data
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                gameData.nickName = [dict objectForKey:@"NickName"];
+                gameData.gender = [dict objectForKey:@"Gender"];
+                gameData.teamName = [dict objectForKey:@"TeamName"];
+                gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
             }
-            
         }];
     }];
 }

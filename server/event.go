@@ -392,7 +392,7 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
 	now := time.Now().Unix()
-	if now < event.BeginTime || now >= event.EndTime {
+	if now < event.BeginTime || now >= event.EndTime || event.HasResult {
 		lwutil.SendError("err_time", "event not running")
 	}
 
@@ -411,7 +411,7 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 		var playerInfo PlayerInfo
 		_getPlayerInfo(ssdb, session, &playerInfo)
 		lwutil.CheckError(err, "")
-		record.PlayerName = playerInfo.Name
+		record.PlayerName = playerInfo.NickName
 	}
 
 	//gen secret

@@ -24,4 +24,6 @@
     #import "DOUAudioStreamer/DOUAudioStreamer.h"
     #import "DOUAudioStreamer/DOUAudioStreamer+Options.h"
     #import "MWPhotoBrowser/Classes/MWPhotoBrowser.h"
+    #import "SSKeychain/SSkeychain.h"
+    #import "UIAlertView-Blocks/UIAlertView+Blocks.h"
 #endif

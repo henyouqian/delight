@@ -22,7 +22,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
-@property (weak, nonatomic) IBOutlet UILabel *likeLabel;
 @end
 
 @implementation RankCell
@@ -45,6 +44,7 @@
 @property (nonatomic) NSString *userName;
 @property (nonatomic) NSString *score;
 @property (nonatomic) NSString *teamName;
+@property (nonatomic) NSString *gravatarKey;
 @end
 
 @implementation RankInfo
@@ -255,14 +255,16 @@
         [cell.userNameLabel setTextColor:color];
         [cell.scoreLabel setTextColor:color];
         [cell.teamLabel setTextColor:color];
-        [cell.likeLabel setTextColor:color];
     };
+    
+    SldGameData *gamedata = [SldGameData getInstance];
     
     if (indexPath.section == 0) {
         RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
         [cell reset];
         cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
-        cell.userNameLabel.text = [SldGameData getInstance].userName;
+        cell.userNameLabel.text = gamedata.nickName;
+        cell.teamLabel.text = gamedata.teamName;
         cell.rankLabel.text = detailVc.rankStr;
         cell.scoreLabel.text = detailVc.highScoreStr;
         
@@ -270,7 +272,7 @@
         
         //avatar
         cell.avatarImageView.image = nil;
-        NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=96", detailVc.rankStr];
+        NSString *url = [SldUtil makeGravatarUrlWithKey:gamedata.gravatarKey width:cell.avatarImageView.frame.size.width];
         [cell.avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
         
         return cell;
@@ -293,7 +295,7 @@
                 
                 //avatar
                 cell.avatarImageView.image = nil;
-                NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=96", rankInfo.rank];
+                NSString *url = [SldUtil makeGravatarUrlWithKey:rankInfo.gravatarKey width:cell.avatarImageView.frame.size.width];
                 [cell.avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
                 
                 return cell;

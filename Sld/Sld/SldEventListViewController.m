@@ -42,6 +42,26 @@ NSString *CELL_ID = @"cellID";
 @end
 
 
+//
+@interface SldCollectionView : UICollectionView
+
+@end
+
+@implementation SldCollectionView
+
+- (void)setContentInset:(UIEdgeInsets)contentInset {
+    if (self.tracking) {
+        CGFloat diff = contentInset.top - self.contentInset.top;
+        CGPoint translation = [self.panGestureRecognizer translationInView:self];
+        translation.y -= diff * 3.0 / 2.0;
+        [self.panGestureRecognizer setTranslation:translation inView:self];
+    }
+    [super setContentInset:contentInset];
+}
+
+@end
+
+
 @interface SldEventListViewController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *musicButton;
 @property (nonatomic) UIRefreshControl *refreshControl;
@@ -172,7 +192,7 @@ static __weak SldEventListViewController *g_inst = nil;
             event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
             event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
             
-            if (oldLatestEvent && oldLatestEvent.id == event.id) {
+            if (oldLatestEvent && oldLatestEvent.id >= event.id) {
                 break;
             }
             

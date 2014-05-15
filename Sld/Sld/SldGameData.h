@@ -36,7 +36,12 @@
 
 @property (nonatomic) UInt64 userId;
 @property (nonatomic) NSString *userName;
-@property (nonatomic) BOOL offline;
+@property (nonatomic) BOOL online;
+
+@property (nonatomic) NSString *nickName;
+@property (nonatomic) NSString *gender;
+@property (nonatomic) NSString *teamName;
+@property (nonatomic) NSString *gravatarKey;
 
 + (instancetype)getInstance;
 

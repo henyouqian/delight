@@ -132,7 +132,6 @@
     
     ActivityData* activityData = [_activityDatas objectAtIndex:indexPath.row];
     cell.textView.text = activityData.text;
-    cell.iconView.image = nil;
     cell.userNameLabel.text = activityData.userName;
     
     cell.iconView.image = nil;

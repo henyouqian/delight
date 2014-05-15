@@ -32,8 +32,9 @@ func init() {
 }
 
 type PlayerInfo struct {
-	Name            string
+	NickName        string
 	TeamName        string
+	Gender          string
 	CustomAvatarKey string
 	GravatarKey     string
 }
@@ -93,8 +94,14 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
+	stringLimit(&in.NickName, 40)
+	stringLimit(&in.Gender, 20)
+	stringLimit(&in.GravatarKey, 20)
+	stringLimit(&in.CustomAvatarKey, 60)
+	stringLimit(&in.TeamName, 40)
+
 	//check playerInfo
-	if in.Name == "" || in.TeamName == "" || (in.GravatarKey == "" && in.CustomAvatarKey == "") {
+	if in.NickName == "" || in.TeamName == "" || (in.GravatarKey == "" && in.CustomAvatarKey == "") {
 		lwutil.SendError("err_info_incomplete", "")
 	}
 

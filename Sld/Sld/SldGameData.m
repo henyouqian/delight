@@ -54,7 +54,7 @@ static SldGameData *g_inst = nil;
 - (instancetype)init {
     if ([super init]) {
         _eventInfos = [NSMutableArray arrayWithCapacity:20];
-        _offline = YES;
+        _online = NO;
     }
     return self;
 }

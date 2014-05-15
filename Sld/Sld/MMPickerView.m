@@ -18,6 +18,7 @@ NSString * const MMselectedObject = @"selectedObject";
 NSString * const MMtoolbarBackgroundImage = @"toolbarBackgroundImage";
 NSString * const MMtextAlignment = @"textAlignment";
 NSString * const MMshowsSelectionIndicator = @"showsSelectionIndicator";
+NSString * const MMcaption = @"caption";
 
 @interface MMPickerView () <UIPickerViewDelegate, UIPickerViewDataSource>
 
@@ -105,6 +106,12 @@ NSString * const MMshowsSelectionIndicator = @"showsSelectionIndicator";
 
 -(void)setPickerHidden: (BOOL)hidden
               callBack: (void(^)(NSString *))callBack; {
+    
+    if (hidden) {
+        [_pickerViewContainerView setAlpha:1.0];
+    } else {
+        [_pickerViewContainerView setAlpha:0.0];
+    }
   
   [UIView animateWithDuration:0.3
                         delay:0.0
@@ -260,7 +267,19 @@ NSString * const MMshowsSelectionIndicator = @"showsSelectionIndicator";
   UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
   
   _pickerViewBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismiss)];
-  _pickerViewToolBar.items = @[flexibleSpace, _pickerViewBarButtonItem];
+    
+    //lw begin
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    label.text = @"";
+    UIBarButtonItem *title = [[UIBarButtonItem alloc] initWithCustomView:label];
+    NSString *caption = [options objectForKey:MMcaption];
+    if (caption) {
+        label.text = caption;
+    }
+
+    _pickerViewToolBar.items = @[title, flexibleSpace, _pickerViewBarButtonItem];
+    
+    //lw end
   [_pickerViewBarButtonItem setTintColor:buttonTextColor];
   
   //[_pickerViewBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithName:@"Helvetica-Neue" size:23.0], UITextAttributeFont,nil] forState:UIControlStateNormal];
@@ -283,7 +302,9 @@ NSString * const MMshowsSelectionIndicator = @"showsSelectionIndicator";
   [_pickerContainerView setTransform:CGAffineTransformMakeTranslation(0.0, CGRectGetHeight(_pickerContainerView.frame))];
   
   //Set selected row
-  [_pickerView selectRow:selectedRow inComponent:0 animated:YES];
+    if (selectedRow < [_pickerView numberOfRowsInComponent:0]) {
+        [_pickerView selectRow:selectedRow inComponent:0 animated:YES];
+    }
 }
 
 #pragma mark - UIPickerViewDataSource

@@ -13,4 +13,5 @@
 
 @property (nonatomic) NSString *IMG_CACHE_DIR;
 @property (nonatomic) NSString *DATA_HOST;
+@property (nonatomic) NSString *KEYCHAIN_SERVICE;
 @end

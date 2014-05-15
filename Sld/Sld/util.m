@@ -106,6 +106,12 @@ NSString* sha256(NSString* data, NSString *salt) {
     return hash;
 }
 
++ (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width {
+    NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=%u", gravatarKey, (unsigned int)width*2];
+    return url;
+}
+
+
 @end
 
 

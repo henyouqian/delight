@@ -9,9 +9,17 @@
 #import "SldUserController.h"
 #import "SldLoginViewController.h"
 #import "SldHttpSession.h"
+#import "config.h"
+#import "UIImageView+sldAsyncLoad.h"
+#import "SldGameData.h"
+#import "util.h"
 
 @interface SldUserController ()
 @property (weak, nonatomic) IBOutlet UITableViewCell *logoutCell;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
+@property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *teamLabel;
+@property (weak, nonatomic) IBOutlet UILabel *genderLabel;
 
 @end
 
@@ -21,27 +29,74 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = YES;
+    SldGameData *gamedata = [SldGameData getInstance];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //
+    if (!gamedata.online) {
+        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+        return;
+    }
+    
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    SldGameData *gamedata = [SldGameData getInstance];
+
+    //avatar
+    _avatarView.image = nil;
+    NSString *url = [SldUtil makeGravatarUrlWithKey:gamedata.gravatarKey width:_avatarView.frame.size.width];
+    [_avatarView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+    
+    //nickname
+    _nickNameLabel.text = gamedata.nickName;
+    
+    //team
+    _teamLabel.text = gamedata.teamName;
+    
+    //gender
+    if ([gamedata.gender compare:@"男"] == 0) {
+        _genderLabel.text = @"♂";
+        _genderLabel.textColor = makeUIColor(0, 122, 255, 255);
+    } else if ([gamedata.gender compare:@"女"] == 0) {
+        _genderLabel.text = @"♀";
+        _genderLabel.textColor = makeUIColor(244, 75, 116, 255);
+    } else {
+        _genderLabel.text = gamedata.gender;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (cell == _logoutCell) {
-        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
-    }
+//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//    if (cell == _logoutCell) {
+//        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+//    }
 }
 
 - (IBAction)onLogoutButton:(id)sender {
-    [[SldHttpSession defaultSession] logoutWithComplete:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
-        });
-    }];
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
+    
+	RIButtonItem *logoutItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
+		[[SldHttpSession defaultSession] logoutWithComplete:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                Config *conf = [Config sharedConf];
+                NSArray *accounts = [SSKeychain accountsForService:conf.KEYCHAIN_SERVICE];
+                NSString *username = [accounts lastObject][@"acct"];
+                [SSKeychain setPassword:@"" forService:conf.KEYCHAIN_SERVICE account:username];
+                [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+            });
+        }];
+	}];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Log out?"
+	                                                    message:nil
+											   cancelButtonItem:cancelItem
+											   otherButtonItems:logoutItem, nil];
+	[alertView show];
 }
 
 
