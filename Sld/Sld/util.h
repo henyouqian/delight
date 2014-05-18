@@ -9,6 +9,7 @@
 NSString* getResFullPath(NSString* fileName);
 NSString* makeDocPath(NSString* path);
 UIAlertView* alert(NSString *title, NSString *message);
+UIAlertView* alertNoButton(NSString *title);
 
 BOOL imageExist(NSString *imageKey);
 NSString* makeImagePath(NSString *imageKey);

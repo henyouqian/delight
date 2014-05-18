@@ -70,13 +70,17 @@ type Event struct {
 }
 
 type EventPlayerRecord struct {
-	PlayerName    string
-	Secret        string
-	SecretExpire  int64
-	Trys          uint32
-	HighScore     int32
-	HighScoreTime int64
-	FinalRank     uint32
+	PlayerName       string
+	TeamName         string
+	Secret           string
+	SecretExpire     int64
+	Trys             uint32
+	HighScore        int32
+	HighScoreTime    int64
+	FinalRank        uint32
+	GravatarKey      string
+	CustomAvartarKey string
+	Gender           int
 }
 
 type FreePlayRecord struct {
@@ -412,6 +416,9 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 		_getPlayerInfo(ssdb, session, &playerInfo)
 		lwutil.CheckError(err, "")
 		record.PlayerName = playerInfo.NickName
+		record.TeamName = playerInfo.TeamName
+		record.GravatarKey = playerInfo.GravatarKey
+		record.CustomAvartarKey = playerInfo.CustomAvatarKey
 	}
 
 	//gen secret
@@ -562,12 +569,12 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 
 	//
 	type RankInfo struct {
-		Rank     uint32
-		UserId   uint64
-		Score    int32
-		UserName string
-		Time     int64
-		Trys     uint32
+		Rank       uint32
+		UserId     uint64
+		Score      int32
+		PlayerName string
+		Time       int64
+		Trys       uint32
 	}
 
 	type Out struct {
@@ -657,7 +664,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal([]byte(resp[i*2+1]), &record)
 		lwutil.CheckError(err, "")
 		ranks[i].Score = record.HighScore
-		ranks[i].UserName = record.PlayerName
+		ranks[i].PlayerName = record.PlayerName
 		ranks[i].Time = record.HighScoreTime
 		ranks[i].Trys = record.Trys
 	}

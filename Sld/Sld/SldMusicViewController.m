@@ -40,7 +40,7 @@ NSArray *_channels = nil;
 
 @interface SldMusicViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) ChannelCell *rotatingCell;
+@property (weak, nonatomic) ChannelCell *currentChannelCell;
 
 @property (nonatomic) MarqueeLabel *headerLabel;
 @end
@@ -71,7 +71,7 @@ NSArray *_channels = nil;
 {
     [super viewDidLoad];
     
-    _rotatingCell = nil;
+    _currentChannelCell = nil;
     
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
@@ -136,8 +136,12 @@ NSArray *_channels = nil;
     
     int channelId = [[channel objectForKey:@"id"] intValue];
     SldStreamPlayer *player = [SldStreamPlayer defautPlayer];
-    if (channelId == player.channelId && player.playing && !player.paused ) {
-        [self startRotateCell:cell];
+    if (channelId == player.channelId && (player.playing || player.paused) ) {
+        if (player.paused) {
+            cell.coverView.hidden = YES;
+        } else if (player.playing) {
+            [self startRotateCell:cell];
+        }
     }
     
     Config *conf = [Config sharedConf];
@@ -197,10 +201,6 @@ static NSString *animKey = @"cellRotationAnimation";
 
 #pragma mark - UICollectionViewDelegate
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (_rotatingCell) {
-        [self stopRotateCell:_rotatingCell];
-    }
-    
     NSDictionary *channel = [_channels objectAtIndex:indexPath.row];
     if (!channel) return;
     int channelId = [[channel objectForKey:@"id"] intValue];
@@ -210,10 +210,17 @@ static NSString *animKey = @"cellRotationAnimation";
     //
     ChannelCell *cell = (ChannelCell*)[collectionView cellForItemAtIndexPath:indexPath];
     
+    //pause
     if (channelId == player.channelId && player.playing && !player.paused) {
         [player pause];
         [self stopRotateCell:cell];
-    } else {
+    }
+    //begin chanel
+    else {
+        if (_currentChannelCell) {
+            _currentChannelCell.coverView.hidden = NO;
+            [self stopRotateCell:_currentChannelCell];
+        }
         [player setChannel:channelId];
         [player play];
         [self startRotateCell:cell];
@@ -309,7 +316,7 @@ static NSString *animKey = @"cellRotationAnimation";
         layer.beginTime = timeSincePause;
     }
     
-    _rotatingCell = cell;
+    _currentChannelCell = cell;
     
     cell.coverView.hidden = YES;
 }
@@ -320,9 +327,9 @@ static NSString *animKey = @"cellRotationAnimation";
     CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
     layer.speed = 0.0;
     layer.timeOffset = pausedTime;
-    _rotatingCell = nil;
     
-    cell.coverView.hidden = NO;
+    //_rotatingCell = nil;
+    //cell.coverView.hidden = NO;
 }
 
 - (void)didBecomeActiveNotification {

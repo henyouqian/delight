@@ -146,7 +146,7 @@ function Controller($scope, $http) {
 				},{
 					"name": "setInfo",
 					"method": "POST",
-					"data": {"NickName":"", "Gender":"女", "TeamName":"上海", "CustomAvatarKey":"", "GravatarKey":""}
+					"data": {"NickName":"", "Gender":0, "TeamName":"上海", "CustomAvatarKey":"", "GravatarKey":""}
 				}
 			]
 		},{

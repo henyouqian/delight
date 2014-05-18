@@ -29,6 +29,16 @@ UIAlertView* alert(NSString *title, NSString *message) {
     return alert;
 }
 
+UIAlertView* alertNoButton(NSString *title) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:nil
+                                                   delegate:nil
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:nil];
+    [alert show];
+    return alert;
+}
+
 BOOL imageExist(NSString *imageKey) {
     NSString *path = makeImagePath(imageKey);
     return [[NSFileManager defaultManager] fileExistsAtPath:path];

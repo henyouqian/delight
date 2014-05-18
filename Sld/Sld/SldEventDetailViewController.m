@@ -203,6 +203,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         int minute = (sec % 3600)/60;
         sec = (sec % 60);
         _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
+        _matchButton.enabled = YES;
     }
 }
 
@@ -236,6 +237,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     __block int localNum = 0;
     NSUInteger totalNum = [imageKeys count];
     if (totalNum == 0) {
+        alert(@"Not downloaded", nil);
         return;
     }
     for (NSString *imageKey in imageKeys) {
@@ -272,6 +274,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
                     localNum++;
                     [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
                     
+                    //download complete
                     if (localNum == totalNum) {
                         [alert dismissWithClickedButtonIndex:0 animated:YES];
                         [self enterGame];
@@ -317,6 +320,13 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         startGame(nil);
     }
     
+    //update db
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gamedata.eventInfo.id)];
+    if (!ok) {
+        lwError("Sql error:%@", [db lastErrorMessage]);
+        return;
+    }
 }
 
 #pragma mark - Navigation

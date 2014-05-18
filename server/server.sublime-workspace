@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"parse",
+				"ParseUint	n uint64, err error ƒ"
+			],
+			[
+				"err",
+				"Errorf	 ƒ"
+			],
+			[
+				"getre",
+				"GetRedisTimeUnix	int64 ƒ"
+			],
+			[
 				"Int",
 				"Int64	int64, error ƒ"
 			],
@@ -215,7 +227,7 @@
 			"file": "main.go",
 			"settings":
 			{
-				"buffer_size": 790,
+				"buffer_size": 813,
 				"line_ending": "Unix"
 			}
 		},
@@ -223,7 +235,15 @@
 			"file": "event.go",
 			"settings":
 			{
-				"buffer_size": 14295,
+				"buffer_size": 16888,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scorekeeper.go",
+			"settings":
+			{
+				"buffer_size": 3560,
 				"line_ending": "Unix"
 			}
 		},
@@ -231,7 +251,7 @@
 			"file": "www/api.js",
 			"settings":
 			{
-				"buffer_size": 7404,
+				"buffer_size": 7650,
 				"line_ending": "Unix"
 			}
 		},
@@ -239,7 +259,23 @@
 			"file": "player.go",
 			"settings":
 			{
-				"buffer_size": 2570,
+				"buffer_size": 2543,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "auth.go",
+			"settings":
+			{
+				"buffer_size": 9127,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "booker/main.go",
+			"settings":
+			{
+				"buffer_size": 8805,
 				"line_ending": "Unix"
 			}
 		}
@@ -280,16 +316,20 @@
 	},
 	"file_history":
 	[
-		"/Users/weili/Documents/projects/2014/delight/server/www/apis.js",
+		"/Users/weili/Documents/projects/2014/delight/server/robot/main.go",
+		"/Users/weili/Documents/projects/2014/delight/server/pack.go",
+		"/Users/weili/Documents/projects/2014/delight/server/util.go",
+		"/Users/weili/Desktop/_teamNames = @[@\"安徽\",@\"澳门\",@\"北京\",@\"重庆\",@\"福建\",@\"甘肃\"",
+		"/Users/weili/Documents/projects/2014/delight/server/server.sublime-project",
 		"/Users/weili/Documents/projects/2014/delight/server/booker/main.go",
+		"/Users/weili/go/src/github.com/henyouqian/lwutil/util.go",
+		"/Users/weili/Documents/projects/2014/delight/server/www/apis.js",
 		"/Users/weili/Documents/projects/2014/delight/server/booker/booker",
 		"/Users/weili/Documents/projects/2014/delight/client/Classes/collectionListScene.cpp",
 		"/Users/weili/Documents/projects/2014/delight/ssdb/runMatch.sh",
 		"/Users/weili/Documents/projects/2014/delight/ssdb/runAuth.sh",
 		"/Users/weili/Documents/projects/2014/delight/server/tools/packUploader/main.go",
 		"/Users/weili/Documents/projects/2014/delight/server/db.go",
-		"/Users/weili/Documents/projects/2014/delight/server/pack.go",
-		"/Users/weili/Documents/projects/2014/delight/server/util.go",
 		"/Users/weili/Documents/projects/2014/delight/server/main.go",
 		"/Users/weili/Library/Application Support/Sublime Text 2/Packages/GoSublime/CHANGELOG.md",
 		"/Users/weili/Documents/projects/2014/delight/server/tools/packUploader/樋口可南子/1/pack.js",
@@ -398,6 +438,33 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"playBegin",
+			"PlayerInfo",
+			"_getPlayerInfo",
+			"Account",
+			"admin",
+			"mod",
+			"mode",
+			"strconv",
+			"glog",
+			"eventLbLey",
+			"H_EVENT_PLAYER_RECORD",
+			"GameRecord",
+			"PASSWORD",
+			"zrevrange",
+			"zrefv\nzrefv",
+			"makeRedisLeaderboardKey",
+			"redis",
+			"TEAM_CHAMPIONSHIP",
+			"PERSONAL_RANK",
+			"TEAM_CHAMPIONSHIP",
+			"fmt",
+			"CheckSsdbError",
+			"checkError(",
+			"func checkError",
+			"checkError",
+			"login",
+			"time",
 			"getUserPlay",
 			"playEnd",
 			"ssdb.Do",
@@ -498,34 +565,7 @@
 			"updateRound0",
 			"EventPlayerRecord",
 			"topTen",
-			"GameRecord",
-			"_getPlayerInfo",
-			"TEAM_MAP",
-			"H_PLAYER_INFO_PRE",
-			"json",
-			"EventPlayerRecord",
-			"GameRecord",
-			"EventPlayerRecord",
-			".TeamId",
-			"TeamId",
-			".TeamId",
-			"TeamId",
-			"record",
-			"topTen",
-			"GameRecord",
-			"H_EVENT_ROUND_TEAM_TOPTEN",
-			"getTopTen",
-			"zonerank",
-			"_redisInt",
-			"TEAM_MAP",
-			"TEAM_IDS",
-			"begin",
-			"rc",
-			"getEventResult",
-			"body.close",
-			"close",
-			"listEvent",
-			"hasNextRound"
+			"GameRecord"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -554,6 +594,7 @@
 	"groups":
 	[
 		{
+			"selected": 6,
 			"sheets":
 			[
 				{
@@ -561,15 +602,15 @@
 					"file": "main.go",
 					"settings":
 					{
-						"buffer_size": 790,
+						"buffer_size": 813,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								672,
+								672
 							]
 						],
 						"settings":
@@ -588,15 +629,15 @@
 					"file": "event.go",
 					"settings":
 					{
-						"buffer_size": 14295,
+						"buffer_size": 16888,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11672,
-								11672
+								9039,
+								9039
 							]
 						],
 						"settings":
@@ -605,25 +646,52 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 11688.0,
+						"translation.y": 8755.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "www/api.js",
+					"file": "scorekeeper.go",
 					"settings":
 					{
-						"buffer_size": 7404,
+						"buffer_size": 3560,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3462,
-								3462
+								1637,
+								1637
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "www/api.js",
+					"settings":
+					{
+						"buffer_size": 7650,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2985,
+								2985
 							]
 						],
 						"settings":
@@ -631,26 +699,26 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
-						"translation.y": 3292.0,
+						"translation.x": 116.0,
+						"translation.y": 3022.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "player.go",
 					"settings":
 					{
-						"buffer_size": 2570,
+						"buffer_size": 2543,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								954,
-								1033
+								1957,
+								1957
 							]
 						],
 						"settings":
@@ -659,7 +727,61 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 625.0,
+						"translation.y": 1858.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "auth.go",
+					"settings":
+					{
+						"buffer_size": 9127,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								512,
+								512
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 396.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "booker/main.go",
+					"settings":
+					{
+						"buffer_size": 8805,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6565,
+								7250
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -714,6 +836,10 @@
 	{
 		"height": 142.0
 	},
+	"output.9o:///Users/weili/Documents/projects/2014/delight/server/robot":
+	{
+		"height": 142.0
+	},
 	"output.9o:///Users/weili/Documents/projects/2014/delight/server/tools/packUploader":
 	{
 		"height": 142.0
@@ -764,6 +890,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"pack",
+				"server/pack.go"
+			],
 			[
 				"db",
 				"db.go"

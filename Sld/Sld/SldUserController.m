@@ -58,14 +58,15 @@
     _teamLabel.text = gamedata.teamName;
     
     //gender
-    if ([gamedata.gender compare:@"男"] == 0) {
-        _genderLabel.text = @"♂";
+    if (gamedata.gender == 1) {
+        _genderLabel.text = @"🚹";
         _genderLabel.textColor = makeUIColor(0, 122, 255, 255);
-    } else if ([gamedata.gender compare:@"女"] == 0) {
-        _genderLabel.text = @"♀";
+    } else if (gamedata.gender == 0) {
+        _genderLabel.text = @"🚺";
         _genderLabel.textColor = makeUIColor(244, 75, 116, 255);
     } else {
-        _genderLabel.text = gamedata.gender;
+        _genderLabel.text = @"🚻";
+        _genderLabel.textColor = makeUIColor(128, 128, 128, 255);
     }
 }
 

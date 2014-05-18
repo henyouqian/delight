@@ -58,8 +58,12 @@
 }
 
 - (IBAction)onOfflineButton:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    //[self dismissViewControllerAnimated:YES completion:nil];
     [SldGameData getInstance].online = NO;
+}
+
+- (IBAction)backToLogin:(UIStoryboardSegue *)segue {
+    
 }
 
 - (void)viewDidLoad
@@ -166,7 +170,7 @@
                 //update game data
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 gameData.nickName = [dict objectForKey:@"NickName"];
-                gameData.gender = [dict objectForKey:@"Gender"];
+                gameData.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
                 gameData.teamName = [dict objectForKey:@"TeamName"];
                 gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
             }

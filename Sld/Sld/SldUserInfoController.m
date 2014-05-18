@@ -23,6 +23,8 @@
 @property (nonatomic) NSString *gravatarKey;
 @end
 
+static NSArray *_genderStrings;
+
 @implementation SldUserInfoController
 
 + (void)createAndPresentFromController:(UIViewController*)srcController cancelable:(BOOL)cancelable {
@@ -54,13 +56,19 @@
     
     SldGameData *gamedata = [SldGameData getInstance];
     
+    _genderStrings = @[@"女", @"男", @"其他"];
+    
     _nameInput.text = gamedata.nickName;
-    _genderInput.text = gamedata.gender;
+    _genderInput.text = [_genderStrings objectAtIndex:gamedata.gender];
     _teamInput.text = gamedata.teamName;
     _gravatarKey = gamedata.gravatarKey;
     
-    NSString *url = [SldUtil makeGravatarUrlWithKey:_gravatarKey width:_avatarImageView.frame.size.width];
-    [_avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+    if (_gravatarKey) {
+        NSString *url = [SldUtil makeGravatarUrlWithKey:_gravatarKey width:_avatarImageView.frame.size.width];
+        [_avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+    }
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,7 +79,6 @@
 
 - (IBAction)onGenderButton:(id)sender {
     [self.view endEditing:YES];
-    NSArray *strings = @[@"女", @"男", @"其他", @"保密"];
     
     NSString *genderText = _genderInput.text;
     if (genderText == nil) {
@@ -80,7 +87,7 @@
     NSDictionary *options = @{MMselectedObject:genderText, MMcaption:@"性别"};
     
     [MMPickerView showPickerViewInView:self.navigationController.view
-                           withStrings:strings
+                           withStrings:_genderStrings
                            withOptions:options
                             completion:^(NSString *selectedString) {
                                 _genderInput.text = selectedString;
@@ -91,7 +98,7 @@
     [self.view endEditing:YES];
     NSArray *strings = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西族",@"贵州",@"海南",@"河北",@"黑龙江",@"河南",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
     
-    NSString *teamText = _genderInput.text;
+    NSString *teamText = _teamInput.text;
     if (teamText == nil) {
         teamText = @"";
     }
@@ -126,9 +133,14 @@
         return;
     }
     
-    UIAlertView *alt = alert(@"Saving...", nil);
+    UIAlertView *alt = alertNoButton(@"Saving...");
     
-    NSDictionary *body = @{@"NickName":_nameInput.text, @"TeamName":_teamInput.text, @"Gender":_genderInput.text, @"GravatarKey":_gravatarKey};
+    NSUInteger genderIdx = [_genderStrings indexOfObject:_genderInput.text];
+    if (genderIdx > 2) {
+        genderIdx = 2;
+    }
+    
+    NSDictionary *body = @{@"NickName":_nameInput.text, @"TeamName":_teamInput.text, @"Gender":@(genderIdx), @"GravatarKey":_gravatarKey};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"player/setInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [alt dismissWithClickedButtonIndex:0 animated:YES];
@@ -149,7 +161,7 @@
         
         //update game data
         gamedata.nickName = _nameInput.text;
-        gamedata.gender = _genderInput.text;
+        gamedata.gender = genderIdx;
         gamedata.teamName = _teamInput.text;
         gamedata.gravatarKey = _gravatarKey;
         

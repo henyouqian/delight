@@ -9,14 +9,24 @@
 #import "SldGameData.h"
 
 @implementation EventInfo
-
++ (instancetype)eventWithDictionary:(NSDictionary*)dict {
+    EventInfo *event = [[EventInfo alloc] init];
+    
+    event.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
+    event.thumb = dict[@"Thumb"];
+    event.packId = [(NSNumber*)dict[@"PackId"] unsignedLongLongValue];
+    event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
+    event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
+    event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
+    
+    return event;
+}
 @end
 
 @implementation PackInfo
 + (instancetype)packWithDictionary:(NSDictionary*)dict {
     PackInfo *packInfo = [[PackInfo alloc] init];
-    NSError *error = nil;
-
+    
     packInfo.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
     packInfo.title = dict[@"Title"];
     packInfo.thumb = dict[@"Thumb"];
@@ -26,10 +36,6 @@
         packInfo.coverBlur = packInfo.cover;
     }
     NSArray *imgs = dict[@"Images"];
-    if (error) {
-        lwError("Json error:%@", [error localizedDescription]);
-        return packInfo;
-    }
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:[imgs count]];
     for (NSDictionary *img in imgs) {
         [images addObject:img[@"Key"]];

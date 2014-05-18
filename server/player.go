@@ -34,7 +34,7 @@ func init() {
 type PlayerInfo struct {
 	NickName        string
 	TeamName        string
-	Gender          string
+	Gender          uint
 	CustomAvatarKey string
 	GravatarKey     string
 }
@@ -93,9 +93,11 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	var in PlayerInfo
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+	if in.Gender > 2 {
+		lwutil.SendError("err_gender", "")
+	}
 
 	stringLimit(&in.NickName, 40)
-	stringLimit(&in.Gender, 20)
 	stringLimit(&in.GravatarKey, 20)
 	stringLimit(&in.CustomAvatarKey, 60)
 	stringLimit(&in.TeamName, 40)

@@ -15,6 +15,8 @@
 @property (nonatomic) NSDate *beginTime;
 @property (nonatomic) NSDate *endTime;
 @property (nonatomic) BOOL hasResult;
+
++ (instancetype)eventWithDictionary:(NSDictionary*)dict;
 @end
 
 @interface PackInfo : NSObject
@@ -39,7 +41,7 @@
 @property (nonatomic) BOOL online;
 
 @property (nonatomic) NSString *nickName;
-@property (nonatomic) NSString *gender;
+@property (nonatomic) uint gender;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
 

@@ -14,6 +14,7 @@
 #import "util.h"
 #import "config.h"
 #import "SldStreamPlayer.h"
+#import "SldDb.h"
 #import "UIImageView+sldAsyncLoad.h"
 
 NSString *CELL_ID = @"cellID";
@@ -67,6 +68,7 @@ NSString *CELL_ID = @"cellID";
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) UIImage *loadingImage;
 @property (nonatomic) SldGameData *gameData;
+@property (weak, nonatomic) UICollectionReusableView *footerView;
 @end
 
 static __weak SldEventListViewController *g_inst = nil;
@@ -107,6 +109,133 @@ static __weak SldEventListViewController *g_inst = nil;
     //
     _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    
+    if ([_gameData.eventInfos count] == 0) {
+        [self refreshList];
+    }
+    
+    [self didBecomeActiveNotification];
+}
+
+- (void)didBecomeActiveNotification {
+    UIView *view = [_musicButton valueForKey:@"view"];
+    if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
+        CABasicAnimation* rotationAnimation;
+        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+        rotationAnimation.duration = 2.f;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = 10000000;
+        
+        [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    } else {
+        [view.layer removeAllAnimations];
+    }
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)refershControlAction {
+    [self refreshList];
+}
+
+static const int FETCH_EVENT_COUNT = 20;
+
+- (void)refreshList {
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
+    
+    //online
+    if (_gameData.online) {
+        NSDictionary *body = @{@"StartId":@0, @"Limit":@(FETCH_EVENT_COUNT)};
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+         {
+             [self.refreshControl endRefreshing];
+             
+             if (error) {
+                 lwError("Http Error: event/list, error=%@", [error localizedDescription]);
+                 return;
+             }
+             NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+             if (error) {
+                 lwError("Json error, error=%@", [error localizedDescription]);
+                 return;
+             }
+             
+             EventInfo *oldLatestEvent = nil;
+             if ([_gameData.eventInfos count]) {
+                 oldLatestEvent = _gameData.eventInfos[0];
+             }
+             for (int i = 0; i < [array count]; ++i) {
+                 //EventInfo *event = [[EventInfo alloc] init];
+                 NSDictionary *dict = array[i];
+                 EventInfo *event = [EventInfo eventWithDictionary:dict];
+                 
+                 if (oldLatestEvent && oldLatestEvent.id >= event.id) {
+                     break;
+                 }
+                 
+                 [_gameData.eventInfos insertObject:event atIndex:i];
+                 [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                 
+                 NSData *eventData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+                 if (error) {
+                     lwError("Json error, error=%@", [error localizedDescription]);
+                     return;
+                 }
+                 
+                 //save to db
+                 FMResultSet *rs = [db executeQuery:@"SELECT packDownloaded FROM event WHERE id=?", dict[@"Id"]];
+                 BOOL packDownloaded = NO;
+                 if ([rs next]) {
+                     packDownloaded = [rs boolForColumnIndex:0];
+                 }
+                 
+                 BOOL ok = [db executeUpdate:@"REPLACE INTO event (id, data, packDownloaded) VALUES(?, ?, ?)", dict[@"Id"], eventData, @(packDownloaded)];
+                 if (!ok) {
+                     lwError("Sql error:%@", [db lastErrorMessage]);
+                 }
+             }
+             
+             if (insertIndexPaths.count) {
+                 [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
+             }
+         }];
+    }
+    
+//    //offline
+//    else {
+//        [self.refreshControl endRefreshing];
+//        FMResultSet *rs = [db executeQuery:@"SELECT data FROM event ORDER BY id DESC LIMIT ? OFFSET 0", @(FETCH_EVENT_COUNT)];
+//        int i = 0;
+//        while ([rs next]) {
+//            NSString *data = [rs stringForColumnIndex:0];
+//            NSError *error = nil;
+//            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+//            if (error) {
+//                lwError("Json error:%@", [error localizedDescription]);
+//                return;
+//            }
+//            
+//            EventInfo *event = [EventInfo eventWithDictionary:dict];
+//            [_gameData.eventInfos insertObject:event atIndex:i];
+//            [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+//            i++;
+//        }
+//    }
+}
+
+
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return [_gameData.eventInfos count];
@@ -158,90 +287,23 @@ static __weak SldEventListViewController *g_inst = nil;
     return cell;
 }
 
-- (void)refreshList {
-    //todo: offline mode
-    
-    NSDictionary *body = @{@"StartId":@0, @"Limit":@50};
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-    {
-        [self.refreshControl endRefreshing];
-        
-        if (error) {
-            lwError("Http Error: event/list, error=%@", [error localizedDescription]);
-            return;
-        }
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            lwError("Json error, error=%@", [error localizedDescription]);
-            return;
-        }
-        
-        NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
-        EventInfo *oldLatestEvent = nil;
-        if ([_gameData.eventInfos count]) {
-            oldLatestEvent = _gameData.eventInfos[0];
-        }
-        for (int i = 0; i < [array count]; ++i) {
-            EventInfo *event = [[EventInfo alloc] init];
-            NSDictionary *dict = array[i];
-            event.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
-            event.thumb = dict[@"Thumb"];
-            event.packId = [(NSNumber*)dict[@"PackId"] unsignedLongLongValue];
-            event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
-            event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
-            event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
-            
-            if (oldLatestEvent && oldLatestEvent.id >= event.id) {
-                break;
-            }
-            
-            [_gameData.eventInfos insertObject:event atIndex:i];
-            [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0] ];
-        }
-        [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
-        
-    }];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
-    
-    if ([_gameData.eventInfos count] == 0) {
-        [self refreshList];
-    }
-    
-    [self didBecomeActiveNotification];
-}
-
-- (void)didBecomeActiveNotification {
-    UIView *view = [_musicButton valueForKey:@"view"];
-    if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
-        CABasicAnimation* rotationAnimation;
-        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
-        rotationAnimation.duration = 2.f;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = 10000000;
-        
-        [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-    } else {
-        [view.layer removeAllAnimations];
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ((scrollView.contentOffset.y + scrollView.frame.size.height) >= scrollView.contentSize.height) {
+        lwInfo("more data");
+        _footerView.hidden = NO;
     }
 }
 
-- (void)refershControlAction {
-    [self refreshList];
-}
-
-- (void)didReceiveMemoryWarning
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if (kind == UICollectionElementKindSectionFooter) {
+        _footerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"eventListFooter" forIndexPath:indexPath];
+        
+        return _footerView;
+    }
+    
+    return nil;
 }
-
 
 #pragma mark - Navigation
 
@@ -260,7 +322,6 @@ static __weak SldEventListViewController *g_inst = nil;
         if (indexPath.row < [_gameData.eventInfos count]) {
             _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:indexPath.row];
         }
-
     }
 }
 
