@@ -208,13 +208,13 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="EVENTS" id="eWu-jD-vqF">
-                        <barButtonItem key="leftBarButtonItem" image="otlUser2.png" id="a06-ZR-8mR">
+                        <barButtonItem key="leftBarButtonItem" image="otlUser.png" id="a06-ZR-8mR">
                             <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <segue destination="90s-2y-g5U" kind="push" id="87J-O3-Ulx"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="otlMusic3.png" id="ch2-AZ-efZ">
+                        <barButtonItem key="rightBarButtonItem" image="otlMusic.png" id="ch2-AZ-efZ">
                             <color key="tintColor" white="0.20000000000000001" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <segue destination="UXk-Ax-sCN" kind="push" identifier="music" id="Gse-9c-KAP"/>
@@ -1579,9 +1579,9 @@
         <image name="blackDisk90.png" width="90" height="90"/>
         <image name="btnBgWhite90.png" width="90" height="90"/>
         <image name="glyphicons_150_edit.png" width="24" height="21"/>
-        <image name="otlMusic3.png" width="22" height="22"/>
+        <image name="otlMusic.png" width="22" height="22"/>
         <image name="otlNextTrack.png" width="22" height="22"/>
-        <image name="otlUser2.png" width="22" height="22"/>
+        <image name="otlUser.png" width="22" height="22"/>
         <image name="qqBlack36.png" width="36" height="36"/>
         <image name="thumbDarker.png" width="256" height="256"/>
         <image name="weiboBlack36.png" width="36" height="36"/>
