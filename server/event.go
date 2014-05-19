@@ -236,6 +236,9 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 	resp, err := ssdb.Do("zrscan", Z_EVENT, startId, "", "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
+	if len(resp) == 0 {
+		lwutil.SendError("err_not_found", "")
+	}
 
 	//multi_hget
 	keyNum := len(resp) / 2

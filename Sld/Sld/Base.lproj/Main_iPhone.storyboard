@@ -185,7 +185,7 @@
                                 </connections>
                             </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionFooterView" hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="eventListFooter" id="I2X-RX-yTX">
+                        <collectionReusableView key="sectionFooterView" hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="eventListFooter" id="I2X-RX-yTX" customClass="EventListFooterView">
                             <rect key="frame" x="0.0" y="203" width="320" height="68"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
@@ -201,6 +201,10 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
                             </subviews>
+                            <connections>
+                                <outlet property="label" destination="kZ9-hx-v2q" id="bvB-dt-Rhg"/>
+                                <outlet property="spinner" destination="oX4-VN-q5p" id="SbX-yt-631"/>
+                            </connections>
                         </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="G6w-0m-hNO" id="PFO-0Y-5ET"/>
@@ -328,7 +332,7 @@
                         </subviews>
                     </view>
                     <navigationItem key="navigationItem" title="豆瓣FM" id="lA6-FO-z5M">
-                        <barButtonItem key="rightBarButtonItem" image="otlNextTrack.png" id="Yh3-RX-XM8">
+                        <barButtonItem key="rightBarButtonItem" image="otlFastForward.png" id="Yh3-RX-XM8">
                             <connections>
                                 <action selector="onNextButton:" destination="UXk-Ax-sCN" id="O6t-mo-4Xo"/>
                             </connections>
@@ -1579,8 +1583,8 @@
         <image name="blackDisk90.png" width="90" height="90"/>
         <image name="btnBgWhite90.png" width="90" height="90"/>
         <image name="glyphicons_150_edit.png" width="24" height="21"/>
+        <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlMusic.png" width="22" height="22"/>
-        <image name="otlNextTrack.png" width="22" height="22"/>
         <image name="otlUser.png" width="22" height="22"/>
         <image name="qqBlack36.png" width="36" height="36"/>
         <image name="thumbDarker.png" width="256" height="256"/>

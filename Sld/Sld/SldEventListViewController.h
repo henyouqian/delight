@@ -13,7 +13,10 @@
 @end
 
 @interface SldEventListViewController : UICollectionViewController
-+ (instancetype)getInstance;
+@end
+
+@interface EventListFooterView : UICollectionReusableView
+
 @end
 
 //@interface CollectionLayout : UICollectionViewFlowLayout

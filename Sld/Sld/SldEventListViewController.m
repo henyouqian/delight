@@ -18,6 +18,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 
 NSString *CELL_ID = @"cellID";
+static const int FETCH_EVENT_COUNT = 8;
 
 @interface EventCell()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -45,7 +46,6 @@ NSString *CELL_ID = @"cellID";
 
 //
 @interface SldCollectionView : UICollectionView
-
 @end
 
 @implementation SldCollectionView
@@ -62,30 +62,40 @@ NSString *CELL_ID = @"cellID";
 
 @end
 
+@interface EventListFooterView()
+@property (weak, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+
+@end
+
+@implementation EventListFooterView
+
+@end
+
 
 @interface SldEventListViewController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *musicButton;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) UIImage *loadingImage;
 @property (nonatomic) SldGameData *gameData;
-@property (weak, nonatomic) UICollectionReusableView *footerView;
+@property (weak, nonatomic) EventListFooterView *footerView;
+@property (nonatomic) BOOL fetching;
+@property (nonatomic) BOOL bottomFetched;
+@property (nonatomic) BOOL appendable;
+@property (nonatomic) BOOL reachBottom;
 @end
-
-static __weak SldEventListViewController *g_inst = nil;
-
 
 @implementation SldEventListViewController
 
-+ (instancetype)getInstance {
-    return g_inst;
-}
-
 - (void)viewDidLoad
 {
-    g_inst = self;
     [super viewDidLoad];
     
     _gameData = [SldGameData getInstance];
+    _fetching = NO;
+    _bottomFetched = NO;
+    _appendable = YES;
+    _reachBottom = NO;
     
     //creat image cache dir
     NSString *imgCacheDir = makeDocPath(@"imgCache");
@@ -148,9 +158,11 @@ static __weak SldEventListViewController *g_inst = nil;
     [self refreshList];
 }
 
-static const int FETCH_EVENT_COUNT = 20;
-
 - (void)refreshList {
+    if (_fetching) {
+        return;
+    }
+    
     FMDatabase *db = [SldDb defaultDb].fmdb;
     NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
     
@@ -158,8 +170,11 @@ static const int FETCH_EVENT_COUNT = 20;
     if (_gameData.online) {
         NSDictionary *body = @{@"StartId":@0, @"Limit":@(FETCH_EVENT_COUNT)};
         SldHttpSession *session = [SldHttpSession defaultSession];
+        
+        _fetching = YES;
         [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
          {
+             _fetching = NO;
              [self.refreshControl endRefreshing];
              
              if (error) {
@@ -171,11 +186,24 @@ static const int FETCH_EVENT_COUNT = 20;
                  lwError("Json error, error=%@", [error localizedDescription]);
                  return;
              }
+             if (array.count == 0) {
+                 return;
+             }
              
              EventInfo *oldLatestEvent = nil;
              if ([_gameData.eventInfos count]) {
                  oldLatestEvent = _gameData.eventInfos[0];
              }
+             
+             EventInfo *newLastEvent = [EventInfo eventWithDictionary:array.lastObject];
+             BOOL refreshAll = NO;
+             if (newLastEvent && oldLatestEvent) {
+                 if (newLastEvent.id > oldLatestEvent.id) {
+                     refreshAll = YES;
+                     [_gameData.eventInfos removeAllObjects];
+                 }
+             }
+             
              for (int i = 0; i < [array count]; ++i) {
                  //EventInfo *event = [[EventInfo alloc] init];
                  NSDictionary *dict = array[i];
@@ -207,6 +235,9 @@ static const int FETCH_EVENT_COUNT = 20;
                  }
              }
              
+             if (refreshAll) {
+                 [self.collectionView reloadData];
+             }
              if (insertIndexPaths.count) {
                  [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
              }
@@ -288,10 +319,87 @@ static const int FETCH_EVENT_COUNT = 20;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if ((scrollView.contentOffset.y + scrollView.frame.size.height) >= scrollView.contentSize.height) {
-        lwInfo("more data");
-        _footerView.hidden = NO;
+    if (_gameData.eventInfos.count == 0) {
+        return;
     }
+    
+    if ((scrollView.contentOffset.y + scrollView.frame.size.height) >= scrollView.contentSize.height) {
+        if (_fetching || !_appendable || _reachBottom) {
+            return;
+        }
+        
+        _footerView.hidden = NO;
+        
+        EventInfo *lastEventInfo = _gameData.eventInfos.lastObject;
+        NSDictionary *body = @{@"StartId":@(lastEventInfo.id), @"Limit":@(FETCH_EVENT_COUNT)};
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        _fetching = YES;
+        _appendable = NO;
+        [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+         {
+             _fetching = NO;
+             if (error) {
+                 NSString *errType = getServerErrorType(data);
+                 if ([errType compare:@"err_not_found"] == 0) {
+                     _reachBottom = YES;
+                 } else {
+                     alertHTTPError(error, data);
+                 }
+                 return;
+             }
+             NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+             if (error) {
+                 alert([NSString stringWithFormat:@"Json error, error=%@", [error localizedDescription]], nil);
+                 return;
+             }
+             if (array.count < FETCH_EVENT_COUNT) {
+                 _reachBottom = YES;
+             }
+             
+             if (_reachBottom) {
+                 [_footerView.spinner stopAnimating];
+                 _footerView.spinner.hidden = YES;
+                 _footerView.label.text = @"NO MORE DATA";
+             }
+             
+             FMDatabase *db = [SldDb defaultDb].fmdb;
+             NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
+             
+             for (int i = 0; i < [array count]; ++i) {
+                 NSDictionary *dict = array[i];
+                 EventInfo *event = [EventInfo eventWithDictionary:dict];
+    
+                 [insertIndexPaths addObject:[NSIndexPath indexPathForRow:_gameData.eventInfos.count inSection:0]];
+                 [_gameData.eventInfos addObject:event];
+                 
+                 //save to db
+                 NSData *eventData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+                 if (error) {
+                     lwError("Json error, error=%@", [error localizedDescription]);
+                     return;
+                 }
+                 FMResultSet *rs = [db executeQuery:@"SELECT packDownloaded FROM event WHERE id=?", dict[@"Id"]];
+                 
+                 BOOL packDownloaded = NO;
+                 if ([rs next]) {
+                     packDownloaded = [rs boolForColumnIndex:0];
+                 }
+                 
+                 BOOL ok = [db executeUpdate:@"REPLACE INTO event (id, data, packDownloaded) VALUES(?, ?, ?)", dict[@"Id"], eventData, @(packDownloaded)];
+                 if (!ok) {
+                     lwError("Sql error:%@", [db lastErrorMessage]);
+                 }
+             }
+             
+             if (insertIndexPaths.count) {
+                 [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
+             }
+         }];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    _appendable = YES;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
