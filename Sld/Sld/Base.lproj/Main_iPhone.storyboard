@@ -358,10 +358,10 @@
                                 <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items/>
-                                <color key="barTintColor" red="0.53820000000000001" green="0.78000000000000003" blue="0.68328" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="barTintColor" red="0.70000000000000007" green="0.62766666666666682" blue="0.48299999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </toolbar>
                         </subviews>
-                        <color key="backgroundColor" red="0.40880000000000005" green="0.72999999999999998" blue="0.59339902752433094" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.72999999999999998" green="0.63587951034063261" blue="0.40880000000000005" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="AJX-eH-y8f" id="fnW-J2-HtV"/>
@@ -530,7 +530,7 @@
                                 </connections>
                             </containerView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vtN-GL-vff">
-                                <rect key="frame" x="87" y="534" width="221" height="29"/>
+                                <rect key="frame" x="87" y="532" width="221" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Rank"/>
