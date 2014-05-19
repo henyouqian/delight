@@ -8,7 +8,6 @@
 
 #import "SldEventDetailViewController.h"
 #import "SldEventListViewController.h"
-#import "SldEventViewHubController.h"
 #import "SldDb.h"
 #import "SldGameController.h"
 #import "SldHttpSession.h"
@@ -16,10 +15,11 @@
 #import "SldGameData.h"
 #import "util.h"
 #import "config.h"
-#import "UIImage+animatedGIF.h"
+#import "UIImageView+sldAsyncLoad.h"
 
 
 @interface SldEventDetailViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bestRecordLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
@@ -50,8 +50,6 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     
     _gamedata = [SldGameData getInstance];
     
-    self.view.backgroundColor = [UIColor clearColor];
-    
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:_gamedata.eventInfo.packId]];
@@ -66,7 +64,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         }
         _gamedata.packInfo = [PackInfo packWithDictionary:dict];
         
-        [[SldEventViewHubController getInstance] loadBackground];
+        [self loadBackground];
         [self reloadData];
     } else { //server
         NSDictionary *body = @{@"Id":@(_gamedata.eventInfo.packId)};
@@ -90,7 +88,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
                 return;
             }
             
-            [[SldEventViewHubController getInstance] loadBackground];
+            [self loadBackground];
             [self reloadData];
         }];
     }
@@ -112,6 +110,20 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         NSNumber *rank = [dict objectForKey:@"Rank"];
         NSNumber *rankNum = [dict objectForKey:@"RankNum"];
         [self setPlayRecordWithHighscore:highScore rank:rank rankNum:rankNum];
+    }];
+}
+
+- (void)loadBackground{
+    NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
+    
+    BOOL imageExistLocal = imageExist(bgKey);
+    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+        if (!imageExistLocal || _bgImageView.animationImages) {
+            _bgImageView.alpha = 0.0;
+            [UIView animateWithDuration:1.f animations:^{
+                _bgImageView.alpha = 1.0;
+            }];
+        }
     }];
 }
 
@@ -295,7 +307,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         controller.gameMode = _gameMode;
         controller.matchSecret = matchSecret;
         
-        [[SldEventViewHubController getInstance].navigationController pushViewController:controller animated:YES];
+        [self.navigationController pushViewController:controller animated:YES];
     };
     
     if (_gameMode == MATCH) {

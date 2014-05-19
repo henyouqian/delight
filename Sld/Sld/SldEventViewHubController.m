@@ -58,8 +58,8 @@ static __weak SldEventViewHubController* g_inst = nil;
     
     //rank view
     _rankController = [self.storyboard instantiateViewControllerWithIdentifier:@"rankController"];
-    float topInset = self.navigationController.navigationBar.bounds.size.height+self.navigationController.navigationBar.frame.origin.y;
-    _rankController.tableView.contentInset = UIEdgeInsetsMake(topInset, 0, 0, 0);
+//    float topInset = self.navigationController.navigationBar.bounds.size.height+self.navigationController.navigationBar.frame.origin.y;
+//    _rankController.tableView.contentInset = UIEdgeInsetsMake(topInset, 0, 0, 0);
     [self.view addSubview:_rankController.view];
     [self addChildViewController:_rankController];
     

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldRankController : UITableViewController
+@interface SldRankController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 - (void)onViewShown;
 

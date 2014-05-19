@@ -52,6 +52,8 @@
 
 
 @interface SldRankController ()
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) UITableViewController *tableViewController;
 @property (nonatomic) NSMutableArray *rankInfos;
 @property (nonatomic) BOOL loadingRank;
 @end
@@ -67,13 +69,25 @@
     [super viewDidLoad];
     
     _loadingRank = NO;
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
     
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(updateRanks) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl.tintColor = [UIColor whiteColor];
+    //refreshControl
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(updateRanks) forControlEvents:UIControlEventValueChanged];
+    refreshControl.tintColor = [UIColor whiteColor];
     
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake([SldNevigationController getBottomY], 0, 0, 0);
+    _tableViewController = [[UITableViewController alloc] init];
+    _tableViewController.tableView = _tableView;
+    _tableViewController.refreshControl = refreshControl;
+    
+    _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    _tableView.scrollIndicatorInsets = UIEdgeInsetsMake([SldNevigationController getBottomY], 0, 0, 0);
+    
+    //set tableView inset
+    int navBottomY = [SldNevigationController getBottomY];
+    _tableView.contentInset = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
+    _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
 }
 
 //- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -125,7 +139,7 @@
     
     _loadingRank = YES;
     [session postToApi:@"event/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        [self.refreshControl endRefreshing];
+        [_tableViewController.refreshControl endRefreshing];
         _loadingRank = NO;
         if (error) {
             alertHTTPError(error, data);
