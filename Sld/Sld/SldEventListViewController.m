@@ -418,12 +418,6 @@ static const int FETCH_EVENT_COUNT = 8;
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (segue.identifier && [segue.identifier compare:@"toEventDetail"] == 0) {
-//        NSIndexPath *selectedIndexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
-//        NSInteger row = selectedIndexPath.row;
-//        if (row < [_gameData.eventInfos count]) {
-//            _gameData.eventInfo = [_gameData.eventInfos objectAtIndex:row];
-//        }
-        
         UIButton *button = sender;
         UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];

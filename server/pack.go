@@ -8,6 +8,7 @@ import (
 	"github.com/henyouqian/lwutil"
 	. "github.com/qiniu/api/conf"
 	"github.com/qiniu/api/rs"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,7 +21,13 @@ const (
 	H_PACK           = "H_PACK"          //key:packId, value:packData
 	Z_USER_PACK_PRE  = "Z_USER_PACK_PRE" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
 	Z_TAG_PRE        = "Z_TAG_PRE"       //name:Z_TAG_PRE/tag, key:packid, score:packid
+	Z_COMMENT        = "Z_COMMENT"       //name:Z_COMMENT/packid, key:commentId, score:commentId
+	H_COMMENT        = "H_COMMENT"       //key:commentId, value:commentData
 )
+
+func makeZCommentName(packId uint64) (name string) {
+	return fmt.Sprintf("%s/%d", Z_COMMENT, packId)
+}
 
 type Image struct {
 	File  string
@@ -486,35 +493,143 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 }
 
 type Comment struct {
-	Id       uint64
-	UserId   uint64
-	UserName string
-	UserIcon string
-	Text     string
+	Id          uint64
+	PackId      uint64
+	UserId      uint64
+	UserName    string
+	GravatarKey string
+	Team        string
+	Text        string
+}
+
+func addComment(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in Comment
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	if len(in.Text) == 0 {
+		lwutil.SendError("err_empty_text", "")
+	}
+	stringLimit(&in.Text, 200)
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//player
+	var playerInfo PlayerInfo
+	_getPlayerInfo(ssdb, session, &playerInfo)
+
+	//check pack
+	resp, err := ssdb.Do("hexists", H_PACK, in.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	if resp[1] == "0" {
+		lwutil.SendError("err_not_exist", "pack not exist")
+	}
+
+	//override in
+	in.Id = GenSerial(ssdb, "comment")
+	in.UserId = session.Userid
+	in.UserName = playerInfo.NickName
+	in.Team = playerInfo.TeamName
+	in.GravatarKey = playerInfo.GravatarKey
+
+	//save
+	zName := makeZCommentName(in.PackId)
+	resp, err = ssdb.Do("zset", zName, in.Id, in.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	jsComment, _ := json.Marshal(in)
+	resp, err = ssdb.Do("hset", H_COMMENT, in.Id, jsComment)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, &in)
 }
 
 func getComments(w http.ResponseWriter, r *http.Request) {
-	//var err error
+	var err error
 	lwutil.CheckMathod(r, "POST")
 
-	comments := []Comment{
-		Comment{45323, 1, "Ezra", "", "The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.\n\nThe quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog."},
-		Comment{5424, 2, "brian.clear", "", `label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];`},
-		Comment{2452, 44, "Alladinian", "", "Try this!"},
-		Comment{4562435, 345, "Proveme007", "", "gogogo!"},
-		Comment{23452, 743, "samfisher", "", `implement scrollViewDidScroll: and check contentOffset in that for reaching the end`},
-		Comment{233452, 7523, "很有钱", "", `赞同第一名的答案。痛经这个事情，每个人先天体质不一样没办法，但是其实很大一部分是坏的作息饮食习惯，和身体虚弱导致的。最管用的根治方法就是规律作息，多运动。我原来有朋友超级痛，走在路上会忽然痛到回不了家那种。后来去了军队，每天熄灯早起，天天搞体能，随意武装越野五公里，扳手腕偶尔能赢我。那会一点都不疼，经期生龙活虎嗷嗷叫。后来去文职机关了，老毛病又回来了。
-吃上面尽量少吃凉的，西瓜山竹什么的注意控制。能早睡就早睡。慢慢养成规律运动的习惯。坚持下来会显著改善的。那些贴的吃的涂得中药西药都不治本。止疼针止疼片实在没办法可以用，但是到了那一步了就真心要注意了。
-正能量的总结：多运动多早睡，生活更美好。实际观察爱运动身体好的女生痛的程度和概率远远小于水瓶盖扭不开八百米走完的女生。
-
-—————————真答案分割线————————
-大家都知道运动有效，可是大多数时候是做不到的。谁愿意天天被人催着去坚持锻炼，去早睡，这也不吃那也不吃。能不能做到其实看女生自己，男朋友能起到作用有限。。。反正我能力不足，潜移默化常年失败，这事真那么容易那也不会有那么多整天分享各种郑多燕啦腹肌撕裂者啦实际从来不会认真去坚持的人啦。
-所以呢，碰见女朋友痛呢，悄悄叹口气，安静陪着，要热水给热水要荷包蛋做荷包蛋想吃啥去买啥要帮揉就揉不要就乖乖呆着不要烦她，
-
-
-
-然后努力忍住不要借机教育要规律生活多运动（更不能嘲笑说平时不努力现在徒伤悲！切记切记！）就好啦～`},
+	//in
+	var in struct {
+		PackId          uint64
+		BottomCommentId uint64
+		Limit           uint
 	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	if in.BottomCommentId == 0 {
+		in.BottomCommentId = math.MaxUint64
+	}
+	if in.Limit > 20 {
+		in.Limit = 20
+	}
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//get zset
+	name := makeZCommentName(in.PackId)
+	resp, err := ssdb.Do("zrscan", name, in.BottomCommentId, in.BottomCommentId, "", in.Limit)
+	lwutil.CheckSsdbError(resp, err)
+
+	if len(resp) == 1 {
+		//lwutil.SendError("err_not_found", "")
+		comments := make([]Comment, 0)
+		lwutil.WriteResponse(w, &comments)
+		return
+	}
+	resp = resp[1:]
+
+	//get comments
+	cmds := make([]interface{}, len(resp)/2+2)
+	cmds[0] = "multi_hget"
+	cmds[1] = H_COMMENT
+	for i, _ := range cmds {
+		if i >= 2 {
+			cmds[i] = resp[(i-2)*2]
+		}
+	}
+	resp, err = ssdb.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	comments := make([]Comment, len(resp)/2)
+	for i, _ := range comments {
+		js := resp[i*2+1]
+		err = json.Unmarshal([]byte(js), &comments[i])
+		lwutil.CheckError(err, "")
+	}
+
+	// 	comments := []Comment{
+	// 		Comment{45323, 1, 1, "Ezra", "3", "北京", "The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.\n\nThe quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog."},
+	// 		Comment{5424, 2, 1, "brian.clear", "4", "美国", `label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];`},
+	// 		Comment{2452, 44, 1, "Alladinian", "6", "上海", "Try this!"},
+	// 		Comment{4562435, 345, 1, "Proveme007", "7", "福建", "gogogo!"},
+	// 		Comment{23452, 743, 1, "samfisher", "8", "山东", `implement scrollViewDidScroll: and check contentOffset in that for reaching the end`},
+	// 		Comment{233452, 7523, 1, "很有钱", "9", "浙江", `赞同第一名的答案。痛经这个事情，每个人先天体质不一样没办法，但是其实很大一部分是坏的作息饮食习惯，和身体虚弱导致的。最管用的根治方法就是规律作息，多运动。我原来有朋友超级痛，走在路上会忽然痛到回不了家那种。后来去了军队，每天熄灯早起，天天搞体能，随意武装越野五公里，扳手腕偶尔能赢我。那会一点都不疼，经期生龙活虎嗷嗷叫。后来去文职机关了，老毛病又回来了。
+	// 吃上面尽量少吃凉的，西瓜山竹什么的注意控制。能早睡就早睡。慢慢养成规律运动的习惯。坚持下来会显著改善的。那些贴的吃的涂得中药西药都不治本。止疼针止疼片实在没办法可以用，但是到了那一步了就真心要注意了。
+	// 正能量的总结：多运动多早睡，生活更美好。实际观察爱运动身体好的女生痛的程度和概率远远小于水瓶盖扭不开八百米走完的女生。
+
+	// —————————真答案分割线————————
+	// 大家都知道运动有效，可是大多数时候是做不到的。谁愿意天天被人催着去坚持锻炼，去早睡，这也不吃那也不吃。能不能做到其实看女生自己，男朋友能起到作用有限。。。反正我能力不足，潜移默化常年失败，这事真那么容易那也不会有那么多整天分享各种郑多燕啦腹肌撕裂者啦实际从来不会认真去坚持的人啦。
+	// 所以呢，碰见女朋友痛呢，悄悄叹口气，安静陪着，要热水给热水要荷包蛋做荷包蛋想吃啥去买啥要帮揉就揉不要就乖乖呆着不要烦她，
+
+	// 然后努力忍住不要借机教育要规律生活多运动（更不能嘲笑说平时不努力现在徒伤悲！切记切记！）就好啦～`},
+	// 	}
 
 	//out
 	lwutil.WriteResponse(w, &comments)
@@ -529,5 +644,6 @@ func regPack() {
 	http.Handle("/pack/listMatch", lwutil.ReqHandler(listMatchPack))
 	http.Handle("/pack/listByTag", lwutil.ReqHandler(listPackByTag))
 	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
+	http.Handle("/pack/addComment", lwutil.ReqHandler(addComment))
 	http.Handle("/pack/getComments", lwutil.ReqHandler(getComments))
 }

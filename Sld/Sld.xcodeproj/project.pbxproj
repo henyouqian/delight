@@ -10,6 +10,8 @@
 		B3024C5F18FE7EF600F9EEA3 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = B3024C5E18FE7EF600F9EEA3 /* audio */; };
 		B308AFD0190FC1620021BE9C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B308AFCF190FC1620021BE9C /* MediaPlayer.framework */; };
 		B308AFD1190FC1750021BE9C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD22190FA67700435EF4 /* CFNetwork.framework */; };
+		B3118976192B31AD00DFB549 /* SldOfflineEventEnterControler.m in Sources */ = {isa = PBXBuildFile; fileRef = B3118975192B31AD00DFB549 /* SldOfflineEventEnterControler.m */; };
+		B3118978192B417200DFB549 /* btnBgWhite90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3118977192B417200DFB549 /* btnBgWhite90@2x.png */; };
 		B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */; };
 		B31CBEA419089EA700621165 /* SldDb.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA319089EA700621165 /* SldDb.m */; };
 		B31CBEB3190AA47500621165 /* SldButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEB2190AA47500621165 /* SldButton.m */; };
@@ -48,7 +50,6 @@
 		B36DAD28190FAFA200435EF4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD18190FA50100435EF4 /* AudioToolbox.framework */; };
 		B36DAD2A190FB46900435EF4 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD1E190FA59600435EF4 /* CoreAudio.framework */; };
 		B36DAD2B190FB46F00435EF4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD1A190FA50B00435EF4 /* AVFoundation.framework */; };
-		B374C5781916E2F900E5C6A2 /* SldEventViewHubController.m in Sources */ = {isa = PBXBuildFile; fileRef = B374C5771916E2F900E5C6A2 /* SldEventViewHubController.m */; };
 		B374C57B19177B2F00E5C6A2 /* SldGameData.m in Sources */ = {isa = PBXBuildFile; fileRef = B374C57A19177B2F00E5C6A2 /* SldGameData.m */; };
 		B37A9C3618F2E4850080E8F0 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = B37A9C3518F2E4850080E8F0 /* util.m */; };
 		B38110401913FC750093F321 /* config.m in Sources */ = {isa = PBXBuildFile; fileRef = B381103F1913FC750093F321 /* config.m */; };
@@ -72,7 +73,7 @@
 		B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B39E450D191ED0BB00CBB247 /* MWPhotoBrowser.bundle */; };
 		B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E4514191FB72400CBB247 /* MSWeakTimer.m */; };
 		B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */; };
-		B3A521FC19288D4F00D5A38C /* SldOfflineEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A521FB19288D4F00D5A38C /* SldOfflineEventController.m */; };
+		B3A521FC19288D4F00D5A38C /* SldOfflineEventListController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A521FB19288D4F00D5A38C /* SldOfflineEventListController.m */; };
 		B3A522111928F56000D5A38C /* otlUser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3A5220F1928F56000D5A38C /* otlUser@2x.png */; };
 		B3A522131928FDDC00D5A38C /* otlMusic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3A522121928FDDC00D5A38C /* otlMusic@2x.png */; };
 		B3A522151928FF0B00D5A38C /* otlNextTrack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3A522141928FF0B00D5A38C /* otlNextTrack@2x.png */; };
@@ -130,6 +131,9 @@
 		B3024C5E18FE7EF600F9EEA3 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = res/audio; sourceTree = "<group>"; };
 		B3024C8E18FE857A00F9EEA3 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		B308AFCF190FC1620021BE9C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		B3118974192B31AD00DFB549 /* SldOfflineEventEnterControler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldOfflineEventEnterControler.h; sourceTree = "<group>"; };
+		B3118975192B31AD00DFB549 /* SldOfflineEventEnterControler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldOfflineEventEnterControler.m; sourceTree = "<group>"; };
+		B3118977192B417200DFB549 /* btnBgWhite90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgWhite90@2x.png"; sourceTree = "<group>"; };
 		B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventDetailViewController.h; sourceTree = "<group>"; };
 		B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventDetailViewController.m; sourceTree = "<group>"; };
 		B31CBEA219089EA700621165 /* SldDb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldDb.h; sourceTree = "<group>"; };
@@ -193,8 +197,6 @@
 		B36DAD22190FA67700435EF4 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B36DAD24190FA68900435EF4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B36DAD26190FA6DA00435EF4 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		B374C5761916E2F900E5C6A2 /* SldEventViewHubController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventViewHubController.h; sourceTree = "<group>"; };
-		B374C5771916E2F900E5C6A2 /* SldEventViewHubController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventViewHubController.m; sourceTree = "<group>"; };
 		B374C57919177B2F00E5C6A2 /* SldGameData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldGameData.h; sourceTree = "<group>"; };
 		B374C57A19177B2F00E5C6A2 /* SldGameData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldGameData.m; sourceTree = "<group>"; };
 		B37A9C3418F2E4850080E8F0 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
@@ -230,8 +232,8 @@
 		B39E4514191FB72400CBB247 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
 		B39E452619201C1A00CBB247 /* UIImageView+sldAsyncLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+sldAsyncLoad.h"; sourceTree = "<group>"; };
 		B39E452719201C1A00CBB247 /* UIImageView+sldAsyncLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+sldAsyncLoad.m"; sourceTree = "<group>"; };
-		B3A521FA19288D4F00D5A38C /* SldOfflineEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldOfflineEventController.h; sourceTree = "<group>"; };
-		B3A521FB19288D4F00D5A38C /* SldOfflineEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldOfflineEventController.m; sourceTree = "<group>"; };
+		B3A521FA19288D4F00D5A38C /* SldOfflineEventListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldOfflineEventListController.h; sourceTree = "<group>"; };
+		B3A521FB19288D4F00D5A38C /* SldOfflineEventListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldOfflineEventListController.m; sourceTree = "<group>"; };
 		B3A5220F1928F56000D5A38C /* otlUser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlUser@2x.png"; sourceTree = "<group>"; };
 		B3A522121928FDDC00D5A38C /* otlMusic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlMusic@2x.png"; sourceTree = "<group>"; };
 		B3A522141928FF0B00D5A38C /* otlNextTrack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlNextTrack@2x.png"; sourceTree = "<group>"; };
@@ -458,10 +460,6 @@
 				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
 				B3691E1A1900C36A0055C419 /* SldEventListViewController.h */,
 				B3691E1B1900C36A0055C419 /* SldEventListViewController.m */,
-				B3A521FA19288D4F00D5A38C /* SldOfflineEventController.h */,
-				B3A521FB19288D4F00D5A38C /* SldOfflineEventController.m */,
-				B374C5761916E2F900E5C6A2 /* SldEventViewHubController.h */,
-				B374C5771916E2F900E5C6A2 /* SldEventViewHubController.m */,
 				B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */,
 				B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */,
 				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
@@ -476,6 +474,10 @@
 				B39E4472191D6CBD00CBB247 /* SldActivityController.m */,
 				B39E4475191E132800CBB247 /* SldAddCommentController.h */,
 				B39E4476191E132800CBB247 /* SldAddCommentController.m */,
+				B3A521FA19288D4F00D5A38C /* SldOfflineEventListController.h */,
+				B3A521FB19288D4F00D5A38C /* SldOfflineEventListController.m */,
+				B3118974192B31AD00DFB549 /* SldOfflineEventEnterControler.h */,
+				B3118975192B31AD00DFB549 /* SldOfflineEventEnterControler.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -514,6 +516,7 @@
 				B33121FA1916D02C003E05DB /* thumbDarker.png */,
 				B3C1BB6C1910D8BE0062D50C /* btnBgWhite50.png */,
 				B3C1BB8A191137400062D50C /* btnBgGray90.png */,
+				B3118977192B417200DFB549 /* btnBgWhite90@2x.png */,
 				B3C1BB6D1910D8BE0062D50C /* btnBgWhite90.png */,
 				B3C1BB88191133910062D50C /* btnBgBlack90.png */,
 				B3C1BB6E1910D8BE0062D50C /* glyphicons_173_play.png */,
@@ -687,6 +690,7 @@
 				B3C1BB8B191137400062D50C /* btnBgGray90.png in Resources */,
 				B33DD389192124BE006B8ACD /* qqBlack36@2x.png in Resources */,
 				B31EE7E418F05BE60047E9FD /* Main_iPad.storyboard in Resources */,
+				B3118978192B417200DFB549 /* btnBgWhite90@2x.png in Resources */,
 				B33DD388192124BE006B8ACD /* qqBlack36.png in Resources */,
 				B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */,
 				B3C1BB7F1910D8BE0062D50C /* glyphicons_175_stop@2x.png in Resources */,
@@ -734,12 +738,12 @@
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
+				B3118976192B31AD00DFB549 /* SldOfflineEventEnterControler.m in Sources */,
 				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
-				B3A521FC19288D4F00D5A38C /* SldOfflineEventController.m in Sources */,
+				B3A521FC19288D4F00D5A38C /* SldOfflineEventListController.m in Sources */,
 				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
 				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,
-				B374C5781916E2F900E5C6A2 /* SldEventViewHubController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,
 			);

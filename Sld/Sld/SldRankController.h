@@ -10,6 +10,7 @@
 
 @interface SldRankController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (void)onViewShown;
 
 @end

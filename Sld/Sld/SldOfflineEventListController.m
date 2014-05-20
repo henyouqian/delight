@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldOfflineEventController.h"
+#import "SldOfflineEventListController.h"
 #import "SldDb.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldGameData.h"
@@ -22,14 +22,14 @@ static const int FETCH_EVENT_COUNT = 50;
 @end
 
 
-@interface SldOfflineEventController()
+@interface SldOfflineEventListController()
 @property (nonatomic) NSMutableArray *eventInfos;
 @property (nonatomic) UIImage *loadingImage;
 @end
 
 
 
-@implementation SldOfflineEventController
+@implementation SldOfflineEventListController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -94,15 +94,18 @@ static const int FETCH_EVENT_COUNT = 50;
     return cell;
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (segue.identifier && [segue.identifier compare:@"toOfflineEnter"] == 0) {
+        SldGameData *gamedata = [SldGameData getInstance];
+        UIButton *button = sender;
+        UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        if (indexPath.row < [_eventInfos count]) {
+            gamedata.eventInfo = [_eventInfos objectAtIndex:indexPath.row];
+        }
+    }
 }
-*/
 
 @end

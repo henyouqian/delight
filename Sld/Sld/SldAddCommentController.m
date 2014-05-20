@@ -9,7 +9,6 @@
 #import "SldAddCommentController.h"
 
 @interface SldAddCommentController ()
-@property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
 
@@ -22,6 +21,28 @@
     
     [self registerForKeyboardNotifications];
     [_textView becomeFirstResponder];
+    
+    if (_restoreText) {
+        _textView.text = _restoreText;
+    }
+}
+
+- (IBAction)onSendButton:(id)sender {
+    if (_textView.text.length == 0) {
+        return;
+    }
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
+    
+	RIButtonItem *sendItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
+		[_commentController onSendComment];
+        [self dismissViewControllerAnimated:YES completion:nil];
+	}];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Send this comment?"
+	                                                    message:nil
+											   cancelButtonItem:cancelItem
+											   otherButtonItems:sendItem, nil];
+	[alertView show];
 }
 
 - (void)registerForKeyboardNotifications

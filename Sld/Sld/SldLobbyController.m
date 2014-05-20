@@ -22,6 +22,7 @@
 @property (weak, nonatomic) SldRankController *rankController;
 @property (weak, nonatomic) SldCommentController *commentController;
 @property (weak, nonatomic) SldActivityController *activityController;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
 
 @end
 
@@ -30,26 +31,31 @@
 - (IBAction)onSegChange:(id)sender {
     UISegmentedControl *seg = sender;
     int idx = seg.selectedSegmentIndex;
+    
+    _rankView.hidden = YES;
+    _commentView.hidden = YES;
+    _activityView.hidden = YES;
+    _rankController.tableView.scrollsToTop = NO;
+    _commentController.tableView.scrollsToTop = NO;
+    _activityController.tableView.scrollsToTop = NO;
+    
     if (idx == 0) {
         _rankView.hidden = NO;
-        _commentView.hidden = YES;
-        _activityView.hidden = YES;
-        [_commentController onViewShown];
+        _rankController.tableView.scrollsToTop = YES;
+        [_rankController onViewShown];
     } else if (idx == 1) {
-        _rankView.hidden = YES;
         _commentView.hidden = NO;
-        _activityView.hidden = YES;
-        [_activityController onViewShown];
-    } else {
-        _rankView.hidden = YES;
-        _commentView.hidden = YES;
-        _activityView.hidden = NO;
+        _commentController.tableView.scrollsToTop = YES;
         [_commentController onViewShown];
+    } else {
+        _activityView.hidden = NO;
+        _activityController.tableView.scrollsToTop = YES;
+        [_activityController onViewShown];
     }
 }
 
-- (void)onViewShown {
-    [_commentController onViewShown];
+- (void)viewWillAppear:(BOOL)animated {
+    [_rankController onViewShown];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -68,9 +74,7 @@
 {
     [super viewDidLoad];
     
-    _rankView.hidden = NO;
-    _commentView.hidden = YES;
-    _activityView.hidden = YES;
+    [self onSegChange:_seg];
     
     [self loadBackground];
 }

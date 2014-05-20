@@ -52,7 +52,6 @@
 
 //SldCommentController
 @interface SldActivityController ()
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *activityDatas;
 @property (nonatomic) UITableViewController *tableViewController;
 @end
@@ -132,18 +131,20 @@
     
     ActivityData* activityData = [_activityDatas objectAtIndex:indexPath.row];
     cell.textView.text = activityData.text;
+    cell.textView.scrollsToTop = NO;
     cell.userNameLabel.text = activityData.userName;
     
+    SldGameData *gdata = [SldGameData getInstance];
     cell.iconView.image = nil;
-    NSString *avatarUrl = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", activityData.userId];
-    [cell.iconView asyncLoadImageWithUrl:avatarUrl showIndicator:NO completion:nil];
+    NSString *url = [SldUtil makeGravatarUrlWithKey:gdata.gravatarKey width:cell.iconView.frame.size.width];
+    [cell.iconView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row >= [_activityDatas count]) {
-        return 80;
+        return 60;
     }
     ActivityData* activityData = [_activityDatas objectAtIndex:indexPath.row];
     float h = [self textHeightForText:activityData.text width:250 fontName:nil fontSize:14];

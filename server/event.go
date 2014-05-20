@@ -686,22 +686,12 @@ func getActivities(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	comments := []Comment{
-		Comment{45323, 35, "杨健伟", "", `1、日本的零售业竞争非常激烈，所以实体店本身已经是微利产业了。类似堂吉诃德之类的超廉价超市，以及遍地都有的百元店，还有无印良品与优衣库这样的存在大大压缩了电商的生存空间。
-2、日本的支付系统不发达，大部分网上支付都依靠原始的汇款转账。
-3、部分零售终端讲求购物的氛围和感受，这是电商无法代替的。代表是无印良品——顺带说一下，相对日本人的收入，无印良品大多数是便宜货，这和在中国的情形略有不同。
-4、日本仍以单职工家庭为主，上街购物是女人消磨时间以及社交的主要方式。
-5、日本城市布局紧密，零售店分布非常密集且合理。
-6、日本人讲究“羁绊”（きずな、kizuna）,尤其是上年纪的日本人，对经常买东西的地方会有情感依赖。
-暂时就想到这么多。`},
-		Comment{5424, 2453, "周大大", "", `看到后立马问了日本姐姐 她刚刚在网上买了窗帘=。= 她的回答如下
-1.喜欢网购的人有、有警戒心的日本人不放心物品质量的也有。例如在乐天买衣服、与图片稍有差异的例子还是很多的。
-2.如果是很重自己亲自买很麻烦的物品 还是倾向于网购。日本发货速度还是挺快。（我在amazon下午下单第二天中午就到了）所以很紧急想买的就会去网上购物。
-3.还是按人而定。如果工作很忙没时间购物大概还是倾向网购。
-日本商店物品确实很完备～所以有警戒心的日本更愿意亲自购买确定。网上物品会比店里便宜的有、但也有很多便宜的实体店、就看你知不知道了。但是日本乡下地方还是超多的 去一趟商业街专门为买一样东西很麻烦吧。`},
-		Comment{2452, 443564, "ddtt", "", "Try this!"},
-		Comment{4562435, 356745, "Proveme007", "", "gogogo!"},
-		Comment{23452, 7473, "samfisher", "", `implement scrollViewDidScroll: and check contentOffset in that for reaching the end`},
-		Comment{233452, 75283, "很有钱", "", `赞同第一名的答案。痛经这个事情，每个人先天体质不一样没办法，但是其实很大一部分是坏的作息饮食习惯，和身体虚弱导致的。最管用的根治方法就是规律作息，多运动。我原来有朋友超级痛，走在路上会忽然痛到回不了家那种。后来去了军队，每天熄灯早起，天天搞体能，随意武装越野五公里，扳手腕偶尔能赢我。那会一点都不疼，经期生龙活虎嗷嗷叫。后来去文职机关了，老毛病又回来了。
+		Comment{45323, 1, 1, "Ezra", "3", "北京", "The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.\n\nThe quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog."},
+		Comment{5424, 2, 1, "brian.clear", "4", "美国", `label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];`},
+		Comment{2452, 44, 1, "Alladinian", "6", "上海", "Try this!"},
+		Comment{4562435, 345, 1, "Proveme007", "7", "福建", "gogogo!"},
+		Comment{23452, 743, 1, "samfisher", "8", "山东", `implement scrollViewDidScroll: and check contentOffset in that for reaching the end`},
+		Comment{233452, 7523, 1, "很有钱", "9", "浙江", `赞同第一名的答案。痛经这个事情，每个人先天体质不一样没办法，但是其实很大一部分是坏的作息饮食习惯，和身体虚弱导致的。最管用的根治方法就是规律作息，多运动。我原来有朋友超级痛，走在路上会忽然痛到回不了家那种。后来去了军队，每天熄灯早起，天天搞体能，随意武装越野五公里，扳手腕偶尔能赢我。那会一点都不疼，经期生龙活虎嗷嗷叫。后来去文职机关了，老毛病又回来了。
 吃上面尽量少吃凉的，西瓜山竹什么的注意控制。能早睡就早睡。慢慢养成规律运动的习惯。坚持下来会显著改善的。那些贴的吃的涂得中药西药都不治本。止疼针止疼片实在没办法可以用，但是到了那一步了就真心要注意了。
 正能量的总结：多运动多早睡，生活更美好。实际观察爱运动身体好的女生痛的程度和概率远远小于水瓶盖扭不开八百米走完的女生。
 

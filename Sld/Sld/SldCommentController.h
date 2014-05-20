@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SldCommentController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MWPhotoBrowserDelegate>
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (void)onViewShown;
+- (void)onSendComment;
 @end

@@ -10,6 +10,7 @@
 #import "SldNevigationController.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
+#import "SldAddCommentController.h"
 #import "UIImageView+sldAsyncLoad.h"
 
 //CommentHeaderCell
@@ -81,7 +82,6 @@
 
 //SldCommentController
 @interface SldCommentController ()
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *commentDatas;
 @property (nonatomic) UITableViewController *tableViewController;
 @property (nonatomic) BOOL ready;
@@ -89,6 +89,7 @@
 @property (weak, nonatomic) SldGameData *gameData;
 @property (nonatomic) int currImagePage;
 @property (nonatomic) CommentHeaderCell *imageSlideCell;
+@property (nonatomic) NSString *commentText;
 @end
 
 @implementation SldCommentController
@@ -176,6 +177,7 @@
         SldGameData *gameData = [SldGameData getInstance];
         
         CommentHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentImageCell" forIndexPath:indexPath];
+        cell.scrollView.scrollsToTop = NO;
         if (!_ready) {
             return cell;
         }
@@ -223,6 +225,7 @@
         }
         
         CommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
+        cell.textView.scrollsToTop = NO;
         
         CommentData* commentData = [_commentDatas objectAtIndex:indexPath.row];
         cell.textView.text = commentData.text;
@@ -242,7 +245,7 @@
         return 280;
     } else if (indexPath.section == 1) {
         if (indexPath.row >= [_commentDatas count]) {
-            return 80;
+            return 60;
         }
         CommentData* commentData = [_commentDatas objectAtIndex:indexPath.row];
         float h = [self textHeightForText:commentData.text width:250 fontName:@"HelveticaNeue" fontSize:14];
@@ -316,12 +319,22 @@
     nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:nc animated:YES completion:nil];}
 
-- (IBAction)sendComment:(UIStoryboardSegue *)segue {
-    
+- (void)onSendComment {
+    _commentText = nil;
 }
 
 - (IBAction)cancelComment:(UIStoryboardSegue *)segue {
-    
+    SldAddCommentController* vc = (SldAddCommentController*)segue.sourceViewController;
+    _commentText = vc.textView.text;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier compare:@"addComment"] == 0 && _commentText) {
+        SldAddCommentController* vc = (SldAddCommentController*)segue.destinationViewController;
+        vc.restoreText = _commentText;
+        vc.commentController = self;
+    }
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {

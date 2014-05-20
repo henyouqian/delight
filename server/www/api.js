@@ -93,9 +93,13 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"Id": 1}
 				},{
+					"name": "addComment",
+					"method": "POST",
+					"data": {"PackId": 0, "Text":"好喜欢"}
+				},{
 					"name": "getComments",
 					"method": "POST",
-					"data": {"PackId": 0, "Key": 0, "Limit": 20}
+					"data": {"PackId": 0, "BottomCommentId": 0, "Limit": 20}
 				}
 			]
 		},{

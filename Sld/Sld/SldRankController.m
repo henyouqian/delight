@@ -52,7 +52,6 @@
 
 
 @interface SldRankController ()
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) UITableViewController *tableViewController;
 @property (nonatomic) NSMutableArray *rankInfos;
 @property (nonatomic) BOOL loadingRank;
@@ -82,7 +81,7 @@
     _tableViewController.refreshControl = refreshControl;
     
     _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    _tableView.scrollIndicatorInsets = UIEdgeInsetsMake([SldNevigationController getBottomY], 0, 0, 0);
+    _tableView.tableFooterView.backgroundColor = [UIColor clearColor];
     
     //set tableView inset
     int navBottomY = [SldNevigationController getBottomY];
@@ -322,15 +321,17 @@
     return [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
 }
 
--(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    return [[UIView alloc] initWithFrame:CGRectZero];
-}
+//-(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+//{
+//    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+//    view.backgroundColor = [UIColor clearColor];
+//    return [[UIView alloc] initWithFrame:CGRectZero];
+//}
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 0.01f;
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+//{
+//    return 0.f;
+//}
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -355,7 +356,12 @@
     if (indexPath.section == 0) {
         return 62;
     } else if (indexPath.section == 1) {
-        return 62;
+        if (indexPath.row < _rankInfos.count) {
+            return 62;
+        } else {
+            return 60;
+        }
+        
     }
     return 0;
 }

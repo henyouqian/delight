@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldOfflineEventController : UICollectionViewController
+@interface SldOfflineEventListController : UICollectionViewController
 
 @end
