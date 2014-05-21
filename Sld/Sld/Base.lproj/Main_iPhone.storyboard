@@ -998,7 +998,7 @@
         <!--Sld Offline Event Enter Controler-->
         <scene sceneID="HBT-75-6n3">
             <objects>
-                <viewController id="06C-8n-xcI" customClass="SldOfflineEventEnterControler" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="offlineEnter" useStoryboardIdentifierAsRestorationIdentifier="YES" id="06C-8n-xcI" customClass="SldOfflineEventEnterControler" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6VJ-Kq-PUL"/>
                         <viewControllerLayoutGuide type="bottom" id="nQw-NC-nK8"/>

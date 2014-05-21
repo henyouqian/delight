@@ -365,7 +365,21 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onBackYes {
-    [self.navigationController popViewControllerAnimated:YES];
+    if (_gameController.gameMode == MATCH) {
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
+        
+        RIButtonItem *yesItem = [RIButtonItem itemWithLabel:@"Yes, Exit!" action:^{
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Exit this match?"
+                                                            message:nil
+                                                   cancelButtonItem:cancelItem
+                                                   otherButtonItems:yesItem, nil];
+        [alertView show];
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)onBackNo {
@@ -907,50 +921,6 @@ static float lerpf(float a, float b, float t) {
     [_btnExit setFontColor:[UIColor whiteColor]];
     SldGameData *gd = [SldGameData getInstance];
     
-    //show blured image and cover
-    [self addChild:_lastImageBlurSprite];
-    _lastImageBlurSprite.hidden = NO;
-    _lastImageBlurSprite.alpha = 0.f;
-    [self addChild:_lastImageCover];
-    _lastImageCover.hidden = NO;
-    _lastImageCover.alpha = 0.f;
-    
-    //scale
-    float texW = [_lastImageBlurSprite.texture size].width;
-    float texH = [_lastImageBlurSprite.texture size].height;
-    
-    float scale = _targetW/texW;
-    scale = MAX(_targetH/texH, scale);
-    [_lastImageBlurSprite setScale:scale];
-    
-    _targetW = self.view.frame.size.width;
-    _targetH = self.view.frame.size.height;
-    float scale2 = _targetW/texW;
-    scale2 = MAX(_targetH/texH, scale2);
-    
-    //blur action
-    float dur = 1.f;
-    SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-        float t = QuarticEaseOut(elapsedTime/dur);
-        [_lastImageBlurSprite setAlpha:lerpf(0.f, 1.f, t)];
-        [_lastImageBlurSprite setScale:lerpf(scale, scale2, t)];
-        [_lastImageCover setAlpha:lerpf(0.f, 1.f, t)];
-    }];
-    [_lastImageBlurSprite runAction:action];
-    
-    //complete label
-    SKLabelNode *completeLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
-    [completeLabel setFontColor:makeUIColor(255, 197, 131, 255)];
-    [completeLabel setText:@"COMPLETE"];
-    [completeLabel setFontSize:32];
-    [completeLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-    [completeLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-    [completeLabel setPosition:CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f)];
-    [_lastImageCover addChild:completeLabel];
-    if (_needRotate) {
-        completeLabel.zRotation = -M_PI_2;
-    }
-    
     //
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
@@ -985,8 +955,52 @@ static float lerpf(float a, float b, float t) {
         [_btnExit setHidden:NO];
     }
     
+    //show blured image and cover
+    [self addChild:_lastImageBlurSprite];
+    _lastImageBlurSprite.hidden = NO;
+    _lastImageBlurSprite.alpha = 0.f;
+    [self addChild:_lastImageCover];
+    _lastImageCover.hidden = NO;
+    _lastImageCover.alpha = 0.f;
+    
+    //scale
+    float texW = [_lastImageBlurSprite.texture size].width;
+    float texH = [_lastImageBlurSprite.texture size].height;
+    
+    float scale = _targetW/texW;
+    scale = MAX(_targetH/texH, scale);
+    [_lastImageBlurSprite setScale:scale];
+    
+    _targetW = self.view.frame.size.width;
+    _targetH = self.view.frame.size.height;
+    float scale2 = _targetW/texW;
+    scale2 = MAX(_targetH/texH, scale2);
+    
+    //blur action
+    float dur = .5f;
+    SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        float t = QuarticEaseOut(elapsedTime/dur);
+        [_lastImageBlurSprite setAlpha:lerpf(0.f, 1.f, t)];
+        [_lastImageBlurSprite setScale:lerpf(scale, scale2, t)];
+        [_lastImageCover setAlpha:lerpf(0.f, 1.f, t)];
+    }];
+    [_lastImageBlurSprite runAction:action];
+    
+    //complete label
+    SKLabelNode *completeLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+    [completeLabel setFontColor:makeUIColor(255, 197, 131, 255)];
+    [completeLabel setText:@"COMPLETE"];
+    [completeLabel setFontSize:32];
+    [completeLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+    [completeLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+    [completeLabel setPosition:CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f)];
+    [_lastImageCover addChild:completeLabel];
+    if (_needRotate) {
+        completeLabel.zRotation = -M_PI_2;
+    }
+    
     //complete label action
-    dur = .4f;
+    //dur = .4f;
     completeLabel.xScale = 0.f;
     completeLabel.yScale = 2.f;
     SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {

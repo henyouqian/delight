@@ -13,6 +13,7 @@
 #import "SldHttpSession.h"
 #import "SldGameScene.h"
 #import "SldGameData.h"
+#import "SldOfflineEventEnterControler.h"
 #import "util.h"
 #import "config.h"
 #import "UIImageView+sldAsyncLoad.h"
@@ -342,8 +343,10 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
                 startGame(matchSecret);
             }
         }];
-    } else {
-        startGame(nil);
+    } else { //practice
+        //startGame(nil);
+        SldOfflineEventEnterControler *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"offlineEnter"];
+        [self.navigationController pushViewController:controller animated:YES];
     }
     
     //update db
