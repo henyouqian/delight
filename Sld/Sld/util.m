@@ -97,7 +97,19 @@ NSString* sha256(NSString* data, NSString *salt) {
     return hash;
 }
 
-
+NSString* formatScore(int score) {
+    int msec = -score;
+    if (msec == 0) {
+        return @"无记录";
+    } else {
+        int sec = msec/1000;
+        int min = sec / 60;
+        sec = sec % 60;
+        msec = msec % 1000;
+        return [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
+    }
+    return @"";
+}
 
 @implementation SldUtil
 

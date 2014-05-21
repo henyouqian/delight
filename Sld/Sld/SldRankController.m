@@ -87,7 +87,29 @@
     int navBottomY = [SldNevigationController getBottomY];
     _tableView.contentInset = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
     _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
+    
+    CGRect frame = self.view.frame;
+    //frame.origin.x = 100;
+    frame.size.height = 44;
+    _tableView.tableHeaderView = [[UIView alloc] initWithFrame:frame];
+    _tableView.tableHeaderView.backgroundColor = [UIColor clearColor];
+    
+    UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"Personal", @"Team"]];
+    seg.tintColor = [UIColor whiteColor];
+    seg.selectedSegmentIndex = 0;
+    [_tableView.tableHeaderView addSubview:seg];
+    [seg setWidth:100 forSegmentAtIndex:0];
+    [seg setWidth:100 forSegmentAtIndex:1];
+    seg.center = CGPointMake(_tableView.tableHeaderView.frame.size.width / 2, _tableView.tableHeaderView.frame.size.height / 2);
+    
+    
+//    UIButton *button = [[UIButton alloc]initWithFrame:frame];
+//    button.titleLabel.text = @"asdfas";
+//    button.center = CGPointMake(_tableView.tableHeaderView.frame.size.width / 2, _tableView.tableHeaderView.frame.size.height / 2);
+//    [_tableView.tableHeaderView addSubview:button];
+    
 }
+
 
 //- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 ////    NSInteger currentOffset = scrollView.contentOffset.y;

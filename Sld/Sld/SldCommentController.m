@@ -37,12 +37,14 @@
 
 @end
 
+
 //Comment
 @interface CommentData : NSObject
 @property (nonatomic) UInt64 id;
 @property (nonatomic) UInt64 userId;
 @property (nonatomic) NSString *userName;
-@property (nonatomic) NSString *userIcon;
+@property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) NSString *team;
 @property (nonatomic) NSString *text;
 @end
 
@@ -58,8 +60,10 @@
         data.userId = [nUserId unsignedLongLongValue];
     }
     data.userName = [dict objectForKey:@"UserName"];
-    data.userIcon = [dict objectForKey:@"UserIcon"];
+    data.gravatarKey = [dict objectForKey:@"GravatarKey"];
+    data.team = [dict objectForKey:@"Team"];
     data.text = [dict objectForKey:@"Text"];
+    
     
     return data;
 }
@@ -230,9 +234,8 @@
         CommentData* commentData = [_commentDatas objectAtIndex:indexPath.row];
         cell.textView.text = commentData.text;
         cell.userNameLabel.text = commentData.userName;
-        
         cell.iconView.image = nil;
-        NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%llu?d=identicon&s=96", commentData.userId];
+        NSString *url = [SldUtil makeGravatarUrlWithKey:commentData.gravatarKey width:cell.iconView.frame.size.width];
         [cell.iconView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
         
         return cell;
@@ -321,6 +324,7 @@
 
 - (void)onSendComment {
     _commentText = nil;
+    [self updateComments];
 }
 
 - (IBAction)cancelComment:(UIStoryboardSegue *)segue {
@@ -330,7 +334,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier compare:@"addComment"] == 0 && _commentText) {
+    if ([segue.identifier compare:@"addComment"] == 0) {
         SldAddCommentController* vc = (SldAddCommentController*)segue.destinationViewController;
         vc.restoreText = _commentText;
         vc.commentController = self;

@@ -323,7 +323,7 @@ static const int FETCH_EVENT_COUNT = 8;
         return;
     }
     
-    if ((scrollView.contentOffset.y + scrollView.frame.size.height) >= scrollView.contentSize.height) {
+    if ((scrollView.contentOffset.y + scrollView.frame.size.height + _footerView.frame.size.height) >= scrollView.contentSize.height) {
         if (_fetching || !_appendable || _reachBottom) {
             return;
         }

@@ -13,6 +13,7 @@
 #import "SldStreamPlayer.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
+#import "SldDb.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -53,6 +54,13 @@
 @property (nonatomic) BOOL inCurtain;
 @property (nonatomic) SKLabelNode *timerLabel;
 @property (nonatomic) BOOL packHasFinished;
+@property (nonatomic) SKSpriteNode *lastImageBlurSprite;
+@property (nonatomic) SKSpriteNode *lastImageCover;
+
+
+@property (nonatomic) float targetW;
+@property (nonatomic) float targetH;
+
 @end
 
 static float BUTTON_ALPHA = .7f;
@@ -68,11 +76,13 @@ static const float DOT_ALPHA_HIGHLIGHT = 1.f;
 static const float DOT_SCALE_NORMAL = .6f;
 static const float DOT_SCALE_HIGHLIGHT = .75f;
 static const float MOVE_DURATION = .1f;
-static const uint32_t DEFUALT_SLIDER_NUM = 7;
+static const uint32_t DEFUALT_SLIDER_NUM = 2;
 static const float TRANS_DURATION = .3f;
 
 UIColor *BUTTON_COLOR_RED = nil;
 UIColor *BUTTON_COLOR_GREEN = nil;
+
+static NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 9;
 
 
 @implementation SldGameScene
@@ -113,11 +123,14 @@ NSDate *_gameBeginTime;
         BUTTON_COLOR_RED = makeUIColor(255, 59, 48, 255);
         BUTTON_COLOR_GREEN = makeUIColor(76, 217, 100, 255);
         
+        float buttonZ = 10.f;
+        
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];
         [self.btnExit setLabelWithText:@"Exit" color:fontColorDark fontSize:BUTTON_FONT_SIZE];
         [self.btnExit setPosition:BUTTON_POS1];
         [self.btnExit setAlpha:BUTTON_ALPHA];
+        self.btnExit.zPosition = buttonZ;
         self.btnExit.onClick = ^{
             [weakSelf onExit];
         };
@@ -132,6 +145,7 @@ NSDate *_gameBeginTime;
         [self.btnYes setPosition:BUTTON_POS_HIDE];
         [self.btnYes setBackgroundColor:BUTTON_COLOR_RED];
         [self.btnYes setAlpha:0.f];
+        self.btnYes.zPosition = buttonZ;
         self.btnYes.onClick = ^{
             [weakSelf onBackYes];
         };
@@ -144,6 +158,7 @@ NSDate *_gameBeginTime;
         [self.btnNo setLabelWithText:@"No" color:fontColorDark fontSize:BUTTON_FONT_SIZE];
         [self.btnNo setPosition:BUTTON_POS_HIDE];
         [self.btnNo setAlpha:0.f];
+        self.btnNo.zPosition = buttonZ;
         self.btnNo.onClick = ^{
             [weakSelf onBackNo];
         };
@@ -157,6 +172,7 @@ NSDate *_gameBeginTime;
         [self.btnNext setPosition:BUTTON_POS_HIDE];
         [self.btnNext setBackgroundColor:BUTTON_COLOR_GREEN];
         [self.btnNext setAlpha:0.f];
+        self.btnNext.zPosition = buttonZ;
         self.btnNext.onClick = ^{
             [weakSelf next];
         };
@@ -260,6 +276,43 @@ NSDate *_gameBeginTime;
         
     }
     return self;
+}
+
+- (void)loadLastBlurSprite {
+    //effect node
+    SKEffectNode *effectNode = [SKEffectNode node];
+    [effectNode setShouldEnableEffects:YES];
+    CIFilter *blur = [CIFilter filterWithName:@"CIGaussianBlur" keysAndValues:@"inputRadius", @10.0f, nil];
+    [effectNode setFilter:blur];
+    
+    UIImage *image = [UIImage imageWithContentsOfFile:[_files lastObject]];
+    SKTexture *texture = [SKTexture textureWithImage:image];
+    SKSpriteNode *lastImageSpt = [SKSpriteNode spriteNodeWithTexture:texture];
+    [effectNode addChild:lastImageSpt];
+    
+    texture = [self.view textureFromNode:effectNode];
+    _lastImageBlurSprite = [SKSpriteNode spriteNodeWithTexture:texture];
+    
+    _lastImageBlurSprite.zPosition = 2.f;
+    
+    //
+    float texW = [_lastImageBlurSprite.texture size].width;
+    float texH = [_lastImageBlurSprite.texture size].height;
+    _lastImageBlurSprite.anchorPoint = CGPointMake(.5f, .5f);
+    _lastImageBlurSprite.position = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
+//    float scale = self.view.frame.size.width/texW;
+//    scale = MAX(self.view.frame.size.height/texH, scale);
+    if (texW > texH) {
+//        scale = self.view.frame.size.height/texW;
+//        scale = MAX(self.view.frame.size.width/texH, scale);
+        _lastImageBlurSprite.zRotation = -M_PI_2;
+    }
+//    [_lastImageBlurSprite setScale:scale*1.2f];
+    
+    //cover
+    _lastImageCover = [SKSpriteNode spriteNodeWithColor:makeUIColor(100, 100, 100, 128) size:self.view.frame.size];
+    _lastImageCover.anchorPoint = CGPointZero;
+    _lastImageCover.zPosition = 2.f;
 }
 
 - (void)dealloc {
@@ -497,6 +550,8 @@ static float lerpf(float a, float b, float t) {
         }
         float targetW = screenW;
         float targetH = screenW/targetRatio;
+        _targetW = targetW;
+        _targetH = targetH;
         
         //sliders
         float sliderW = screenW;
@@ -550,6 +605,8 @@ static float lerpf(float a, float b, float t) {
         }
         float targetW = screenW;
         float targetH = screenW/targetRatio;
+        _targetW = targetW;
+        _targetH = targetH;
         
         //sliders
         float sliderW = screenW;
@@ -623,6 +680,7 @@ static float lerpf(float a, float b, float t) {
             _isLoaded = YES;
         }];
     } else { //first image loaded
+        [self loadLastBlurSprite];
         //[parent setAlpha:0];
         float dur = .6f;
         SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
@@ -680,7 +738,7 @@ static float lerpf(float a, float b, float t) {
     
     //curtain
     float dur = .3f;
-    if (self.inCurtain && (node == self.curtainTop || node == self.curtainBottom || node == self.curtainBelt || node == self.curtainLabel)) {
+    if (self.inCurtain /*&& (node == self.curtainTop || node == self.curtainBottom || node == self.curtainBelt || node == self.curtainLabel)*/) {
         self.inCurtain = NO;
         SKAction *left = [SKAction moveToX:-self.size.width*2.5f duration:.8f];
         left.timingMode = SKActionTimingEaseOut;
@@ -805,7 +863,7 @@ static float lerpf(float a, float b, float t) {
                 
                 if (self.imgIdx == [self.files count]-1) {
                     [self.sndFinish play];
-                    [self onPackFinish:nextRotate];
+                    [self onPackFinish];
                 } else {
                     [self.sndSuccess play];
                     [self onImageFinish:nextRotate];
@@ -843,23 +901,66 @@ static float lerpf(float a, float b, float t) {
     [self.btnNext runAction:action];
 }
 
-- (void)onPackFinish:(BOOL)rotate {
+- (void)onPackFinish {
     _packHasFinished = YES;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];
+    SldGameData *gd = [SldGameData getInstance];
     
+    //show blured image and cover
+    [self addChild:_lastImageBlurSprite];
+    _lastImageBlurSprite.hidden = NO;
+    _lastImageBlurSprite.alpha = 0.f;
+    [self addChild:_lastImageCover];
+    _lastImageCover.hidden = NO;
+    _lastImageCover.alpha = 0.f;
+    
+    //scale
+    float texW = [_lastImageBlurSprite.texture size].width;
+    float texH = [_lastImageBlurSprite.texture size].height;
+    
+    float scale = _targetW/texW;
+    scale = MAX(_targetH/texH, scale);
+    [_lastImageBlurSprite setScale:scale];
+    
+    _targetW = self.view.frame.size.width;
+    _targetH = self.view.frame.size.height;
+    float scale2 = _targetW/texW;
+    scale2 = MAX(_targetH/texH, scale2);
+    
+    //blur action
+    float dur = 1.f;
+    SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        float t = QuarticEaseOut(elapsedTime/dur);
+        [_lastImageBlurSprite setAlpha:lerpf(0.f, 1.f, t)];
+        [_lastImageBlurSprite setScale:lerpf(scale, scale2, t)];
+        [_lastImageCover setAlpha:lerpf(0.f, 1.f, t)];
+    }];
+    [_lastImageBlurSprite runAction:action];
+    
+    //complete label
+    SKLabelNode *completeLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+    [completeLabel setFontColor:makeUIColor(255, 197, 131, 255)];
+    [completeLabel setText:@"COMPLETE"];
+    [completeLabel setFontSize:32];
+    [completeLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+    [completeLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+    [completeLabel setPosition:CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f)];
+    [_lastImageCover addChild:completeLabel];
+    if (_needRotate) {
+        completeLabel.zRotation = -M_PI_2;
+    }
     
     //
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
     int score = -(int)(dt*1000);
-    alert(@"Time", [NSString stringWithFormat:@"%f", dt]);
+    //alert(@"Time", [NSString stringWithFormat:@"%f", dt]);
     if (_gameController.gameMode == MATCH) {
         [_btnExit setHidden:YES];
         
         SldHttpSession *session = [SldHttpSession defaultSession];
-        SldGameData *gameData = [SldGameData getInstance];
-        NSDictionary *body = @{@"EventId":@(gameData.eventInfo.id),
+        NSDictionary *body = @{@"EventId":@(gd.eventInfo.id),
                                @"Secret":_gameController.matchSecret,
                                @"Score":@(score)};
         [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -882,6 +983,67 @@ static float lerpf(float a, float b, float t) {
             }
         }];
         [_btnExit setHidden:NO];
+    }
+    
+    //complete label action
+    dur = .4f;
+    completeLabel.xScale = 0.f;
+    completeLabel.yScale = 2.f;
+    SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        float t = QuarticEaseOut(elapsedTime/dur);
+        [node setYScale:lerpf(0.f, 1.f, t)];
+        [node setXScale:2.0-lerpf(0.f, 1.f, t)];
+    }];
+    
+    SKAction *wait = [SKAction waitForDuration:1.5f];
+    dur = .3f;
+    SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        float t = QuarticEaseIn(elapsedTime/dur);
+        [node setYScale:lerpf(1.f, 0.f, t)];
+    }];
+    SKAction *setText = [SKAction runBlock:^{
+        completeLabel.text = formatScore(score);
+    }];
+    SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+        float t = QuarticEaseOut(elapsedTime/dur);
+        [node setYScale:lerpf(0.f, 1.f, t)];
+    }];
+    SKAction *seq = [SKAction sequence:@[appear, wait, flip1, setText, flip2]];
+    
+    [completeLabel runAction:seq];
+    
+    //save to local
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", [NSNumber numberWithUnsignedLongLong:gd.eventInfo.id]];
+    NSMutableArray *scores = nil;
+    NSError *error;
+    if ([rs next]) {
+        NSData *js = [rs dataForColumnIndex:0];
+        scores = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:js options:0 error:&error]];
+        if (error) {
+            lwError("%@", error);
+            return;
+        }
+        [scores addObject:@(score)];
+        [scores sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [obj1 integerValue] < [obj2 integerValue];
+        }];
+        while (scores.count > LOCAL_SCORE_COUNT_LIMIT) {
+            [scores removeLastObject];
+        }
+    } else {
+        scores = [NSMutableArray arrayWithArray:@[@(score)]];
+    }
+    
+    NSData *js = [NSJSONSerialization dataWithJSONObject:scores options:0 error:&error];
+    if (error) {
+        lwError("%@", error);
+        return;
+    }
+    BOOL ok = [db executeUpdate:@"REPLACE INTO localScore VALUES (?, ?)", @(gd.eventInfo.id), js];
+    if (!ok) {
+        lwError("%@", db.lastErrorMessage);
+        return;
     }
 }
 

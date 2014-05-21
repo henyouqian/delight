@@ -154,16 +154,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     if (highScore) {
         if (_highScore == nil || [_highScore intValue] == 0 || [highScore intValue] > [_highScore intValue]) {
             _highScore = highScore;
-            int msec = -[highScore intValue];
-            if (msec == 0) {
-                _highScoreStr = @"无记录";
-            } else {
-                int sec = msec/1000;
-                int min = sec / 60;
-                sec = sec % 60;
-                msec = msec % 1000;
-                _highScoreStr = [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
-            }
+            _highScoreStr = formatScore([highScore intValue]);
             
             [UIView animateWithDuration:.3f animations:^{
                 _bestRecordLabel.alpha = 0.f;

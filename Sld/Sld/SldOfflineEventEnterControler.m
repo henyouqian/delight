@@ -16,7 +16,11 @@
 
 @interface SldOfflineEventEnterControler ()
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@end
 
+@interface SldOfflineEventEnterControler()
+@property (weak, nonatomic) IBOutlet UIView *scoresView;
 @end
 
 @implementation SldOfflineEventEnterControler
@@ -25,11 +29,11 @@
 {
     [super viewDidLoad];
     
-    SldGameData *gdata = [SldGameData getInstance];
+    SldGameData *gd = [SldGameData getInstance];
     
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
-    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:gdata.eventInfo.packId]];
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:gd.eventInfo.packId]];
     
     if ([rs next]) { //local
         NSString *data = [rs stringForColumnIndex:0];
@@ -39,9 +43,54 @@
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-        gdata.packInfo = [PackInfo packWithDictionary:dict];
+        gd.packInfo = [PackInfo packWithDictionary:dict];
         
         [self loadBackground];
+    }
+    
+    _titleLabel.text = gd.packInfo.title;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self reloadLocalScore];
+}
+
+- (void)reloadLocalScore {
+    SldGameData *gd = [SldGameData getInstance];
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    NSError *error = nil;
+    
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", [NSNumber numberWithUnsignedLongLong:gd.eventInfo.id]];
+    if ([rs next]) {
+        NSData *jsData = [rs dataForColumnIndex:0];
+        NSArray *scores = [NSJSONSerialization JSONObjectWithData:jsData options:0 error:&error];
+        if (error) {
+            lwError("%@", error);
+            return;
+        }
+        
+        [[_scoresView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        float x = 80;
+        float y = 150;
+        float w = 100;
+        float h = 25;
+        int i = 0;
+        for (NSNumber *score in scores) {
+            UILabel *idxLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+            idxLabel.text = [NSString stringWithFormat:@"%d", i+1];
+            idxLabel.textColor = [UIColor whiteColor];
+            [_scoresView addSubview:idxLabel];
+            
+            UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+90, y, w, h)];
+            scoreLabel.text = formatScore([score intValue]);
+            scoreLabel.textColor = [UIColor whiteColor];
+            [_scoresView addSubview:scoreLabel];
+            
+            y += h+5;
+            i++;
+        }
+    } else {
+        lwInfo(@"no local score");
     }
 }
 

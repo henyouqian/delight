@@ -61,21 +61,20 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString * segueName = segue.identifier;
+    UINavigationController* nav = (UINavigationController*) [segue destinationViewController];
     if ([segueName isEqualToString: @"rankController"]) {
-        _rankController = (SldRankController*) [segue destinationViewController];
+        _rankController = (SldRankController*)nav.topViewController;
     }else if ([segueName isEqualToString: @"commentController"]) {
-        _commentController = (SldCommentController*) [segue destinationViewController];
+        _commentController = (SldCommentController*)nav.topViewController;
     } else if ([segueName isEqualToString: @"activityController"]) {
-        _activityController = (SldActivityController*) [segue destinationViewController];
+        _activityController = (SldActivityController*)nav.topViewController;
     }
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self onSegChange:_seg];
-    
     [self loadBackground];
 }
 

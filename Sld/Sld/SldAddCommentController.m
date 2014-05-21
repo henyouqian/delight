@@ -7,6 +7,8 @@
 //
 
 #import "SldAddCommentController.h"
+#import "SldHttpSession.h"
+#import "SldGameData.h"
 
 @interface SldAddCommentController ()
 
@@ -34,8 +36,20 @@
     RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
     
 	RIButtonItem *sendItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
-		[_commentController onSendComment];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        SldGameData *gd = [SldGameData getInstance];
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"PackId":@(gd.packInfo.id), @"Text": _textView.text};
+        UIAlertView *alert = alertNoButton(@"Sending comment ...");
+        [session postToApi:@"pack/addComment" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [alert dismissWithClickedButtonIndex:0 animated:YES];
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            [_commentController onSendComment];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }];
 	}];
     
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Send this comment?"
@@ -82,6 +96,10 @@
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     _textView.contentInset = contentInsets;
     _textView.scrollIndicatorInsets = contentInsets;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

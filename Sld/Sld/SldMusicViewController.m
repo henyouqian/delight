@@ -139,6 +139,7 @@ NSArray *_channels = nil;
     if (channelId == player.channelId && (player.playing || player.paused) ) {
         if (player.paused) {
             cell.coverView.hidden = YES;
+            _currentChannelCell = cell;
         } else if (player.playing) {
             [self startRotateCell:cell];
         }

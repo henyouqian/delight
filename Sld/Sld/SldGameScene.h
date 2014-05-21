@@ -15,4 +15,6 @@
 
 + (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller;
 - (instancetype)initWithSize:(CGSize)size controller:(SldGameController*)controller;
+
 @end
+
