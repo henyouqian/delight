@@ -165,7 +165,6 @@
                 
             } else {
                 gameData.online = YES;
-                [self dismissViewControllerAnimated:YES completion:nil];
                 
                 //update game data
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -173,6 +172,9 @@
                 gameData.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
                 gameData.teamName = [dict objectForKey:@"TeamName"];
                 gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
+                gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+                gameData.exp = [(NSNumber*)[dict objectForKey:@"Exp"] unsignedIntValue];
+                [self dismissViewControllerAnimated:YES completion:nil];
             }
         }];
     }];

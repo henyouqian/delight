@@ -11,7 +11,7 @@ import (
 	// "strconv"
 	//"strings"
 	"errors"
-	"time"
+	//"time"
 )
 
 const (
@@ -37,6 +37,9 @@ type PlayerInfo struct {
 	Gender          uint
 	CustomAvatarKey string
 	GravatarKey     string
+	Level           uint32
+	Exp             uint32
+	Money           int64
 }
 
 func _getPlayerInfo(ssdb *ssdb.Client, session *Session, playerInfo *PlayerInfo) (err error) {
@@ -73,10 +76,10 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	//out
 	out := struct {
 		PlayerInfo
-		Now int64
+		//Now int64
 	}{
 		playerInfo,
-		time.Now().Unix(),
+		//time.Now().Unix(),
 	}
 	lwutil.WriteResponse(w, out)
 }
@@ -112,13 +115,40 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
+	//check player info exist
+	var playerInfo PlayerInfo
+	resp, err := ssdb.Do("hget", H_PLAYER_INFO, session.Userid)
+	if resp[0] == "not_found" {
+		//set default value
+		playerInfo = in
+		playerInfo.Level = 1
+		playerInfo.Exp = 0
+		playerInfo.Money = 1000
+	} else {
+		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
+		lwutil.CheckError(err, "")
+		if len(in.NickName) > 0 {
+			playerInfo.NickName = in.NickName
+		}
+		if len(in.GravatarKey) > 0 {
+			playerInfo.GravatarKey = in.GravatarKey
+		}
+		if len(in.CustomAvatarKey) > 0 {
+			playerInfo.CustomAvatarKey = in.CustomAvatarKey
+		}
+		if len(in.TeamName) > 0 {
+			playerInfo.TeamName = in.TeamName
+		}
+		playerInfo.Gender = in.Gender
+	}
+
 	//set
-	js, err := json.Marshal(in)
-	resp, err := ssdb.Do("hset", H_PLAYER_INFO, session.Userid, js)
+	js, err := json.Marshal(playerInfo)
+	resp, err = ssdb.Do("hset", H_PLAYER_INFO, session.Userid, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
-	lwutil.WriteResponse(w, in)
+	lwutil.WriteResponse(w, playerInfo)
 }
 
 func regPlayer() {

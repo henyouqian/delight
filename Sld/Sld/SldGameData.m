@@ -57,10 +57,15 @@ static SldGameData *g_inst = nil;
     return g_inst;
 }
 
+- (void)dealloc {
+    
+}
+
 - (instancetype)init {
     if ([super init]) {
         _eventInfos = [NSMutableArray arrayWithCapacity:20];
         _online = NO;
+        _recentScore = 0;
     }
     return self;
 }

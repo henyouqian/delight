@@ -97,6 +97,7 @@
 		B3C1BB89191133910062D50C /* btnBgBlack90.png in Resources */ = {isa = PBXBuildFile; fileRef = B3C1BB88191133910062D50C /* btnBgBlack90.png */; };
 		B3C1BB8B191137400062D50C /* btnBgGray90.png in Resources */ = {isa = PBXBuildFile; fileRef = B3C1BB8A191137400062D50C /* btnBgGray90.png */; };
 		B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */; };
+		B3CB80B119307A3B009E5F52 /* SldBetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CB80B019307A3B009E5F52 /* SldBetController.m */; };
 		B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D054601910084C00CEFCBE /* SldMusicViewController.m */; };
 		B3DB83211929494B00544759 /* otlFastForward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3DB83201929494B00544759 /* otlFastForward@2x.png */; };
 		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
@@ -258,6 +259,8 @@
 		B3C1BB8A191137400062D50C /* btnBgGray90.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnBgGray90.png; sourceTree = "<group>"; };
 		B3C1BB8C191159EF0062D50C /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		B3C1BB8D191159EF0062D50C /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
+		B3CB80AF19307A3B009E5F52 /* SldBetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBetController.h; sourceTree = "<group>"; };
+		B3CB80B019307A3B009E5F52 /* SldBetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBetController.m; sourceTree = "<group>"; };
 		B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMusicViewController.h; sourceTree = "<group>"; };
 		B3D054601910084C00CEFCBE /* SldMusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMusicViewController.m; sourceTree = "<group>"; };
 		B3DB83201929494B00544759 /* otlFastForward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlFastForward@2x.png"; sourceTree = "<group>"; };
@@ -470,6 +473,8 @@
 				B33121F719165A10003E05DB /* SldRankController.m */,
 				B39E446E191BEDB600CBB247 /* SldCommentController.h */,
 				B39E446F191BEDB600CBB247 /* SldCommentController.m */,
+				B3CB80AF19307A3B009E5F52 /* SldBetController.h */,
+				B3CB80B019307A3B009E5F52 /* SldBetController.m */,
 				B39E4471191D6CBD00CBB247 /* SldActivityController.h */,
 				B39E4472191D6CBD00CBB247 /* SldActivityController.m */,
 				B39E4475191E132800CBB247 /* SldAddCommentController.h */,
@@ -742,6 +747,7 @@
 				B3691E1C1900C36A0055C419 /* SldEventListViewController.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 				B3A521FC19288D4F00D5A38C /* SldOfflineEventListController.m in Sources */,
+				B3CB80B119307A3B009E5F52 /* SldBetController.m in Sources */,
 				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
 				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,

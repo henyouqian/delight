@@ -925,15 +925,47 @@ static float lerpf(float a, float b, float t) {
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
     int score = -(int)(dt*1000);
-    //alert(@"Time", [NSString stringWithFormat:@"%f", dt]);
+    gd.recentScore = score;
     if (_gameController.gameMode == MATCH) {
         [_btnExit setHidden:YES];
         
+        //rank label
+        SKLabelNode *rankLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+        [rankLabel setFontColor:makeUIColor(255, 197, 131, 255)];
+        [rankLabel setFontSize:32];
+        [rankLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+        [rankLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+        [_lastImageCover addChild:rankLabel];
+        
+        CGPoint pos = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
+        
+        if (_needRotate) {
+            rankLabel.zRotation = -M_PI_2;
+            pos.x -= 25;
+        } else {
+            pos.y -= 25;
+        }
+        rankLabel.position = pos;
+        rankLabel.text = @"Submitting score ...";
+        
+        //rankLabel action
+        float dur = .4f;
+        rankLabel.xScale = 0.f;
+        rankLabel.yScale = 2.f;
+        SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+            float t = QuarticEaseOut(elapsedTime/dur);
+            [node setYScale:lerpf(0.f, 1.f, t)];
+            [node setXScale:2.0-lerpf(0.f, 1.f, t)];
+        }];
+        [rankLabel runAction:appear];
+        
+        //UIAlertView *av = alertNoButton(@"Commiting score to server ...");
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"EventId":@(gd.eventInfo.id),
                                @"Secret":_gameController.matchSecret,
                                @"Score":@(score)};
         [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            //[av dismissWithClickedButtonIndex:0 animated:YES];
             if (error) {
                 alertHTTPError(error, data);
             } else {
@@ -942,7 +974,6 @@ static float lerpf(float a, float b, float t) {
                     alert(@"Json error", [error localizedDescription]);
                     return;
                 }
-                alert(@"My result", [NSString stringWithFormat:@"%@", dict]);
                 
                 //update detail vc
                 SldEventDetailViewController *detailVC = [SldEventDetailViewController getInstance];
@@ -950,6 +981,26 @@ static float lerpf(float a, float b, float t) {
                 NSNumber *rank = [dict objectForKey:@"Rank"];
                 NSNumber *rankNum = [dict objectForKey:@"RankNum"];
                 [detailVC setPlayRecordWithHighscore:highScore rank:rank rankNum:rankNum];
+                
+                //rank label
+                double delayInSeconds = .4f;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    //SKAction *wait = [SKAction waitForDuration:1.f];
+                    SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+                        float t = QuarticEaseIn(elapsedTime/dur);
+                        [node setYScale:lerpf(1.f, 0.f, t)];
+                    }];
+                    SKAction *setText = [SKAction runBlock:^{
+                        rankLabel.text = [NSString stringWithFormat:@"Current rank: %@", rank];
+                    }];
+                    SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+                        float t = QuarticEaseOut(elapsedTime/dur);
+                        [node setYScale:lerpf(0.f, 1.f, t)];
+                    }];
+                    SKAction *seq = [SKAction sequence:@[/*wait, */flip1, setText, flip2]];
+                    [rankLabel runAction:seq];
+                });
             }
         }];
         [_btnExit setHidden:NO];
@@ -993,11 +1044,15 @@ static float lerpf(float a, float b, float t) {
     [completeLabel setFontSize:32];
     [completeLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
     [completeLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-    [completeLabel setPosition:CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f)];
     [_lastImageCover addChild:completeLabel];
+    CGPoint pos = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
     if (_needRotate) {
         completeLabel.zRotation = -M_PI_2;
+        pos.x += 25;
+    } else {
+        pos.y += 25;
     }
+    [completeLabel setPosition:pos];
     
     //complete label action
     //dur = .4f;
@@ -1009,7 +1064,7 @@ static float lerpf(float a, float b, float t) {
         [node setXScale:2.0-lerpf(0.f, 1.f, t)];
     }];
     
-    SKAction *wait = [SKAction waitForDuration:1.5f];
+    SKAction *wait = [SKAction waitForDuration:1.f];
     dur = .3f;
     SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         float t = QuarticEaseIn(elapsedTime/dur);

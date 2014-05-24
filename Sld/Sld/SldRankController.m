@@ -41,7 +41,7 @@
 @interface RankInfo : NSObject
 @property (nonatomic) NSNumber *rank;
 @property (nonatomic) UInt64 userId;
-@property (nonatomic) NSString *userName;
+@property (nonatomic) NSString *nickName;
 @property (nonatomic) NSString *score;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
@@ -88,19 +88,20 @@
     _tableView.contentInset = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
     _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
     
-    CGRect frame = self.view.frame;
-    //frame.origin.x = 100;
-    frame.size.height = 44;
-    _tableView.tableHeaderView = [[UIView alloc] initWithFrame:frame];
-    _tableView.tableHeaderView.backgroundColor = [UIColor clearColor];
-    
-    UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"Personal", @"Team"]];
-    seg.tintColor = [UIColor whiteColor];
-    seg.selectedSegmentIndex = 0;
-    [_tableView.tableHeaderView addSubview:seg];
-    [seg setWidth:100 forSegmentAtIndex:0];
-    [seg setWidth:100 forSegmentAtIndex:1];
-    seg.center = CGPointMake(_tableView.tableHeaderView.frame.size.width / 2, _tableView.tableHeaderView.frame.size.height / 2);
+//    //header
+//    CGRect frame = self.view.frame;
+//    //frame.origin.x = 100;
+//    frame.size.height = 44;
+//    _tableView.tableHeaderView = [[UIView alloc] initWithFrame:frame];
+//    _tableView.tableHeaderView.backgroundColor = [UIColor clearColor];
+//    
+//    UISegmentedControl *seg = [[UISegmentedControl alloc] initWithItems:@[@"Personal", @"Team"]];
+//    seg.tintColor = [UIColor whiteColor];
+//    seg.selectedSegmentIndex = 0;
+//    [_tableView.tableHeaderView addSubview:seg];
+//    [seg setWidth:100 forSegmentAtIndex:0];
+//    [seg setWidth:100 forSegmentAtIndex:1];
+//    seg.center = CGPointMake(_tableView.tableHeaderView.frame.size.width / 2, _tableView.tableHeaderView.frame.size.height / 2);
     
     
 //    UIButton *button = [[UIButton alloc]initWithFrame:frame];
@@ -181,16 +182,13 @@
         for (NSDictionary *rankDict in rankArray) {
             RankInfo *rankInfo = [[RankInfo alloc] init];
             rankInfo.rank = [rankDict objectForKey:@"Rank"];
-            rankInfo.userName = [rankDict objectForKey:@"UserName"];
+            rankInfo.nickName = [rankDict objectForKey:@"NickName"];
+            rankInfo.teamName = [rankDict objectForKey:@"TeamName"];
+            rankInfo.gravatarKey = [rankDict objectForKey:@"GravatarKey"];
             NSNumber *score = [rankDict objectForKey:@"Score"];
             rankInfo.score = @"0";
             if (score) {
-                int msec = -[score intValue];
-                int sec = msec/1000;
-                int min = sec / 60;
-                sec = sec % 60;
-                msec = msec % 1000;
-                rankInfo.score = [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
+                rankInfo.score = formatScore([score intValue]);
             }
             [_rankInfos addObject:rankInfo];
         }
@@ -242,7 +240,7 @@
         for (NSDictionary *rankDict in rankArray) {
             RankInfo *rankInfo = [[RankInfo alloc] init];
             rankInfo.rank = [rankDict objectForKey:@"Rank"];
-            rankInfo.userName = [rankDict objectForKey:@"UserName"];
+            rankInfo.nickName = [rankDict objectForKey:@"NickName"];
             NSNumber *score = [rankDict objectForKey:@"Score"];
             rankInfo.score = @"0";
             if (score) {
@@ -318,7 +316,7 @@
                 RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
                 [cell reset];
                 cell.rankLabel.text = [NSString stringWithFormat:@"%d", [rankInfo.rank intValue]];
-                cell.userNameLabel.text = rankInfo.userName;
+                cell.userNameLabel.text = rankInfo.nickName;
                 cell.scoreLabel.text = rankInfo.score;
                 cell.teamLabel.text = rankInfo.teamName;
                 

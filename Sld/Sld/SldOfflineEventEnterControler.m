@@ -49,6 +49,7 @@
     }
     
     _titleLabel.text = gd.packInfo.title;
+    gd.recentScore = 0;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -75,6 +76,7 @@
         float w = 100;
         float h = 25;
         int i = 0;
+        BOOL recentFound = NO;
         for (NSNumber *score in scores) {
             UILabel *idxLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
             idxLabel.text = [NSString stringWithFormat:@"%d", i+1];
@@ -85,6 +87,14 @@
             scoreLabel.text = formatScore([score intValue]);
             scoreLabel.textColor = [UIColor whiteColor];
             [_scoresView addSubview:scoreLabel];
+            
+            if (!recentFound && [score intValue] == gd.recentScore) {
+                recentFound = YES;
+                UIColor *color = makeUIColor(255, 197, 131, 255);
+                scoreLabel.textColor = color;
+                idxLabel.textColor = color;
+                gd.recentScore = 0;
+            }
             
             y += h+5;
             i++;

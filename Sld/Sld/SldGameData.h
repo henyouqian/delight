@@ -44,6 +44,10 @@
 @property (nonatomic) uint gender;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) SInt64 money;
+@property (nonatomic) UInt32 exp;
+
+@property (nonatomic) int recentScore;
 
 + (instancetype)getInstance;
 

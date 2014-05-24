@@ -29,14 +29,15 @@ const (
 	TRY_COST_MONEY              = 100
 	TRY_EXPIRE_SECONDS          = 600
 	TEAM_CHAMPIONSHIP_ROUND_NUM = 6
+	H_EVENT_TEAM_SCORE          = "H_EVENT_TEAM_SCORE" //key:evnetId value:map[string(teamName)]uint32(score)
 )
 
 func makeRedisLeaderboardKey(evnetId uint64) string {
 	return fmt.Sprintf("%s/%d", RDS_Z_EVENT_LEADERBOARD_PRE, evnetId)
 }
 
-func makeHashEventRankKey(evnetId uint64) string {
-	return fmt.Sprintf("%s/%d", H_EVENT_RANK, evnetId)
+func makeHashEventRankKey(eventId uint64) string {
+	return fmt.Sprintf("%s/%d", H_EVENT_RANK, eventId)
 }
 
 var (
@@ -519,6 +520,70 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	rankNum, err := redis.Int(rc.Receive())
 	lwutil.CheckError(err, "")
 
+	//recaculate team score
+	if scoreUpdate && rank <= 100 {
+		resp, err := ssdb.Do("hget", H_EVENT, in.EventId)
+		lwutil.CheckSsdbError(resp, err)
+		var event Event
+		err = json.Unmarshal([]byte(resp[1]), &event)
+		lwutil.CheckError(err, "")
+		if event.HasResult == false {
+			//redis
+			rc := redisPool.Get()
+			defer rc.Close()
+
+			//get ranks from redis
+			eventLbLey := makeRedisLeaderboardKey(in.EventId)
+			values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, 0, 99))
+			lwutil.CheckError(err, "")
+
+			num := len(values)
+			userIds := make([]uint64, 0, 100)
+			if num > 0 {
+				cmds := make([]interface{}, 0, num+2)
+				cmds = append(cmds, "multi_hget")
+				cmds = append(cmds, H_EVENT_PLAYER_RECORD)
+
+				for i := 0; i < num; i++ {
+					userId, err := redisUint64(values[i], nil)
+					lwutil.CheckError(err, "")
+					userIds = append(userIds, userId)
+					recordKey := fmt.Sprintf("%d/%d", in.EventId, userId)
+					cmds = append(cmds, recordKey)
+				}
+
+				//get event player record
+				resp, err = ssdb.Do(cmds...)
+				lwutil.CheckSsdbError(resp, err)
+				resp = resp[1:]
+
+				if num*2 != len(resp) {
+					lwutil.SendError("err_data_missing", "")
+				}
+				var record EventPlayerRecord
+				scoreMap := make(map[string]uint32)
+				for i := range userIds {
+					err = json.Unmarshal([]byte(resp[i*2+1]), &record)
+					lwutil.CheckError(err, "")
+					score := scoreMap[record.TeamName]
+					score += (uint32)(100 - i)
+					if i == 0 {
+						score += 50
+					}
+					scoreMap[record.TeamName] = score
+				}
+				glog.Info(scoreMap)
+
+				js, err := json.Marshal(scoreMap)
+				lwutil.CheckError(err, "")
+
+				resp, err := ssdb.Do("hset", H_EVENT_TEAM_SCORE, in.EventId, js)
+				glog.Info(string(js))
+				lwutil.CheckSsdbError(resp, err)
+			}
+		}
+	}
+
 	//out
 	out := struct {
 		Rank    uint32
@@ -570,14 +635,16 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
 
-	//
+	//RankInfo
 	type RankInfo struct {
-		Rank       uint32
-		UserId     uint64
-		Score      int32
-		PlayerName string
-		Time       int64
-		Trys       uint32
+		Rank        uint32
+		UserId      uint64
+		NickName    string
+		TeamName    string
+		GravatarKey string
+		Score       int32
+		Time        int64
+		Trys        uint32
 	}
 
 	type Out struct {
@@ -589,7 +656,6 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	var ranks []RankInfo
 
 	if event.HasResult {
-
 		cmds := make([]interface{}, in.Limit+2)
 		cmds[0] = "multi_hget"
 		cmds[1] = makeHashEventRankKey(event.Id)
@@ -625,7 +691,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 
 		num := len(values)
 		if num > 0 {
-			ranks := make([]RankInfo, num)
+			ranks = make([]RankInfo, num)
 
 			currRank := in.Offset + 1
 			for i := 0; i < num; i++ {
@@ -667,9 +733,11 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal([]byte(resp[i*2+1]), &record)
 		lwutil.CheckError(err, "")
 		ranks[i].Score = record.HighScore
-		ranks[i].PlayerName = record.PlayerName
+		ranks[i].NickName = record.PlayerName
 		ranks[i].Time = record.HighScoreTime
 		ranks[i].Trys = record.Trys
+		ranks[i].TeamName = record.TeamName
+		ranks[i].GravatarKey = record.GravatarKey
 	}
 
 	//out

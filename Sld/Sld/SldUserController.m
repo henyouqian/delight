@@ -20,6 +20,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
+@property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *expLabel;
 
 @end
 
@@ -65,9 +68,15 @@
         _genderLabel.text = @"🚺";
         _genderLabel.textColor = makeUIColor(244, 75, 116, 255);
     } else {
-        _genderLabel.text = @"🚻";
+        _genderLabel.text = @"㊙";
         _genderLabel.textColor = makeUIColor(128, 128, 128, 255);
     }
+    
+    //money
+    _moneyLabel.text = [NSString stringWithFormat:@"%lld", gamedata.money];
+    
+    //exp
+    _expLabel.text = [NSString stringWithFormat:@"%lu", gamedata.exp];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

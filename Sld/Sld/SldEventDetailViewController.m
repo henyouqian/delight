@@ -200,7 +200,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
             float sat = sat1 + (sat2-sat1)*beatRate;
             UIColor *color = [UIColor colorWithHue:136.f/355.f saturation:sat brightness:1.f alpha:1.f];
             _rankLabel.textColor = color;
-            _beatLabel.textColor = color;
+            //_beatLabel.textColor = color;
         }
         
         

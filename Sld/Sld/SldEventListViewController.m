@@ -18,7 +18,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 
 NSString *CELL_ID = @"cellID";
-static const int FETCH_EVENT_COUNT = 8;
+static const int FETCH_EVENT_COUNT = 20;
 
 @interface EventCell()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -79,7 +79,7 @@ static const int FETCH_EVENT_COUNT = 8;
 @property (nonatomic) UIImage *loadingImage;
 @property (nonatomic) SldGameData *gameData;
 @property (weak, nonatomic) EventListFooterView *footerView;
-@property (nonatomic) BOOL fetching;
+@property (nonatomic) SInt64 fetchStartId;
 @property (nonatomic) BOOL bottomFetched;
 @property (nonatomic) BOOL appendable;
 @property (nonatomic) BOOL reachBottom;
@@ -92,7 +92,7 @@ static const int FETCH_EVENT_COUNT = 8;
     [super viewDidLoad];
     
     _gameData = [SldGameData getInstance];
-    _fetching = NO;
+    _fetchStartId = -1;
     _bottomFetched = NO;
     _appendable = YES;
     _reachBottom = NO;
@@ -159,22 +159,21 @@ static const int FETCH_EVENT_COUNT = 8;
 }
 
 - (void)refreshList {
-    if (_fetching) {
-        return;
-    }
-    
     FMDatabase *db = [SldDb defaultDb].fmdb;
     NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:20];
     
     //online
     if (_gameData.online) {
+        if (_fetchStartId == 0) {
+            return;
+        }
+        _fetchStartId = 0;
         NSDictionary *body = @{@"StartId":@0, @"Limit":@(FETCH_EVENT_COUNT)};
         SldHttpSession *session = [SldHttpSession defaultSession];
         
-        _fetching = YES;
         [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
          {
-             _fetching = NO;
+             _fetchStartId = -1;
              [self.refreshControl endRefreshing];
              
              if (error) {
@@ -324,24 +323,29 @@ static const int FETCH_EVENT_COUNT = 8;
     }
     
     if ((scrollView.contentOffset.y + scrollView.frame.size.height + _footerView.frame.size.height) >= scrollView.contentSize.height) {
-        if (_fetching || !_appendable || _reachBottom) {
+        EventInfo *lastEventInfo = _gameData.eventInfos.lastObject;
+        if (_fetchStartId == lastEventInfo.id || !_appendable || _reachBottom) {
             return;
         }
-        
         _footerView.hidden = NO;
+        _fetchStartId = lastEventInfo.id;
         
-        EventInfo *lastEventInfo = _gameData.eventInfos.lastObject;
         NSDictionary *body = @{@"StartId":@(lastEventInfo.id), @"Limit":@(FETCH_EVENT_COUNT)};
         SldHttpSession *session = [SldHttpSession defaultSession];
-        _fetching = YES;
         _appendable = NO;
         [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
          {
-             _fetching = NO;
+             void(^onReachBottom)() = ^(){
+                 [_footerView.spinner stopAnimating];
+                 _footerView.spinner.hidden = YES;
+                 _footerView.label.text = @"NO MORE DATA";
+             };
+             _fetchStartId = -1;
              if (error) {
                  NSString *errType = getServerErrorType(data);
                  if ([errType compare:@"err_not_found"] == 0) {
                      _reachBottom = YES;
+                     onReachBottom();
                  } else {
                      alertHTTPError(error, data);
                  }
@@ -354,12 +358,7 @@ static const int FETCH_EVENT_COUNT = 8;
              }
              if (array.count < FETCH_EVENT_COUNT) {
                  _reachBottom = YES;
-             }
-             
-             if (_reachBottom) {
-                 [_footerView.spinner stopAnimating];
-                 _footerView.spinner.hidden = YES;
-                 _footerView.label.text = @"NO MORE DATA";
+                 onReachBottom();
              }
              
              FMDatabase *db = [SldDb defaultDb].fmdb;

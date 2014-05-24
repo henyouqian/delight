@@ -56,7 +56,7 @@ static NSArray *_genderStrings;
     
     SldGameData *gamedata = [SldGameData getInstance];
     
-    _genderStrings = @[@"女", @"男", @"其他"];
+    _genderStrings = @[@"女", @"男", @"保密"];
     
     _nameInput.text = gamedata.nickName;
     _genderInput.text = [_genderStrings objectAtIndex:gamedata.gender];

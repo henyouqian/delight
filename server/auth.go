@@ -24,7 +24,7 @@ const (
 )
 
 var (
-	ADMIN_SET = map[string]bool{"admin": true}
+	ADMIN_SET = map[string]bool{"henyouqian": true}
 )
 
 type Session struct {

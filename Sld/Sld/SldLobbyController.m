@@ -9,7 +9,7 @@
 #import "SldLobbyController.h"
 #import "SldRankController.h"
 #import "SldCommentController.h"
-#import "SldActivityController.h"
+#import "SldBetController.h"
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "util.h"
@@ -18,10 +18,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIView *rankView;
 @property (weak, nonatomic) IBOutlet UIView *commentView;
-@property (weak, nonatomic) IBOutlet UIView *activityView;
+@property (weak, nonatomic) IBOutlet UIView *betView;
 @property (weak, nonatomic) SldRankController *rankController;
 @property (weak, nonatomic) SldCommentController *commentController;
-@property (weak, nonatomic) SldActivityController *activityController;
+@property (weak, nonatomic) SldBetController *betController;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
 
 @end
@@ -34,10 +34,10 @@
     
     _rankView.hidden = YES;
     _commentView.hidden = YES;
-    _activityView.hidden = YES;
+    _betView.hidden = YES;
     _rankController.tableView.scrollsToTop = NO;
     _commentController.tableView.scrollsToTop = NO;
-    _activityController.tableView.scrollsToTop = NO;
+    _betController.tableView.scrollsToTop = NO;
     
     if (idx == 0) {
         _rankView.hidden = NO;
@@ -48,9 +48,9 @@
         _commentController.tableView.scrollsToTop = YES;
         [_commentController onViewShown];
     } else {
-        _activityView.hidden = NO;
-        _activityController.tableView.scrollsToTop = YES;
-        [_activityController onViewShown];
+        _betView.hidden = NO;
+        _betController.tableView.scrollsToTop = YES;
+        [_betController onViewShown];
     }
 }
 
@@ -66,8 +66,8 @@
         _rankController = (SldRankController*)nav.topViewController;
     }else if ([segueName isEqualToString: @"commentController"]) {
         _commentController = (SldCommentController*)nav.topViewController;
-    } else if ([segueName isEqualToString: @"activityController"]) {
-        _activityController = (SldActivityController*)nav.topViewController;
+    } else if ([segueName isEqualToString: @"betController"]) {
+        _betController = (SldBetController*)nav.topViewController;
     }
 }
 
