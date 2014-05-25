@@ -99,8 +99,6 @@
             y += h+5;
             i++;
         }
-    } else {
-        lwInfo(@"no local score");
     }
 }
 

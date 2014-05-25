@@ -37,9 +37,12 @@ type PlayerInfo struct {
 	Gender          uint
 	CustomAvatarKey string
 	GravatarKey     string
-	Level           uint32
-	Exp             uint32
-	Money           int64
+	Money           uint64
+	AP              uint32
+	APMax           uint32
+	APInterval      uint32
+	LastApTime      int64
+	BetMax          uint32
 }
 
 func _getPlayerInfo(ssdb *ssdb.Client, session *Session, playerInfo *PlayerInfo) (err error) {
@@ -121,9 +124,12 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	if resp[0] == "not_found" {
 		//set default value
 		playerInfo = in
-		playerInfo.Level = 1
-		playerInfo.Exp = 0
 		playerInfo.Money = 1000
+		playerInfo.AP = 1
+		playerInfo.APMax = 1
+		playerInfo.APInterval = 2 * 60 * 60
+		playerInfo.LastApTime = 0
+		playerInfo.BetMax = 100
 	} else {
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
 		lwutil.CheckError(err, "")

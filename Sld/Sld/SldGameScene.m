@@ -76,7 +76,7 @@ static const float DOT_ALPHA_HIGHLIGHT = 1.f;
 static const float DOT_SCALE_NORMAL = .6f;
 static const float DOT_SCALE_HIGHLIGHT = .75f;
 static const float MOVE_DURATION = .1f;
-static const uint32_t DEFUALT_SLIDER_NUM = 2;
+static const uint32_t DEFUALT_SLIDER_NUM = 6;
 static const float TRANS_DURATION = .3f;
 
 UIColor *BUTTON_COLOR_RED = nil;

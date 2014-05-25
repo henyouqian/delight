@@ -173,7 +173,6 @@
                 gameData.teamName = [dict objectForKey:@"TeamName"];
                 gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
                 gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-                gameData.exp = [(NSNumber*)[dict objectForKey:@"Exp"] unsignedIntValue];
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }];

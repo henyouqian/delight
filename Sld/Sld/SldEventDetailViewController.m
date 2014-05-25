@@ -27,9 +27,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *beatLabel;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
+@property (weak, nonatomic) IBOutlet UIButton *practiceButton;
 @property (weak, nonatomic) NSTimer *timer;
 @property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) SldGameData *gamedata;
+@property (nonatomic) BOOL hasNetError;
 @end
 
 static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
@@ -48,14 +50,19 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
 {
     [super viewDidLoad];
     g_eventDetailViewController = self;
+    _hasNetError = NO;
+    _practiceButton.enabled = NO;
+    _matchButton.enabled = NO;
     
     _gamedata = [SldGameData getInstance];
+    _gamedata.packInfo = nil;
     
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:_gamedata.eventInfo.packId]];
     SldHttpSession *session = [SldHttpSession defaultSession];
     if ([rs next]) { //local
+        _practiceButton.enabled = YES;
         NSString *data = [rs stringForColumnIndex:0];
         NSError *error = nil;
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
@@ -71,9 +78,14 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         NSDictionary *body = @{@"Id":@(_gamedata.eventInfo.packId)};
         [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
-                lwError("Http error:%@", [error localizedDescription]);
+                if (!_hasNetError) {
+                    alertHTTPError(error, data);
+                    _bestRecordLabel.text = @"网络错误";
+                    _hasNetError = YES;
+                }
                 return;
             }
+            _practiceButton.enabled = YES;
             
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (error) {
@@ -98,7 +110,11 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id), @"UserId":@0};
     [session postToApi:@"event/getUserPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            alertHTTPError(error, data);
+            if (!_hasNetError) {
+                alertHTTPError(error, data);
+                _bestRecordLabel.text = @"网络错误";
+                _hasNetError = YES;
+            }
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -230,7 +246,11 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         int minute = (sec % 3600)/60;
         sec = (sec % 60);
         _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
-        _matchButton.enabled = YES;
+        if (!_hasNetError && _gamedata.packInfo) {
+            _matchButton.enabled = YES;
+        } else {
+            _matchButton.enabled = NO;
+        }
     }
 }
 

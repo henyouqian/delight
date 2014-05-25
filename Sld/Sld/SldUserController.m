@@ -22,7 +22,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *expLabel;
 
 @end
 
@@ -74,9 +73,6 @@
     
     //money
     _moneyLabel.text = [NSString stringWithFormat:@"%lld", gamedata.money];
-    
-    //exp
-    _expLabel.text = [NSString stringWithFormat:@"%lu", gamedata.exp];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

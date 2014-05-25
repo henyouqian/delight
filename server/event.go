@@ -776,6 +776,10 @@ func getActivities(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &comments)
 }
 
+func getBetInfos(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(newEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(delEvent))
@@ -785,5 +789,6 @@ func regMatch() {
 	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
 	http.Handle("/event/getRanks", lwutil.ReqHandler(getRanks))
+	http.Handle("/event/getBetInfos", lwutil.ReqHandler(getBetInfos))
 	http.Handle("/event/getActivities", lwutil.ReqHandler(getActivities))
 }
