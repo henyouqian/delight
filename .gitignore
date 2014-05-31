@@ -19,11 +19,12 @@ client/proj.android/obj/
 client/Classes/obsolete/
 client/publish/
 client2/cocos2d/external/
-server/server
 server/obsolete/
 server/tools/packUploader/packUploader
+server/tools/packUploader/packs
 server/redis/
-robot/robot
+server/match/match
 server/booker/booker
-ssdb/
-redis/
+server/ssdb/auth/var/
+server/ssdb/match/var/
+robot/robot

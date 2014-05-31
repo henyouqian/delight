@@ -27,7 +27,6 @@
 		B31EE7F718F05BE60047E9FD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7CF18F05BE60047E9FD /* UIKit.framework */; };
 		B31EE7FF18F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE80118F05BE60047E9FD /* SldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE80018F05BE60047E9FD /* SldTests.m */; };
-		B31EE82B18F06F4D0047E9FD /* img in Resources */ = {isa = PBXBuildFile; fileRef = B31EE82A18F06F4D0047E9FD /* img */; };
 		B33121F819165A10003E05DB /* SldRankController.m in Sources */ = {isa = PBXBuildFile; fileRef = B33121F719165A10003E05DB /* SldRankController.m */; };
 		B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */ = {isa = PBXBuildFile; fileRef = B33121FA1916D02C003E05DB /* thumbDarker.png */; };
 		B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B33DD3821921132A006B8ACD /* MMPickerView.m */; };
@@ -162,7 +161,6 @@
 		B31EE7FC18F05BE60047E9FD /* SldTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SldTests-Info.plist"; sourceTree = "<group>"; };
 		B31EE7FE18F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B31EE80018F05BE60047E9FD /* SldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldTests.m; sourceTree = "<group>"; };
-		B31EE82A18F06F4D0047E9FD /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = res/img; sourceTree = "<group>"; };
 		B33121F619165A10003E05DB /* SldRankController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldRankController.h; sourceTree = "<group>"; };
 		B33121F719165A10003E05DB /* SldRankController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldRankController.m; sourceTree = "<group>"; };
 		B33121FA1916D02C003E05DB /* thumbDarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumbDarker.png; sourceTree = "<group>"; };
@@ -422,7 +420,6 @@
 				B3815E78190C0D7A003AF183 /* ui */,
 				B3C0AF5E1906703200CB4DFD /* db */,
 				B3024C5E18FE7EF600F9EEA3 /* audio */,
-				B31EE82A18F06F4D0047E9FD /* img */,
 			);
 			name = res;
 			sourceTree = "<group>";
@@ -679,7 +676,6 @@
 				B3835376191AD83500D259F5 /* glyphicons_150_edit@2x.png in Resources */,
 				B3C1BB7C1910D8BE0062D50C /* glyphicons_173_play.png in Resources */,
 				B3A522111928F56000D5A38C /* otlUser@2x.png in Resources */,
-				B31EE82B18F06F4D0047E9FD /* img in Resources */,
 				B39E447F191E794800CBB247 /* glyphicons_017_music@2x.png in Resources */,
 				B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */,
 				B3835372191AD68400D259F5 /* glyphicons_245_chat@2x.png in Resources */,

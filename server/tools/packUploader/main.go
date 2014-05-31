@@ -108,6 +108,11 @@ func newPack() {
 		return
 	}
 
+	if pack.Id != 0 {
+		glog.Errorln("Pack already uploaded?")
+		return
+	}
+
 	//check image file exist
 	for _, img := range pack.Images {
 		if _, err := os.Stat(img.File); os.IsNotExist(err) {
@@ -257,7 +262,8 @@ func newPack() {
 
 	packRaw.Id = dwpack.Id
 
-	packjs, err = json.Marshal(packRaw)
+	//packjs, err = json.Marshal(packRaw)
+	packjs, err = json.Marshal(dwpack)
 	checkErr(err)
 
 	var f *os.File
@@ -369,7 +375,8 @@ func login() {
 	checkErr(err)
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		glog.Fatalf("login error: resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
+		glog.Fatalf("Login Error: username=%s", account.Name)
+		//glog.Fatalf("login error: resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
 	}
 	bts, err := ioutil.ReadAll(resp.Body)
 	checkErr(err)

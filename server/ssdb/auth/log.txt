@@ -1,0 +1,458 @@
+2014-05-30 03:51:50.962 [INFO ] ssdb-server.cpp(400): ssdb-server 1.6.8.6
+2014-05-30 03:51:50.965 [INFO ] ssdb-server.cpp(401): conf_file       : auth/ssdb.conf
+2014-05-30 03:51:50.965 [INFO ] ssdb-server.cpp(402): work_dir        : ./var
+2014-05-30 03:51:50.965 [INFO ] ssdb-server.cpp(403): log_level       : debug
+2014-05-30 03:51:50.965 [INFO ] ssdb-server.cpp(404): log_output      : log.txt
+2014-05-30 03:51:50.965 [INFO ] ssdb-server.cpp(405): log_rotate_size : 1000000000
+2014-05-30 03:51:50.965 [INFO ] ssdb-server.cpp(439): server listen on: 127.0.0.1:9875
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(71): main_db          : ./var/data
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(72): meta_db          : ./var/meta
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(73): cache_size       : 500 MB
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(74): block_size       : 32 KB
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(75): write_buffer     : 64 MB
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(76): compaction_speed : 1000 MB/s
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(77): compression      : no
+2014-05-30 03:51:50.965 [INFO ] ssdb.cpp(78): binlog           : yes
+2014-05-30 03:51:50.970 [INFO ] binlog.cpp(149): binlogs capacity: 10000000, min: 0, max: 0,
+2014-05-30 03:51:50.971 [INFO ] ssdb-server.cpp(473): pidfile: ./var/ssdb.pid, pid: 17625
+2014-05-30 03:51:50.971 [INFO ] ssdb-server.cpp(459): ssdb server started.
+2014-05-30 03:51:50.971 [DEBUG] ttl.cpp(81): ExpirationHandler started
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): writer 0 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 0 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 1 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 2 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 3 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 4 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 5 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 6 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 7 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 8 init
+2014-05-30 03:51:50.972 [DEBUG] serv.cpp(338): reader 9 init
+2014-05-30 03:51:53.480 [DEBUG] backend_dump.cpp(9): BackendDump finalized
+2014-05-30 03:51:53.480 [DEBUG] backend_sync.cpp(31): BackendSync finalized
+2014-05-30 03:51:53.515 [DEBUG] ttl.cpp(112): ExpirationHandler thread_func quit
+2014-05-30 03:51:53.523 [DEBUG] serv.cpp(280): Server finalized
+2014-05-30 03:51:53.523 [INFO ] ssdb-server.cpp(65): shutdown network
+2014-05-30 03:51:53.523 [DEBUG] ssdb-server.cpp(69): free ssdb
+2014-05-30 03:51:53.596 [DEBUG] binlog.cpp(360): clean_thread quit
+2014-05-30 03:51:53.605 [DEBUG] binlog.cpp(188): BinlogQueue finalized
+2014-05-30 03:51:53.606 [DEBUG] ssdb.cpp(39): SSDB finalized
+2014-05-30 03:51:53.606 [DEBUG] ssdb-server.cpp(73): free conf
+2014-05-30 03:51:53.607 [INFO ] ssdb-server.cpp(79): ssdb server exit.
+2014-05-30 03:52:06.096 [INFO ] ssdb-server.cpp(400): ssdb-server 1.6.8.6
+2014-05-30 03:52:06.098 [INFO ] ssdb-server.cpp(401): conf_file       : auth/ssdb.conf
+2014-05-30 03:52:06.098 [INFO ] ssdb-server.cpp(402): work_dir        : ./var
+2014-05-30 03:52:06.098 [INFO ] ssdb-server.cpp(403): log_level       : debug
+2014-05-30 03:52:06.098 [INFO ] ssdb-server.cpp(404): log_output      : log.txt
+2014-05-30 03:52:06.098 [INFO ] ssdb-server.cpp(405): log_rotate_size : 1000000000
+2014-05-30 03:52:06.099 [INFO ] ssdb-server.cpp(439): server listen on: 127.0.0.1:9875
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(71): main_db          : ./var/data
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(72): meta_db          : ./var/meta
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(73): cache_size       : 500 MB
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(74): block_size       : 32 KB
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(75): write_buffer     : 64 MB
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(76): compaction_speed : 1000 MB/s
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(77): compression      : no
+2014-05-30 03:52:06.099 [INFO ] ssdb.cpp(78): binlog           : yes
+2014-05-30 03:52:06.105 [INFO ] binlog.cpp(149): binlogs capacity: 10000000, min: 0, max: 0,
+2014-05-30 03:52:06.105 [INFO ] ssdb-server.cpp(473): pidfile: ./var/ssdb.pid, pid: 17635
+2014-05-30 03:52:06.106 [INFO ] ssdb-server.cpp(459): ssdb server started.
+2014-05-30 03:52:06.106 [DEBUG] ttl.cpp(81): ExpirationHandler started
+2014-05-30 03:52:06.106 [DEBUG] serv.cpp(338): writer 0 init
+2014-05-30 03:52:06.106 [DEBUG] serv.cpp(338): reader 0 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 1 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 2 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 3 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 4 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 5 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 6 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 7 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 8 init
+2014-05-30 03:52:06.107 [DEBUG] serv.cpp(338): reader 9 init
+2014-05-30 03:57:07.007 [INFO ] ssdb-server.cpp(215): ssdb working, links: 0
+2014-05-30 04:02:07.006 [INFO ] ssdb-server.cpp(215): ssdb working, links: 0
+2014-05-30 04:07:07.006 [INFO ] ssdb-server.cpp(215): ssdb working, links: 0
+2014-05-30 04:10:45.790 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:59121, fd: 17, link_count: 1
+2014-05-30 04:10:45.792 [DEBUG] serv.cpp(327): w:0.017,p:1.323, req: hget H_NAME_ACCONT aa, resp: not_found
+2014-05-30 04:10:55.281 [DEBUG] serv.cpp(327): w:0.002,p:0.034, req: hexists H_NAME_ACCONT aa, resp: ok 0
+2014-05-30 04:10:55.287 [DEBUG] serv.cpp(358): w:0.240,p:5.177, req: hincr hSerial account 1, resp: ok 1
+2014-05-30 04:10:55.287 [DEBUG] serv.cpp(358): w:0.054,p:0.027, req: hset H_ACCOUNT 1 [89], resp: ok 1
+2014-05-30 04:10:55.287 [DEBUG] serv.cpp(358): w:0.016,p:0.019, req: hset H_NAME_ACCONT aa 1, resp: ok 1
+2014-05-30 04:12:07.006 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-30 17:44:02.580 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-05-30 17:44:48.566 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:59176, fd: 17, link_count: 1
+2014-05-30 17:44:48.566 [DEBUG] serv.cpp(327): w:0.019,p:0.101, req: hget H_NAME_ACCONT aa, resp: ok 1
+2014-05-30 17:44:48.567 [DEBUG] serv.cpp(327): w:0.001,p:0.009, req: hget H_ACCOUNT 1, resp: ok [89]
+2014-05-30 17:44:48.572 [DEBUG] serv.cpp(327): w:0.002,p:0.744, req: get H_USER_TOKEN/0/1, resp: not_found
+2014-05-30 17:44:48.583 [DEBUG] serv.cpp(358): w:1.700,p:0.716, req: setx [34] [83] 604800, resp: ok 1
+2014-05-30 17:44:48.584 [DEBUG] serv.cpp(358): w:0.029,p:0.044, req: setx H_USER_TOKEN/0/1 8Kkidc3kRXl1Dek6OKm_xw== 604800, resp: ok 1
+2014-05-30 17:44:55.429 [DEBUG] serv.cpp(327): w:0.002,p:0.017, req: get H_SESSION/8Kkidc3kRXl1Dek6OKm_xw==, resp: ok [83]
+2014-05-31 00:19:12.630 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:24:12.630 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:29:12.630 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:34:12.681 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:39:12.629 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:44:12.629 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:49:12.629 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:54:12.629 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 00:59:12.629 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:04:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:09:12.628 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:14:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:19:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:24:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:29:12.626 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:34:12.626 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:39:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:44:12.626 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:49:12.626 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:54:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 01:59:12.627 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 04:20:42.358 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 11:25:20.673 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 12:55:54.954 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:00:54.954 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:05:54.954 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:10:54.953 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:15:54.952 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:20:54.953 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:25:54.953 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:30:56.653 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:36:06.552 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:41:06.551 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:46:06.552 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:51:06.551 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 13:56:06.551 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:01:06.551 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:06:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:11:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:16:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:21:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:26:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:31:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:36:06.550 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:41:06.549 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:46:06.549 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:51:06.548 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 14:56:06.549 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:01:06.549 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:06:06.547 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:11:06.548 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:16:06.548 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:21:06.547 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:26:06.547 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:31:06.647 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:36:06.646 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:41:06.647 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:46:06.646 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:51:06.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 15:56:06.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:01:06.646 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:06:06.646 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:11:06.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:16:06.644 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:21:06.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:45:45.074 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:50:45.074 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 16:55:45.073 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 17:36:07.067 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 17:41:07.067 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 17:46:07.067 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 17:51:07.066 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 17:56:07.068 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:02:43.441 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:07:43.542 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:12:43.541 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:17:43.541 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:22:43.541 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:27:43.541 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:32:43.540 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:37:43.540 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:42:43.941 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:47:43.940 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:52:43.939 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 18:57:43.939 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:02:43.939 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:07:43.938 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:12:43.940 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:31:40.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:36:40.646 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:41:40.646 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:46:40.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 19:51:40.645 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 23:39:16.061 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 23:44:16.060 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 23:49:16.061 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 23:54:16.061 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-05-31 23:59:16.059 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:04:16.060 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:09:16.059 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:14:16.460 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:19:16.459 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:24:16.458 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:29:16.459 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:34:16.559 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:39:16.558 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:44:16.558 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:49:16.558 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:54:16.557 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 00:59:16.557 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:04:16.557 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:09:16.556 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:14:16.556 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:19:16.556 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:24:16.557 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:29:16.556 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:34:16.555 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:39:16.556 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:44:16.555 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:49:16.555 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:54:16.554 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 01:59:16.554 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:04:16.555 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:09:16.556 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:14:16.553 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:19:16.553 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:24:16.553 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:29:17.153 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:34:17.153 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:39:17.153 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:42:08.005 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 02:42:08.017 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:54499, fd: 17, link_count: 1
+2014-06-01 02:42:08.031 [DEBUG] serv.cpp(327): w:0.032,p:1.518, req: hget H_NAME_ACCONT henyouqian, resp: not_found
+2014-06-01 02:42:14.828 [DEBUG] serv.cpp(327): w:0.002,p:0.021, req: hget H_NAME_ACCONT henyouqian, resp: not_found
+2014-06-01 02:42:21.025 [DEBUG] serv.cpp(327): w:0.002,p:0.025, req: hget H_NAME_ACCONT henyouqian, resp: not_found
+2014-06-01 02:42:21.788 [DEBUG] serv.cpp(327): w:0.003,p:0.030, req: hget H_NAME_ACCONT henyouqian, resp: not_found
+2014-06-01 02:42:37.208 [DEBUG] serv.cpp(327): w:0.002,p:0.037, req: hexists H_NAME_ACCONT henyouqian, resp: ok 0
+2014-06-01 02:42:37.327 [DEBUG] serv.cpp(358): w:0.101,p:119.348, req: hincr hSerial account 1, resp: ok 2
+2014-06-01 02:42:37.329 [DEBUG] serv.cpp(358): w:0.030,p:0.039, req: hset H_ACCOUNT 2 [97], resp: ok 1
+2014-06-01 02:42:37.329 [DEBUG] serv.cpp(358): w:0.022,p:0.021, req: hset H_NAME_ACCONT henyouqian 2, resp: ok 1
+2014-06-01 02:42:47.681 [DEBUG] serv.cpp(327): w:0.002,p:0.019, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 02:42:47.682 [DEBUG] serv.cpp(327): w:0.000,p:0.014, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 02:42:47.684 [DEBUG] serv.cpp(327): w:0.003,p:0.030, req: get H_USER_TOKEN/0/2, resp: not_found
+2014-06-01 02:42:47.686 [DEBUG] serv.cpp(358): w:0.047,p:0.115, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 02:42:47.693 [DEBUG] serv.cpp(358): w:0.027,p:6.257, req: setx H_USER_TOKEN/0/2 755LLPObTAN7M9r2lKBZaQ== 604800, resp: ok 1
+2014-06-01 02:42:59.549 [DEBUG] serv.cpp(327): w:0.002,p:0.024, req: get H_SESSION/755LLPObTAN7M9r2lKBZaQ==, resp: ok [91]
+2014-06-01 02:44:17.152 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:49:17.152 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:53:17.708 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 02:53:17.714 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55050, fd: 17, link_count: 1
+2014-06-01 02:53:17.714 [DEBUG] serv.cpp(327): w:0.002,p:0.014, req: hget H_NAME_ACCONT admin, resp: not_found
+2014-06-01 02:54:17.252 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 02:56:12.951 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 02:56:12.952 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55177, fd: 17, link_count: 1
+2014-06-01 02:56:12.952 [DEBUG] serv.cpp(327): w:0.002,p:0.024, req: hget H_NAME_ACCONT admin, resp: not_found
+2014-06-01 02:56:15.281 [DEBUG] serv.cpp(327): w:0.002,p:0.021, req: get H_SESSION/, resp: not_found
+2014-06-01 02:56:20.196 [DEBUG] serv.cpp(327): w:0.002,p:0.020, req: hget H_NAME_ACCONT admin, resp: not_found
+2014-06-01 02:57:08.425 [DEBUG] serv.cpp(327): w:0.002,p:0.021, req: hget H_NAME_ACCONT admin, resp: not_found
+2014-06-01 02:59:17.252 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:00:31.457 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:00:31.458 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55393, fd: 17, link_count: 1
+2014-06-01 03:00:31.458 [DEBUG] serv.cpp(327): w:0.002,p:0.013, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:00:31.458 [DEBUG] serv.cpp(327): w:0.001,p:0.008, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:00:31.459 [DEBUG] serv.cpp(327): w:0.001,p:0.009, req: get H_USER_TOKEN/0/2, resp: ok 755LLPObTAN7M9r2lKBZaQ==
+2014-06-01 03:00:31.459 [DEBUG] serv.cpp(358): w:0.028,p:0.023, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:00:31.459 [DEBUG] serv.cpp(358): w:0.019,p:0.013, req: del [34], resp: ok 1
+2014-06-01 03:00:31.460 [DEBUG] serv.cpp(358): w:0.019,p:0.940, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:00:31.461 [DEBUG] serv.cpp(358): w:0.031,p:0.429, req: setx H_USER_TOKEN/0/2 aGxwKvf3SpR-Pyp5YM4ngA== 604800, resp: ok 1
+2014-06-01 03:00:32.542 [DEBUG] serv.cpp(327): w:0.002,p:0.025, req: get H_SESSION/aGxwKvf3SpR-Pyp5YM4ngA==, resp: ok [91]
+2014-06-01 03:03:36.441 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:03:45.196 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55405, fd: 17, link_count: 1
+2014-06-01 03:03:45.196 [DEBUG] serv.cpp(327): w:0.002,p:0.016, req: get H_SESSION/755LLPObTAN7M9r2lKBZaQ==, resp: not_found
+2014-06-01 03:03:51.063 [DEBUG] serv.cpp(327): w:0.002,p:0.016, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:03:51.063 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:03:51.064 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: get H_USER_TOKEN/0/2, resp: ok aGxwKvf3SpR-Pyp5YM4ngA==
+2014-06-01 03:03:51.064 [DEBUG] serv.cpp(358): w:0.217,p:0.021, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:03:51.065 [DEBUG] serv.cpp(358): w:0.029,p:0.017, req: del [34], resp: ok 1
+2014-06-01 03:03:51.068 [DEBUG] serv.cpp(358): w:0.038,p:0.069, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:03:51.069 [DEBUG] serv.cpp(358): w:0.031,p:0.113, req: setx H_USER_TOKEN/0/2 4PGpEsC2QYttZUOfHPVr1g== 604800, resp: ok 1
+2014-06-01 03:04:00.278 [DEBUG] serv.cpp(327): w:0.002,p:0.027, req: get H_SESSION/4PGpEsC2QYttZUOfHPVr1g==, resp: ok [91]
+2014-06-01 03:04:17.252 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:06:11.727 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:06:11.729 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55410, fd: 17, link_count: 1
+2014-06-01 03:06:11.729 [DEBUG] serv.cpp(327): w:0.002,p:0.016, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:06:11.730 [DEBUG] serv.cpp(327): w:0.001,p:0.011, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:06:11.730 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: get H_USER_TOKEN/0/2, resp: ok 4PGpEsC2QYttZUOfHPVr1g==
+2014-06-01 03:06:11.730 [DEBUG] serv.cpp(358): w:0.038,p:0.021, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:06:11.730 [DEBUG] serv.cpp(358): w:0.019,p:0.015, req: del [34], resp: ok 1
+2014-06-01 03:06:11.731 [DEBUG] serv.cpp(358): w:0.017,p:0.050, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:06:11.731 [DEBUG] serv.cpp(358): w:0.019,p:0.040, req: setx H_USER_TOKEN/0/2 rR5I0qh1Rc5dTHUstb-JzQ== 604800, resp: ok 1
+2014-06-01 03:09:17.251 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:11:14.164 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:11:14.165 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55683, fd: 17, link_count: 1
+2014-06-01 03:11:14.165 [DEBUG] serv.cpp(327): w:0.002,p:0.015, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:11:14.165 [DEBUG] serv.cpp(327): w:0.001,p:0.009, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:11:14.165 [DEBUG] serv.cpp(327): w:0.001,p:0.009, req: get H_USER_TOKEN/0/2, resp: ok rR5I0qh1Rc5dTHUstb-JzQ==
+2014-06-01 03:11:14.166 [DEBUG] serv.cpp(358): w:0.023,p:0.020, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:11:14.166 [DEBUG] serv.cpp(358): w:0.015,p:0.015, req: del [34], resp: ok 1
+2014-06-01 03:11:14.166 [DEBUG] serv.cpp(358): w:0.024,p:0.062, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:11:14.167 [DEBUG] serv.cpp(358): w:0.015,p:0.039, req: setx H_USER_TOKEN/0/2 KVRiVZ24R2BrhiC2LiJwjw== 604800, resp: ok 1
+2014-06-01 03:11:19.944 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:11:54.073 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55691, fd: 17, link_count: 1
+2014-06-01 03:11:54.073 [DEBUG] serv.cpp(327): w:0.001,p:0.015, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:11:54.074 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:11:54.074 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: get H_USER_TOKEN/0/2, resp: ok KVRiVZ24R2BrhiC2LiJwjw==
+2014-06-01 03:11:54.074 [DEBUG] serv.cpp(358): w:0.022,p:0.021, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:11:54.075 [DEBUG] serv.cpp(358): w:0.017,p:0.017, req: del [34], resp: ok 1
+2014-06-01 03:11:54.076 [DEBUG] serv.cpp(358): w:0.053,p:0.057, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:11:54.076 [DEBUG] serv.cpp(358): w:0.019,p:0.039, req: setx H_USER_TOKEN/0/2 8C7aZNFZRGxR34Mxv1KegQ== 604800, resp: ok 1
+2014-06-01 03:11:57.530 [DEBUG] serv.cpp(327): w:0.003,p:0.024, req: get H_SESSION/8C7aZNFZRGxR34Mxv1KegQ==, resp: ok [91]
+2014-06-01 03:11:58.785 [DEBUG] serv.cpp(327): w:0.002,p:0.028, req: get H_SESSION/8C7aZNFZRGxR34Mxv1KegQ==, resp: ok [91]
+2014-06-01 03:12:29.411 [DEBUG] serv.cpp(327): w:0.002,p:0.022, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:12:29.411 [DEBUG] serv.cpp(327): w:0.000,p:0.008, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:12:29.411 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: get H_USER_TOKEN/0/2, resp: ok 8C7aZNFZRGxR34Mxv1KegQ==
+2014-06-01 03:12:29.411 [DEBUG] serv.cpp(358): w:0.024,p:0.020, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:12:29.411 [DEBUG] serv.cpp(358): w:0.014,p:0.015, req: del [34], resp: ok 1
+2014-06-01 03:12:29.412 [DEBUG] serv.cpp(358): w:0.021,p:0.049, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:12:29.412 [DEBUG] serv.cpp(358): w:0.015,p:0.051, req: setx H_USER_TOKEN/0/2 xU0-iwpzQMBovSB-DhZivA== 604800, resp: ok 1
+2014-06-01 03:12:34.563 [DEBUG] serv.cpp(327): w:0.002,p:0.023, req: get H_SESSION/xU0-iwpzQMBovSB-DhZivA==, resp: ok [91]
+2014-06-01 03:13:15.691 [DEBUG] serv.cpp(327): w:0.001,p:0.022, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:13:15.691 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:13:15.691 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: get H_USER_TOKEN/0/2, resp: ok xU0-iwpzQMBovSB-DhZivA==
+2014-06-01 03:13:15.691 [DEBUG] serv.cpp(358): w:0.022,p:0.020, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:13:15.691 [DEBUG] serv.cpp(358): w:0.014,p:0.015, req: del [34], resp: ok 1
+2014-06-01 03:13:15.692 [DEBUG] serv.cpp(358): w:0.016,p:0.063, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:13:15.692 [DEBUG] serv.cpp(358): w:0.015,p:0.040, req: setx H_USER_TOKEN/0/2 Nv663Ea2TOhBLKgne2xOVg== 604800, resp: ok 1
+2014-06-01 03:13:20.786 [DEBUG] serv.cpp(327): w:0.002,p:0.042, req: get H_SESSION/Nv663Ea2TOhBLKgne2xOVg==, resp: ok [91]
+2014-06-01 03:13:40.600 [DEBUG] serv.cpp(327): w:0.002,p:0.023, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:13:40.600 [DEBUG] serv.cpp(327): w:0.000,p:0.011, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:13:40.601 [DEBUG] serv.cpp(327): w:0.001,p:0.012, req: get H_USER_TOKEN/0/2, resp: ok Nv663Ea2TOhBLKgne2xOVg==
+2014-06-01 03:13:40.601 [DEBUG] serv.cpp(358): w:0.038,p:0.022, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:13:40.601 [DEBUG] serv.cpp(358): w:0.018,p:0.016, req: del [34], resp: ok 1
+2014-06-01 03:13:40.602 [DEBUG] serv.cpp(358): w:0.018,p:0.059, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:13:40.602 [DEBUG] serv.cpp(358): w:0.017,p:0.045, req: setx H_USER_TOKEN/0/2 KLMbgswHQL5W4f9SISDTYw== 604800, resp: ok 1
+2014-06-01 03:13:45.683 [DEBUG] serv.cpp(327): w:0.003,p:0.027, req: get H_SESSION/KLMbgswHQL5W4f9SISDTYw==, resp: ok [91]
+2014-06-01 03:14:17.252 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:15:30.567 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:15:30.568 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55714, fd: 17, link_count: 1
+2014-06-01 03:15:30.568 [DEBUG] serv.cpp(327): w:0.003,p:0.018, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:15:30.568 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:15:30.569 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: get H_USER_TOKEN/0/2, resp: ok KLMbgswHQL5W4f9SISDTYw==
+2014-06-01 03:15:30.569 [DEBUG] serv.cpp(358): w:0.023,p:0.021, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:15:30.569 [DEBUG] serv.cpp(358): w:0.015,p:0.015, req: del [34], resp: ok 1
+2014-06-01 03:15:30.569 [DEBUG] serv.cpp(358): w:0.015,p:0.051, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:15:30.570 [DEBUG] serv.cpp(358): w:0.015,p:0.042, req: setx H_USER_TOKEN/0/2 sOIh96tBQx94kBPYgLaJCQ== 604800, resp: ok 1
+2014-06-01 03:15:35.378 [DEBUG] serv.cpp(327): w:0.002,p:0.025, req: get H_SESSION/sOIh96tBQx94kBPYgLaJCQ==, resp: ok [91]
+2014-06-01 03:17:14.308 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:17:14.309 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:55723, fd: 17, link_count: 1
+2014-06-01 03:17:14.309 [DEBUG] serv.cpp(327): w:0.002,p:0.018, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:17:14.309 [DEBUG] serv.cpp(327): w:0.000,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:17:14.309 [DEBUG] serv.cpp(327): w:0.001,p:0.012, req: get H_USER_TOKEN/0/2, resp: ok sOIh96tBQx94kBPYgLaJCQ==
+2014-06-01 03:17:14.310 [DEBUG] serv.cpp(358): w:0.024,p:0.023, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:17:14.310 [DEBUG] serv.cpp(358): w:0.016,p:0.017, req: del [34], resp: ok 1
+2014-06-01 03:17:14.310 [DEBUG] serv.cpp(358): w:0.017,p:0.059, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:17:14.310 [DEBUG] serv.cpp(358): w:0.017,p:0.116, req: setx H_USER_TOKEN/0/2 i3xGEyrpTK1vZRuiD_Btiw== 604800, resp: ok 1
+2014-06-01 03:17:43.126 [DEBUG] serv.cpp(327): w:0.008,p:0.029, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:17:43.126 [DEBUG] serv.cpp(327): w:0.001,p:0.011, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:17:43.126 [DEBUG] serv.cpp(327): w:0.001,p:0.013, req: get H_USER_TOKEN/0/2, resp: ok i3xGEyrpTK1vZRuiD_Btiw==
+2014-06-01 03:17:43.127 [DEBUG] serv.cpp(358): w:0.028,p:0.028, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:17:43.127 [DEBUG] serv.cpp(358): w:0.015,p:0.014, req: del [34], resp: ok 1
+2014-06-01 03:17:43.127 [DEBUG] serv.cpp(358): w:0.022,p:0.061, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:17:43.127 [DEBUG] serv.cpp(358): w:0.019,p:0.051, req: setx H_USER_TOKEN/0/2 s0Pb4VsYRl1CnGYQHB5bMw== 604800, resp: ok 1
+2014-06-01 03:17:47.889 [DEBUG] serv.cpp(327): w:0.002,p:0.027, req: get H_SESSION/s0Pb4VsYRl1CnGYQHB5bMw==, resp: ok [91]
+2014-06-01 03:19:17.251 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:24:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:29:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:34:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:34:26.935 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:34:26.939 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:57196, fd: 17, link_count: 1
+2014-06-01 03:34:26.943 [DEBUG] serv.cpp(327): w:0.002,p:0.020, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:34:26.943 [DEBUG] serv.cpp(327): w:0.000,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:34:26.944 [DEBUG] serv.cpp(327): w:0.002,p:0.012, req: get H_USER_TOKEN/0/2, resp: ok s0Pb4VsYRl1CnGYQHB5bMw==
+2014-06-01 03:34:26.944 [DEBUG] serv.cpp(358): w:0.025,p:0.386, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:34:26.945 [DEBUG] serv.cpp(358): w:0.014,p:0.015, req: del [34], resp: ok 1
+2014-06-01 03:34:26.947 [DEBUG] serv.cpp(358): w:0.034,p:0.081, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:34:26.948 [DEBUG] serv.cpp(358): w:0.028,p:0.474, req: setx H_USER_TOKEN/0/2 nLbk5FqFS-9mhZ-kg2MLrg== 604800, resp: ok 1
+2014-06-01 03:34:34.777 [DEBUG] serv.cpp(327): w:0.002,p:0.022, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:34:34.777 [DEBUG] serv.cpp(327): w:0.001,p:0.014, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:34:34.777 [DEBUG] serv.cpp(327): w:0.001,p:0.011, req: get H_USER_TOKEN/0/2, resp: ok nLbk5FqFS-9mhZ-kg2MLrg==
+2014-06-01 03:34:34.778 [DEBUG] serv.cpp(358): w:0.024,p:0.023, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:34:34.778 [DEBUG] serv.cpp(358): w:0.014,p:0.016, req: del [34], resp: ok 1
+2014-06-01 03:34:34.778 [DEBUG] serv.cpp(358): w:0.016,p:0.050, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:34:34.781 [DEBUG] serv.cpp(358): w:0.015,p:2.562, req: setx H_USER_TOKEN/0/2 WNOnRW99SChiUFQfrkR-lg== 604800, resp: ok 1
+2014-06-01 03:34:42.264 [DEBUG] serv.cpp(327): w:0.003,p:0.024, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:34:42.265 [DEBUG] serv.cpp(327): w:0.000,p:0.013, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:34:42.265 [DEBUG] serv.cpp(327): w:0.001,p:0.012, req: get H_USER_TOKEN/0/2, resp: ok WNOnRW99SChiUFQfrkR-lg==
+2014-06-01 03:34:42.265 [DEBUG] serv.cpp(358): w:0.021,p:0.023, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:34:42.265 [DEBUG] serv.cpp(358): w:0.016,p:0.017, req: del [34], resp: ok 1
+2014-06-01 03:34:42.266 [DEBUG] serv.cpp(358): w:0.017,p:0.058, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:34:42.266 [DEBUG] serv.cpp(358): w:0.015,p:0.052, req: setx H_USER_TOKEN/0/2 QyHUbWzsQp9aMZ2UL5Uo4A== 604800, resp: ok 1
+2014-06-01 03:34:42.429 [DEBUG] serv.cpp(327): w:0.002,p:0.028, req: get H_SESSION/QyHUbWzsQp9aMZ2UL5Uo4A==, resp: ok [91]
+2014-06-01 03:34:55.959 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:35:18.139 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:57214, fd: 17, link_count: 1
+2014-06-01 03:35:18.140 [DEBUG] serv.cpp(327): w:0.001,p:0.016, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:35:18.140 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:35:18.140 [DEBUG] serv.cpp(327): w:0.001,p:0.012, req: get H_USER_TOKEN/0/2, resp: ok QyHUbWzsQp9aMZ2UL5Uo4A==
+2014-06-01 03:35:18.140 [DEBUG] serv.cpp(358): w:0.022,p:0.020, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:35:18.140 [DEBUG] serv.cpp(358): w:0.014,p:0.016, req: del [34], resp: ok 1
+2014-06-01 03:35:18.142 [DEBUG] serv.cpp(358): w:0.015,p:0.052, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:35:18.142 [DEBUG] serv.cpp(358): w:0.015,p:0.043, req: setx H_USER_TOKEN/0/2 5Lv8d9RATmRDgyk3ILwwfg== 604800, resp: ok 1
+2014-06-01 03:35:18.249 [DEBUG] serv.cpp(327): w:0.004,p:0.048, req: get H_SESSION/5Lv8d9RATmRDgyk3ILwwfg==, resp: ok [91]
+2014-06-01 03:36:30.259 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:36:30.260 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:57223, fd: 17, link_count: 1
+2014-06-01 03:36:30.260 [DEBUG] serv.cpp(327): w:0.002,p:0.018, req: get H_SESSION/8C7aZNFZRGxR34Mxv1KegQ==, resp: not_found
+2014-06-01 03:36:42.890 [DEBUG] serv.cpp(327): w:0.002,p:0.020, req: hget H_NAME_ACCONT henyouqian, resp: ok 2
+2014-06-01 03:36:42.890 [DEBUG] serv.cpp(327): w:0.001,p:0.010, req: hget H_ACCOUNT 2, resp: ok [97]
+2014-06-01 03:36:42.890 [DEBUG] serv.cpp(327): w:0.001,p:0.013, req: get H_USER_TOKEN/0/2, resp: ok 5Lv8d9RATmRDgyk3ILwwfg==
+2014-06-01 03:36:42.890 [DEBUG] serv.cpp(358): w:0.124,p:0.022, req: del H_USER_TOKEN/0/2, resp: ok 1
+2014-06-01 03:36:42.892 [DEBUG] serv.cpp(358): w:0.977,p:0.028, req: del [34], resp: ok 1
+2014-06-01 03:36:42.893 [DEBUG] serv.cpp(358): w:0.072,p:0.082, req: setx [34] [91] 604800, resp: ok 1
+2014-06-01 03:36:42.894 [DEBUG] serv.cpp(358): w:0.042,p:0.074, req: setx H_USER_TOKEN/0/2 NPPmoKZmTfpn-E9cOM1ULA== 604800, resp: ok 1
+2014-06-01 03:36:57.083 [DEBUG] serv.cpp(327): w:0.002,p:0.029, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:38:42.712 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 03:38:49.997 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:57235, fd: 17, link_count: 1
+2014-06-01 03:38:49.997 [DEBUG] serv.cpp(327): w:0.002,p:0.020, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:01.429 [DEBUG] serv.cpp(327): w:0.002,p:0.029, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:05.683 [DEBUG] serv.cpp(327): w:0.002,p:0.024, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:07.281 [DEBUG] serv.cpp(327): w:0.002,p:0.023, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:12.838 [DEBUG] serv.cpp(327): w:0.002,p:0.030, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:15.940 [DEBUG] serv.cpp(327): w:0.002,p:0.028, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:39:25.425 [DEBUG] serv.cpp(327): w:0.002,p:0.033, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:39:32.967 [DEBUG] serv.cpp(327): w:0.003,p:0.028, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 03:44:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:49:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:54:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 03:59:17.249 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:04:17.249 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:07:46.930 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 04:07:46.931 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:61624, fd: 17, link_count: 1
+2014-06-01 04:07:46.934 [DEBUG] serv.cpp(327): w:0.021,p:0.476, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 04:08:08.251 [DEBUG] serv.cpp(327): w:0.002,p:0.101, req: get H_SESSION/NPPmoKZmTfpn-E9cOM1ULA==, resp: ok [91]
+2014-06-01 04:09:17.250 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:10:27.322 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 04:10:27.324 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:61636, fd: 17, link_count: 1
+2014-06-01 04:10:27.328 [DEBUG] serv.cpp(327): w:0.039,p:0.541, req: hget H_NAME_ACCONT aa, resp: ok 1
+2014-06-01 04:10:27.328 [DEBUG] serv.cpp(327): w:0.001,p:0.019, req: hget H_ACCOUNT 1, resp: ok [89]
+2014-06-01 04:10:27.329 [DEBUG] serv.cpp(327): w:0.002,p:0.071, req: get H_USER_TOKEN/0/1, resp: ok 8Kkidc3kRXl1Dek6OKm_xw==
+2014-06-01 04:10:27.333 [DEBUG] serv.cpp(358): w:0.138,p:3.620, req: del H_USER_TOKEN/0/1, resp: ok 1
+2014-06-01 04:10:27.334 [DEBUG] serv.cpp(358): w:0.049,p:0.037, req: del [34], resp: ok 1
+2014-06-01 04:10:27.342 [DEBUG] serv.cpp(358): w:0.062,p:0.166, req: setx [34] [83] 604800, resp: ok 1
+2014-06-01 04:10:27.342 [DEBUG] serv.cpp(358): w:0.026,p:0.099, req: setx H_USER_TOKEN/0/1 rujkcWvpQm1zNjRlQpo-vg== 604800, resp: ok 1
+2014-06-01 04:10:27.418 [DEBUG] serv.cpp(327): w:0.004,p:0.044, req: get H_SESSION/rujkcWvpQm1zNjRlQpo-vg==, resp: ok [83]
+2014-06-01 04:10:38.863 [DEBUG] serv.cpp(327): w:0.003,p:0.051, req: get H_SESSION/rujkcWvpQm1zNjRlQpo-vg==, resp: ok [83]
+2014-06-01 04:10:39.580 [DEBUG] serv.cpp(327): w:0.004,p:0.052, req: get H_SESSION/rujkcWvpQm1zNjRlQpo-vg==, resp: ok [83]
+2014-06-01 04:10:41.014 [DEBUG] serv.cpp(327): w:0.004,p:0.052, req: get H_SESSION/rujkcWvpQm1zNjRlQpo-vg==, resp: ok [83]
+2014-06-01 04:10:41.729 [DEBUG] serv.cpp(327): w:0.003,p:0.030, req: get H_SESSION/rujkcWvpQm1zNjRlQpo-vg==, resp: ok [83]
+2014-06-01 04:14:01.999 [DEBUG] ssdb-server.cpp(176): fd: 17, read: 0, delete link
+2014-06-01 04:14:02.007 [DEBUG] ssdb-server.cpp(96): new link from 127.0.0.1:61639, fd: 17, link_count: 1
+2014-06-01 04:14:02.007 [DEBUG] serv.cpp(327): w:0.003,p:0.031, req: hget H_NAME_ACCONT aa, resp: ok 1
+2014-06-01 04:14:02.007 [DEBUG] serv.cpp(327): w:0.001,p:0.018, req: hget H_ACCOUNT 1, resp: ok [89]
+2014-06-01 04:14:02.008 [DEBUG] serv.cpp(327): w:0.002,p:0.021, req: get H_USER_TOKEN/0/1, resp: ok rujkcWvpQm1zNjRlQpo-vg==
+2014-06-01 04:14:02.008 [DEBUG] serv.cpp(358): w:0.053,p:0.037, req: del H_USER_TOKEN/0/1, resp: ok 1
+2014-06-01 04:14:02.009 [DEBUG] serv.cpp(358): w:0.028,p:0.027, req: del [34], resp: ok 1
+2014-06-01 04:14:02.009 [DEBUG] serv.cpp(358): w:0.039,p:0.134, req: setx [34] [83] 604800, resp: ok 1
+2014-06-01 04:14:02.010 [DEBUG] serv.cpp(358): w:0.026,p:0.070, req: setx H_USER_TOKEN/0/1 0qowj06KS5powZANfhpshQ== 604800, resp: ok 1
+2014-06-01 04:14:02.101 [DEBUG] serv.cpp(327): w:0.003,p:0.047, req: get H_SESSION/0qowj06KS5powZANfhpshQ==, resp: ok [83]
+2014-06-01 04:14:02.209 [DEBUG] serv.cpp(327): w:0.004,p:0.047, req: get H_SESSION/0qowj06KS5powZANfhpshQ==, resp: ok [83]
+2014-06-01 04:14:03.684 [DEBUG] serv.cpp(327): w:0.004,p:0.053, req: get H_SESSION/0qowj06KS5powZANfhpshQ==, resp: ok [83]
+2014-06-01 04:14:04.298 [DEBUG] serv.cpp(327): w:0.002,p:0.033, req: get H_SESSION/0qowj06KS5powZANfhpshQ==, resp: ok [83]
+2014-06-01 04:14:17.249 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:14:49.738 [DEBUG] serv.cpp(327): w:0.004,p:0.049, req: get H_SESSION/0qowj06KS5powZANfhpshQ==, resp: ok [83]
+2014-06-01 04:19:17.248 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:24:17.249 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:32:50.469 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:37:50.470 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:46:18.934 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:51:18.933 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
+2014-06-01 04:56:18.933 [INFO ] ssdb-server.cpp(215): ssdb working, links: 1
