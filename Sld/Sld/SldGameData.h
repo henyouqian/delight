@@ -22,6 +22,7 @@
 @interface PackInfo : NSObject
 @property (nonatomic) UInt64 id;
 @property (nonatomic) NSString *title;
+@property (nonatomic) NSString *text;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *cover;
 @property (nonatomic) NSString *coverBlur;

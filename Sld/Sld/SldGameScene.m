@@ -14,6 +14,7 @@
 #import "SldHttpSession.h"
 #import "SldGameData.h"
 #import "SldDb.h"
+#import "config.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -81,8 +82,6 @@ static const float TRANS_DURATION = .3f;
 
 UIColor *BUTTON_COLOR_RED = nil;
 UIColor *BUTTON_COLOR_GREEN = nil;
-
-static NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 9;
 
 
 @implementation SldGameScene

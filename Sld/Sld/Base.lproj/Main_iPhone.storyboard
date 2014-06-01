@@ -1088,13 +1088,6 @@
                                     <action selector="onEnterGame:" destination="06C-8n-xcI" eventType="touchUpInside" id="dOD-Es-44M"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lJp-36-Elp">
-                                <rect key="frame" x="20" y="81" width="280" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -1102,7 +1095,6 @@
                     <connections>
                         <outlet property="bgImageView" destination="AzD-RI-q0K" id="KGO-Zs-QNk"/>
                         <outlet property="scoresView" destination="8g5-Xe-5Qh" id="o6a-hH-4Vw"/>
-                        <outlet property="titleLabel" destination="lJp-36-Elp" id="ifj-ZE-YEP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o03-BF-DGU" userLabel="First Responder" sceneMemberID="firstResponder"/>

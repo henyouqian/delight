@@ -29,6 +29,7 @@
     
     packInfo.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
     packInfo.title = dict[@"Title"];
+    packInfo.text = dict[@"Text"];
     packInfo.thumb = dict[@"Thumb"];
     packInfo.cover = dict[@"Cover"];
     packInfo.coverBlur = dict[@"CoverBlur"];

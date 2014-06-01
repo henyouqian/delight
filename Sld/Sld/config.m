@@ -8,6 +8,8 @@
 
 #import "config.h"
 
+NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
+
 @implementation Config
 + (instancetype)sharedConf {
     static Config *inst = nil;

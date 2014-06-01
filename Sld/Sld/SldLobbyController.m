@@ -52,6 +52,7 @@
         _betController.tableView.scrollsToTop = YES;
         [_betController onViewShown];
     }
+    self.title = [seg titleForSegmentAtIndex:idx];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

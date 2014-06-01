@@ -197,10 +197,23 @@
         NSMutableArray *images = gameData.packInfo.images;
         cell.pageControl.numberOfPages = [images count];
         
+        //desc
+        CGRect frame;
+        frame.origin.x = 0;
+        frame.origin.y = 0;
+        frame.size = cell.frame.size;
+        UITextView *textView = [[UITextView alloc] initWithFrame:frame];
+        textView.text = gameData.packInfo.text;
+        textView.text = @"个人见过最系统全面的皱褶画法，最近把它翻译成了中文。来自Famous Artists Course ，两年前翻墙下到了皱褶课程部分。";
+        textView.textColor = [UIColor whiteColor];
+        textView.backgroundColor = [UIColor clearColor];
+        [cell.scrollView addSubview:textView];
+        
+        //image
         int imageIndex = 0;
         for(NSString *imageKey in images) {
             CGRect frame;
-            frame.origin.x = (cell.scrollView.frame.size.width) * imageIndex;
+            frame.origin.x = (cell.scrollView.frame.size.width) * (imageIndex+1);
             frame.origin.y = 0;
             frame.size = cell.frame.size;
             //frame = CGRectInset(frame, 5.0, 0.0);
@@ -215,6 +228,14 @@
         }
         CGSize pageScrollViewSize = cell.scrollView.frame.size;
         cell.scrollView.contentSize = CGSizeMake(pageScrollViewSize.width * images.count, pageScrollViewSize.height);
+        
+        //set second page present
+        [cell.pageControl setCurrentPage:1];
+        
+        frame = cell.scrollView.frame;
+        frame.origin.x = frame.size.width;
+        frame.origin.y = 0;
+        [cell.scrollView scrollRectToVisible:frame animated:NO];
         
         //tap gesture
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
@@ -281,7 +302,7 @@
     NSString *sectionName;
     switch (section) {
         case 0:
-            sectionName = NSLocalizedString(@"Description", @"Description");
+            sectionName = NSLocalizedString(@"Pack", @"Pack");
             break;
         case 1:
             sectionName = NSLocalizedString(@"Talks", @"Talks");

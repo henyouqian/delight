@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
+
 @interface Config : NSObject
 + (instancetype)sharedConf;
 
