@@ -12,13 +12,7 @@
 *.la
 *.a
 
-client/proj.android/assets/
-client/proj.android/bin/
-client/proj.android/gen/
-client/proj.android/obj/
-client/Classes/obsolete/
-client/publish/
-client2/cocos2d/external/
+*.DS_Store
 server/obsolete/
 server/tools/packUploader/packUploader
 server/tools/packUploader/packs
@@ -27,4 +21,7 @@ server/match/match
 server/booker/booker
 server/ssdb/auth/var/
 server/ssdb/match/var/
+server/ssdb/auth/log.txt
+server/ssdb/match/log.txt
+Sld/Sld.xcodeproj/xcuserdata/liwei.xcuserdatad/xcdebugger/
 robot/robot
