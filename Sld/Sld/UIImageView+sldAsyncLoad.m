@@ -105,7 +105,7 @@
 }
 
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
-    NSString *imageName = [SldUtil sha1WithData:url salt:@""];
+    NSString *imageName = [SldUtil sha1WithData:url];
     NSString *localPath = makeImagePath(imageName);
     
     UIActivityIndicatorView *indicatorView = nil;

@@ -16,6 +16,7 @@
 #import "SldStreamPlayer.h"
 #import "SldDb.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "MSWeakTimer.h"
 
 NSString *CELL_ID = @"cellID";
 static const int FETCH_EVENT_COUNT = 20;
@@ -83,9 +84,14 @@ static const int FETCH_EVENT_COUNT = 20;
 @property (nonatomic) BOOL bottomFetched;
 @property (nonatomic) BOOL appendable;
 @property (nonatomic) BOOL reachBottom;
+@property (nonatomic) MSWeakTimer *timer;
 @end
 
 @implementation SldEventListViewController
+
+-(void)dealloc {
+    [_timer invalidate];
+}
 
 - (void)viewDidLoad
 {
@@ -118,6 +124,70 @@ static const int FETCH_EVENT_COUNT = 20;
     
     //
     _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
+    
+    //timer
+    _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+}
+
+- (void)onTimer {
+    int eventNum = [_gameData.eventInfos count];
+    NSMutableArray *reloadIndexPathes = [NSMutableArray array];
+    if (eventNum > 0) {
+        for (int i = 0; i < eventNum; ++i) {
+            EventInfo *eventInfo = _gameData.eventInfos[i];
+            if (eventInfo.state == 3) {
+                continue;
+            }
+            int state = 0;
+            
+            NSTimeInterval beginIntv = [eventInfo.beginTime timeIntervalSinceNow];
+            NSTimeInterval endIntv = [eventInfo.endTime timeIntervalSinceNow];
+            if (beginIntv > 0) {
+                state = 1; //comming
+            } else {
+                if (endIntv < 0 || eventInfo.hasResult) {
+                    state = 3; //closed
+                } else {
+                    state = 2; //running
+                }
+            }
+            if (state != eventInfo.state) {
+                if (eventInfo.state > 0) {
+                    [reloadIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                }
+                eventInfo.state = state;
+            }
+        }
+        if (reloadIndexPathes.count) {
+            [self.collectionView reloadItemsAtIndexPaths:reloadIndexPathes];
+        }
+    }
+//    NSTimeInterval endIntv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
+//    if (endIntv < 0 || _gamedata.eventInfo.hasResult) {
+//        _timeRemainLabel.text = @"活动已结束";
+//        _matchButton.enabled = NO;
+//    } else {
+//        NSTimeInterval beginIntv = [_gamedata.eventInfo.beginTime timeIntervalSinceNow];
+//        if (beginIntv > 0) {
+//            int sec = (int)beginIntv;
+//            int hour = sec / 3600;
+//            int minute = (sec % 3600)/60;
+//            sec = (sec % 60);
+//            _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%02d:%02d:%02d", hour, minute, sec];
+//            _matchButton.enabled = NO;
+//        } else {
+//            int sec = (int)endIntv;
+//            int hour = sec / 3600;
+//            int minute = (sec % 3600)/60;
+//            sec = (sec % 60);
+//            _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
+//            if (!_hasNetError && _gamedata.packInfo) {
+//                _matchButton.enabled = YES;
+//            } else {
+//                _matchButton.enabled = NO;
+//            }
+//        }
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

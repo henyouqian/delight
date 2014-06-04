@@ -8,6 +8,8 @@
 
 #import "SldGameData.h"
 
+const UInt32 DEFUALT_SLIDER_NUM = 6;
+
 @implementation EventInfo
 + (instancetype)eventWithDictionary:(NSDictionary*)dict {
     EventInfo *event = [[EventInfo alloc] init];
@@ -18,6 +20,10 @@
     event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
     event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
     event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
+    event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] unsignedLongValue];
+    if (event.sliderNum == 0) {
+        event.sliderNum = DEFUALT_SLIDER_NUM;
+    }
     
     return event;
 }

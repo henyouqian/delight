@@ -17,6 +17,7 @@
 #import "util.h"
 #import "config.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "MSWeakTimer.h"
 
 
 @interface SldEventDetailViewController ()
@@ -28,13 +29,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *beatLabel;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *practiceButton;
-@property (weak, nonatomic) NSTimer *timer;
+@property (nonatomic) MSWeakTimer *timer;
 @property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) SldGameData *gamedata;
 @property (nonatomic) BOOL hasNetError;
 @end
 
 static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
+static NSMutableSet *g_updatedPackIdSet = nil;
 
 @implementation SldEventDetailViewController
 
@@ -43,7 +45,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
 }
 
 -(void)dealloc {
-    
+    [_timer invalidate];
 }
 
 - (void)viewDidLoad
@@ -53,13 +55,18 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     _hasNetError = NO;
     _practiceButton.enabled = NO;
     _matchButton.enabled = NO;
+    if (g_updatedPackIdSet == nil) {
+        g_updatedPackIdSet = [NSMutableSet set];
+    }
     
     _gamedata = [SldGameData getInstance];
     _gamedata.packInfo = nil;
     
+    UInt64 packId = _gamedata.eventInfo.packId;
+    
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
-    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:_gamedata.eventInfo.packId]];
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
     SldHttpSession *session = [SldHttpSession defaultSession];
     if ([rs next]) { //local
         _practiceButton.enabled = YES;
@@ -74,8 +81,10 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         
         [self loadBackground];
         [self reloadData];
-    } else { //server
-        NSDictionary *body = @{@"Id":@(_gamedata.eventInfo.packId)};
+    }
+    
+    if (![g_updatedPackIdSet containsObject:@(packId)]) { //server
+        NSDictionary *body = @{@"Id":@(packId)};
         [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 if (!_hasNetError) {
@@ -103,6 +112,7 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
             
             [self loadBackground];
             [self reloadData];
+            [g_updatedPackIdSet addObject:@(packId)];
         }];
     }
 
@@ -128,6 +138,9 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
         NSNumber *rankNum = [dict objectForKey:@"RankNum"];
         [self setPlayRecordWithHighscore:highScore rank:rank rankNum:rankNum];
     }];
+    
+    //timer
+    _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
 //    //motion effect
 //    UIInterpolatingMotionEffect *verticalMotionEffect =
@@ -223,34 +236,34 @@ static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    if (!_gamedata.eventInfo.hasResult) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
-    }
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [_timer invalidate];
-}
 
 - (void)onTimer {
-    NSTimeInterval intv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
-    if (intv < 0 || _gamedata.eventInfo.hasResult) {
+    NSTimeInterval endIntv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
+    if (endIntv < 0 || _gamedata.eventInfo.hasResult) {
         _timeRemainLabel.text = @"活动已结束";
         _matchButton.enabled = NO;
     } else {
-        int sec = (int)intv;
-        int hour = sec / 3600;
-        int minute = (sec % 3600)/60;
-        sec = (sec % 60);
-        _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
-        if (!_hasNetError && _gamedata.packInfo) {
-            _matchButton.enabled = YES;
-        } else {
+        NSTimeInterval beginIntv = [_gamedata.eventInfo.beginTime timeIntervalSinceNow];
+        if (beginIntv > 0) {
+            int sec = (int)beginIntv;
+            int hour = sec / 3600;
+            int minute = (sec % 3600)/60;
+            sec = (sec % 60);
+            _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%02d:%02d:%02d", hour, minute, sec];
             _matchButton.enabled = NO;
+        } else {
+            int sec = (int)endIntv;
+            int hour = sec / 3600;
+            int minute = (sec % 3600)/60;
+            sec = (sec % 60);
+            _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
+            if (!_hasNetError && _gamedata.packInfo) {
+                _matchButton.enabled = YES;
+            } else {
+                _matchButton.enabled = NO;
+            }
         }
+        
     }
 }
 

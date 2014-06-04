@@ -94,6 +94,14 @@
 		B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF561906699400CB4DFD /* FMResultSet.m */; };
 		B3C0AF671906D69B00CB4DFD /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF641906D69A00CB4DFD /* SSKeychain.m */; };
 		B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */; };
+		D0606A76193EFEDF00DC967C /* MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A66193EFEDF00DC967C /* MD5.m */; };
+		D0606A77193EFEDF00DC967C /* MessageDigest.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A68193EFEDF00DC967C /* MessageDigest.m */; };
+		D0606A78193EFEDF00DC967C /* nv_ios_digest.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A6B193EFEDF00DC967C /* nv_ios_digest.m */; };
+		D0606A79193EFEDF00DC967C /* SHA1.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A6D193EFEDF00DC967C /* SHA1.m */; };
+		D0606A7A193EFEDF00DC967C /* SHA224.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A6F193EFEDF00DC967C /* SHA224.m */; };
+		D0606A7B193EFEDF00DC967C /* SHA256.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A71193EFEDF00DC967C /* SHA256.m */; };
+		D0606A7C193EFEDF00DC967C /* SHA384.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A73193EFEDF00DC967C /* SHA384.m */; };
+		D0606A7D193EFEDF00DC967C /* SHA512.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A75193EFEDF00DC967C /* SHA512.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -301,6 +309,23 @@
 		B3C0AF641906D69A00CB4DFD /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		B3C0AF651906D69A00CB4DFD /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
 		B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
+		D0606A65193EFEDF00DC967C /* MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MD5.h; sourceTree = "<group>"; };
+		D0606A66193EFEDF00DC967C /* MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MD5.m; sourceTree = "<group>"; };
+		D0606A67193EFEDF00DC967C /* MessageDigest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDigest.h; sourceTree = "<group>"; };
+		D0606A68193EFEDF00DC967C /* MessageDigest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDigest.m; sourceTree = "<group>"; };
+		D0606A69193EFEDF00DC967C /* nv-ios-digest-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nv-ios-digest-Prefix.pch"; sourceTree = "<group>"; };
+		D0606A6A193EFEDF00DC967C /* nv_ios_digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nv_ios_digest.h; sourceTree = "<group>"; };
+		D0606A6B193EFEDF00DC967C /* nv_ios_digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nv_ios_digest.m; sourceTree = "<group>"; };
+		D0606A6C193EFEDF00DC967C /* SHA1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA1.h; sourceTree = "<group>"; };
+		D0606A6D193EFEDF00DC967C /* SHA1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHA1.m; sourceTree = "<group>"; };
+		D0606A6E193EFEDF00DC967C /* SHA224.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA224.h; sourceTree = "<group>"; };
+		D0606A6F193EFEDF00DC967C /* SHA224.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHA224.m; sourceTree = "<group>"; };
+		D0606A70193EFEDF00DC967C /* SHA256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA256.h; sourceTree = "<group>"; };
+		D0606A71193EFEDF00DC967C /* SHA256.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHA256.m; sourceTree = "<group>"; };
+		D0606A72193EFEDF00DC967C /* SHA384.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA384.h; sourceTree = "<group>"; };
+		D0606A73193EFEDF00DC967C /* SHA384.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHA384.m; sourceTree = "<group>"; };
+		D0606A74193EFEDF00DC967C /* SHA512.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA512.h; sourceTree = "<group>"; };
+		D0606A75193EFEDF00DC967C /* SHA512.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHA512.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -548,6 +573,7 @@
 		B3C0AE9E1906662100CB4DFD /* libExt */ = {
 			isa = PBXGroup;
 			children = (
+				D0606A64193EFEDF00DC967C /* nv-ios-digest */,
 				B363AD691925270C001CD6D6 /* UIAlertView-Blocks */,
 				B39E4488191EB91000CBB247 /* DACircularProgress */,
 				B39E448B191EB91000CBB247 /* MBProgressHUD */,
@@ -666,6 +692,30 @@
 			path = SSKeychain;
 			sourceTree = SOURCE_ROOT;
 		};
+		D0606A64193EFEDF00DC967C /* nv-ios-digest */ = {
+			isa = PBXGroup;
+			children = (
+				D0606A65193EFEDF00DC967C /* MD5.h */,
+				D0606A66193EFEDF00DC967C /* MD5.m */,
+				D0606A67193EFEDF00DC967C /* MessageDigest.h */,
+				D0606A68193EFEDF00DC967C /* MessageDigest.m */,
+				D0606A69193EFEDF00DC967C /* nv-ios-digest-Prefix.pch */,
+				D0606A6A193EFEDF00DC967C /* nv_ios_digest.h */,
+				D0606A6B193EFEDF00DC967C /* nv_ios_digest.m */,
+				D0606A6C193EFEDF00DC967C /* SHA1.h */,
+				D0606A6D193EFEDF00DC967C /* SHA1.m */,
+				D0606A6E193EFEDF00DC967C /* SHA224.h */,
+				D0606A6F193EFEDF00DC967C /* SHA224.m */,
+				D0606A70193EFEDF00DC967C /* SHA256.h */,
+				D0606A71193EFEDF00DC967C /* SHA256.m */,
+				D0606A72193EFEDF00DC967C /* SHA384.h */,
+				D0606A73193EFEDF00DC967C /* SHA384.m */,
+				D0606A74193EFEDF00DC967C /* SHA512.h */,
+				D0606A75193EFEDF00DC967C /* SHA512.m */,
+			);
+			path = "nv-ios-digest";
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -744,6 +794,7 @@
 				B39E4503191EB91000CBB247 /* SDWebImageDownloaderOperation.m in Sources */,
 				B308B03B190FC4810021BE9C /* DOUAudioAnalyzer+Default.m in Sources */,
 				B3C0AF3E190667C300CB4DFD /* FISoundContext.m in Sources */,
+				D0606A7A193EFEDF00DC967C /* SHA224.m in Sources */,
 				B308B046190FC4810021BE9C /* DOUAudioStreamer+Options.m in Sources */,
 				B308B041190FC4810021BE9C /* DOUAudioFrequencyAnalyzer.m in Sources */,
 				B39E44E9191EB91000CBB247 /* MWGridViewController.m in Sources */,
@@ -756,6 +807,7 @@
 				B3C0AF40190667C300CB4DFD /* FISoundEngine.m in Sources */,
 				B308B03C190FC4810021BE9C /* DOUAudioAnalyzer.m in Sources */,
 				B3C0AF3F190667C300CB4DFD /* FISoundDevice.m in Sources */,
+				D0606A7D193EFEDF00DC967C /* SHA512.m in Sources */,
 				B3C0AF3C190667C300CB4DFD /* FISampleFormat.m in Sources */,
 				B308B045190FC4810021BE9C /* DOUAudioSpatialAnalyzer.m in Sources */,
 				B3C0AF44190667C300CB4DFD /* gif_err.c in Sources */,
@@ -765,6 +817,7 @@
 				B308B049190FC4810021BE9C /* DOUEAGL1View.m in Sources */,
 				B39E44F9191EB91000CBB247 /* PSTGridLayoutItem.m in Sources */,
 				B3C0AF37190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m in Sources */,
+				D0606A77193EFEDF00DC967C /* MessageDigest.m in Sources */,
 				B308B03D190FC4810021BE9C /* DOUAudioDecoder.m in Sources */,
 				B39E44F3191EB91000CBB247 /* PSTCollectionViewData.m in Sources */,
 				B3C0AF3A190667C300CB4DFD /* FISampleBuffer.m in Sources */,
@@ -775,13 +828,17 @@
 				B39E44F2191EB91000CBB247 /* PSTCollectionViewController.m in Sources */,
 				B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */,
 				B39E44E8191EB91000CBB247 /* MWGridCell.m in Sources */,
+				D0606A7B193EFEDF00DC967C /* SHA256.m in Sources */,
 				B39E4500191EB91000CBB247 /* SDWebImageCompat.m in Sources */,
 				B39E4504191EB91000CBB247 /* SDWebImageManager.m in Sources */,
 				B3C0AF47190667C300CB4DFD /* gifalloc.c in Sources */,
 				B3C0AF671906D69B00CB4DFD /* SSKeychain.m in Sources */,
+				D0606A79193EFEDF00DC967C /* SHA1.m in Sources */,
 				B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */,
 				B308B042190FC4810021BE9C /* DOUAudioLPCM.m in Sources */,
+				D0606A76193EFEDF00DC967C /* MD5.m in Sources */,
 				B3C0AF45190667C300CB4DFD /* gif_font.c in Sources */,
+				D0606A7C193EFEDF00DC967C /* SHA384.m in Sources */,
 				B39E44F0191EB91000CBB247 /* PSTCollectionView.m in Sources */,
 				B39E4506191EB91000CBB247 /* UIButton+WebCache.m in Sources */,
 				B3C0AF3B190667C300CB4DFD /* FISampleDecoder.m in Sources */,
@@ -794,6 +851,7 @@
 				B39E44FE191EB91000CBB247 /* NSData+ImageContentType.m in Sources */,
 				B39E44ED191EB91000CBB247 /* MWTapDetectingView.m in Sources */,
 				B39E44E5191EB91000CBB247 /* DACircularProgressView.m in Sources */,
+				D0606A78193EFEDF00DC967C /* nv_ios_digest.m in Sources */,
 				B3C0AF5A1906699400CB4DFD /* FMDatabaseQueue.m in Sources */,
 				B39E44EA191EB91000CBB247 /* MWPhoto.m in Sources */,
 				B39E44F4191EB91000CBB247 /* PSTCollectionViewFlowLayout.m in Sources */,

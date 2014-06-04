@@ -8,6 +8,7 @@
 
 #import "util.h"
 #import "config.h"
+#import "nv-ios-digest/SHA1.h"
 #import <CommonCrypto/CommonHMAC.h>
 
 NSString* getResFullPath(NSString* fileName) {
@@ -50,7 +51,7 @@ NSString* makeImagePath(NSString *imageKey) {
 }
 
 NSString* makeImagePathFromUrl(NSString *imageUrl) {
-    NSString *imageName = [SldUtil sha1WithData:imageUrl salt:@""];
+    NSString *imageName = [SldUtil sha1WithData:imageUrl];
     return makeImagePath(imageName);
 }
 
@@ -83,6 +84,9 @@ NSDate *getServerNow() {
 }
 
 NSString* sha256(NSString* data, NSString *salt) {
+    if (salt == nil) {
+        salt = @"";
+    }
     const char *cKey  = [salt cStringUsingEncoding:NSUTF8StringEncoding];
     const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];
     unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
@@ -113,19 +117,11 @@ NSString* formatScore(int score) {
 
 @implementation SldUtil
 
-+ (NSString*)sha1WithData:(NSString*)data salt:(NSString*)salt {
-    const char *cKey  = [salt cStringUsingEncoding:NSUTF8StringEncoding];
-    const char *cData = [data cStringUsingEncoding:NSUTF8StringEncoding];
-    unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
-    CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
-    
-    NSString *hash;
-    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    
-    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", cHMAC[i]];
-    hash = output;
-    return hash;
++ (NSString*)sha1WithData:(NSString*)data {
+    SHA1 *sha1 = [SHA1 sha1WithString:data];
+    NSData *nsd = [NSData dataWithBytes:sha1.buffer length:sha1.bufferSize];
+    NSString *output = [nsd hexadecimalString];
+    return output;
 }
 
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width {
@@ -133,13 +129,35 @@ NSString* formatScore(int score) {
     return url;
 }
 
-
 @end
 
 
 
+@implementation NSData (NSData_Conversion)
 
+- (NSString *)hexadecimalString
+{
+    /* Returns hexadecimal string of NSData. Empty string if data is empty.   */
+    
+    const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+    
+    if (!dataBuffer)
+    {
+        return [NSString string];
+    }
+    
+    NSUInteger          dataLength  = [self length];
+    NSMutableString     *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+    
+    for (int i = 0; i < dataLength; ++i)
+    {
+        [hexString appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
+    }
+    
+    return [NSString stringWithString:hexString];
+}
 
+@end
 
 
 

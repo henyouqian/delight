@@ -91,7 +91,7 @@
 @property (nonatomic) BOOL ready;
 @property (nonatomic) NSMutableDictionary *photos;
 @property (weak, nonatomic) SldGameData *gameData;
-@property (nonatomic) int currImagePage;
+@property (nonatomic) int currPage;
 @property (nonatomic) CommentHeaderCell *imageSlideCell;
 @property (nonatomic) NSString *commentText;
 @end
@@ -109,7 +109,7 @@
     _gameData = [SldGameData getInstance];
     _ready = NO;
     _photos = [NSMutableDictionary dictionary];
-    _currImagePage = 0;
+    _currPage = 0;
     
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -186,8 +186,11 @@
             return cell;
         }
         if (_imageSlideCell) {
-            for ( UIImageView *imageView in _imageSlideCell.scrollView.subviews) {
-                [imageView startAnimating];
+            for ( UIView *view in _imageSlideCell.scrollView.subviews) {
+                if ([view isKindOfClass:[UIImageView class]]) {
+                    UIImageView *imageView = (UIImageView *)view;
+                    [imageView startAnimating];
+                }
             }
             return _imageSlideCell;
         }
@@ -202,10 +205,11 @@
         frame.origin.x = 0;
         frame.origin.y = 0;
         frame.size = cell.frame.size;
+        //frame.size.height = frame.size.height - 40;
         UITextView *textView = [[UITextView alloc] initWithFrame:frame];
         textView.text = gameData.packInfo.text;
-        textView.text = @"个人见过最系统全面的皱褶画法，最近把它翻译成了中文。来自Famous Artists Course ，两年前翻墙下到了皱褶课程部分。";
         textView.textColor = [UIColor whiteColor];
+        textView.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
         textView.backgroundColor = [UIColor clearColor];
         [cell.scrollView addSubview:textView];
         
@@ -318,11 +322,14 @@
 {
     CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     CGFloat pageWidth = cell.frame.size.width;
-    _currImagePage = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth) ;
-    cell.pageControl.currentPage = _currImagePage;
+    _currPage = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth) ;
+    cell.pageControl.currentPage = _currPage;
 }
 
 - (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
+    if (_currPage == 0) {
+        return;
+    }
     MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
     
     // Set options
@@ -335,7 +342,7 @@
     browser.startOnGrid = NO; // Whether to start on the grid of thumbnails instead of the first photo (defaults to NO)
     
     // Optionally set the current visible photo before displaying
-    [browser setCurrentPhotoIndex:_currImagePage];
+    [browser setCurrentPhotoIndex:_currPage-1];
     
     // Present
     //[self.navigationController pushViewController:browser animated:YES];
@@ -384,12 +391,13 @@
 
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
     CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    _currPage = index + 1;
     if (cell) {
-        [cell.pageControl setCurrentPage:index];
+        [cell.pageControl setCurrentPage:_currPage];
     }
     
     CGRect frame = cell.scrollView.frame;
-    frame.origin.x = cell.scrollView.frame.size.width * index;
+    frame.origin.x = cell.scrollView.frame.size.width * _currPage;
     frame.origin.y = 0;
     [cell.scrollView scrollRectToVisible:frame animated:NO];
 }

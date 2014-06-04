@@ -31,6 +31,7 @@ func main() {
 	regCollection()
 	regPlayer()
 	regMatch()
+	regAdmin()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 

@@ -62,50 +62,53 @@
     NSError *error = nil;
     
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", [NSNumber numberWithUnsignedLongLong:gd.eventInfo.id]];
-    if ([rs next]) {
+    
+    NSArray *scores = [NSArray array];
+    BOOL dataFound = [rs next];
+    if (dataFound) {
         NSData *jsData = [rs dataForColumnIndex:0];
-        NSArray *scores = [NSJSONSerialization JSONObjectWithData:jsData options:0 error:&error];
+        scores = [NSJSONSerialization JSONObjectWithData:jsData options:0 error:&error];
         if (error) {
             lwError("%@", error);
             return;
         }
+    }
+    [[_scoresView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    float x = -20;
+    float y = 100;
+    float w = 100;
+    float h = 25;
+    BOOL recentFound = NO;
+    int scoreNum = [scores count];
+    for (int i = 0; i < LOCAL_SCORE_COUNT_LIMIT; ++i) {
+        UILabel *idxLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+        idxLabel.text = [NSString stringWithFormat:@"%d", i+1];
+        idxLabel.textColor = [UIColor whiteColor];
+        idxLabel.textAlignment = NSTextAlignmentRight;
+        [_scoresView addSubview:idxLabel];
         
-        [[_scoresView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        float x = -20;
-        float y = 100;
-        float w = 100;
-        float h = 25;
-        BOOL recentFound = NO;
-        int scoreNum = [scores count];
-        for (int i = 0; i < LOCAL_SCORE_COUNT_LIMIT; ++i) {
-            UILabel *idxLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
-            idxLabel.text = [NSString stringWithFormat:@"%d", i+1];
-            idxLabel.textColor = [UIColor whiteColor];
-            idxLabel.textAlignment = NSTextAlignmentRight;
-            [_scoresView addSubview:idxLabel];
+        UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+200, y, w, h)];
+        
+        scoreLabel.textColor = [UIColor whiteColor];
+        [_scoresView addSubview:scoreLabel];
+        
+        if (i < scoreNum) {
+            int score = [[scores objectAtIndex:i] intValue];
+            scoreLabel.text = formatScore(score);
             
-            UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+200, y, w, h)];
-            
-            scoreLabel.textColor = [UIColor whiteColor];
-            [_scoresView addSubview:scoreLabel];
-            
-            if (i < scoreNum) {
-                int score = [[scores objectAtIndex:i] intValue];
-                scoreLabel.text = formatScore(score);
-                
-                if (!recentFound && score == gd.recentScore) {
-                    recentFound = YES;
-                    UIColor *color = makeUIColor(255, 197, 131, 255);
-                    scoreLabel.textColor = color;
-                    idxLabel.textColor = color;
-                    gd.recentScore = 0;
-                }
-            } else {
-                scoreLabel.text = @"−:−−.−−−";
+            if (!recentFound && score == gd.recentScore) {
+                recentFound = YES;
+                UIColor *color = makeUIColor(255, 197, 131, 255);
+                scoreLabel.textColor = color;
+                idxLabel.textColor = color;
+                gd.recentScore = 0;
             }
-            
-            y += h+5;
+        } else {
+            scoreLabel.text = @"−:−−.−−−";
         }
+        
+        y += h+5;
     }
 }
 

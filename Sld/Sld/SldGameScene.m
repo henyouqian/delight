@@ -15,6 +15,7 @@
 #import "SldGameData.h"
 #import "SldDb.h"
 #import "config.h"
+#import "nv-ios-digest/SHA1.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -77,7 +78,7 @@ static const float DOT_ALPHA_HIGHLIGHT = 1.f;
 static const float DOT_SCALE_NORMAL = .6f;
 static const float DOT_SCALE_HIGHLIGHT = .75f;
 static const float MOVE_DURATION = .1f;
-static const uint32_t DEFUALT_SLIDER_NUM = 6;
+//static const UInt32 DEFUALT_SLIDER_NUM = 6;
 static const float TRANS_DURATION = .3f;
 
 UIColor *BUTTON_COLOR_RED = nil;
@@ -107,7 +108,7 @@ NSDate *_gameBeginTime;
         
         _imgIdx = -1;
         _sprites = [NSMutableArray arrayWithCapacity:3];
-        _sliderNum = DEFUALT_SLIDER_NUM;
+        _sliderNum = gameData.eventInfo.sliderNum;
         _needRotate = NO;
         _sliderParent = [SKNode node];
         [self.scene addChild:self.sliderParent];
@@ -465,7 +466,7 @@ static float lerpf(float a, float b, float t) {
 
 -(void)nextImage {
     if (self.imgIdx >= (NSInteger)[self.files count]-1) {
-        lwError("idx >= [self.files count]-1: self.imgIdx=%d", (int)self.imgIdx);
+        //lwError("idx >= [self.files count]-1: self.imgIdx=%d", (int)self.imgIdx);
         return;
     }
     
@@ -958,11 +959,17 @@ static float lerpf(float a, float b, float t) {
         }];
         [rankLabel runAction:appear];
         
-        //UIAlertView *av = alertNoButton(@"Commiting score to server ...");
+        //checksum
+        NSString *checksum = [NSString stringWithFormat:@"%@+%d9d7a", _gameController.matchSecret, score*score];
+        
+        checksum = [SldUtil sha1WithData:checksum];
+        //post
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"EventId":@(gd.eventInfo.id),
                                @"Secret":_gameController.matchSecret,
-                               @"Score":@(score)};
+                               @"Score":@(score),
+                               @"Checksum":checksum};
+        
         [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             //[av dismissWithClickedButtonIndex:0 animated:YES];
             if (error) {

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
@@ -68,6 +70,7 @@ type Event struct {
 	EndTimeString   string
 	HasResult       bool
 	Thumb           string
+	SliderNum       uint32
 }
 
 type EventPlayerRecord struct {
@@ -141,6 +144,13 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 	//check timePotins
 	if event.BeginTime >= event.EndTime {
 		lwutil.SendError("err_time", "event.BeginTime >= event.EndTime")
+	}
+
+	//sliderNum
+	if event.SliderNum == 0 {
+		event.SliderNum = 6
+	} else if event.SliderNum > 10 {
+		event.SliderNum = 10
 	}
 
 	// //check pack
@@ -417,7 +427,7 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 		record.Trys = 1
 
 		var playerInfo PlayerInfo
-		_getPlayerInfo(ssdb, session, &playerInfo)
+		getPlayer(ssdb, session.Userid, &playerInfo)
 		lwutil.CheckError(err, "")
 		record.PlayerName = playerInfo.NickName
 		record.TeamName = playerInfo.TeamName
@@ -453,12 +463,24 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		EventId uint64
-		Secret  string
-		Score   int32
+		EventId  uint64
+		Secret   string
+		Score    int32
+		Checksum string
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+
+	//checksum
+	checksum := fmt.Sprintf("%s+%d9d7a", in.Secret, in.Score*in.Score)
+	glog.Error(checksum)
+	hasher := sha1.New()
+	hasher.Write([]byte(checksum))
+	checksum = hex.EncodeToString(hasher.Sum(nil))
+	glog.Error(checksum)
+	if in.Checksum != checksum {
+		lwutil.SendError("err_checksum", checksum)
+	}
 
 	//check event record
 	recordKey := fmt.Sprintf("%d/%d", in.EventId, session.Userid)
@@ -572,13 +594,13 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 					}
 					scoreMap[record.TeamName] = score
 				}
-				glog.Info(scoreMap)
+				// glog.Info(scoreMap)
 
 				js, err := json.Marshal(scoreMap)
 				lwutil.CheckError(err, "")
 
 				resp, err := ssdb.Do("hset", H_EVENT_TEAM_SCORE, in.EventId, js)
-				glog.Info(string(js))
+				// glog.Info(string(js))
 				lwutil.CheckSsdbError(resp, err)
 			}
 		}

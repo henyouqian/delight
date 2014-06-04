@@ -540,7 +540,7 @@ func addComment(w http.ResponseWriter, r *http.Request) {
 
 	//player
 	var playerInfo PlayerInfo
-	_getPlayerInfo(ssdb, session, &playerInfo)
+	getPlayer(ssdb, session.Userid, &playerInfo)
 
 	//check pack
 	resp, err := ssdb.Do("hexists", H_PACK, in.PackId)

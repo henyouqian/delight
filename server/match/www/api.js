@@ -198,6 +198,16 @@ function Controller($scope, $http) {
 					"data": {"PackId": 0, "Key": 0, "Limit": 20}
 				}
 			]
+		},{
+			"tab":"admin",
+			"path":"admin",
+			"apis":[
+				{
+					"name": "addMoney",
+					"method": "POST",
+					"data": {"UserId": 0, "UserName": "aa", "AddMoney": 100}
+				}
+			]
 		}
 	]
 

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern const UInt32 DEFUALT_SLIDER_NUM;
+
 @interface EventInfo : NSObject
 @property (nonatomic) UInt64 id;
 @property (nonatomic) UInt64 packId;
@@ -15,6 +17,9 @@
 @property (nonatomic) NSDate *beginTime;
 @property (nonatomic) NSDate *endTime;
 @property (nonatomic) BOOL hasResult;
+@property (nonatomic) BOOL sliderNum;
+@property (nonatomic) int state; //undefined:0, comming:1, running:2, closed:3
+
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
 @end

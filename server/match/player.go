@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	// "fmt"
+	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	//. "github.com/qiniu/api/conf"
 	//"github.com/qiniu/api/rs"
@@ -29,6 +30,7 @@ func init() {
 	for _, v := range TEAM_IDS {
 		TEAM_MAP[v] = true
 	}
+	glog.Info("")
 }
 
 type PlayerInfo struct {
@@ -37,7 +39,7 @@ type PlayerInfo struct {
 	Gender          uint
 	CustomAvatarKey string
 	GravatarKey     string
-	Money           uint64
+	Money           uint32
 	AP              uint32
 	APMax           uint32
 	APInterval      uint32
@@ -45,9 +47,9 @@ type PlayerInfo struct {
 	BetMax          uint32
 }
 
-func _getPlayerInfo(ssdb *ssdb.Client, session *Session, playerInfo *PlayerInfo) (err error) {
-	resp, err := ssdb.Do("hget", H_PLAYER_INFO, session.Userid)
-	lwutil.CheckError(err, "err_ssdb")
+func getPlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) (err error) {
+	resp, err := ssdb.Do("hget", H_PLAYER_INFO, userId)
+	lwutil.CheckSsdbError(resp, err)
 
 	if resp[0] == "not_found" {
 		return errors.New("not_found")
@@ -56,6 +58,14 @@ func _getPlayerInfo(ssdb *ssdb.Client, session *Session, playerInfo *PlayerInfo)
 		lwutil.CheckError(err, "")
 	}
 	return nil
+}
+
+func savePlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) {
+	js, err := json.Marshal(playerInfo)
+	lwutil.CheckError(err, "")
+
+	resp, err := ssdb.Do("hset", H_PLAYER_INFO, userId, js)
+	lwutil.CheckSsdbError(resp, err)
 }
 
 func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +83,7 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	//get info
 	var playerInfo PlayerInfo
-	err = _getPlayerInfo(ssdb, session, &playerInfo)
+	err = getPlayer(ssdb, session.Userid, &playerInfo)
 	lwutil.CheckError(err, "")
 
 	//out
@@ -150,6 +160,7 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	//set
 	js, err := json.Marshal(playerInfo)
+	lwutil.CheckError(err, "")
 	resp, err = ssdb.Do("hset", H_PLAYER_INFO, session.Userid, js)
 	lwutil.CheckSsdbError(resp, err)
 

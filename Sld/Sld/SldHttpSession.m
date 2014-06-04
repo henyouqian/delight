@@ -76,7 +76,7 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             NSInteger code = [(NSHTTPURLResponse*)response statusCode];
             if (!error && code != 200) {
-                lwError("post error: statusCode=%ld", (long)code);
+                //lwError("post error: statusCode=%ld", (long)code);
                 NSString *desc = [NSString stringWithFormat:@"Http error: statusCode=%ld", (long)code];
                 error = [NSError errorWithDomain:@"lw" code:code userInfo:@{NSLocalizedDescriptionKey:desc}];
             }
