@@ -161,8 +161,10 @@ function Controller($scope, $http) {
 					"name": "new",
 					"method": "POST",
 					"data": {"Type": "PERSONAL_RANK", "PackId": 1, 
-						"BeginTimeString": "2014-04-01T00:00",					
-						"EndTimeString": "2014-04-02T00:00"
+						"SliderNum": 6,
+						"BeginTimeString": "2014-04-01T00:00",				
+						"EndTimeString": "2014-04-02T00:00",
+						"ChallengeSecs": [32, 35, 40]
 						}
 				},{
 					"name": "del",
@@ -187,15 +189,15 @@ function Controller($scope, $http) {
 				},{
 					"name": "playEnd",
 					"method": "POST",
-					"data": {"EventId": 1, "Secret": "", "Score": 100}
+					"data": {"EventId": 1, "Secret": "", "Score": 100, "Checksum":"cks"}
 				},{
 					"name": "getRanks",
 					"method": "POST",
 					"data": {"EventId": 1, "Offset": 0, "Limit": 20}
 				},{
-					"name": "getActivities",
+					"name": "submitChallangeScore",
 					"method": "POST",
-					"data": {"PackId": 0, "Key": 0, "Limit": 20}
+					"data": {"EventId": 1, "Score": 100, "Checksum":"cks"}
 				}
 			]
 		},{
@@ -206,6 +208,20 @@ function Controller($scope, $http) {
 					"name": "addMoney",
 					"method": "POST",
 					"data": {"UserId": 0, "UserName": "aa", "AddMoney": 100}
+				}
+			]
+		},{
+			"tab":"store",
+			"path":"store",
+			"apis":[
+				{
+					"name": "listGameCoinPack",
+					"method": "POST",
+					"data": ""
+				},{
+					"name": "buyGameCoin",
+					"method": "POST",
+					"data": {"EventId":0, "GameCoinPackId":0}
 				}
 			]
 		}

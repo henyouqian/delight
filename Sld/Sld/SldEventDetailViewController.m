@@ -14,6 +14,7 @@
 #import "SldGameScene.h"
 #import "SldGameData.h"
 #import "SldOfflineEventEnterControler.h"
+#import "SldMatchPrepareController.h"
 #import "util.h"
 #import "config.h"
 #import "UIImageView+sldAsyncLoad.h"
@@ -28,11 +29,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *beatLabel;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
-@property (weak, nonatomic) IBOutlet UIButton *practiceButton;
+@property (weak, nonatomic) IBOutlet UIButton *challangeButton;
+@property (weak, nonatomic) IBOutlet UILabel *gameCoinLabel;
 @property (nonatomic) MSWeakTimer *timer;
-@property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) SldGameData *gamedata;
 @property (nonatomic) BOOL hasNetError;
+@property (nonatomic) int gameCoinNum;
+@property (nonatomic) NSMutableArray *gameCoinPrices;
 @end
 
 static __weak SldEventDetailViewController *g_eventDetailViewController = nil;
@@ -53,14 +56,14 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     [super viewDidLoad];
     g_eventDetailViewController = self;
     _hasNetError = NO;
-    _practiceButton.enabled = NO;
+    _challangeButton.enabled = NO;
     _matchButton.enabled = NO;
     if (g_updatedPackIdSet == nil) {
         g_updatedPackIdSet = [NSMutableSet set];
     }
     
     _gamedata = [SldGameData getInstance];
-    _gamedata.packInfo = nil;
+    [_gamedata resetEvent];
     
     UInt64 packId = _gamedata.eventInfo.packId;
     
@@ -69,7 +72,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
     SldHttpSession *session = [SldHttpSession defaultSession];
     if ([rs next]) { //local
-        _practiceButton.enabled = YES;
+        _challangeButton.enabled = YES;
         NSString *data = [rs stringForColumnIndex:0];
         NSError *error = nil;
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
@@ -94,7 +97,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
                 }
                 return;
             }
-            _practiceButton.enabled = YES;
+            _challangeButton.enabled = YES;
             
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (error) {
@@ -133,10 +136,12 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             return;
         }
         
-        NSNumber *highScore = [dict objectForKey:@"HighScore"];
-        NSNumber *rank = [dict objectForKey:@"Rank"];
-        NSNumber *rankNum = [dict objectForKey:@"RankNum"];
-        [self setPlayRecordWithHighscore:highScore rank:rank rankNum:rankNum];
+        _gamedata.eventPlayRecord = [EventPlayRecored recordWithDictionary:dict];
+        
+        [self updatePlayRecordWithHighscore];
+        
+        _gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
+        _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", _gameCoinNum];
     }];
     
     //timer
@@ -180,60 +185,44 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     }];
 }
 
-- (void)setPlayRecordWithHighscore:(NSNumber*)highScore rank:(NSNumber*)nRank rankNum:(NSNumber*)nRankNum {
-    if (highScore) {
-        if (_highScore == nil || [_highScore intValue] == 0 || [highScore intValue] > [_highScore intValue]) {
-            _highScore = highScore;
-            _highScoreStr = formatScore([highScore intValue]);
-            
-            [UIView animateWithDuration:.3f animations:^{
-                _bestRecordLabel.alpha = 0.f;
-            } completion:^(BOOL finished) {
-                _bestRecordLabel.text = _highScoreStr;
-                [UIView animateWithDuration:.3f animations:^{
-                    _bestRecordLabel.alpha = 1.f;
-                }];
-            }];
-        }
-    }
+- (void)updatePlayRecordWithHighscore {
+    EventPlayRecored *record = _gamedata.eventPlayRecord;
+    _highScoreStr = formatScore(record.highScore);
+    [UIView animateWithDuration:.3f animations:^{
+        _bestRecordLabel.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        _bestRecordLabel.text = _highScoreStr;
+        [UIView animateWithDuration:.3f animations:^{
+            _bestRecordLabel.alpha = 1.f;
+        }];
+    }];
+    
+    int rank = record.rank;
+    int rankNum = record.rankNum;
     
     //rank
-    int rank = 0;
-    if (nRank) {
-        rank = [nRank intValue];
-        if (rank) {
-            _rankLabel.text = [NSString stringWithFormat:@"第%d名", rank];
-            _rankStr = [NSString stringWithFormat:@"%d", rank];
-            
-//            NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:rankText];
-//            [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(1,[rankText length]-2)];
-//            _rankLabel.attributedText=string;
-        }
+    if (rank == 0) {
+        _rankLabel.text = @"无名次";
+    } else {
+        _rankLabel.text = [NSString stringWithFormat:@"第%d名", rank];
     }
+    _rankStr = [NSString stringWithFormat:@"%d", rank];
     
     //beat
-    if (rank && nRankNum) {
-        int rankNum = [nRankNum intValue];
-        if (rankNum) {
-            int beatNum = rankNum-rank;
-            float beatRate = 0.f;
-            if (rankNum <= 1) {
-                beatNum = 0;
-            } else {
-                beatRate = (float)(rankNum-rank)/(float)(rankNum-1);
-            }
-            _beatLabel.text = [NSString stringWithFormat:@"击败了%d人(%.1f%%)", beatNum, beatRate*100];
-            
-            float sat1 = 0;
-            float sat2 = 0.65;
-            float sat = sat1 + (sat2-sat1)*beatRate;
-            UIColor *color = [UIColor colorWithHue:136.f/355.f saturation:sat brightness:1.f alpha:1.f];
-            _rankLabel.textColor = color;
-            //_beatLabel.textColor = color;
-        }
-        
-        
+    int beatNum = rankNum-rank;
+    float beatRate = 0.f;
+    if (rankNum <= 1) {
+        beatNum = 0;
+    } else {
+        beatRate = (float)(rankNum-rank)/(float)(rankNum-1);
     }
+    _beatLabel.text = [NSString stringWithFormat:@"击败了%d人(%.1f%%)", beatNum, beatRate*100];
+    
+    float sat1 = 0;
+    float sat2 = 0.65;
+    float sat = sat1 + (sat2-sat1)*beatRate;
+    UIColor *color = [UIColor colorWithHue:136.f/355.f saturation:sat brightness:1.f alpha:1.f];
+    _rankLabel.textColor = color;
 }
 
 
@@ -282,14 +271,63 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 }
 
 #pragma mark - Button callback
-- (IBAction)onClickPractice:(id)sender {
-    _gameMode = PRACTICE;
+- (IBAction)onClickChallange:(id)sender {
+    _gamedata.gameMode = CHALLANGE;
     [self loadPacks];
 }
 
 - (IBAction)onClickMatch:(id)sender {
-    _gameMode = MATCH;
-    [self loadPacks];
+    _gamedata.gameMode = MATCH;
+    
+    if (_gameCoinNum == 0) {
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        self.view.userInteractionEnabled = NO;
+        [session postToApi:@"store/listGameCoinPack" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            self.view.userInteractionEnabled = YES;
+            if (error) {
+                alertHTTPError(error, data);
+            } else {
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error) {
+                    alert(@"Json error", [error localizedDescription]);
+                    return;
+                }
+                NSArray *gameCoinPacks = [dict objectForKey:@"GameCoinPacks"];
+                
+                _gameCoinPrices = [NSMutableArray array];
+                NSMutableArray *strings = [NSMutableArray array];
+                for (NSDictionary *pack in gameCoinPacks) {
+                    int price = [(NSNumber*)[pack objectForKey:@"Price"] intValue];
+                    int coinNum = [(NSNumber*)[pack objectForKey:@"CoinNum"] intValue];
+                    NSString *str = [NSString stringWithFormat:@"%d金币 购买 %d个游戏币", price, coinNum];
+                    [strings addObject:str];
+                    [_gameCoinPrices addObject:@(price)];
+                }
+                
+                //
+                SldGameCoinBuyController* vc = (SldGameCoinBuyController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"buyGameCoin"];
+                vc.strings = strings;
+                [self addChildViewController:vc];
+                [self.view addSubview:vc.view];
+                vc.view.alpha = 0.f;
+                [UIView animateWithDuration:.3f animations:^{
+                    vc.view.alpha = 1.f;
+                }];
+            }
+        }];
+    } else {
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:^{
+        }];
+        
+        RIButtonItem *okItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
+            [self loadPacks];
+        }];
+        
+        [[[UIAlertView alloc] initWithTitle:@"确定花费一个游戏币开始比赛?"
+                                    message:nil
+                           cancelButtonItem:cancelItem
+                           otherButtonItems:okItem, nil] show];
+    }
 }
 
 - (void)loadPacks {
@@ -352,20 +390,24 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (void)enterGame {
     void (^startGame)(NSString *) = ^(NSString *matchSecret){
         SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-        controller.gameMode = _gameMode;
         controller.matchSecret = matchSecret;
         
         [self.navigationController pushViewController:controller animated:YES];
     };
     
-    if (_gameMode == MATCH) {
+    if (_gamedata.gameMode == MATCH) {
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id)};
         self.view.userInteractionEnabled = NO;
         [session postToApi:@"event/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             self.view.userInteractionEnabled = YES;
             if (error) {
-                alertHTTPError(error, data);
+                NSString *errType = getServerErrorType(data);
+                if ([errType compare:@"err_game_coin"] == 0) {
+                    _gameCoinNum = 0;
+                } else {
+                    alertHTTPError(error, data);
+                }
             } else {
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error) {
@@ -374,9 +416,14 @@ static NSMutableSet *g_updatedPackIdSet = nil;
                 }
                 NSString *matchSecret = [dict objectForKey:@"Secret"];
                 startGame(matchSecret);
+                
+                _gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
+                _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", _gameCoinNum];
             }
         }];
-    } else { //practice
+//        SldMatchPrepareController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchPrepare"];
+//        [self.navigationController pushViewController:controller animated:YES];
+    } else { //challange
         //startGame(nil);
         SldOfflineEventEnterControler *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"offlineEnter"];
         [self.navigationController pushViewController:controller animated:YES];
@@ -389,6 +436,38 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         lwError("Sql error:%@", [db lastErrorMessage]);
         return;
     }
+}
+
+- (void)onBuyGameCoinWithPackId:(NSInteger)packId {
+    if (packId < _gameCoinPrices.count) {
+        int price = [(NSNumber*)_gameCoinPrices[packId] intValue];
+        if (_gamedata.money < price) {
+            alert(@"买不起😱", nil);
+            return;
+        }
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id), @"GameCoinPackId":@(packId)};
+    [session postToApi:@"store/buyGameCoin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        _gamedata.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+        _gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
+        _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", _gameCoinNum];
+        
+        if (_gameCoinNum > 0) {
+            [self onClickMatch:nil];
+        }
+    }];
 }
 
 #pragma mark - Navigation
@@ -407,3 +486,62 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 
 
 @end
+
+@interface SldGameCoinBuyController ()
+@property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
+
+@property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
+
+@end
+
+@implementation SldGameCoinBuyController
+
+- (void)viewDidLoad {
+    _pickerView.delegate = self;
+    _pickerView.dataSource = self;
+    SldGameData *gd = [SldGameData getInstance];
+    _moneyLabel.text = [NSString stringWithFormat:@"我的铜币：%d", gd.money];
+}
+
+- (IBAction)onCancel:(id)sender {
+    [UIView animateWithDuration:.3f animations:^{
+        self.view.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }];
+}
+
+- (IBAction)onBuy:(id)sender {
+    [UIView animateWithDuration:.3f animations:^{
+        self.view.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }];
+    
+    SldEventDetailViewController *parentVc = (SldEventDetailViewController*)self.parentViewController;
+    [parentVc onBuyGameCoinWithPackId:[_pickerView selectedRowInComponent:0]];
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return _strings.count;
+}
+
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    return _strings[row];
+}
+
+@end
+
+
+
+
+
+

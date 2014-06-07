@@ -20,6 +20,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
     event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
     event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
+    event.challengeSecs = [dict valueForKey:@"ChallengeSecs"];
+    if ([event.challengeSecs isKindOfClass:[NSNull class]]) {
+        event.challengeSecs = [NSArray array];
+    }
     event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] unsignedLongValue];
     if (event.sliderNum == 0) {
         event.sliderNum = DEFUALT_SLIDER_NUM;
@@ -53,6 +57,21 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 }
 @end
 
+@implementation EventPlayRecored
++ (instancetype)recordWithDictionary:(NSDictionary*)dict {
+    EventPlayRecored *record = [[EventPlayRecored alloc] init];
+    record.highScore = [(NSNumber*)[dict objectForKey:@"HighScore"] intValue];
+    record.trys = [(NSNumber*)[dict objectForKey:@"Trys"] intValue];
+    record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
+    record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
+    record.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
+    record.challangeHighScore = [(NSNumber*)[dict objectForKey:@"ChallangeHighScore"] intValue];
+    
+    return record;
+}
+
+@end
+
 @implementation SldGameData
 
 static SldGameData *g_inst = nil;
@@ -71,10 +90,31 @@ static SldGameData *g_inst = nil;
 - (instancetype)init {
     if ([super init]) {
         _eventInfos = [NSMutableArray arrayWithCapacity:20];
-        _online = NO;
-        _recentScore = 0;
+        
+        [self reset];
     }
     return self;
+}
+
+- (void)resetEvent {
+    _packInfo = nil;
+    _recentScore = 0;
+}
+
+- (void)reset {
+    _online = NO;
+    _recentScore = 0;
+    _eventInfo = nil;
+    _packInfo = nil;
+    
+    _userId = 0;
+    _userName = nil;
+    
+    _nickName = nil;
+    _gender = 0;
+    _teamName = nil;
+    _gravatarKey = nil;
+    _money = 0;
 }
 
 @end

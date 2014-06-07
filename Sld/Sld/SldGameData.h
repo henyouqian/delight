@@ -18,12 +18,13 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSDate *endTime;
 @property (nonatomic) BOOL hasResult;
 @property (nonatomic) BOOL sliderNum;
+@property (nonatomic) NSArray *challengeSecs;
 @property (nonatomic) int state; //undefined:0, comming:1, running:2, closed:3
-
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
 @end
 
+//=================
 @interface PackInfo : NSObject
 @property (nonatomic) UInt64 id;
 @property (nonatomic) NSString *title;
@@ -36,12 +37,37 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 + (instancetype)packWithDictionary:(NSDictionary*)dict;
 @end
 
+//=================
+@interface EventPlayRecored : NSObject
+@property (nonatomic) int highScore;
+@property (nonatomic) int trys;
+@property (nonatomic) int rank;
+@property (nonatomic) int rankNum;
+@property (nonatomic) int gameCoinNum;
+@property (nonatomic) int challangeHighScore;
+
++ (instancetype)recordWithDictionary:(NSDictionary*)dict;
+@end
+
+//=================
+enum GameMode{
+    PRACTICE,
+    CHALLANGE,
+    MATCH,
+};
+
+//=================
 @interface SldGameData : NSObject
 
+//event
 @property (nonatomic) NSMutableArray *eventInfos;
 @property (nonatomic) EventInfo *eventInfo;
 @property (nonatomic) PackInfo *packInfo;
+@property (nonatomic) EventPlayRecored *eventPlayRecord;
+@property (nonatomic) int recentScore;
+- (void)resetEvent;
 
+//player
 @property (nonatomic) UInt64 userId;
 @property (nonatomic) NSString *userName;
 @property (nonatomic) BOOL online;
@@ -50,10 +76,11 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) uint gender;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
-@property (nonatomic) SInt64 money;
+@property (nonatomic) int money;
 
-@property (nonatomic) int recentScore;
+@property (nonatomic) enum GameMode gameMode;
 
 + (instancetype)getInstance;
+- (void)reset;
 
 @end

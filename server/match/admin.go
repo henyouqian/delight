@@ -35,7 +35,7 @@ func addMoney(w http.ResponseWriter, r *http.Request) {
 	var in struct {
 		UserId   uint64
 		UserName string
-		AddMoney uint32
+		AddMoney int
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")

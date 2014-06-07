@@ -72,7 +72,7 @@
     }
     
     //money
-    _moneyLabel.text = [NSString stringWithFormat:@"%lld", gamedata.money];
+    _moneyLabel.text = [NSString stringWithFormat:@"%d", gamedata.money];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -94,6 +94,9 @@
                 NSString *username = [accounts lastObject][@"acct"];
                 [SSKeychain setPassword:@"" forService:conf.KEYCHAIN_SERVICE account:username];
                 [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+                
+                SldGameData *gd = [SldGameData getInstance];
+                [gd reset];
             });
         }];
 	}];

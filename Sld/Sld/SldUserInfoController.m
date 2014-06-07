@@ -96,7 +96,7 @@ static NSArray *_genderStrings;
 
 - (IBAction)onTeamButton:(id)sender {
     [self.view endEditing:YES];
-    NSArray *strings = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西族",@"贵州",@"海南",@"河北",@"黑龙江",@"河南",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
+    NSArray *strings = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西",@"贵州",@"海南",@"河北",@"黑龙江",@"河南",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
     
     NSString *teamText = _teamInput.text;
     if (teamText == nil) {
@@ -160,10 +160,16 @@ static NSArray *_genderStrings;
         }
         
         //update game data
-        gamedata.nickName = _nameInput.text;
-        gamedata.gender = genderIdx;
-        gamedata.teamName = _teamInput.text;
-        gamedata.gravatarKey = _gravatarKey;
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            alert(@"Json parse error!", nil);
+            return;
+        }
+        gamedata.nickName = [dict objectForKey:@"NickName"];
+        gamedata.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
+        gamedata.teamName = [dict objectForKey:@"TeamName"];
+        gamedata.gravatarKey = [dict objectForKey:@"GravatarKey"];
+        gamedata.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
         
         [self.presentingViewController viewWillAppear:YES];
     }];

@@ -8,13 +8,6 @@
 
 #import "SldEventDetailViewController.h"
 
-enum GameMode{
-    PRACTICE,
-    //BATTLE,
-    MATCH,
-};
-
 @interface SldGameController : UIViewController
-@property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) NSString *matchSecret;
 @end

@@ -172,7 +172,7 @@
                 gameData.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
                 gameData.teamName = [dict objectForKey:@"TeamName"];
                 gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
-                gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+                gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }];
@@ -194,7 +194,7 @@
             return;
         }
         
-        alert(@"Message", @"Sign up succeed. Please login.");
+        alert(@"Sign up succeed. Please login.", nil);
     }];
 }
 

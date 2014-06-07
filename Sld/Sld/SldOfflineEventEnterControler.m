@@ -17,10 +17,10 @@
 
 @interface SldOfflineEventEnterControler ()
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
-@end
-
-@interface SldOfflineEventEnterControler()
 @property (weak, nonatomic) IBOutlet UIView *scoresView;
+@property (weak, nonatomic) IBOutlet UILabel *goldLabel;
+@property (weak, nonatomic) IBOutlet UILabel *silverLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bronzeLabel;
 @end
 
 @implementation SldOfflineEventEnterControler
@@ -50,6 +50,19 @@
     
     self.title = @"本地排名";
     gd.recentScore = 0;
+    
+    //cup label
+    NSArray *secs = gd.eventInfo.challengeSecs;
+    if (secs != nil && secs.count == 3) {
+        _goldLabel.text = formatScore([(NSNumber*)secs[0] intValue]*-1000);
+        _silverLabel.text = formatScore([(NSNumber*)secs[1] intValue]*-1000);
+        _bronzeLabel.text = formatScore([(NSNumber*)secs[2] intValue]*-1000);
+    } else {
+        NSString *text = @"−:−−.−−−";
+        _goldLabel.text = text;
+        _silverLabel.text = text;
+        _bronzeLabel.text = text;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -61,7 +74,8 @@
     FMDatabase *db = [SldDb defaultDb].fmdb;
     NSError *error = nil;
     
-    FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", [NSNumber numberWithUnsignedLongLong:gd.eventInfo.id]];
+    NSString *key = [NSString stringWithFormat:@"%d/%d", (int)gd.eventInfo.id, (int)gd.userId];
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", key];
     
     NSArray *scores = [NSArray array];
     BOOL dataFound = [rs next];
@@ -75,20 +89,20 @@
     }
     [[_scoresView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    float x = -20;
+    float x = 160;
     float y = 100;
     float w = 100;
     float h = 25;
     BOOL recentFound = NO;
     int scoreNum = [scores count];
     for (int i = 0; i < LOCAL_SCORE_COUNT_LIMIT; ++i) {
-        UILabel *idxLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+        UILabel *idxLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 25, h)];
         idxLabel.text = [NSString stringWithFormat:@"%d", i+1];
         idxLabel.textColor = [UIColor whiteColor];
         idxLabel.textAlignment = NSTextAlignmentRight;
         [_scoresView addSubview:idxLabel];
         
-        UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+200, y, w, h)];
+        UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+50, y, w, h)];
         
         scoreLabel.textColor = [UIColor whiteColor];
         [_scoresView addSubview:scoreLabel];
@@ -110,6 +124,24 @@
         
         y += h+5;
     }
+    
+    //cup highlight
+    int hs = gd.eventPlayRecord.challangeHighScore;
+    NSArray *secs = gd.eventInfo.challengeSecs;
+    if (hs != 0 && secs.count == 3) {
+        _goldLabel.textColor = [UIColor whiteColor];
+        _silverLabel.textColor = [UIColor whiteColor];
+        _bronzeLabel.textColor = [UIColor whiteColor];
+        
+        UIColor *color = makeUIColor(255, 197, 131, 255);
+        if (hs >= [(NSNumber*)secs[0] intValue]*-1000) {
+            _goldLabel.textColor = color;
+        } else if (hs >= [(NSNumber*)secs[1] intValue]*-1000) {
+            _silverLabel.textColor = color;
+        } else if (hs >= [(NSNumber*)secs[2] intValue]*-1000) {
+            _bronzeLabel.textColor = color;
+        }
+    }
 }
 
 - (void)loadBackground{
@@ -128,7 +160,6 @@
 
 - (IBAction)onEnterGame:(id)sender {
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    controller.gameMode = PRACTICE;
     controller.matchSecret = nil;
     
     [self.navigationController pushViewController:controller animated:YES];

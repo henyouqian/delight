@@ -105,6 +105,7 @@ static const int FETCH_EVENT_COUNT = 50;
         if (indexPath.row < [_eventInfos count]) {
             gamedata.eventInfo = [_eventInfos objectAtIndex:indexPath.row];
         }
+        gamedata.gameMode = PRACTICE;
     }
 }
 

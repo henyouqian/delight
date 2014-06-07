@@ -36,15 +36,12 @@ func init() {
 type PlayerInfo struct {
 	NickName        string
 	TeamName        string
-	Gender          uint
+	Gender          int
 	CustomAvatarKey string
 	GravatarKey     string
-	Money           uint32
-	AP              uint32
-	APMax           uint32
-	APInterval      uint32
-	LastApTime      int64
-	BetMax          uint32
+	Money           int
+	BetMax          int
+	AllowSave       bool
 }
 
 func getPlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) (err error) {
@@ -57,10 +54,14 @@ func getPlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) (err er
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
 		lwutil.CheckError(err, "")
 	}
+	playerInfo.AllowSave = true
 	return nil
 }
 
 func savePlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) {
+	if !playerInfo.AllowSave {
+		lwutil.SendError("err_player_save_locked", "")
+	}
 	js, err := json.Marshal(playerInfo)
 	lwutil.CheckError(err, "")
 
@@ -134,11 +135,7 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	if resp[0] == "not_found" {
 		//set default value
 		playerInfo = in
-		playerInfo.Money = 1000
-		playerInfo.AP = 1
-		playerInfo.APMax = 1
-		playerInfo.APInterval = 2 * 60 * 60
-		playerInfo.LastApTime = 0
+		playerInfo.Money = INIT_MONEY
 		playerInfo.BetMax = 100
 	} else {
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
@@ -159,10 +156,8 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//set
-	js, err := json.Marshal(playerInfo)
-	lwutil.CheckError(err, "")
-	resp, err = ssdb.Do("hset", H_PLAYER_INFO, session.Userid, js)
-	lwutil.CheckSsdbError(resp, err)
+	playerInfo.AllowSave = true
+	savePlayer(ssdb, session.Userid, &playerInfo)
 
 	//out
 	lwutil.WriteResponse(w, playerInfo)

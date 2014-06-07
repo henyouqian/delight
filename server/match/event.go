@@ -11,15 +11,12 @@ import (
 	//. "github.com/qiniu/api/conf"
 	//"github.com/qiniu/api/rs"
 	// "io/ioutil"
+	"math"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
 )
-
-func init() {
-	glog.Info("match init")
-}
 
 const (
 	H_EVENT                     = "H_EVENT"
@@ -31,7 +28,13 @@ const (
 	TRY_COST_MONEY              = 100
 	TRY_EXPIRE_SECONDS          = 600
 	TEAM_CHAMPIONSHIP_ROUND_NUM = 6
-	H_EVENT_TEAM_SCORE          = "H_EVENT_TEAM_SCORE" //key:evnetId value:map[string(teamName)]uint32(score)
+	H_EVENT_TEAM_SCORE          = "H_EVENT_TEAM_SCORE"   //subkey:eventId value:map[teamName:string]score:int
+	H_EVENT_BETTING_POOL        = "H_EVENT_BETTING_POOL" //subkey:eventId value:map[teamName:string]money:int64
+	INIT_GAME_COIN_NUM          = 3
+)
+
+var (
+	challageRewards = []int{100, 50, 50} //gold, silver, bronze
 )
 
 func makeRedisLeaderboardKey(evnetId uint64) string {
@@ -40,6 +43,11 @@ func makeRedisLeaderboardKey(evnetId uint64) string {
 
 func makeHashEventRankKey(eventId uint64) string {
 	return fmt.Sprintf("%s/%d", H_EVENT_RANK, eventId)
+}
+
+func makeEventPlayerRecordSubkey(eventId uint64, userId uint64) string {
+	key := fmt.Sprintf("%d/%d", eventId, userId)
+	return key
 }
 
 var (
@@ -58,7 +66,19 @@ var (
 		91, 92,
 		71,
 	}
+
+	TEAM_NAMES              = []string{"安徽", "澳门", "北京", "重庆", "福建", "甘肃", "广东", "广西", "贵州", "海南", "河北", "黑龙江", "河南", "湖北", "湖南", "江苏", "江西", "吉林", "辽宁", "内蒙古", "宁夏", "青海", "陕西", "山东", "上海", "山西", "四川", "台湾", "天津", "香港", "新疆", "西藏", "云南", "浙江"}
+	EVENT_INIT_BETTING_POOL = map[string]int64{}
+	INIT_BET_MONEY          = int64(10000)
 )
+
+func init() {
+	glog.Info("match init")
+	for _, teamName := range TEAM_NAMES {
+		EVENT_INIT_BETTING_POOL[teamName] = INIT_BET_MONEY
+	}
+	fmt.Printf("%v", EVENT_INIT_BETTING_POOL)
+}
 
 type Event struct {
 	Type            string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
@@ -71,20 +91,32 @@ type Event struct {
 	HasResult       bool
 	Thumb           string
 	SliderNum       uint32
+	ChallengeSecs   []int
 }
 
 type EventPlayerRecord struct {
-	PlayerName       string
-	TeamName         string
-	Secret           string
-	SecretExpire     int64
-	Trys             uint32
-	HighScore        int32
-	HighScoreTime    int64
-	FinalRank        uint32
-	GravatarKey      string
-	CustomAvartarKey string
-	Gender           int
+	PlayerName         string
+	TeamName           string
+	Secret             string
+	SecretExpire       int64
+	Trys               uint32
+	HighScore          int32
+	HighScoreTime      int64
+	FinalRank          uint32
+	GravatarKey        string
+	CustomAvartarKey   string
+	Gender             int
+	GameCoinNum        int
+	ChallangeHighScore int
+}
+
+func (record *EventPlayerRecord) init(playerInfo *PlayerInfo) {
+	record.Trys = 0
+	record.PlayerName = playerInfo.NickName
+	record.TeamName = playerInfo.TeamName
+	record.GravatarKey = playerInfo.GravatarKey
+	record.CustomAvartarKey = playerInfo.CustomAvatarKey
+	record.GameCoinNum = INIT_GAME_COIN_NUM
 }
 
 type FreePlayRecord struct {
@@ -125,7 +157,7 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 	event.HasResult = false
 
 	//fill TimePoints
-	now := time.Now().Unix()
+	now := lwutil.GetRedisTimeUnix()
 
 	t, err := time.ParseInLocation("2006-01-02T15:04", event.BeginTimeString, time.Local)
 	lwutil.CheckError(err, "")
@@ -173,11 +205,18 @@ func newEvent(w http.ResponseWriter, r *http.Request) {
 
 	//save to ssdb
 	js, err := json.Marshal(event)
+	lwutil.CheckError(err, "")
 	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	//resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.EndTime)
 	resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	//init betting pool
+	js, err = json.Marshal(EVENT_INIT_BETTING_POOL)
+	lwutil.CheckError(err, "")
+	resp, err = ssdb.Do("hset", H_EVENT_BETTING_POOL, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
@@ -346,23 +385,21 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 
 	//
 	type Out struct {
-		HighScore int32
-		Trys      uint32
-		Rank      uint32
-		RankNum   uint32
+		HighScore          int32
+		Trys               uint32
+		Rank               uint32
+		RankNum            uint32
+		GameCoinNum        int
+		ChallangeHighScore int
 	}
 
 	//
-	recordKey := fmt.Sprintf("%d/%d", in.EventId, in.UserId)
+	recordKey := makeEventPlayerRecordSubkey(in.EventId, in.UserId)
 	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] != "ok" {
-		out := Out{
-			int32(0),
-			uint32(0),
-			uint32(0),
-			uint32(0),
-		}
+		out := Out{}
+		out.GameCoinNum = INIT_GAME_COIN_NUM
 		lwutil.WriteResponse(w, out)
 		return
 	}
@@ -377,6 +414,8 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 		record.Trys,
 		uint32(rank + 1),
 		uint32(rankNum),
+		record.GameCoinNum,
+		record.ChallangeHighScore,
 	}
 
 	//out
@@ -409,13 +448,14 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 	var event Event
 	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
-	now := time.Now().Unix()
+	now := lwutil.GetRedisTimeUnix()
+
 	if now < event.BeginTime || now >= event.EndTime || event.HasResult {
 		lwutil.SendError("err_time", "event not running")
 	}
 
 	//get event player record
-	key := fmt.Sprintf("%d/%d", in.EventId, session.Userid)
+	key := makeEventPlayerRecordSubkey(in.EventId, session.Userid)
 	resp, err = ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
 	lwutil.CheckError(err, "")
 	record := EventPlayerRecord{}
@@ -423,21 +463,23 @@ func playBegin(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal([]byte(resp[1]), &record)
 		lwutil.CheckError(err, "")
 		record.Trys++
-	} else {
-		record.Trys = 1
 
+		if record.GameCoinNum <= 0 {
+			lwutil.SendError("err_game_coin", "")
+		}
+		record.GameCoinNum--
+	} else {
 		var playerInfo PlayerInfo
 		getPlayer(ssdb, session.Userid, &playerInfo)
 		lwutil.CheckError(err, "")
-		record.PlayerName = playerInfo.NickName
-		record.TeamName = playerInfo.TeamName
-		record.GravatarKey = playerInfo.GravatarKey
-		record.CustomAvartarKey = playerInfo.CustomAvatarKey
+		record.init(&playerInfo)
+		record.GameCoinNum--
+		record.Trys++
 	}
 
 	//gen secret
 	record.Secret = lwutil.GenUUID()
-	record.SecretExpire = time.Now().Unix() + TRY_EXPIRE_SECONDS
+	record.SecretExpire = lwutil.GetRedisTimeUnix() + TRY_EXPIRE_SECONDS
 
 	//update record
 	js, err := json.Marshal(record)
@@ -473,17 +515,16 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 
 	//checksum
 	checksum := fmt.Sprintf("%s+%d9d7a", in.Secret, in.Score*in.Score)
-	glog.Error(checksum)
 	hasher := sha1.New()
 	hasher.Write([]byte(checksum))
 	checksum = hex.EncodeToString(hasher.Sum(nil))
-	glog.Error(checksum)
 	if in.Checksum != checksum {
 		lwutil.SendError("err_checksum", checksum)
 	}
 
 	//check event record
-	recordKey := fmt.Sprintf("%d/%d", in.EventId, session.Userid)
+	now := lwutil.GetRedisTimeUnix()
+	recordKey := makeEventPlayerRecordSubkey(in.EventId, session.Userid)
 	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
 	lwutil.CheckError(err, "")
 	if resp[0] != "ok" {
@@ -496,7 +537,7 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	if record.Secret != in.Secret {
 		lwutil.SendError("err_not_match", "Secret not match")
 	}
-	if time.Now().Unix() > record.SecretExpire {
+	if now > record.SecretExpire {
 		lwutil.SendError("err_expired", "secret expired")
 	}
 
@@ -507,7 +548,7 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	scoreUpdate := false
 	if record.Trys == 1 || record.HighScore == 0 {
 		record.HighScore = in.Score
-		record.HighScoreTime = time.Now().Unix()
+		record.HighScoreTime = now
 		scoreUpdate = true
 	} else {
 		if in.Score > record.HighScore {
@@ -570,7 +611,7 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 					userId, err := redisUint64(values[i], nil)
 					lwutil.CheckError(err, "")
 					userIds = append(userIds, userId)
-					recordKey := fmt.Sprintf("%d/%d", in.EventId, userId)
+					recordKey := makeEventPlayerRecordSubkey(in.EventId, userId)
 					cmds = append(cmds, recordKey)
 				}
 
@@ -740,7 +781,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	cmds = append(cmds, "multi_hget")
 	cmds = append(cmds, H_EVENT_PLAYER_RECORD)
 	for _, rank := range ranks {
-		recordKey := fmt.Sprintf("%d/%d", in.EventId, rank.UserId)
+		recordKey := makeEventPlayerRecordSubkey(in.EventId, rank.UserId)
 		cmds = append(cmds, recordKey)
 	}
 	resp, err = ssdb.Do(cmds...)
@@ -771,35 +812,121 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
-func getActivities(w http.ResponseWriter, r *http.Request) {
-	//var err error
+func getBetInfos(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func submitChallangeScore(w http.ResponseWriter, r *http.Request) {
+	var err error
 	lwutil.CheckMathod(r, "POST")
 
-	comments := []Comment{
-		Comment{45323, 1, 1, "Ezra", "3", "北京", "The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.\n\nThe quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog.The quick brown fox jumps over the lazy dog."},
-		Comment{5424, 2, 1, "brian.clear", "4", "美国", `label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];`},
-		Comment{2452, 44, 1, "Alladinian", "6", "上海", "Try this!"},
-		Comment{4562435, 345, 1, "Proveme007", "7", "福建", "gogogo!"},
-		Comment{23452, 743, 1, "samfisher", "8", "山东", `implement scrollViewDidScroll: and check contentOffset in that for reaching the end`},
-		Comment{233452, 7523, 1, "很有钱", "9", "浙江", `赞同第一名的答案。痛经这个事情，每个人先天体质不一样没办法，但是其实很大一部分是坏的作息饮食习惯，和身体虚弱导致的。最管用的根治方法就是规律作息，多运动。我原来有朋友超级痛，走在路上会忽然痛到回不了家那种。后来去了军队，每天熄灯早起，天天搞体能，随意武装越野五公里，扳手腕偶尔能赢我。那会一点都不疼，经期生龙活虎嗷嗷叫。后来去文职机关了，老毛病又回来了。
-吃上面尽量少吃凉的，西瓜山竹什么的注意控制。能早睡就早睡。慢慢养成规律运动的习惯。坚持下来会显著改善的。那些贴的吃的涂得中药西药都不治本。止疼针止疼片实在没办法可以用，但是到了那一步了就真心要注意了。
-正能量的总结：多运动多早睡，生活更美好。实际观察爱运动身体好的女生痛的程度和概率远远小于水瓶盖扭不开八百米走完的女生。
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
 
-—————————真答案分割线————————
-大家都知道运动有效，可是大多数时候是做不到的。谁愿意天天被人催着去坚持锻炼，去早睡，这也不吃那也不吃。能不能做到其实看女生自己，男朋友能起到作用有限。。。反正我能力不足，潜移默化常年失败，这事真那么容易那也不会有那么多整天分享各种郑多燕啦腹肌撕裂者啦实际从来不会认真去坚持的人啦。
-所以呢，碰见女朋友痛呢，悄悄叹口气，安静陪着，要热水给热水要荷包蛋做荷包蛋想吃啥去买啥要帮揉就揉不要就乖乖呆着不要烦她，
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
 
+	//in
+	var in struct {
+		EventId  uint64
+		Score    int
+		Checksum string
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
 
+	//checksum
+	checksum := fmt.Sprintf("zzzz%d9d7a", in.Score*in.Score)
+	hasher := sha1.New()
+	hasher.Write([]byte(checksum))
+	checksum = hex.EncodeToString(hasher.Sum(nil))
+	if in.Checksum != checksum {
+		lwutil.SendError("err_checksum", checksum)
+	}
 
-然后努力忍住不要借机教育要规律生活多运动（更不能嘲笑说平时不努力现在徒伤悲！切记切记！）就好啦～`},
+	//check event record
+	recordKey := makeEventPlayerRecordSubkey(in.EventId, session.Userid)
+	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+	lwutil.CheckError(err, "")
+
+	record := EventPlayerRecord{}
+	if resp[0] != "ok" {
+		var playerInfo PlayerInfo
+		getPlayer(ssdb, session.Userid, &playerInfo)
+		lwutil.CheckError(err, "")
+		record.init(&playerInfo)
+	} else {
+		err = json.Unmarshal([]byte(resp[1]), &record)
+		lwutil.CheckError(err, "")
+	}
+
+	//update score
+	scoreUpdate := false
+	reward := 0
+	oldScore := record.ChallangeHighScore
+	if record.ChallangeHighScore == 0 {
+		record.ChallangeHighScore = in.Score
+		scoreUpdate = true
+	} else {
+		if in.Score > record.ChallangeHighScore {
+			record.ChallangeHighScore = in.Score
+			scoreUpdate = true
+		}
+	}
+
+	//
+	if scoreUpdate {
+		if oldScore == 0 {
+			oldScore = math.MinInt32
+		}
+
+		//get event
+		resp, err := ssdb.Do("hget", H_EVENT, in.EventId)
+		lwutil.CheckSsdbError(resp, err)
+
+		event := Event{}
+		err = json.Unmarshal([]byte(resp[1]), &event)
+		lwutil.CheckError(err, "")
+
+		for i, sec := range event.ChallengeSecs {
+			refScore := -int(sec * 1000)
+			if refScore > oldScore && refScore <= in.Score {
+				reward += challageRewards[i]
+			}
+		}
+	}
+
+	//save record
+	if scoreUpdate {
+		jsRecord, err := json.Marshal(record)
+		resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, recordKey, jsRecord)
+		lwutil.CheckSsdbError(resp, err)
+	}
+
+	//add money
+	newMoney := 0
+	if reward > 0 {
+		var playerInfo PlayerInfo
+		getPlayer(ssdb, session.Userid, &playerInfo)
+		playerInfo.Money += reward
+		savePlayer(ssdb, session.Userid, &playerInfo)
+		newMoney = playerInfo.Money
 	}
 
 	//out
-	lwutil.WriteResponse(w, &comments)
-}
+	out := struct {
+		Reward   int
+		NewMoney int
+	}{
+		reward,
+		newMoney,
+	}
 
-func getBetInfos(w http.ResponseWriter, r *http.Request) {
-
+	//out
+	lwutil.WriteResponse(w, out)
 }
 
 func regMatch() {
@@ -812,5 +939,6 @@ func regMatch() {
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
 	http.Handle("/event/getRanks", lwutil.ReqHandler(getRanks))
 	http.Handle("/event/getBetInfos", lwutil.ReqHandler(getBetInfos))
-	http.Handle("/event/getActivities", lwutil.ReqHandler(getActivities))
+	http.Handle("/event/submitChallangeScore", lwutil.ReqHandler(submitChallangeScore))
+
 }

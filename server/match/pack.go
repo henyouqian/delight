@@ -492,7 +492,7 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 
 	//get packs
 	resp, err := ssdb.Do("hget", H_PACK, in.Id)
-	lwutil.CheckSsdbError(resp, err)
+	lwutil.CheckSsdbErrorDesc(resp, err, fmt.Sprintf("id:%d", in.Id))
 
 	var pack Pack
 	err = json.Unmarshal([]byte(resp[1]), &pack)

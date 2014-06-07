@@ -10,13 +10,16 @@
 #import "SldEventListViewController.h"
 
 @interface SldEventDetailViewController : UIViewController<UIAlertViewDelegate>
-@property (nonatomic) NSNumber *highScore;
-@property (nonatomic) NSNumber *rank;
+@property (nonatomic) int highScore;
+@property (nonatomic) int rank;
 @property (nonatomic) NSString *highScoreStr;
 @property (nonatomic) NSString *rankStr;
 
 + (instancetype)getInstance;
-- (void)setPlayRecordWithHighscore:(NSNumber*)highscore rank:(NSNumber*)rank rankNum:(NSNumber*)rankNum;
+- (void)updatePlayRecordWithHighscore;
 @end
 
 
+@interface SldGameCoinBuyController : UIViewController<UIPickerViewDelegate, UIPickerViewDataSource>
+@property (nonatomic) NSArray *strings;
+@end
