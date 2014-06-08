@@ -53,6 +53,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     }
     packInfo.images = images;
     
+    if (packInfo.text == nil || packInfo.text.length == 0) {
+        packInfo.text = packInfo.title;
+    }
+    
     return packInfo;
 }
 @end

@@ -99,8 +99,8 @@ type EventPlayerRecord struct {
 	TeamName           string
 	Secret             string
 	SecretExpire       int64
-	Trys               uint32
-	HighScore          int32
+	Trys               int
+	HighScore          int
 	HighScoreTime      int64
 	FinalRank          int
 	GravatarKey        string
@@ -368,53 +368,74 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 		in.UserId = session.Userid
 	}
 
-	//redis
-	rc := redisPool.Get()
-	defer rc.Close()
-
-	//get rank
-	eventLbLey := makeRedisLeaderboardKey(in.EventId)
-	rc.Send("ZREVRANK", eventLbLey, in.UserId)
-	rc.Send("ZCARD", eventLbLey)
-	err = rc.Flush()
-	lwutil.CheckError(err, "")
-	rank, err := _redisInt(rc.Receive())
-	lwutil.CheckError(err, "")
-	rankNum, err := _redisInt(rc.Receive())
+	//get event info
+	resp, err := ssdb.Do("hget", H_EVENT, in.EventId)
+	lwutil.CheckSsdbError(resp, err)
+	event := Event{}
+	err = json.Unmarshal([]byte(resp[1]), &event)
 	lwutil.CheckError(err, "")
 
-	//
+	//Out
 	type Out struct {
-		HighScore          int32
-		Trys               uint32
-		Rank               uint32
-		RankNum            uint32
+		HighScore          int
+		Trys               int
+		Rank               int
+		RankNum            int
 		GameCoinNum        int
 		ChallangeHighScore int
 		TeamName           string
 	}
 
-	//
+	//event play record
+	record := EventPlayerRecord{}
 	recordKey := makeEventPlayerRecordSubkey(in.EventId, in.UserId)
-	resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+	resp, err = ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
 	lwutil.CheckError(err, "")
-	if resp[0] != "ok" {
-		out := Out{}
-		out.GameCoinNum = INIT_GAME_COIN_NUM
-		lwutil.WriteResponse(w, out)
-		return
+	if resp[0] == "ok" {
+		err = json.Unmarshal([]byte(resp[1]), &record)
+		lwutil.CheckError(err, "")
+	} else {
+		if !event.HasResult {
+			record.GameCoinNum = INIT_GAME_COIN_NUM
+		}
 	}
 
-	record := EventPlayerRecord{}
-	err = json.Unmarshal([]byte(resp[1]), &record)
-	lwutil.CheckError(err, "")
+	//rank and rankNum
+	rank := 0
+	rankNum := 0
+
+	if event.HasResult {
+		rank = record.FinalRank
+		//rankNum
+		hRankKey := makeHashEventRankKey(in.EventId)
+		resp, err = ssdb.Do("hsize", hRankKey)
+		lwutil.CheckSsdbError(resp, err)
+		rankNum, err = strconv.Atoi(resp[1])
+		lwutil.CheckError(err, "")
+	} else {
+		//redis
+		rc := redisPool.Get()
+		defer rc.Close()
+
+		//get rank
+		eventLbLey := makeRedisLeaderboardKey(in.EventId)
+		rc.Send("ZREVRANK", eventLbLey, in.UserId)
+		rc.Send("ZCARD", eventLbLey)
+		err = rc.Flush()
+		lwutil.CheckError(err, "")
+		rank, err = _redisInt(rc.Receive())
+		rank += 1
+		lwutil.CheckError(err, "")
+		rankNum, err = _redisInt(rc.Receive())
+		lwutil.CheckError(err, "")
+	}
 
 	//out
 	out := Out{
 		record.HighScore,
 		record.Trys,
-		uint32(rank + 1),
-		uint32(rankNum),
+		rank,
+		rankNum,
 		record.GameCoinNum,
 		record.ChallangeHighScore,
 		record.TeamName,
@@ -509,7 +530,7 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 	var in struct {
 		EventId  uint64
 		Secret   string
-		Score    int32
+		Score    int
 		Checksum string
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
@@ -687,8 +708,8 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	//in
 	var in struct {
 		EventId uint64
-		Offset  uint32
-		Limit   uint32
+		Offset  int
+		Limit   int
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
@@ -706,14 +727,14 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 
 	//RankInfo
 	type RankInfo struct {
-		Rank        uint32
+		Rank        int
 		UserId      uint64
 		NickName    string
 		TeamName    string
 		GravatarKey string
-		Score       int32
+		Score       int
 		Time        int64
-		Trys        uint32
+		Trys        int
 	}
 
 	type Out struct {
@@ -733,7 +754,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		cmds[0] = "multi_hget"
 		cmds[1] = makeHashEventRankKey(event.Id)
 		hRankKey := cmds[1]
-		for i := uint32(0); i < in.Limit; i++ {
+		for i := 0; i < in.Limit; i++ {
 			rank := i + in.Offset + 1
 			cmds[i+2] = rank
 		}
@@ -748,7 +769,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < num; i++ {
 			rank, err := strconv.ParseUint(resp[i*2], 10, 32)
 			lwutil.CheckError(err, "")
-			ranks[i].Rank = uint32(rank)
+			ranks[i].Rank = int(rank)
 			ranks[i].UserId, err = strconv.ParseUint(resp[i*2+1], 10, 64)
 			lwutil.CheckError(err, "")
 		}
@@ -768,7 +789,7 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 		//rankNum
 		resp, err = ssdb.Do("hsize", hRankKey)
 		lwutil.CheckSsdbError(resp, err)
-		myRank, err = strconv.Atoi(resp[1])
+		rankNum, err = strconv.Atoi(resp[1])
 		lwutil.CheckError(err, "")
 	} else {
 		//redis

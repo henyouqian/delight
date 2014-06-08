@@ -27,7 +27,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *bestRecordLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
-@property (weak, nonatomic) IBOutlet UILabel *beatLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rankNumLabel;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *challangeButton;
 @property (weak, nonatomic) IBOutlet UILabel *gameCoinLabel;
@@ -217,20 +217,23 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     }
     _rankStr = [NSString stringWithFormat:@"%d", rank];
     
-    //beat
+    //rankNum
     int beatNum = rankNum-rank;
+    if (rank <= 0) {
+        beatNum = 0;
+    }
     float beatRate = 0.f;
     if (rankNum <= 1) {
         beatNum = 0;
     } else {
-        beatRate = (float)(rankNum-rank)/(float)(rankNum-1);
+        beatRate = (float)beatNum/(float)(rankNum-1);
     }
-    _beatLabel.text = [NSString stringWithFormat:@"击败了%d人(%.1f%%)", beatNum, beatRate*100];
+    _rankNumLabel.text = [NSString stringWithFormat:@"%d人参加(击败%.1f%%)", rankNum, beatRate*100];
     
     float sat1 = 0;
     float sat2 = 0.65;
     float sat = sat1 + (sat2-sat1)*beatRate;
-    UIColor *color = [UIColor colorWithHue:136.f/355.f saturation:sat brightness:1.f alpha:1.f];
+    UIColor *color = [UIColor colorWithHue:136.f/360.f saturation:sat brightness:1.f alpha:1.f];
     _rankLabel.textColor = color;
 }
 

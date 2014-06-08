@@ -141,6 +141,10 @@ func scoreKeeper() {
 		resp, err = ssdb.Do("hset", H_EVENT, event.Id, jsEvent)
 		checkSsdbError(resp, err)
 
+		//del redis leaderboard
+		_, err = rc.Do("del", eventLbLey)
+		checkError(err)
+
 		glog.Infof("event end")
 	}
 }
