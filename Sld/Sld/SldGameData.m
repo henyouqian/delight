@@ -64,6 +64,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     record.trys = [(NSNumber*)[dict objectForKey:@"Trys"] intValue];
     record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
     record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
+    record.teamName = [dict objectForKey:@"TeamName"];
+    if (record.teamName.length == 0) {
+        record.teamName = [SldGameData getInstance].teamName;
+    }
     record.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
     record.challangeHighScore = [(NSNumber*)[dict objectForKey:@"ChallangeHighScore"] intValue];
     

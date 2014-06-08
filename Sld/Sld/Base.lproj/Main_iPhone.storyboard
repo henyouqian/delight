@@ -23,6 +23,15 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhe-Cl-whW" userLabel="bg cover View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="游戏币: 0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bo1-z9-UPh" userLabel="gameCoin">
+                                        <rect key="frame" x="26" y="324" width="268" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="0.5" colorSpace="calibratedRGB"/>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v6h-b5-yak" userLabel="title">
@@ -60,7 +69,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="游戏币: 0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bo1-z9-UPh" userLabel="remainTime">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="所属队伍: " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h61-Eo-TNj" userLabel="team">
                                 <rect key="frame" x="24" y="299" width="268" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -146,6 +155,7 @@
                         <outlet property="gameCoinLabel" destination="bo1-z9-UPh" id="G05-eO-gPc"/>
                         <outlet property="matchButton" destination="sP7-Hu-Cuh" id="ys3-l8-ETO"/>
                         <outlet property="rankLabel" destination="puS-c7-cRZ" id="Odv-Oa-MS9"/>
+                        <outlet property="teamLabel" destination="h61-Eo-TNj" id="mGg-ob-CkG"/>
                         <outlet property="timeRemainLabel" destination="L7D-KT-ZpW" id="vUW-Ym-iUk"/>
                         <outlet property="titleLabel" destination="v6h-b5-yak" id="DaQ-3B-IxW"/>
                     </connections>
@@ -1836,7 +1846,7 @@
                                         <connections>
                                             <outlet property="scoreLabel" destination="Gym-ld-Fws" id="yrP-TO-We1"/>
                                             <outlet property="teamLabel" destination="6y7-1I-IJE" id="iDm-6e-aTE"/>
-                                            <outlet property="winMul" destination="Kk6-9S-gYG" id="qPW-ga-af0"/>
+                                            <outlet property="winMulLabel" destination="Kk6-9S-gYG" id="eOo-bA-cxV"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

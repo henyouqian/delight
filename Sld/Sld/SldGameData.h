@@ -43,8 +43,10 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int trys;
 @property (nonatomic) int rank;
 @property (nonatomic) int rankNum;
+@property (nonatomic) NSString *teamName;
 @property (nonatomic) int gameCoinNum;
 @property (nonatomic) int challangeHighScore;
+
 
 + (instancetype)recordWithDictionary:(NSDictionary*)dict;
 @end

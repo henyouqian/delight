@@ -179,6 +179,9 @@
             return;
         }
         
+        gameData.eventPlayRecord.rank = [(NSNumber*)[dict objectForKey:@"MyRank"] intValue];
+        gameData.eventPlayRecord.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
+        
         for (NSDictionary *rankDict in rankArray) {
             RankInfo *rankInfo = [[RankInfo alloc] init];
             rankInfo.rank = [rankDict objectForKey:@"Rank"];
@@ -296,7 +299,8 @@
         RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
         [cell reset];
         cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
-        cell.userNameLabel.text = gamedata.nickName;
+        //cell.userNameLabel.text = gamedata.nickName;
+        cell.userNameLabel.text = @"“我”";
         cell.teamLabel.text = gamedata.teamName;
         cell.rankLabel.text = detailVc.rankStr;
         cell.scoreLabel.text = detailVc.highScoreStr;

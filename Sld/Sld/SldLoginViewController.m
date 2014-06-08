@@ -190,11 +190,16 @@
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/register" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            alertHTTPError(error, data);
+            NSString *errType = getServerErrorType(data);
+            if ([errType compare:@"err_exist"] == 0) {
+                alert(@"账号已存在", nil);
+            }else {
+                alertHTTPError(error, data);
+            }
             return;
         }
         
-        alert(@"Sign up succeed. Please login.", nil);
+        [self login];
     }];
 }
 

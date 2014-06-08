@@ -77,7 +77,7 @@ func init() {
 	for _, teamName := range TEAM_NAMES {
 		EVENT_INIT_BETTING_POOL[teamName] = INIT_BET_MONEY
 	}
-	fmt.Printf("%v", EVENT_INIT_BETTING_POOL)
+	//fmt.Printf("%v", EVENT_INIT_BETTING_POOL)
 }
 
 type Event struct {
@@ -102,7 +102,7 @@ type EventPlayerRecord struct {
 	Trys               uint32
 	HighScore          int32
 	HighScoreTime      int64
-	FinalRank          uint32
+	FinalRank          int
 	GravatarKey        string
 	CustomAvartarKey   string
 	Gender             int
@@ -391,6 +391,7 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 		RankNum            uint32
 		GameCoinNum        int
 		ChallangeHighScore int
+		TeamName           string
 	}
 
 	//
@@ -416,6 +417,7 @@ func getUserPlay(w http.ResponseWriter, r *http.Request) {
 		uint32(rankNum),
 		record.GameCoinNum,
 		record.ChallangeHighScore,
+		record.TeamName,
 	}
 
 	//out
@@ -624,12 +626,12 @@ func playEnd(w http.ResponseWriter, r *http.Request) {
 					lwutil.SendError("err_data_missing", "")
 				}
 				var record EventPlayerRecord
-				scoreMap := make(map[string]uint32)
+				scoreMap := make(map[string]int)
 				for i := range userIds {
 					err = json.Unmarshal([]byte(resp[i*2+1]), &record)
 					lwutil.CheckError(err, "")
 					score := scoreMap[record.TeamName]
-					score += (uint32)(100 - i)
+					score += 100 - i
 					if i == 0 {
 						score += 50
 					}
@@ -678,6 +680,10 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
 	//in
 	var in struct {
 		EventId uint64
@@ -712,16 +718,21 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 
 	type Out struct {
 		EventId uint64
+		MyRank  int
 		Ranks   []RankInfo
+		RankNum int
 	}
 
 	//get ranks
 	var ranks []RankInfo
+	myRank := 0
+	rankNum := 0
 
 	if event.HasResult {
 		cmds := make([]interface{}, in.Limit+2)
 		cmds[0] = "multi_hget"
 		cmds[1] = makeHashEventRankKey(event.Id)
+		hRankKey := cmds[1]
 		for i := uint32(0); i < in.Limit; i++ {
 			rank := i + in.Offset + 1
 			cmds[i+2] = rank
@@ -742,13 +753,31 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 			lwutil.CheckError(err, "")
 		}
 
+		//my rank
+		recordKey := makeEventPlayerRecordSubkey(in.EventId, session.Userid)
+		resp, err = ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+		lwutil.CheckError(err, "")
+
+		record := EventPlayerRecord{}
+		if resp[0] == "ok" {
+			err = json.Unmarshal([]byte(resp[1]), &record)
+			lwutil.CheckError(err, "")
+			myRank = record.FinalRank
+		}
+
+		//rankNum
+		resp, err = ssdb.Do("hsize", hRankKey)
+		lwutil.CheckSsdbError(resp, err)
+		myRank, err = strconv.Atoi(resp[1])
+		lwutil.CheckError(err, "")
 	} else {
 		//redis
 		rc := redisPool.Get()
 		defer rc.Close()
 
-		//get ranks from redis
 		eventLbLey := makeRedisLeaderboardKey(in.EventId)
+
+		//get ranks from redis
 		values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, in.Offset, in.Offset+in.Limit-1))
 		lwutil.CheckError(err, "")
 
@@ -764,13 +793,31 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 				lwutil.CheckError(err, "")
 			}
 		}
+
+		//get my rank
+		rc.Send("ZREVRANK", eventLbLey, session.Userid)
+		rc.Send("ZCARD", eventLbLey)
+		err = rc.Flush()
+		lwutil.CheckError(err, "")
+		myRank, err = redis.Int(rc.Receive())
+		if err == nil {
+			myRank += 1
+		} else {
+			myRank = 0
+		}
+		rankNum, err = redis.Int(rc.Receive())
+		if err != nil {
+			rankNum = 0
+		}
 	}
 
 	num := len(ranks)
 	if num == 0 {
 		out := Out{
 			in.EventId,
+			myRank,
 			[]RankInfo{},
+			rankNum,
 		}
 		lwutil.WriteResponse(w, out)
 		return
@@ -806,14 +853,12 @@ func getRanks(w http.ResponseWriter, r *http.Request) {
 	//out
 	out := Out{
 		in.EventId,
+		myRank,
 		ranks,
+		rankNum,
 	}
 
 	lwutil.WriteResponse(w, out)
-}
-
-func getBetInfos(w http.ResponseWriter, r *http.Request) {
-
 }
 
 func submitChallangeScore(w http.ResponseWriter, r *http.Request) {
@@ -929,6 +974,45 @@ func submitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func getBettingPool(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in struct {
+		EventId uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//betting pool
+	resp, err := ssdb.Do("hget", H_EVENT_BETTING_POOL, in.EventId)
+	lwutil.CheckSsdbError(resp, err)
+	var bettingPool map[string]int64
+	err = json.Unmarshal([]byte(resp[1]), &bettingPool)
+	lwutil.CheckError(err, "")
+
+	//team score
+	resp, err = ssdb.Do("hget", H_EVENT_TEAM_SCORE, in.EventId)
+	teamScores := map[string]int{}
+	if resp[0] == "ok" {
+		err = json.Unmarshal([]byte(resp[1]), &teamScores)
+		lwutil.CheckError(err, "")
+	}
+
+	//out
+	out := map[string]interface{}{
+		"BettingPool": bettingPool,
+		"TeamScores":  teamScores,
+	}
+	lwutil.WriteResponse(w, out)
+}
+
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(newEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(delEvent))
@@ -938,7 +1022,6 @@ func regMatch() {
 	http.Handle("/event/playBegin", lwutil.ReqHandler(playBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(playEnd))
 	http.Handle("/event/getRanks", lwutil.ReqHandler(getRanks))
-	http.Handle("/event/getBetInfos", lwutil.ReqHandler(getBetInfos))
 	http.Handle("/event/submitChallangeScore", lwutil.ReqHandler(submitChallangeScore))
-
+	http.Handle("/event/getBettingPool", lwutil.ReqHandler(getBettingPool))
 }

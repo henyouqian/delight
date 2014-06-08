@@ -987,7 +987,9 @@ static float lerpf(float a, float b, float t) {
                 
                 //update detail vc
                 SldEventDetailViewController *detailVC = [SldEventDetailViewController getInstance];
-                record.highScore = score;
+                if (score > record.highScore || record.highScore == 0) {
+                    record.highScore = score;
+                }
                 record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
                 record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
                 [detailVC updatePlayRecordWithHighscore];

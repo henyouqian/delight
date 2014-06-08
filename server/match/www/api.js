@@ -198,6 +198,10 @@ function Controller($scope, $http) {
 					"name": "submitChallangeScore",
 					"method": "POST",
 					"data": {"EventId": 1, "Score": 100, "Checksum":"cks"}
+				},{
+					"name": "getBettingPool",
+					"method": "POST",
+					"data": {"EventId": 1}
 				}
 			]
 		},{

@@ -95,7 +95,7 @@ func scoreKeeper() {
 		rankNum, err := redis.Int(rc.Do("ZCARD", eventLbLey))
 		checkError(err)
 		numPerBatch := 1000
-		currRank := uint32(1)
+		currRank := 1
 		for iBatch := 0; iBatch < rankNum/numPerBatch+1; iBatch++ {
 			offset := iBatch * numPerBatch
 			values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, offset, offset+numPerBatch-1, "WITHSCORES"))

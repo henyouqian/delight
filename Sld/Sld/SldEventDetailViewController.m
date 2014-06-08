@@ -31,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *challangeButton;
 @property (weak, nonatomic) IBOutlet UILabel *gameCoinLabel;
+@property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (nonatomic) MSWeakTimer *timer;
 @property (nonatomic) SldGameData *gamedata;
 @property (nonatomic) BOOL hasNetError;
@@ -138,10 +139,11 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         
         _gamedata.eventPlayRecord = [EventPlayRecored recordWithDictionary:dict];
         
-        [self updatePlayRecordWithHighscore];
+        //[self updatePlayRecordWithHighscore];
         
         _gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
         _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", _gameCoinNum];
+        _teamLabel.text = [NSString stringWithFormat:@"所属队伍: %@", _gamedata.eventPlayRecord.teamName];
     }];
     
     //timer
@@ -171,6 +173,10 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 //    [self.view addMotionEffect:group];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self updatePlayRecordWithHighscore];
+}
+
 - (void)loadBackground{
     NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
     
@@ -188,14 +194,17 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (void)updatePlayRecordWithHighscore {
     EventPlayRecored *record = _gamedata.eventPlayRecord;
     _highScoreStr = formatScore(record.highScore);
-    [UIView animateWithDuration:.3f animations:^{
-        _bestRecordLabel.alpha = 0.f;
-    } completion:^(BOOL finished) {
-        _bestRecordLabel.text = _highScoreStr;
+    
+    if ([_bestRecordLabel.text compare:_highScoreStr] != 0) {
         [UIView animateWithDuration:.3f animations:^{
-            _bestRecordLabel.alpha = 1.f;
+            _bestRecordLabel.alpha = 0.f;
+        } completion:^(BOOL finished) {
+            _bestRecordLabel.text = _highScoreStr;
+            [UIView animateWithDuration:.3f animations:^{
+                _bestRecordLabel.alpha = 1.f;
+            }];
         }];
-    }];
+    }
     
     int rank = record.rank;
     int rankNum = record.rankNum;
@@ -231,6 +240,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     if (endIntv < 0 || _gamedata.eventInfo.hasResult) {
         _timeRemainLabel.text = @"活动已结束";
         _matchButton.enabled = NO;
+        _challangeButton.enabled = YES;
     } else {
         NSTimeInterval beginIntv = [_gamedata.eventInfo.beginTime timeIntervalSinceNow];
         if (beginIntv > 0) {
@@ -240,6 +250,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             sec = (sec % 60);
             _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%02d:%02d:%02d", hour, minute, sec];
             _matchButton.enabled = NO;
+            _challangeButton.enabled = NO;
         } else {
             int sec = (int)endIntv;
             int hour = sec / 3600;
@@ -248,8 +259,10 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
             if (!_hasNetError && _gamedata.packInfo) {
                 _matchButton.enabled = YES;
+                _challangeButton.enabled = YES;
             } else {
                 _matchButton.enabled = NO;
+                _challangeButton.enabled = NO;
             }
         }
         

@@ -48,7 +48,7 @@
         [self loadBackground];
     }
     
-    self.title = @"本地排名";
+    self.title = @"挑战";
     gd.recentScore = 0;
     
     //cup label

@@ -15,10 +15,21 @@
 #import "util.h"
 #import "UIImageView+sldAsyncLoad.h"
 
+@interface BettingTeam : NSObject
+@property (nonatomic) NSString *teamName;
+@property (nonatomic) int score;
+@property (nonatomic) SInt64 betMoney;
+@property (nonatomic) float winMul;
+@end
+
+@implementation BettingTeam
+@end
+
+//========================
 @interface TeamScoreCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *winMul;
+@property (weak, nonatomic) IBOutlet UILabel *winMulLabel;
 
 @end
 
@@ -27,9 +38,11 @@
 @end
 
 
+//========================
 @interface SldBetController ()
 @property (nonatomic) UITableViewController *tableViewController;
-@property (weak, nonatomic) IBOutlet UIView *headerView;
+@property (nonatomic) IBOutlet UIView *headerView;
+@property (nonatomic) NSMutableArray *bettingTeams;
 @end
 
 @implementation SldBetController
@@ -59,14 +72,69 @@
     _tableViewController = [[UITableViewController alloc] init];
     _tableViewController.tableView = _tableView;
     _tableViewController.refreshControl = refreshControl;
+    
+    [self updateTeamScore];
 }
 
 - (void)onViewShown {
-    [_tableView reloadData];
+    //[_tableView reloadData];
 }
 
 - (void)updateTeamScore {
-    [_tableViewController.refreshControl endRefreshing];
+    SldGameData *gd = [SldGameData getInstance];
+    NSDictionary *body = @{@"EventId":@(gd.eventInfo.id)};
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"event/getBettingPool" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_tableViewController.refreshControl endRefreshing];
+        if (error) {
+            //alertHTTPError(error, data);
+            return;
+        }
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            alert(@"Json error", [error localizedDescription]);
+            return;
+        }
+        
+        NSDictionary *bettingPool = [dict objectForKey:@"BettingPool"];
+        NSDictionary *teamScores = [dict objectForKey:@"TeamScores"];
+        
+        NSMutableDictionary *bettingDict = [NSMutableDictionary dictionary];
+        int betSum = 0;
+        for (id key in bettingPool) {
+            BettingTeam *bt = [[BettingTeam alloc] init];
+            bt.teamName = (NSString*)key;
+            bt.betMoney = [(NSNumber*)bettingPool[key] longLongValue];
+            bettingDict[key] = bt;
+            betSum += bt.betMoney;
+        }
+        for (id key in bettingPool) {
+            BettingTeam *bt = bettingDict[key];
+            bt.winMul = (float)betSum / bt.betMoney;
+            bettingDict[key] = bt;
+        }
+        
+        for (id key in teamScores) {
+            BettingTeam *bt = [bettingDict objectForKey:key];
+            if (bt) {
+                bt.score = [(NSNumber*)teamScores[key] intValue];
+                bettingDict[key] = bt;
+            }
+        }
+        
+        _bettingTeams = [NSMutableArray array];
+        for (id key in bettingDict) {
+            [_bettingTeams addObject:bettingDict[key]];
+        }
+        
+        [_bettingTeams sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            BettingTeam* bt1 = (BettingTeam*)obj1;
+            BettingTeam* bt2 = (BettingTeam*)obj2;
+            return [bt1.teamName localizedCompare:bt2.teamName];
+        }];
+        
+        [_tableView reloadData];
+    }];
 }
 
 
@@ -79,13 +147,18 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 33;
+    return _bettingTeams.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TeamScoreCell *cell = [tableView dequeueReusableCellWithIdentifier:@"teamScoreCell" forIndexPath:indexPath];
-    //cell.teamLabel.text = @"上海";
+    if (indexPath.row < _bettingTeams.count) {
+        BettingTeam *bt = _bettingTeams[indexPath.row];
+        cell.teamLabel.text = bt.teamName;
+        cell.scoreLabel.text = [NSString stringWithFormat:@"%d", bt.score];
+        cell.winMulLabel.text = [NSString stringWithFormat:@"%.2f", bt.winMul];
+    }
     return cell;
 }
 
