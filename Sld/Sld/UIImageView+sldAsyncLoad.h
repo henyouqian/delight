@@ -10,6 +10,7 @@
 
 @interface UIImageView (sldAsyncLoad)
 
+- (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion;
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 

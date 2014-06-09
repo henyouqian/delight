@@ -45,6 +45,10 @@ func handleError() {
 	}
 }
 
+func calcReward(rank int) (reward int) {
+	return 0
+}
+
 func scoreKeeper() {
 	defer handleError()
 

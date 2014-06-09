@@ -7,7 +7,7 @@
 //
 
 #import "SldRankController.h"
-#import "SldEventDetailViewController.h"
+//#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldNevigationController.h"
@@ -282,7 +282,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SldEventDetailViewController *detailVc = [SldEventDetailViewController getInstance];
+//    SldEventDetailViewController *detailVc = [SldEventDetailViewController getInstance];
     UIColor *meColor = makeUIColor(255, 197, 131, 255);
     UIColor *normalColor = [UIColor whiteColor];
     
@@ -302,8 +302,8 @@
         //cell.userNameLabel.text = gamedata.nickName;
         cell.userNameLabel.text = @"“我”";
         cell.teamLabel.text = gamedata.teamName;
-        cell.rankLabel.text = detailVc.rankStr;
-        cell.scoreLabel.text = detailVc.highScoreStr;
+//        cell.rankLabel.text = detailVc.rankStr;
+//        cell.scoreLabel.text = detailVc.highScoreStr;
         
         setLabelColor(cell, meColor);
         
@@ -319,12 +319,13 @@
             if (rankInfo) {
                 RankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
                 [cell reset];
-                cell.rankLabel.text = [NSString stringWithFormat:@"%d", [rankInfo.rank intValue]];
+                int rank = [rankInfo.rank intValue];
+                cell.rankLabel.text = [NSString stringWithFormat:@"%d", rank];
                 cell.userNameLabel.text = rankInfo.nickName;
                 cell.scoreLabel.text = rankInfo.score;
                 cell.teamLabel.text = rankInfo.teamName;
                 
-                if (detailVc.rankStr && [detailVc.rankStr compare:cell.rankLabel.text] == 0) {
+                if (gamedata.eventPlayRecord.rank == rank) {
                     setLabelColor(cell, meColor);
                 } else {
                     setLabelColor(cell, normalColor);

@@ -8,7 +8,7 @@
 
 #import "SldEventListViewController.h"
 #import "SldHttpSession.h"
-#import "SldEventDetailViewController.h"
+//#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldLoginViewController.h"
 #import "util.h"
@@ -26,6 +26,7 @@ static const int FETCH_EVENT_COUNT = 20;
 //@property (weak, nonatomic) IBOutlet UIView *highlight;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *cupIcon;
 
 @end
 
@@ -197,7 +198,10 @@ static const int FETCH_EVENT_COUNT = 20;
     
     if ([_gameData.eventInfos count] == 0) {
         [self refreshList];
+    } else if (_gameData.needReloadEventList){
+        [self.collectionView reloadData];
     }
+     _gameData.needReloadEventList = NO;
     
     [self didBecomeActiveNotification];
 }
@@ -268,9 +272,12 @@ static const int FETCH_EVENT_COUNT = 20;
              BOOL refreshAll = NO;
              if (newLastEvent && oldLatestEvent) {
                  if (newLastEvent.id > oldLatestEvent.id) {
-                     refreshAll = YES;
                      [_gameData.eventInfos removeAllObjects];
                  }
+             }
+             
+             if (_gameData.eventInfos.count == 0) {
+                 refreshAll = YES;
              }
              
              for (int i = 0; i < [array count]; ++i) {
@@ -306,10 +313,10 @@ static const int FETCH_EVENT_COUNT = 20;
              
              if (refreshAll) {
                  [self.collectionView reloadData];
-             }
-             if (insertIndexPaths.count) {
+             } else if (insertIndexPaths.count) {
                  [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
              }
+             
          }];
     }
     
@@ -374,7 +381,7 @@ static const int FETCH_EVENT_COUNT = 20;
         [cell.statusLabel setHidden:YES];
     }
     
-    //datelabel
+    //date label
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
@@ -383,6 +390,13 @@ static const int FETCH_EVENT_COUNT = 20;
     NSString *strDate = [dateFormatter stringFromDate:event.beginTime];
     NSArray *comps = [strDate componentsSeparatedByString:@","];
     cell.dateLabel.text = [comps objectAtIndex:0];
+    
+    //cup icon
+    NSArray *pathes = @[@"cupWhite@2x.png", @"cupGold@2x.png", @"cupSilver@2x.png", @"cupBronze@2x.png"];
+    if (event.cupType >= 0 && event.cupType < pathes.count){
+        NSString *path = getResFullPath(pathes[event.cupType]);
+        [cell.cupIcon asyncLoadLocalImageWithPath:path completion:nil];
+    }
     
     return cell;
 }
@@ -486,7 +500,7 @@ static const int FETCH_EVENT_COUNT = 20;
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if (segue.identifier && [segue.identifier compare:@"toEventDetail"] == 0) {
+    if (segue.identifier && [segue.identifier compare:@"toEventMenu"] == 0) {
         UIButton *button = sender;
         UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];

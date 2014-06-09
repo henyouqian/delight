@@ -7,7 +7,7 @@
 //
 
 #import "SldBetController.h"
-#import "SldEventDetailViewController.h"
+//#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldNevigationController.h"

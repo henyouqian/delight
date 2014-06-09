@@ -94,6 +94,7 @@
 @property (nonatomic) int currPage;
 @property (nonatomic) CommentHeaderCell *imageSlideCell;
 @property (nonatomic) NSString *commentText;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @end
 
 @implementation SldCommentController
@@ -128,6 +129,16 @@
     _tableViewController = [[UITableViewController alloc] init];
     _tableViewController.tableView = _tableView;
     _tableViewController.refreshControl = refreshControl;
+    
+    //
+    [self loadBackground];
+    
+    //
+    if (_commentDatas == nil) {
+        [self updateComments];
+    }
+    
+    _ready = YES;
 }
 
 - (void)onViewShown {
@@ -160,6 +171,20 @@
             [_commentDatas addObject:commentData];
         }
         [_tableView reloadData];
+    }];
+}
+
+- (void)loadBackground{
+    NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
+    
+    BOOL imageExistLocal = imageExist(bgKey);
+    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+        if (!imageExistLocal || _bgImageView.animationImages) {
+            _bgImageView.alpha = 0.0;
+            [UIView animateWithDuration:1.f animations:^{
+                _bgImageView.alpha = 1.0;
+            }];
+        }
     }];
 }
 

@@ -12,7 +12,7 @@
 		B308AFD1190FC1750021BE9C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD22190FA67700435EF4 /* CFNetwork.framework */; };
 		B3118976192B31AD00DFB549 /* SldOfflineEventEnterControler.m in Sources */ = {isa = PBXBuildFile; fileRef = B3118975192B31AD00DFB549 /* SldOfflineEventEnterControler.m */; };
 		B3118978192B417200DFB549 /* btnBgWhite90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3118977192B417200DFB549 /* btnBgWhite90@2x.png */; };
-		B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */; };
+		B31CBEA1190894EC00621165 /* SldBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA0190894EC00621165 /* SldBriefController.m */; };
 		B31CBEA419089EA700621165 /* SldDb.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEA319089EA700621165 /* SldDb.m */; };
 		B31CBEB3190AA47500621165 /* SldButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B31CBEB2190AA47500621165 /* SldButton.m */; };
 		B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7D618F05BE60047E9FD /* InfoPlist.strings */; };
@@ -102,9 +102,14 @@
 		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
 		B3FB76C31920ACAE000E67B2 /* black32.png in Resources */ = {isa = PBXBuildFile; fileRef = B3FB76C21920ACAE000E67B2 /* black32.png */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
-		D00F63FA19407FD200C8EA3F /* cupBronze.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F719407FD200C8EA3F /* cupBronze.png */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
+		D01044911945DCE9008DFF8D /* cupBronze@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044901945DCE9008DFF8D /* cupBronze@2x.png */; };
+		D01044951945DF03008DFF8D /* cupWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044941945DF03008DFF8D /* cupWhite@2x.png */; };
+		D010449E19461D69008DFF8D /* SldEventMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D010449D19461D69008DFF8D /* SldEventMenuController.m */; };
+		D01044A219464790008DFF8D /* btnBgBlue90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D010449F19464790008DFF8D /* btnBgBlue90@2x.png */; };
+		D01044A319464790008DFF8D /* btnBgRed90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044A019464790008DFF8D /* btnBgRed90@2x.png */; };
+		D01044A419464790008DFF8D /* btnBgYellow90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044A119464790008DFF8D /* btnBgYellow90@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,8 +143,8 @@
 		B3118974192B31AD00DFB549 /* SldOfflineEventEnterControler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldOfflineEventEnterControler.h; sourceTree = "<group>"; };
 		B3118975192B31AD00DFB549 /* SldOfflineEventEnterControler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldOfflineEventEnterControler.m; sourceTree = "<group>"; };
 		B3118977192B417200DFB549 /* btnBgWhite90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgWhite90@2x.png"; sourceTree = "<group>"; };
-		B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventDetailViewController.h; sourceTree = "<group>"; };
-		B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventDetailViewController.m; sourceTree = "<group>"; };
+		B31CBE9F190894EC00621165 /* SldBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBriefController.h; sourceTree = "<group>"; };
+		B31CBEA0190894EC00621165 /* SldBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBriefController.m; sourceTree = "<group>"; };
 		B31CBEA219089EA700621165 /* SldDb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldDb.h; sourceTree = "<group>"; };
 		B31CBEA319089EA700621165 /* SldDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldDb.m; sourceTree = "<group>"; };
 		B31CBEB1190AA47500621165 /* SldButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldButton.h; sourceTree = "<group>"; };
@@ -271,9 +276,15 @@
 		B3FB76C21920ACAE000E67B2 /* black32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black32.png; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
-		D00F63F719407FD200C8EA3F /* cupBronze.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cupBronze.png; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
 		D00F63F919407FD200C8EA3F /* cupSilver@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupSilver@2x.png"; sourceTree = "<group>"; };
+		D01044901945DCE9008DFF8D /* cupBronze@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupBronze@2x.png"; sourceTree = "<group>"; };
+		D01044941945DF03008DFF8D /* cupWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupWhite@2x.png"; sourceTree = "<group>"; };
+		D010449C19461D69008DFF8D /* SldEventMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEventMenuController.h; sourceTree = "<group>"; };
+		D010449D19461D69008DFF8D /* SldEventMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEventMenuController.m; sourceTree = "<group>"; };
+		D010449F19464790008DFF8D /* btnBgBlue90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgBlue90@2x.png"; sourceTree = "<group>"; };
+		D01044A019464790008DFF8D /* btnBgRed90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgRed90@2x.png"; sourceTree = "<group>"; };
+		D01044A119464790008DFF8D /* btnBgYellow90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgYellow90@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -469,8 +480,10 @@
 				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
 				B3691E1A1900C36A0055C419 /* SldEventListViewController.h */,
 				B3691E1B1900C36A0055C419 /* SldEventListViewController.m */,
-				B31CBE9F190894EC00621165 /* SldEventDetailViewController.h */,
-				B31CBEA0190894EC00621165 /* SldEventDetailViewController.m */,
+				D010449C19461D69008DFF8D /* SldEventMenuController.h */,
+				D010449D19461D69008DFF8D /* SldEventMenuController.m */,
+				B31CBE9F190894EC00621165 /* SldBriefController.h */,
+				B31CBEA0190894EC00621165 /* SldBriefController.m */,
 				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				B383536B191ACA4700D259F5 /* SldLobbyController.h */,
@@ -507,7 +520,8 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
-				D00F63F719407FD200C8EA3F /* cupBronze.png */,
+				D01044941945DF03008DFF8D /* cupWhite@2x.png */,
+				D01044901945DCE9008DFF8D /* cupBronze@2x.png */,
 				D00F63F819407FD200C8EA3F /* cupGold@2x.png */,
 				D00F63F919407FD200C8EA3F /* cupSilver@2x.png */,
 				B3DB83201929494B00544759 /* otlFastForward@2x.png */,
@@ -530,6 +544,9 @@
 				B383536F191AD68400D259F5 /* glyphicons_245_chat.png */,
 				B3835370191AD68400D259F5 /* glyphicons_245_chat@2x.png */,
 				B33121FA1916D02C003E05DB /* thumbDarker.png */,
+				D010449F19464790008DFF8D /* btnBgBlue90@2x.png */,
+				D01044A019464790008DFF8D /* btnBgRed90@2x.png */,
+				D01044A119464790008DFF8D /* btnBgYellow90@2x.png */,
 				B3C1BB6C1910D8BE0062D50C /* btnBgWhite50.png */,
 				B3C1BB8A191137400062D50C /* btnBgGray90.png */,
 				B3118977192B417200DFB549 /* btnBgWhite90@2x.png */,
@@ -666,7 +683,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */,
-				D00F63FA19407FD200C8EA3F /* cupBronze.png in Resources */,
 				B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */,
 				B3C1BB7B1910D8BE0062D50C /* btnBgWhite90.png in Resources */,
 				B3C1BB801910D8BE0062D50C /* glyphicons_177_fast_forward.png in Resources */,
@@ -687,20 +703,25 @@
 				B3FB76C31920ACAE000E67B2 /* black32.png in Resources */,
 				B33DD38B192124BE006B8ACD /* weiboBlack36@2x.png in Resources */,
 				B33DD38A192124BE006B8ACD /* weiboBlack36.png in Resources */,
+				D01044911945DCE9008DFF8D /* cupBronze@2x.png in Resources */,
 				B3C0AF5F1906703200CB4DFD /* db in Resources */,
 				B3C1BB821910D8BE0062D50C /* glyphicons_178_step_forward.png in Resources */,
 				B3C1BB811910D8BE0062D50C /* glyphicons_177_fast_forward@2x.png in Resources */,
 				B3835376191AD83500D259F5 /* glyphicons_150_edit@2x.png in Resources */,
 				B3C1BB7C1910D8BE0062D50C /* glyphicons_173_play.png in Resources */,
+				D01044A219464790008DFF8D /* btnBgBlue90@2x.png in Resources */,
 				B3A522111928F56000D5A38C /* otlUser@2x.png in Resources */,
 				B39E447F191E794800CBB247 /* glyphicons_017_music@2x.png in Resources */,
 				B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */,
+				D01044A419464790008DFF8D /* btnBgYellow90@2x.png in Resources */,
+				D01044951945DF03008DFF8D /* cupWhite@2x.png in Resources */,
 				B3835372191AD68400D259F5 /* glyphicons_245_chat@2x.png in Resources */,
 				B3024C5F18FE7EF600F9EEA3 /* audio in Resources */,
 				B3835371191AD68400D259F5 /* glyphicons_245_chat.png in Resources */,
 				B3C1BB871910D8BE0062D50C /* stop.png in Resources */,
 				B39E447D191E794800CBB247 /* glyphicons_003_user@2x.png in Resources */,
 				B3C1BB841910D8BE0062D50C /* next.png in Resources */,
+				D01044A319464790008DFF8D /* btnBgRed90@2x.png in Resources */,
 				B3C1BB861910D8BE0062D50C /* play.png in Resources */,
 				B3C1BB7E1910D8BE0062D50C /* glyphicons_175_stop.png in Resources */,
 				B3A522131928FDDC00D5A38C /* otlMusic@2x.png in Resources */,
@@ -748,9 +769,10 @@
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
+				D010449E19461D69008DFF8D /* SldEventMenuController.m in Sources */,
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
-				B31CBEA1190894EC00621165 /* SldEventDetailViewController.m in Sources */,
+				B31CBEA1190894EC00621165 /* SldBriefController.m in Sources */,
 				B38110401913FC750093F321 /* config.m in Sources */,
 				B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */,
 				B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */,

@@ -16,6 +16,10 @@
 
 
 - (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion{
+    if (localPath == nil) {
+        lwError("localPath == nil");
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL isGif = [[[localPath pathExtension] lowercaseString] compare:@"gif"] == 0;
         if (isGif) {

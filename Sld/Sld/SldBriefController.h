@@ -1,5 +1,5 @@
 //
-//  SldEventDetailViewController.h
+//  SldBriefViewController.h
 //  Sld
 //
 //  Created by Wei Li on 14-4-24.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SldEventListViewController.h"
 
-@interface SldEventDetailViewController : UIViewController<UIAlertViewDelegate>
+@interface SldBriefController : UIViewController<UIAlertViewDelegate>
 @property (nonatomic) int highScore;
 @property (nonatomic) int rank;
 @property (nonatomic) NSString *highScoreStr;

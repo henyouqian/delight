@@ -20,6 +20,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) BOOL sliderNum;
 @property (nonatomic) NSArray *challengeSecs;
 @property (nonatomic) int state; //undefined:0, comming:1, running:2, closed:3
+@property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
 @end
@@ -81,6 +82,8 @@ enum GameMode{
 @property (nonatomic) int money;
 
 @property (nonatomic) enum GameMode gameMode;
+
+@property (nonatomic) BOOL needReloadEventList;
 
 + (instancetype)getInstance;
 - (void)reset;

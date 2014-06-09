@@ -28,6 +28,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     if (event.sliderNum == 0) {
         event.sliderNum = DEFUALT_SLIDER_NUM;
     }
+    event.cupType = [(NSNumber*)[dict valueForKey:@"CupType"] intValue];
     
     return event;
 }
@@ -97,7 +98,7 @@ static SldGameData *g_inst = nil;
 
 - (instancetype)init {
     if ([super init]) {
-        _eventInfos = [NSMutableArray arrayWithCapacity:20];
+        _eventInfos = [NSMutableArray array];
         
         [self reset];
     }
@@ -110,6 +111,7 @@ static SldGameData *g_inst = nil;
 }
 
 - (void)reset {
+    _eventInfos = [NSMutableArray array];
     _online = NO;
     _recentScore = 0;
     _eventInfo = nil;
@@ -123,6 +125,8 @@ static SldGameData *g_inst = nil;
     _teamName = nil;
     _gravatarKey = nil;
     _money = 0;
+    
+    _needReloadEventList = NO;
 }
 
 @end

@@ -108,6 +108,7 @@ type EventPlayerRecord struct {
 	Gender             int
 	GameCoinNum        int
 	ChallangeHighScore int
+	CupType            int
 }
 
 func (record *EventPlayerRecord) init(playerInfo *PlayerInfo) {
@@ -261,7 +262,7 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 	defer ssdb.Close()
 
 	//session
-	_, err = findSession(w, r, nil)
+	session, err := findSession(w, r, nil)
 	lwutil.CheckError(err, "err_auth")
 
 	//in
@@ -303,11 +304,49 @@ func listEvent(w http.ResponseWriter, r *http.Request) {
 	resp = resp[1:]
 
 	//out
+	type OutEvent struct {
+		Event
+		CupType int
+	}
+
 	eventNum := len(resp) / 2
-	out := make([]Event, eventNum)
+	out := make([]OutEvent, eventNum)
 	for i := 0; i < eventNum; i++ {
 		err = json.Unmarshal([]byte(resp[i*2+1]), &out[i])
 		lwutil.CheckError(err, "")
+	}
+
+	//event index map:
+	//map[recordKey:string]eventIndexInOut:int
+	idxMap := map[string]int{}
+	for i := 0; i < eventNum; i++ {
+		recordKey := makeEventPlayerRecordSubkey(out[i].Id, session.Userid)
+		idxMap[recordKey] = i
+	}
+
+	//cup type
+	cmds = make([]interface{}, 0, eventNum+2)
+	cmds = append(cmds, "multi_hget")
+	cmds = append(cmds, H_EVENT_PLAYER_RECORD)
+
+	for i := 0; i < eventNum; i++ {
+		recordKey := makeEventPlayerRecordSubkey(out[i].Id, session.Userid)
+		cmds = append(cmds, recordKey)
+	}
+
+	//get event player record
+	resp, err = ssdb.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	var record EventPlayerRecord
+	recordNum := len(resp) / 2
+	for i := 0; i < recordNum; i++ {
+		recordKey := resp[i*2]
+		err = json.Unmarshal([]byte(resp[i*2+1]), &record)
+		lwutil.CheckError(err, "")
+
+		out[idxMap[recordKey]].CupType = record.CupType
 	}
 
 	lwutil.WriteResponse(w, out)
@@ -957,10 +996,14 @@ func submitChallangeScore(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal([]byte(resp[1]), &event)
 		lwutil.CheckError(err, "")
 
+		record.CupType = 0
 		for i, sec := range event.ChallengeSecs {
 			refScore := -int(sec * 1000)
 			if refScore > oldScore && refScore <= in.Score {
 				reward += challageRewards[i]
+			}
+			if record.CupType == 0 && in.Score >= refScore {
+				record.CupType = i + 1
 			}
 		}
 	}
@@ -986,9 +1029,11 @@ func submitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	out := struct {
 		Reward   int
 		NewMoney int
+		CupType  int
 	}{
 		reward,
 		newMoney,
+		record.CupType,
 	}
 
 	//out

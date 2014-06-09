@@ -7,6 +7,7 @@
 //
 
 #import "SldGameScene.h"
+#import "SldBriefController.h"
 #import "util.h"
 #import "SldButton.h"
 #import "SldSprite.h"
@@ -986,13 +987,13 @@ static float lerpf(float a, float b, float t) {
                 }
                 
                 //update detail vc
-                SldEventDetailViewController *detailVC = [SldEventDetailViewController getInstance];
+                SldBriefController *briefVC = [SldBriefController getInstance];
                 if (score > record.highScore || record.highScore == 0) {
                     record.highScore = score;
                 }
                 record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
                 record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
-                [detailVC updatePlayRecordWithHighscore];
+                [briefVC updatePlayRecordWithHighscore];
                 
                 //rank label
                 double delayInSeconds = .4f;
@@ -1072,6 +1073,12 @@ static float lerpf(float a, float b, float t) {
                     if (error) {
                         alert(@"Json error", [error localizedDescription]);
                         return;
+                    }
+                    
+                    int cupType = [(NSNumber*)[dict objectForKey:@"CupType"] intValue];
+                    if (_gameData.eventInfo.cupType != cupType) {
+                        _gameData.needReloadEventList = YES;
+                        _gameData.eventInfo.cupType = cupType;
                     }
 
                     //money label

@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *goldLabel;
 @property (weak, nonatomic) IBOutlet UILabel *silverLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bronzeLabel;
+@property (nonatomic) SldGameData *gd;
 @end
 
 @implementation SldOfflineEventEnterControler
@@ -29,11 +30,11 @@
 {
     [super viewDidLoad];
     
-    SldGameData *gd = [SldGameData getInstance];
+    _gd = [SldGameData getInstance];
     
     //load pack data
     FMDatabase *db = [SldDb defaultDb].fmdb;
-    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:gd.eventInfo.packId]];
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:_gd.eventInfo.packId]];
     
     if ([rs next]) { //local
         NSString *data = [rs stringForColumnIndex:0];
@@ -43,16 +44,16 @@
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-        gd.packInfo = [PackInfo packWithDictionary:dict];
+        _gd.packInfo = [PackInfo packWithDictionary:dict];
         
         [self loadBackground];
     }
     
     self.title = @"挑战";
-    gd.recentScore = 0;
+    _gd.recentScore = 0;
     
     //cup label
-    NSArray *secs = gd.eventInfo.challengeSecs;
+    NSArray *secs = _gd.eventInfo.challengeSecs;
     if (secs != nil && secs.count == 3) {
         _goldLabel.text = formatScore([(NSNumber*)secs[0] intValue]*-1000);
         _silverLabel.text = formatScore([(NSNumber*)secs[1] intValue]*-1000);
@@ -159,21 +160,78 @@
 }
 
 - (IBAction)onEnterGame:(id)sender {
+    _gd.gameMode = CHALLANGE;
+    [self loadPacks];
+}
+
+- (void)loadPacks {
+    NSArray *imageKeys = _gd.packInfo.images;
+    __block int localNum = 0;
+    NSUInteger totalNum = [imageKeys count];
+    if (totalNum == 0) {
+        alert(@"Not downloaded", nil);
+        return;
+    }
+    for (NSString *imageKey in imageKeys) {
+        if (imageExist(imageKey)) {
+            localNum++;
+        }
+    }
+    if (localNum == totalNum) {
+        [self enterGame];
+        return;
+    } else if (localNum < totalNum) {
+        NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download..."
+                                                        message:msg
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        //download
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        [session cancelAllTask];
+        for (NSString *imageKey in imageKeys) {
+            if (!imageExist(imageKey)) {
+                [session downloadFromUrl:makeImageServerUrl(imageKey)
+                                  toPath:makeImagePath(imageKey)
+                                withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                 {
+                     if (error) {
+                         lwError("Download error: %@", error.localizedDescription);
+                         [alert dismissWithClickedButtonIndex:0 animated:YES];
+                         return;
+                     }
+                     localNum++;
+                     [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
+                     
+                     //download complete
+                     if (localNum == totalNum) {
+                         [alert dismissWithClickedButtonIndex:0 animated:YES];
+                         [self enterGame];
+                     }
+                 }];
+            }
+        }
+    }
+}
+
+- (void)enterGame {
+    //update db
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gd.eventInfo.id)];
+    if (!ok) {
+        lwError("Sql error:%@", [db lastErrorMessage]);
+        return;
+    }
+    
+    //
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
     controller.matchSecret = nil;
     
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
