@@ -178,14 +178,17 @@
     NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
     
     BOOL imageExistLocal = imageExist(bgKey);
-    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
-        if (!imageExistLocal || _bgImageView.animationImages) {
+    NSString* localPath = makeImagePath(bgKey);
+    if (imageExistLocal) {
+        _bgImageView.image = [UIImage imageWithContentsOfFile:localPath];
+    } else {
+        [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
             _bgImageView.alpha = 0.0;
             [UIView animateWithDuration:1.f animations:^{
                 _bgImageView.alpha = 1.0;
             }];
-        }
-    }];
+        }];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

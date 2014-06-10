@@ -342,10 +342,10 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         int gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
         _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", gameCoinNum];
         
+        _gamedata.eventPlayRecord.gameCoinNum = gameCoinNum;
         if (gameCoinNum > 0) {
             [self onClickMatch:nil];
         }
-        _gamedata.eventPlayRecord.gameCoinNum = gameCoinNum;
     }];
 }
 
