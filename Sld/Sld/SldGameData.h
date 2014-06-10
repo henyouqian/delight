@@ -10,6 +10,13 @@
 
 extern const UInt32 DEFUALT_SLIDER_NUM;
 
+enum EventState{
+    UNDEFINED,
+    COMMING,
+    RUNNING,
+    CLOSED,
+};
+
 @interface EventInfo : NSObject
 @property (nonatomic) UInt64 id;
 @property (nonatomic) UInt64 packId;
@@ -19,7 +26,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) BOOL hasResult;
 @property (nonatomic) BOOL sliderNum;
 @property (nonatomic) NSArray *challengeSecs;
-@property (nonatomic) int state; //undefined:0, comming:1, running:2, closed:3
+@property (nonatomic) enum EventState state; //undefined:0, comming:1, running:2, closed:3
 @property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
@@ -57,6 +64,7 @@ enum GameMode{
     PRACTICE,
     CHALLANGE,
     MATCH,
+    OFFLINE,
 };
 
 //=================

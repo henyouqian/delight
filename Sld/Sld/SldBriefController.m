@@ -61,6 +61,8 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     self.view.backgroundColor = [UIColor clearColor];
+    
+    _playButton.enabled = _gamedata.eventInfo.state == RUNNING;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -122,6 +124,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     if (endIntv < 0 || _gamedata.eventInfo.hasResult) {
         _timeRemainLabel.text = @"活动已结束";
         _playButton.enabled = NO;
+        _gamedata.eventInfo.state = CLOSED;
     } else {
         NSTimeInterval beginIntv = [_gamedata.eventInfo.beginTime timeIntervalSinceNow];
         if (beginIntv > 0) {
@@ -131,6 +134,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             sec = (sec % 60);
             _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%02d:%02d:%02d", hour, minute, sec];
             _playButton.enabled = NO;
+            _gamedata.eventInfo.state = COMMING;
         } else {
             int sec = (int)endIntv;
             int hour = sec / 3600;
@@ -142,6 +146,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             } else {
                 _playButton.enabled = NO;
             }
+            _gamedata.eventInfo.state = RUNNING;
         }
     }
 }

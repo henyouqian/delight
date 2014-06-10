@@ -133,33 +133,36 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 }
 
 - (void)onTimer {
+    if (!_gd.packInfo || !_gd.eventPlayRecord) {
+        _matchButton.enabled = NO;
+        _challangeButton.enabled = NO;
+        return;
+    }
     NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
     if (endIntv < 0 || _gd.eventInfo.hasResult) {
         //closed
-        _matchButton.enabled = NO;
-        [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled];
+        _matchButton.enabled = YES;
+        [_matchButton setTitle:@"已结束" forState:UIControlStateNormal];
         _challangeButton.enabled = YES;
+        _gd.eventInfo.state = CLOSED;
     } else {
         NSTimeInterval beginIntv = [_gd.eventInfo.beginTime timeIntervalSinceNow];
         if (beginIntv > 0) {
             //comming
             _matchButton.enabled = NO;
             _challangeButton.enabled = NO;
+            _gd.eventInfo.state = COMMING;
         } else {
             //running
-            if (_gd.packInfo && _gd.eventPlayRecord) {
-                _matchButton.enabled = YES;
-                _challangeButton.enabled = YES;
-            } else {
-                _matchButton.enabled = NO;
-                _challangeButton.enabled = NO;
-            }
+            _matchButton.enabled = YES;
+            _challangeButton.enabled = YES;
+            _gd.eventInfo.state = RUNNING;
         }
     }
 }
 
 - (IBAction)onMatchButton:(id)sender {
-    
+    _gd.gameMode = MATCH;
 }
 
 - (IBAction)onChallangeButton:(id)sender {

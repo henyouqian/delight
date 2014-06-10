@@ -136,7 +136,7 @@ static const int FETCH_EVENT_COUNT = 20;
     if (eventNum > 0) {
         for (int i = 0; i < eventNum; ++i) {
             EventInfo *eventInfo = _gameData.eventInfos[i];
-            if (eventInfo.state == 3) {
+            if (eventInfo.state == CLOSED) {
                 continue;
             }
             int state = 0;
@@ -153,7 +153,7 @@ static const int FETCH_EVENT_COUNT = 20;
                 }
             }
             if (state != eventInfo.state) {
-                if (eventInfo.state > 0) {
+                if (eventInfo.state != UNDEFINED) {
                     [reloadIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                 }
                 eventInfo.state = state;

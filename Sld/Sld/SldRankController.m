@@ -57,7 +57,13 @@
 @property (nonatomic) BOOL loadingRank;
 @end
 
+static SldRankController *_inst = nil;
+
 @implementation SldRankController
+
++ (instancetype)getInstance {
+    return _inst;
+}
 
 - (void)dealloc {
     
@@ -67,6 +73,7 @@
 {
     [super viewDidLoad];
     
+    _inst = self;
     _loadingRank = NO;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -302,8 +309,9 @@
         //cell.userNameLabel.text = gamedata.nickName;
         cell.userNameLabel.text = @"“我”";
         cell.teamLabel.text = gamedata.teamName;
-//        cell.rankLabel.text = detailVc.rankStr;
-//        cell.scoreLabel.text = detailVc.highScoreStr;
+        cell.rankLabel.text = [NSString stringWithFormat:@"%d", gamedata.eventPlayRecord.rank];
+        NSString *timeStr = formatScore(gamedata.eventPlayRecord.highScore);
+        cell.scoreLabel.text = timeStr;
         
         setLabelColor(cell, meColor);
         

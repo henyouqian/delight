@@ -8,6 +8,8 @@
 
 #import "SldGameScene.h"
 #import "SldBriefController.h"
+#import "SldRankController.h"
+#import "SldBetController.h"
 #import "util.h"
 #import "SldButton.h"
 #import "SldSprite.h"
@@ -1014,6 +1016,10 @@ static float lerpf(float a, float b, float t) {
                     SKAction *seq = [SKAction sequence:@[/*wait, */flip1, setText, flip2]];
                     [rankLabel runAction:seq];
                 });
+                
+                //update rank controller
+                [[SldRankController getInstance] updateRanks];
+                [[SldBetController getInstance] updateTeamScore];
             }
         }];
         [_btnExit setHidden:NO];

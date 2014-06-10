@@ -45,7 +45,13 @@
 @property (nonatomic) NSMutableArray *bettingTeams;
 @end
 
+static SldBetController *_inst = nil;
+
 @implementation SldBetController
+
++ (instancetype)getInstance {
+    return _inst;
+}
 
 - (void)dealloc {
     
@@ -55,6 +61,7 @@
 {
     [super viewDidLoad];
     
+    _inst = self;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     

@@ -226,7 +226,7 @@
         cell.scrollView.delegate = self;
         cell.pageControl.currentPage = 0;
         NSMutableArray *images = gameData.packInfo.images;
-        cell.pageControl.numberOfPages = [images count];
+        cell.pageControl.numberOfPages = [images count]+1;
         
         //desc
         CGRect frame;
@@ -239,6 +239,7 @@
         textView.textColor = [UIColor whiteColor];
         textView.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
         textView.backgroundColor = [UIColor clearColor];
+        textView.editable = false;
         [cell.scrollView addSubview:textView];
         
         //image
@@ -259,7 +260,7 @@
             imageIndex++;
         }
         CGSize pageScrollViewSize = cell.scrollView.frame.size;
-        cell.scrollView.contentSize = CGSizeMake(pageScrollViewSize.width * images.count, pageScrollViewSize.height);
+        cell.scrollView.contentSize = CGSizeMake(pageScrollViewSize.width * (images.count+1), pageScrollViewSize.height);
         
         //set second page present
         [cell.pageControl setCurrentPage:1];
@@ -419,7 +420,7 @@
 
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
     CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    _currPage = index + 1;
+    _currPage = (int)index + 1;
     if (cell) {
         [cell.pageControl setCurrentPage:_currPage];
     }

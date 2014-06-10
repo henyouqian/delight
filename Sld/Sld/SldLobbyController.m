@@ -30,7 +30,7 @@
 
 - (IBAction)onSegChange:(id)sender {
     UISegmentedControl *seg = sender;
-    int idx = seg.selectedSegmentIndex;
+    NSInteger idx = seg.selectedSegmentIndex;
     
     _rankView.hidden = YES;
     _commentView.hidden = YES;

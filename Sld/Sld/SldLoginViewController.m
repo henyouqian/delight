@@ -59,7 +59,9 @@
 
 - (IBAction)onOfflineButton:(id)sender {
     //[self dismissViewControllerAnimated:YES completion:nil];
-    [SldGameData getInstance].online = NO;
+    SldGameData *gd = [SldGameData getInstance];
+    gd.online = NO;
+    gd.gameMode = OFFLINE;
 }
 
 - (IBAction)backToLogin:(UIStoryboardSegue *)segue {

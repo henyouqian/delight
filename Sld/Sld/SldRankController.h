@@ -11,6 +11,9 @@
 @interface SldRankController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
++ (instancetype)getInstance;
 - (void)onViewShown;
+- (void)updateRanks;
 
 @end

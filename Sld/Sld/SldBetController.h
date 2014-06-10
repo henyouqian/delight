@@ -11,6 +11,9 @@
 @interface SldBetController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
++ (instancetype)getInstance;
+- (void)updateTeamScore;
 - (void)onViewShown;
 
 @end

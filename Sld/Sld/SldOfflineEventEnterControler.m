@@ -163,7 +163,6 @@
 }
 
 - (IBAction)onEnterGame:(id)sender {
-    _gd.gameMode = CHALLANGE;
     [self loadPacks];
 }
 
