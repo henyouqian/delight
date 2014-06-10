@@ -137,6 +137,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     if (endIntv < 0 || _gd.eventInfo.hasResult) {
         //closed
         _matchButton.enabled = NO;
+        [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled];
         _challangeButton.enabled = YES;
     } else {
         NSTimeInterval beginIntv = [_gd.eventInfo.beginTime timeIntervalSinceNow];
