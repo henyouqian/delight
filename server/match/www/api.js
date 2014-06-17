@@ -239,6 +239,14 @@ function Controller($scope, $http) {
 					"name": "buyGameCoin",
 					"method": "POST",
 					"data": {"EventId":0, "GameCoinPackId":0}
+				},{
+					"name": "setIapProductId",
+					"method": "POST",
+					"data": ["iapProductId1", "iapProductId2"]
+				},{
+					"name": "listIapProductId",
+					"method": "POST",
+					"data": ""
 				}
 			]
 		}

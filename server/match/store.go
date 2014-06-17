@@ -12,6 +12,10 @@ type GameCoinPack struct {
 	CoinNum int
 }
 
+const (
+	K_IAP_PRODUCT_IDS = "K_IAP_PRODUCT_IDS"
+)
+
 var (
 	gameCoinPacks = []GameCoinPack{
 		{50, 1},
@@ -122,7 +126,55 @@ func apiBuyGameCoin(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func apiListIapProductId(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//
+	resp, err := ssdb.Do("get", K_IAP_PRODUCT_IDS)
+	lwutil.CheckSsdbError(resp, err)
+
+	out := []string{}
+	err = json.Unmarshal([]byte(resp[1]), &out)
+
+	lwutil.WriteResponse(w, out)
+}
+
+func apiSetIapProductId(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//in
+	var in []string
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//
+	if len(in) == 0 {
+		lwutil.SendError("err_no_in", "")
+	}
+	js, err := json.Marshal(in)
+	lwutil.CheckError(err, "")
+
+	resp, err := ssdb.Do("set", K_IAP_PRODUCT_IDS, js)
+	lwutil.CheckSsdbError(resp, err)
+
+	lwutil.WriteResponse(w, in)
+}
+
 func regStore() {
 	http.Handle("/store/listGameCoinPack", lwutil.ReqHandler(apiListGameCoinPack))
 	http.Handle("/store/buyGameCoin", lwutil.ReqHandler(apiBuyGameCoin))
+	http.Handle("/store/listIapProductId", lwutil.ReqHandler(apiListIapProductId))
+	http.Handle("/store/setIapProductId", lwutil.ReqHandler(apiSetIapProductId))
 }

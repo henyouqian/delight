@@ -242,14 +242,13 @@
             return;
         }
         
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *records = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
         
         _matchResults = [NSMutableArray array];
-        NSArray *records = [dict objectForKey:@"Records"];
         for (NSDictionary *record in records) {
             SldMatchResult *mr = [[SldMatchResult alloc] init];
             mr.thumbKey = @""; //fixme
