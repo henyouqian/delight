@@ -30,6 +30,7 @@ enum EventState{
 @property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
+- (enum EventState)updateState;
 @end
 
 //=================
@@ -54,6 +55,10 @@ enum EventState{
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) int gameCoinNum;
 @property (nonatomic) int challangeHighScore;
+@property (nonatomic) SInt64 matchReward;
+@property (nonatomic) SInt64 betReward;
+@property (nonatomic) NSMutableDictionary *bet;    //[teamName:string]betMoney:int64
+@property (nonatomic) SInt64 BetMoneySum;
 
 
 + (instancetype)recordWithDictionary:(NSDictionary*)dict;
@@ -79,7 +84,7 @@ enum GameMode{
 - (void)resetEvent;
 
 //player
-@property (nonatomic) UInt64 userId;
+@property (nonatomic) SInt64 userId;
 @property (nonatomic) NSString *userName;
 @property (nonatomic) BOOL online;
 
@@ -87,13 +92,21 @@ enum GameMode{
 @property (nonatomic) uint gender;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
-@property (nonatomic) int money;
+@property (nonatomic) SInt64 money;
+@property (nonatomic) SInt64 rewardCache;
+
+@property (nonatomic) int betCloseBeforeEndSec;
 
 @property (nonatomic) enum GameMode gameMode;
 
 @property (nonatomic) BOOL needReloadEventList;
 
+//const
+@property (nonatomic) NSArray *TEAM_NAMES;
+
 + (instancetype)getInstance;
 - (void)reset;
 
 @end
+
+

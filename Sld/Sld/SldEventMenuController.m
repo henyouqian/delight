@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *challangeButton;
+@property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) MSWeakTimer *timer;
 @end
@@ -138,26 +139,31 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         _challangeButton.enabled = NO;
         return;
     }
-    NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
-    if (endIntv < 0 || _gd.eventInfo.hasResult) {
-        //closed
+    
+    enum EventState state = [_gd.eventInfo updateState];
+    
+    if (state == CLOSED) {
         _matchButton.enabled = YES;
         [_matchButton setTitle:@"已结束" forState:UIControlStateNormal];
         _challangeButton.enabled = YES;
-        _gd.eventInfo.state = CLOSED;
-    } else {
+        _timeRemainLabel.hidden = YES;
+    } else if (state == COMMING) {
         NSTimeInterval beginIntv = [_gd.eventInfo.beginTime timeIntervalSinceNow];
-        if (beginIntv > 0) {
-            //comming
-            _matchButton.enabled = NO;
-            _challangeButton.enabled = NO;
-            _gd.eventInfo.state = COMMING;
-        } else {
-            //running
-            _matchButton.enabled = YES;
-            _challangeButton.enabled = YES;
-            _gd.eventInfo.state = RUNNING;
-        }
+        NSString *str = formatInterval((int)beginIntv);
+        
+        _matchButton.enabled = NO;
+        _challangeButton.enabled = NO;
+        
+        _timeRemainLabel.hidden = NO;
+        _timeRemainLabel.text = [NSString stringWithFormat:@"距离比赛开始%@", str];
+    } else if (state == RUNNING) {
+        NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
+        NSString *str = formatInterval((int)endIntv);
+        
+        _timeRemainLabel.text = [NSString stringWithFormat:@"比赛剩余%@", str];
+        _matchButton.enabled = YES;
+        _challangeButton.enabled = YES;
+        _timeRemainLabel.hidden = NO;
     }
 }
 

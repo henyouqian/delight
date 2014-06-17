@@ -9,7 +9,7 @@
 #import "SldLoginViewController.h"
 #import "SldEventListViewController.h"
 #import "SldHttpSession.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "SldGameData.h"
 #import "MMPickerView.h"
 #import "SldUserInfoController.h"
@@ -175,6 +175,8 @@
                 gameData.teamName = [dict objectForKey:@"TeamName"];
                 gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
                 gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+                gameData.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
+                gameData.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }];

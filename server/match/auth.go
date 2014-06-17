@@ -28,10 +28,10 @@ var (
 )
 
 type Session struct {
-	Userid   uint64
+	Userid   int64
 	Username string
 	Born     time.Time
-	Appid    uint32
+	Appid    int
 }
 
 type Account struct {
@@ -44,7 +44,7 @@ func init() {
 	glog.Infoln("auth init")
 }
 
-func newSession(w http.ResponseWriter, userid uint64, username string, appid uint32, ssdb *ssdb.Client) (usertoken string) {
+func newSession(w http.ResponseWriter, userid int64, username string, appid int, ssdb *ssdb.Client) (usertoken string) {
 	var err error
 	if ssdb == nil {
 		ssdb, err = ssdbAuthPool.Get()
@@ -124,7 +124,7 @@ func findSession(w http.ResponseWriter, r *http.Request, ssdb *ssdb.Client) (*Se
 	return &session, nil
 }
 
-func authRegister(w http.ResponseWriter, r *http.Request) {
+func apiAuthRegister(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//ssdb
@@ -162,12 +162,12 @@ func authRegister(w http.ResponseWriter, r *http.Request) {
 
 	// reply
 	reply := struct {
-		Userid uint64
+		Userid int64
 	}{id}
 	lwutil.WriteResponse(w, reply)
 }
 
-func authLogin(w http.ResponseWriter, r *http.Request) {
+func apiAuthLogin(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//ssdb
@@ -209,7 +209,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	if resp[0] != "ok" {
 		lwutil.SendError("err_not_match", "name and password not match")
 	}
-	userId, err := strconv.ParseUint(resp[1], 10, 64)
+	userId, err := strconv.ParseInt(resp[1], 10, 64)
 	lwutil.CheckError(err, "")
 
 	resp, err = ssdb.Do("hget", H_ACCOUNT, userId)
@@ -226,7 +226,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get appid
-	appid := uint32(0)
+	appid := 0
 	// if in.Appsecret != "" {
 	// 	row = authDB.QueryRow("SELECT id FROM apps WHERE secret=?", in.Appsecret)
 	// 	err = row.Scan(&appid)
@@ -240,7 +240,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	out := struct {
 		Token  string
 		Now    int64
-		UserId uint64
+		UserId int64
 	}{
 		usertoken,
 		lwutil.GetRedisTimeUnix(),
@@ -249,7 +249,7 @@ func authLogin(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
-func authLogout(w http.ResponseWriter, r *http.Request) {
+func apiAuthLogout(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//ssdb
@@ -282,7 +282,7 @@ func authLogout(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, "logout")
 }
 
-func authLoginInfo(w http.ResponseWriter, r *http.Request) {
+func apiAuthLoginInfo(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	session, err := findSession(w, r, nil)
@@ -362,7 +362,7 @@ func authLoginInfo(w http.ResponseWriter, r *http.Request) {
 // 	lwutil.WriteResponse(w, apps)
 // }
 
-func ssdbTest(w http.ResponseWriter, r *http.Request) {
+func apiSsdbTest(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	ssdb, err := ssdbAuthPool.Get()
@@ -387,9 +387,9 @@ func ssdbTest(w http.ResponseWriter, r *http.Request) {
 }
 
 func regAuth() {
-	http.Handle("/auth/login", lwutil.ReqHandler(authLogin))
-	http.Handle("/auth/logout", lwutil.ReqHandler(authLogout))
-	http.Handle("/auth/register", lwutil.ReqHandler(authRegister))
-	http.Handle("/auth/info", lwutil.ReqHandler(authLoginInfo))
-	http.Handle("/auth/ssdbTest", lwutil.ReqHandler(ssdbTest))
+	http.Handle("/auth/login", lwutil.ReqHandler(apiAuthLogin))
+	http.Handle("/auth/logout", lwutil.ReqHandler(apiAuthLogout))
+	http.Handle("/auth/register", lwutil.ReqHandler(apiAuthRegister))
+	http.Handle("/auth/info", lwutil.ReqHandler(apiAuthLoginInfo))
+	http.Handle("/auth/ssdbTest", lwutil.ReqHandler(apiSsdbTest))
 }

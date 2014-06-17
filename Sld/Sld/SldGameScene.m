@@ -10,7 +10,7 @@
 #import "SldBriefController.h"
 #import "SldRankController.h"
 #import "SldBetController.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "SldButton.h"
 #import "SldSprite.h"
 #import "SldStreamPlayer.h"

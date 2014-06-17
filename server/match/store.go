@@ -25,7 +25,7 @@ func glogStore() {
 	glog.Info("")
 }
 
-func listGameCoinPack(w http.ResponseWriter, r *http.Request) {
+func apiListGameCoinPack(w http.ResponseWriter, r *http.Request) {
 	out := struct {
 		GameCoinPacks []GameCoinPack
 	}{
@@ -34,13 +34,13 @@ func listGameCoinPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
-func buyGameCoin(w http.ResponseWriter, r *http.Request) {
+func apiBuyGameCoin(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
 	//in
 	var in struct {
-		EventId        uint64
+		EventId        int64
 		GameCoinPackId int
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
@@ -79,8 +79,7 @@ func buyGameCoin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//player
-	var playerInfo PlayerInfo
-	err = getPlayer(ssdb, session.Userid, &playerInfo)
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
 	lwutil.CheckError(err, "")
 
 	//check money
@@ -107,10 +106,10 @@ func buyGameCoin(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 
 	//spend money
-	playerInfo.Money -= gameCoinPack.Price
+	playerInfo.Money -= int64(gameCoinPack.Price)
 
 	//save player info
-	savePlayer(ssdb, session.Userid, &playerInfo)
+	savePlayerInfo(ssdb, session.Userid, playerInfo)
 
 	//out
 	out := struct {
@@ -124,6 +123,6 @@ func buyGameCoin(w http.ResponseWriter, r *http.Request) {
 }
 
 func regStore() {
-	http.Handle("/store/listGameCoinPack", lwutil.ReqHandler(listGameCoinPack))
-	http.Handle("/store/buyGameCoin", lwutil.ReqHandler(buyGameCoin))
+	http.Handle("/store/listGameCoinPack", lwutil.ReqHandler(apiListGameCoinPack))
+	http.Handle("/store/buyGameCoin", lwutil.ReqHandler(apiBuyGameCoin))
 }

@@ -65,11 +65,11 @@ func opendb(dbname string) *sql.DB {
 	return db
 }
 
-func GenSerial(ssdb *ssdb.Client, key string) uint64 {
+func GenSerial(ssdb *ssdb.Client, key string) int64 {
 	resp, err := ssdb.Do("hincr", "hSerial", key, 1)
 	lwutil.CheckSsdbError(resp, err)
 
-	out, err := strconv.ParseUint(resp[1], 10, 64)
+	out, err := strconv.ParseInt(resp[1], 10, 64)
 	lwutil.CheckError(err, "")
 	return out
 }

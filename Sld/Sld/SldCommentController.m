@@ -12,6 +12,7 @@
 #import "SldGameData.h"
 #import "SldAddCommentController.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "SldUtil.h"
 
 //CommentHeaderCell
 @interface CommentHeaderCell : UITableViewCell

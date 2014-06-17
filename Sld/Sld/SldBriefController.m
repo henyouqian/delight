@@ -15,7 +15,7 @@
 #import "SldGameData.h"
 #import "SldOfflineEventEnterControler.h"
 #import "SldMatchPrepareController.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "config.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "MSWeakTimer.h"
@@ -120,33 +120,25 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 
 
 - (void)onTimer {
-    NSTimeInterval endIntv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
-    if (endIntv < 0 || _gamedata.eventInfo.hasResult) {
-        _timeRemainLabel.text = @"活动已结束";
+    enum EventState state = [_gamedata.eventInfo updateState];
+    
+    if (state == CLOSED) {
+        _timeRemainLabel.text = @"比赛已结束";
         _playButton.enabled = NO;
-        _gamedata.eventInfo.state = CLOSED;
-    } else {
+    } else if (state == COMMING) {
         NSTimeInterval beginIntv = [_gamedata.eventInfo.beginTime timeIntervalSinceNow];
-        if (beginIntv > 0) {
-            int sec = (int)beginIntv;
-            int hour = sec / 3600;
-            int minute = (sec % 3600)/60;
-            sec = (sec % 60);
-            _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%02d:%02d:%02d", hour, minute, sec];
-            _playButton.enabled = NO;
-            _gamedata.eventInfo.state = COMMING;
+        NSString *str = formatInterval((int)beginIntv);
+        _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%@", str];
+        _playButton.enabled = NO;
+    } else if (state == RUNNING) {
+        NSTimeInterval endIntv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
+        NSString *str = formatInterval((int)endIntv);
+        
+        _timeRemainLabel.text = [NSString stringWithFormat:@"比赛剩余%@", str];
+        if (_gamedata.packInfo) {
+            _playButton.enabled = YES;
         } else {
-            int sec = (int)endIntv;
-            int hour = sec / 3600;
-            int minute = (sec % 3600)/60;
-            sec = (sec % 60);
-            _timeRemainLabel.text = [NSString stringWithFormat:@"活动剩余%02d:%02d:%02d", hour, minute, sec];
-            if (_gamedata.packInfo) {
-                _playButton.enabled = YES;
-            } else {
-                _playButton.enabled = NO;
-            }
-            _gamedata.eventInfo.state = RUNNING;
+            _playButton.enabled = NO;
         }
     }
 }
@@ -384,7 +376,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     _pickerView.delegate = self;
     _pickerView.dataSource = self;
     SldGameData *gd = [SldGameData getInstance];
-    _moneyLabel.text = [NSString stringWithFormat:@"我的铜币：%d", gd.money];
+    _moneyLabel.text = [NSString stringWithFormat:@"我的铜币：%lld", gd.money];
 }
 
 - (IBAction)onCancel:(id)sender {

@@ -25,7 +25,7 @@ const (
 	H_COMMENT        = "H_COMMENT"       //key:commentId, value:commentData
 )
 
-func makeZCommentName(packId uint64) (name string) {
+func makeZCommentName(packId int64) (name string) {
 	return fmt.Sprintf("%s/%d", Z_COMMENT, packId)
 }
 
@@ -37,8 +37,8 @@ type Image struct {
 }
 
 type Pack struct {
-	Id        uint64
-	AuthorId  uint64
+	Id        int64
+	AuthorId  int64
 	Time      string
 	Title     string
 	Text      string
@@ -55,7 +55,7 @@ func init() {
 	glog.Info("init")
 }
 
-func getUptoken(w http.ResponseWriter, r *http.Request) {
+func apiGetUptoken(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
 	//in
@@ -89,7 +89,7 @@ func makeTagName(tag string) (outName string) {
 	return strings.ToLower(s)
 }
 
-func newPack(w http.ResponseWriter, r *http.Request) {
+func apiNewPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -130,7 +130,7 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 
 		resp, err = ssdb.Do("hget", H_SERIAL, "userPack")
 		lwutil.CheckSsdbError(resp, err)
-		maxId, err := strconv.ParseUint(resp[1], 10, 64)
+		maxId, err := strconv.ParseInt(resp[1], 10, 64)
 		lwutil.CheckError(err, "")
 		if pack.Id > maxId {
 			lwutil.SendError("err_packid", "packId > maxId, del or mod pack id from pack.js")
@@ -139,7 +139,7 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 		//gen packid
 		resp, err := ssdb.Do("hincr", H_SERIAL, "userPack", 1)
 		lwutil.CheckSsdbError(resp, err)
-		pack.Id, _ = strconv.ParseUint(resp[1], 10, 32)
+		pack.Id, _ = strconv.ParseInt(resp[1], 10, 32)
 	}
 
 	//add to hash
@@ -163,7 +163,7 @@ func newPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, pack)
 }
 
-func modPack(w http.ResponseWriter, r *http.Request) {
+func apiModPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -234,7 +234,7 @@ func modPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, pack)
 }
 
-func delPack(w http.ResponseWriter, r *http.Request) {
+func apiDelPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -286,7 +286,7 @@ func delPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, in)
 }
 
-func listPack(w http.ResponseWriter, r *http.Request) {
+func apiListPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -346,7 +346,7 @@ func listPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
-func listMatchPack(w http.ResponseWriter, r *http.Request) {
+func apiListMatchPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -411,7 +411,7 @@ func listMatchPack(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
-func listPackByTag(w http.ResponseWriter, r *http.Request) {
+func apiListPackByTag(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -474,7 +474,7 @@ func listPackByTag(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &packs)
 }
 
-func getPack(w http.ResponseWriter, r *http.Request) {
+func apiGetPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -506,16 +506,16 @@ func getPack(w http.ResponseWriter, r *http.Request) {
 }
 
 type Comment struct {
-	Id          uint64
-	PackId      uint64
-	UserId      uint64
+	Id          int64
+	PackId      int64
+	UserId      int64
 	UserName    string
 	GravatarKey string
 	Team        string
 	Text        string
 }
 
-func addComment(w http.ResponseWriter, r *http.Request) {
+func apiAddComment(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -539,8 +539,8 @@ func addComment(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "err_auth")
 
 	//player
-	var playerInfo PlayerInfo
-	getPlayer(ssdb, session.Userid, &playerInfo)
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	lwutil.CheckError(err, "")
 
 	//check pack
 	resp, err := ssdb.Do("hexists", H_PACK, in.PackId)
@@ -569,21 +569,21 @@ func addComment(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &in)
 }
 
-func getComments(w http.ResponseWriter, r *http.Request) {
+func apiGetComments(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
 	//in
 	var in struct {
-		PackId          uint64
-		BottomCommentId uint64
+		PackId          int64
+		BottomCommentId int64
 		Limit           uint
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
 	if in.BottomCommentId == 0 {
-		in.BottomCommentId = math.MaxUint64
+		in.BottomCommentId = math.MaxInt64
 	}
 	if in.Limit > 20 {
 		in.Limit = 20
@@ -649,14 +649,14 @@ func getComments(w http.ResponseWriter, r *http.Request) {
 }
 
 func regPack() {
-	http.Handle("/pack/getUptoken", lwutil.ReqHandler(getUptoken))
-	http.Handle("/pack/new", lwutil.ReqHandler(newPack))
-	http.Handle("/pack/mod", lwutil.ReqHandler(modPack))
-	http.Handle("/pack/del", lwutil.ReqHandler(delPack))
-	http.Handle("/pack/list", lwutil.ReqHandler(listPack))
-	http.Handle("/pack/listMatch", lwutil.ReqHandler(listMatchPack))
-	http.Handle("/pack/listByTag", lwutil.ReqHandler(listPackByTag))
-	http.Handle("/pack/get", lwutil.ReqHandler(getPack))
-	http.Handle("/pack/addComment", lwutil.ReqHandler(addComment))
-	http.Handle("/pack/getComments", lwutil.ReqHandler(getComments))
+	http.Handle("/pack/getUptoken", lwutil.ReqHandler(apiGetUptoken))
+	http.Handle("/pack/new", lwutil.ReqHandler(apiNewPack))
+	http.Handle("/pack/mod", lwutil.ReqHandler(apiModPack))
+	http.Handle("/pack/del", lwutil.ReqHandler(apiDelPack))
+	http.Handle("/pack/list", lwutil.ReqHandler(apiListPack))
+	http.Handle("/pack/listMatch", lwutil.ReqHandler(apiListMatchPack))
+	http.Handle("/pack/listByTag", lwutil.ReqHandler(apiListPackByTag))
+	http.Handle("/pack/get", lwutil.ReqHandler(apiGetPack))
+	http.Handle("/pack/addComment", lwutil.ReqHandler(apiAddComment))
+	http.Handle("/pack/getComments", lwutil.ReqHandler(apiGetComments))
 }

@@ -12,7 +12,7 @@ func glogAdmin() {
 	glog.Info("")
 }
 
-func addMoney(w http.ResponseWriter, r *http.Request) {
+func apiAddMoney(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -33,14 +33,12 @@ func addMoney(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		UserId   uint64
+		UserId   int64
 		UserName string
-		AddMoney int
+		AddMoney int64
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
-
-	var playerInfo PlayerInfo
 
 	//get userid
 	userId := in.UserId
@@ -50,19 +48,19 @@ func addMoney(w http.ResponseWriter, r *http.Request) {
 		if resp[0] != "ok" {
 			lwutil.SendError("err_not_match", "name and password not match")
 		}
-		userId, err = strconv.ParseUint(resp[1], 10, 64)
+		userId, err = strconv.ParseInt(resp[1], 10, 64)
 		lwutil.CheckError(err, "")
 	}
 
-	err = getPlayer(ssdb, userId, &playerInfo)
+	playerInfo, err := getPlayerInfo(ssdb, userId)
 	lwutil.CheckError(err, "")
 	playerInfo.Money += in.AddMoney
-	savePlayer(ssdb, userId, &playerInfo)
+	savePlayerInfo(ssdb, userId, playerInfo)
 
 	//out
 	lwutil.WriteResponse(w, playerInfo)
 }
 
 func regAdmin() {
-	http.Handle("/admin/addMoney", lwutil.ReqHandler(addMoney))
+	http.Handle("/admin/addMoney", lwutil.ReqHandler(apiAddMoney))
 }

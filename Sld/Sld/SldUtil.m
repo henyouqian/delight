@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "util.h"
+#import "SldUtil.h"
 #import "config.h"
 #import "nv-ios-digest/SHA1.h"
 #import <CommonCrypto/CommonHMAC.h>
@@ -113,6 +113,13 @@ NSString* formatScore(int score) {
         return [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
     }
     return @"";
+}
+
+NSString* formatInterval(int sec) {
+    int hour = sec / 3600;
+    int minute = (sec % 3600)/60;
+    sec = (sec % 60);
+    return [NSString stringWithFormat:@"%02d:%02d:%02d", hour, minute, sec];
 }
 
 @implementation SldUtil

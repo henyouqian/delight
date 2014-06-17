@@ -11,7 +11,7 @@
 #import "SldDb.h"
 #import "SldHttpSession.h"
 #import "UIImageView+sldAsyncLoad.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "SldGameController.h"
 #import "config.h"
 

@@ -12,7 +12,7 @@
 #import "config.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldGameData.h"
-#import "util.h"
+#import "SldUtil.h"
 
 @interface SldUserController ()
 @property (weak, nonatomic) IBOutlet UITableViewCell *logoutCell;
@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *assertsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 
 @end
 
@@ -32,15 +33,16 @@
     [super viewDidLoad];
     
     self.clearsSelectionOnViewWillAppear = YES;
-    SldGameData *gamedata = [SldGameData getInstance];
+    SldGameData *gd = [SldGameData getInstance];
     
     //
-    if (!gamedata.online) {
+    if (!gd.online) {
         [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
         return;
     }
     
-    
+    //
+    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", gd.rewardCache];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -72,7 +74,7 @@
     }
     
     //money
-    _moneyLabel.text = [NSString stringWithFormat:@"%d", gamedata.money];
+    _moneyLabel.text = [NSString stringWithFormat:@"%lld", gamedata.money];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -170,15 +172,184 @@
 }
 */
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.destinationViewController isKindOfClass:[SldMatchResultController class]]) {
+        ((SldMatchResultController*)segue.destinationViewController).userController = self;
+    }
 }
-*/
+
+- (void)updateMoney {
+    SldGameData *gd = [SldGameData getInstance];
+    _moneyLabel.text = [NSString stringWithFormat:@"%lld", gd.money];
+    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%d", 0];
+}
+
+@end
+
+//=================
+@interface SldGetRewardCacheCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIButton *getRewardButton;
+@end
+
+@implementation SldGetRewardCacheCell
+@end
+
+//=================
+@interface SldMatchResultCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *rankLabel;
+@property (weak, nonatomic) IBOutlet UILabel *matchRewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *betMoneyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *betRewardLabel;
+
+@end
+
+@implementation SldMatchResultCell
+@end
+
+//=================
+@interface SldMatchResult : NSObject
+@property (nonatomic) NSString* thumbKey;
+@property (nonatomic) int rank;
+@property (nonatomic) int matchReward;
+@property (nonatomic) int betMoneySum;
+@property (nonatomic) int betReward;
+@end
+
+@implementation SldMatchResult
+
+@end
+
+//=================
+@interface SldMatchResultController()
+@property (nonatomic) NSMutableArray *matchResults; //SldMatchResult
+@end
+
+@implementation SldMatchResultController
+
+- (void)viewDidLoad {
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.tableFooterView.backgroundColor = [UIColor clearColor];
+    
+    //get play result
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"StartEventId":@0, @"Limit":@20};
+    [session postToApi:@"event/listPlayResult" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        _matchResults = [NSMutableArray array];
+        NSArray *records = [dict objectForKey:@"Records"];
+        for (NSDictionary *record in records) {
+            SldMatchResult *mr = [[SldMatchResult alloc] init];
+            mr.thumbKey = @""; //fixme
+            mr.rank = [(NSNumber*)[record objectForKey:@"FinalRank"] intValue];
+            mr.matchReward = [(NSNumber*)[record objectForKey:@"MatchReward"] intValue];
+            mr.betMoneySum = [(NSNumber*)[record objectForKey:@"BetMoneySum"] intValue];
+            mr.betReward = [(NSNumber*)[record objectForKey:@"BetReward"] intValue];
+            [_matchResults addObject:mr];
+        }
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return 1;
+    } else if (section == 1) {
+        return _matchResults.count;
+    }
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    SldGameData *gd = [SldGameData getInstance];
+    
+    if (indexPath.section == 0) {
+        SldGetRewardCacheCell *cell = (SldGetRewardCacheCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardCacheCell" forIndexPath:indexPath];
+        
+        NSString *title = [NSString stringWithFormat:@"领取奖金：%lld", gd.rewardCache];
+        [cell.getRewardButton setTitle:title forState:(UIControlStateNormal&UIControlStateHighlighted&UIControlStateDisabled)];
+        if (gd.rewardCache == 0) {
+            cell.getRewardButton.enabled = NO;
+            cell.getRewardButton.backgroundColor = [UIColor lightGrayColor];
+        } else {
+            cell.getRewardButton.enabled = YES;
+            cell.getRewardButton.backgroundColor = makeUIColor(244, 75, 116, 255);
+        }
+        return cell;
+    } else if (indexPath.section == 1) {
+        SldMatchResultCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchResultCell" forIndexPath:indexPath];
+        
+        SldMatchResult *mr = [_matchResults objectAtIndex:indexPath.row];
+        cell.rankLabel.text = [NSString stringWithFormat:@"名次：%d", mr.rank];
+        cell.matchRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", mr.matchReward];
+        cell.betMoneyLabel.text = [NSString stringWithFormat:@"投注：%d", mr.betMoneySum];
+        cell.betRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", mr.betReward];
+        return cell;
+    }
+    
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return 44;
+    } else if (indexPath.section == 1) {
+        return 60;
+    }
+    return 44;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 20;
+}
+
+- (IBAction)onGetReward:(id)sender {
+    UIAlertView *alt = alertNoButton(@"领取中...");
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/addRewardFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        SldGameData *gd = [SldGameData getInstance];
+        SInt64 prevMoney = gd.money;
+        gd.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+        gd.rewardCache = 0;
+        
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [_userController updateMoney];
+        
+        alert(@"金币领取成功", [NSString stringWithFormat:@"%lld + %lld = %lld", prevMoney, gd.money-prevMoney, gd.money]);
+    }];
+}
 
 @end

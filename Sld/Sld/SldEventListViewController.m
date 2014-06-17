@@ -11,7 +11,7 @@
 //#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldLoginViewController.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "config.h"
 #import "SldStreamPlayer.h"
 #import "SldDb.h"

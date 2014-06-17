@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface SldUserController : UITableViewController
+- (void)updateMoney;
+@end
+
+@interface SldMatchResultController : UITableViewController
+@property (nonatomic) SldUserController *userController;
 
 @end

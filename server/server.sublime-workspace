@@ -3,6 +3,86 @@
 	{
 		"selected_items":
 		[
+			[
+				"bet",
+				"BetMoneySum	int64 ν"
+			],
+			[
+				"check",
+				"CheckError	 ƒ"
+			],
+			[
+				"che",
+				"CheckError	 ƒ"
+			],
+			[
+				"getevent",
+				"getEventPlayerRecord	*EventPlayerRecord ƒ"
+			],
+			[
+				"I",
+				"Int64	int64, error ƒ"
+			],
+			[
+				"i",
+				"Int64	int64, error ƒ"
+			],
+			[
+				"Event",
+				"EventPlayerRecord	struct ʈ"
+			],
+			[
+				"z_event",
+				"Z_EVENT_PLAYER_RECORD	 Ɩ"
+			],
+			[
+				"maxint",
+				"MaxInt32	 Ɩ"
+			],
+			[
+				"parse",
+				"ParseInt	i int64, err error ƒ"
+			],
+			[
+				"INI",
+				"INIT_GAME_COIN_NUM	 Ɩ"
+			],
+			[
+				"rank",
+				"rankNum	 ν"
+			],
+			[
+				"Prin",
+				"Printf	n int, err error ƒ"
+			],
+			[
+				"rew",
+				"reward	 ν"
+			],
+			[
+				"rewa",
+				"challageRewards	[]int ν"
+			],
+			[
+				"min",
+				"MinInt32	 Ɩ"
+			],
+			[
+				"game",
+				"gameCoinPack	GameCoinPack ν"
+			],
+			[
+				"getreds",
+				"GetRedisTimeUnix	int64 ƒ"
+			],
+			[
+				"enco",
+				"EncodeToString	string ƒ"
+			],
+			[
+				"sprin",
+				"Sprintf	string ƒ"
+			]
 		]
 	},
 	"buffers":
@@ -11,7 +91,95 @@
 			"file": "match/auth.go",
 			"settings":
 			{
-				"buffer_size": 9132,
+				"buffer_size": 9355,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "tools/packUploader/main.go",
+			"settings":
+			{
+				"buffer_size": 8370,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/pack.go",
+			"settings":
+			{
+				"buffer_size": 16641,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/liwei/Documents/go/src/github.com/henyouqian/lwutil/util.go",
+			"settings":
+			{
+				"buffer_size": 16303,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/admin.go",
+			"settings":
+			{
+				"buffer_size": 1324,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/player.go",
+			"settings":
+			{
+				"buffer_size": 3721,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/store.go",
+			"settings":
+			{
+				"buffer_size": 2684,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/event.go",
+			"settings":
+			{
+				"buffer_size": 30134,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/www/api.js",
+			"settings":
+			{
+				"buffer_size": 8588,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/scorekeeper.go",
+			"settings":
+			{
+				"buffer_size": 4211,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/db.go",
+			"settings":
+			{
+				"buffer_size": 1503,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match/collection.go",
+			"settings":
+			{
+				"buffer_size": 6064,
 				"line_ending": "Unix"
 			}
 		}
@@ -48,6 +216,13 @@
 	},
 	"file_history":
 	[
+		"/Users/liwei/Documents/projects/2014/delight/server/tools/packUploader/packs/宫泽理惠/1/pack.js",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/main.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/util.go",
+		"/Users/liwei/Documents/go/src/github.com/henyouqian/lwutil/util.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/tools/packUploader/account.json",
+		"/Users/liwei/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/liwei/Documents/projects/2014/delight/server/ssdb/ssdb.conf"
 	],
 	"find":
 	{
@@ -58,6 +233,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -65,15 +241,133 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getplay",
+			"bet_close",
+			"H_EVENT",
+			"getEvent",
+			"getEventPlayerRecord",
+			"EventId",
+			"Z_EVENT_PLAYER_RECORD",
+			"listPlayResult",
+			"Z_EVENT_PLAYER_RECORD",
+			"Out",
+			"getUserPlay",
+			"getuserpl",
+			".init",
+			"FreePlayRecord",
+			".init",
+			"makeEventPlayerRecordSubkey",
+			".init",
+			"EventPlayerRecord",
+			"init",
+			"player",
+			"addPlayerReward",
+			"H_PLAYER_REWARD",
+			"event",
+			"makeZCommentName",
+			"redisUint64",
+			"redisInt64",
+			"makeEventPlayerRecordSubkey",
+			"getPlayer",
+			"makeEventPlayerRecordSubkey",
+			"list",
+			"calcReward",
+			"makeEventPlayerRecordSubkey",
+			"H_EVENT_PLAYER_RECORD",
+			"listevent",
+			"list e",
+			"INIT_GAME_COIN_NUM",
+			"userpl",
+			"playbeg",
+			"hRankKey",
+			"hsize",
+			"H_EVENT",
+			"hevent",
+			"getUserPlay",
+			"myRank",
+			"getRanks",
+			"redis",
+			"hdel",
+			"h",
+			"h de l",
+			"playend",
+			"getranks",
+			"ZREVRANK",
+			"FinalRank",
+			"makeEventPlayerRecordSubkey",
+			"recordKey",
+			"EventPlayerRecord",
+			"getranks",
+			"H_EVENT_RANK",
+			"makeHashEventRankKey",
+			"session",
+			"session =",
+			"getranks",
+			"rank",
+			"ranks",
+			"ge t",
+			"getuserp",
+			"playend",
+			"H_EVENT_TEAM_SCORE",
+			"playend",
+			"in",
+			"\"hget\"",
+			"\"get\"",
+			"EVENT_INIT_BETTING_POOL",
+			"@",
+			"H_EVENT_TEAM_SCORE",
+			"playend",
+			"play",
+			"record.Trys = 1\n\n		var playerInfo PlayerInfo\n		getPlayer(ssdb, session.Userid, &playerInfo)\n		lwutil.CheckError(err, \"\")\n		record.PlayerName = playerInfo.NickName\n		record.TeamName = playerInfo.TeamName\n		record.GravatarKey = playerInfo.GravatarKey\n		record.CustomAvartarKey = playerInfo.CustomAvatarKey\n		record.GameCoinNum = INIT_GAME_COIN_NUM - 1",
+			"EventPlayerRecord",
+			"H_EVENT_PLAYER_RECORD",
+			"getPlayer",
+			"playend",
+			"getuserplay",
+			"H_event",
+			"glog.Error(checksum)",
+			"playEnd",
+			"INIT_MONEY",
+			"ssdb",
+			"getUserPlay",
+			"playBegin",
+			"begin",
+			"CheckSsdbErrorDesc",
+			"getUserPlay",
+			"EndTime",
+			"time.now",
+			"H_EVENT",
+			"H_EVENT_PLAYER_RECORD",
+			"record",
+			"EventPlayerRecord",
+			"INIT_MONEY\nINIT_MONEY\nINIT_MONEY",
+			"INIT_MONEY\nINIT_MONEY",
+			"INIT_MONEY",
+			"ssdbAuth",
+			"errors",
+			"PlayerInfo",
+			"in",
+			"in :=",
+			"sha",
+			"Z_USER_PACK_PRE",
+			"loadPack",
+			"checkAdmin",
+			"new(",
+			"packRaw",
+			"admin",
+			"Pack",
+			"ADMIN_USERID",
+			"ssdbAuthPool",
 			"authDB",
 			"sql"
 		],
 		"highlight": true,
-		"in_selection": true,
+		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
 		[
+			""
 		],
 		"reverse": false,
 		"show_context": true,
@@ -84,7 +378,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -92,15 +386,96 @@
 					"file": "match/auth.go",
 					"settings":
 					{
-						"buffer_size": 9132,
+						"buffer_size": 9355,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								195,
-								195
+								2886,
+								2886
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1533.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "tools/packUploader/main.go",
+					"settings":
+					{
+						"buffer_size": 8370,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1919,
+								1919
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4414.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "match/pack.go",
+					"settings":
+					{
+						"buffer_size": 16641,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11822,
+								11822
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 11126.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/liwei/Documents/go/src/github.com/henyouqian/lwutil/util.go",
+					"settings":
+					{
+						"buffer_size": 16303,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3035,
+								3035
 							]
 						],
 						"settings":
@@ -110,6 +485,222 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "match/admin.go",
+					"settings":
+					{
+						"buffer_size": 1324,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								630,
+								630
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 599.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "match/player.go",
+					"settings":
+					{
+						"buffer_size": 3721,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1914,
+								1914
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1520.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "match/store.go",
+					"settings":
+					{
+						"buffer_size": 2684,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2366,
+								2366
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1875.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "match/event.go",
+					"settings":
+					{
+						"buffer_size": 30134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10773,
+								10773
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 8851.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "match/www/api.js",
+					"settings":
+					{
+						"buffer_size": 8588,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4422,
+								4422
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4019.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "match/scorekeeper.go",
+					"settings":
+					{
+						"buffer_size": 4211,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3568,
+								3568
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2909.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "match/db.go",
+					"settings":
+					{
+						"buffer_size": 1503,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								173,
+								173
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "match/collection.go",
+					"settings":
+					{
+						"buffer_size": 6064,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5678,
+								5678
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4805.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -148,13 +739,21 @@
 		]
 	},
 	"menu_visible": true,
+	"output.9o:///Users/liwei/Documents/go/src/github.com/henyouqian/lwutil":
+	{
+		"height": 124.0
+	},
 	"output.9o:///Users/liwei/Documents/projects/2014/delight/server/match":
+	{
+		"height": 118.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/server/tools/packUploader":
 	{
 		"height": 118.0
 	},
 	"replace":
 	{
-		"height": 0.0
+		"height": 68.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -162,6 +761,14 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"player",
+				"server/match/player.go"
+			],
+			[
+				"event",
+				"match/event.go"
+			]
 		],
 		"width": 0.0
 	},

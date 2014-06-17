@@ -8,7 +8,7 @@
 
 #import "SldMatchPrepareController.h"
 #import "SldGameData.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "UIImageView+sldAsyncLoad.h"
 
 @interface SldMatchPrepareController ()

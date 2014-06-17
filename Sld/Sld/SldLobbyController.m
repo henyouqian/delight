@@ -12,7 +12,7 @@
 #import "SldBetController.h"
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
-#import "util.h"
+#import "SldUtil.h"
 
 @interface SldLobbyController ()
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;

@@ -8,7 +8,7 @@
 
 #import "UIImageView+sldAsyncLoad.h"
 #import "UIImage+animatedGIF.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "SldHttpSession.h"
 
 

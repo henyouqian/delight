@@ -32,6 +32,22 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     
     return event;
 }
+
+- (enum EventState)updateState {
+    NSTimeInterval endIntv = [_endTime timeIntervalSinceNow];
+    if (endIntv < 0 || _hasResult) {
+        _state = CLOSED;
+    } else {
+        NSTimeInterval beginIntv = [_beginTime timeIntervalSinceNow];
+        if (beginIntv > 0) {
+            _state = COMMING;
+        } else {
+            _state = RUNNING;
+        }
+    }
+    return _state;
+}
+
 @end
 
 @implementation PackInfo
@@ -76,6 +92,15 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     record.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
     record.challangeHighScore = [(NSNumber*)[dict objectForKey:@"ChallangeHighScore"] intValue];
     
+    record.matchReward = [(NSNumber*)[dict objectForKey:@"MatchReward"] longLongValue];
+    record.betReward = [(NSNumber*)[dict objectForKey:@"BetReward"] longLongValue];
+    record.betMoneySum = [(NSNumber*)[dict objectForKey:@"BetMoneySum"] longLongValue];
+    id bet = (NSDictionary*)[dict objectForKey:@"Bet"];
+    if ([bet isKindOfClass:[NSDictionary class]]) {
+        record.bet = [NSMutableDictionary dictionaryWithDictionary:bet];
+    } else {
+        record.bet = [NSMutableDictionary dictionary];
+    }
     return record;
 }
 
@@ -101,6 +126,8 @@ static SldGameData *g_inst = nil;
         _eventInfos = [NSMutableArray array];
         
         [self reset];
+        
+        _TEAM_NAMES = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西",@"贵州",@"海南",@"河北",@"黑龙江",@"河南",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
     }
     return self;
 }
@@ -125,6 +152,7 @@ static SldGameData *g_inst = nil;
     _teamName = nil;
     _gravatarKey = nil;
     _money = 0;
+    _rewardCache = 0;
     
     _needReloadEventList = NO;
 }

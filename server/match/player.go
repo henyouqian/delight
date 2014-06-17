@@ -2,21 +2,17 @@ package main
 
 import (
 	"encoding/json"
-	// "fmt"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	//. "github.com/qiniu/api/conf"
 	//"github.com/qiniu/api/rs"
 	"./ssdb"
-	"net/http"
-	// "strconv"
-	//"strings"
 	"errors"
-	//"time"
+	"net/http"
 )
 
 const (
-	H_PLAYER_INFO    = "H_PLAYER_INFO"
+	H_PLAYER_INFO    = "H_PLAYER_INFO" //subkey:(int64)userId value:(PlayerInfo)playerInfo
 	INIT_MONEY       = 500
 	FLD_PLAYER_MONEY = "money"
 	FLD_PLAYER_TEAM  = "team"
@@ -39,26 +35,28 @@ type PlayerInfo struct {
 	Gender          int
 	CustomAvatarKey string
 	GravatarKey     string
-	Money           int
+	Money           int64
 	BetMax          int
+	RewardCache     int64
 	AllowSave       bool
 }
 
-func getPlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) (err error) {
+func getPlayerInfo(ssdb *ssdb.Client, userId int64) (*PlayerInfo, error) {
 	resp, err := ssdb.Do("hget", H_PLAYER_INFO, userId)
 	lwutil.CheckSsdbError(resp, err)
 
+	var playerInfo PlayerInfo
 	if resp[0] == "not_found" {
-		return errors.New("not_found")
+		return nil, errors.New("not_found")
 	} else {
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
 		lwutil.CheckError(err, "")
 	}
 	playerInfo.AllowSave = true
-	return nil
+	return &playerInfo, nil
 }
 
-func savePlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) {
+func savePlayerInfo(ssdb *ssdb.Client, userId int64, playerInfo *PlayerInfo) {
 	if !playerInfo.AllowSave {
 		lwutil.SendError("err_player_save_locked", "")
 	}
@@ -69,7 +67,7 @@ func savePlayer(ssdb *ssdb.Client, userId uint64, playerInfo *PlayerInfo) {
 	lwutil.CheckSsdbError(resp, err)
 }
 
-func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
+func apiGetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -83,22 +81,21 @@ func getPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	defer ssdb.Close()
 
 	//get info
-	var playerInfo PlayerInfo
-	err = getPlayer(ssdb, session.Userid, &playerInfo)
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
 	lwutil.CheckError(err, "")
 
 	//out
 	out := struct {
-		PlayerInfo
-		//Now int64
+		*PlayerInfo
+		BetCloseBeforeEndSec int
 	}{
 		playerInfo,
-		//time.Now().Unix(),
+		BET_CLOSE_BEFORE_END_SEC,
 	}
 	lwutil.WriteResponse(w, out)
 }
 
-func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
+func apiSetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -135,8 +132,8 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	if resp[0] == "not_found" {
 		//set default value
 		playerInfo = in
-		playerInfo.Money = INIT_MONEY
 		playerInfo.BetMax = 100
+		playerInfo.Money = INIT_MONEY
 	} else {
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
 		lwutil.CheckError(err, "")
@@ -157,13 +154,43 @@ func setPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	//set
 	playerInfo.AllowSave = true
-	savePlayer(ssdb, session.Userid, &playerInfo)
+	savePlayerInfo(ssdb, session.Userid, &playerInfo)
 
 	//out
 	lwutil.WriteResponse(w, playerInfo)
 }
 
+func apiAddRewardFromCache(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	lwutil.CheckError(err, "")
+	if playerInfo.RewardCache > 0 {
+		playerInfo.Money += playerInfo.RewardCache
+		playerInfo.RewardCache = 0
+		savePlayerInfo(ssdb, session.Userid, playerInfo)
+	}
+
+	//out
+	out := map[string]interface{}{
+		"Money": playerInfo.Money,
+	}
+	lwutil.WriteResponse(w, out)
+}
+
 func regPlayer() {
-	http.Handle("/player/getInfo", lwutil.ReqHandler(getPlayerInfo))
-	http.Handle("/player/setInfo", lwutil.ReqHandler(setPlayerInfo))
+	http.Handle("/player/getInfo", lwutil.ReqHandler(apiGetPlayerInfo))
+	http.Handle("/player/setInfo", lwutil.ReqHandler(apiSetPlayerInfo))
+	http.Handle("/player/addRewardFromCache", lwutil.ReqHandler(apiAddRewardFromCache))
 }

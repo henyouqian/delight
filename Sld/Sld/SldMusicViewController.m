@@ -9,7 +9,7 @@
 #import "SldMusicViewController.h"
 #import "SldHttpSession.h"
 #import "config.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "MarqueeLabel.h"
 
 NSString *listChannelUrl = @"http://douban.fm/j/explore/hot_channels";

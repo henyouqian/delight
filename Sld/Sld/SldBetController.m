@@ -12,7 +12,7 @@
 #import "SldHttpSession.h"
 #import "SldNevigationController.h"
 #import "config.h"
-#import "util.h"
+#import "SldUtil.h"
 #import "UIImageView+sldAsyncLoad.h"
 
 @interface BettingTeam : NSObject
@@ -79,6 +79,8 @@ static SldBetController *_inst = nil;
     _tableViewController = [[UITableViewController alloc] init];
     _tableViewController.tableView = _tableView;
     _tableViewController.refreshControl = refreshControl;
+    _tableViewController.clearsSelectionOnViewWillAppear = YES;
+    [self addChildViewController:_tableViewController];
     
     [self updateTeamScore];
 }
@@ -87,14 +89,39 @@ static SldBetController *_inst = nil;
     //[_tableView reloadData];
 }
 
+- (void)onHttpBetWithDict:(NSDictionary*)dict {
+    SldGameData *gd = [SldGameData getInstance];
+    
+    NSString *teamName = [dict objectForKey:@"TeamName"];
+    SInt64 betMoney = [(NSNumber*)[dict objectForKey:@"BetMoney"]longLongValue];
+    SInt64 betMoneySum = [(NSNumber*)[dict objectForKey:@"BetMoneySum"] longLongValue];
+    SInt64 userMoney = [(NSNumber*)[dict objectForKey:@"UserMoney"] longLongValue];
+    
+    for (int i = 0; i < _bettingTeams.count; ++i) {
+        BettingTeam *bt = (BettingTeam*)_bettingTeams[i];
+        if ([teamName compare:bt.teamName] == 0) {
+            bt.betMoney = betMoney;
+            gd.eventPlayRecord.BetMoneySum = betMoneySum;
+            gd.money = userMoney;
+            
+            NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+            NSArray* rowsToReload = [NSArray arrayWithObjects:path, nil];
+            [_tableView reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+            return;
+        }
+    }
+}
+
 - (void)updateTeamScore {
     SldGameData *gd = [SldGameData getInstance];
     NSDictionary *body = @{@"EventId":@(gd.eventInfo.id)};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"event/getBettingPool" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"event/getBettingPool" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    {
         [_tableViewController.refreshControl endRefreshing];
         if (error) {
-            //alertHTTPError(error, data);
+            alertHTTPError(error, data);
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -130,16 +157,10 @@ static SldBetController *_inst = nil;
         }
         
         _bettingTeams = [NSMutableArray array];
-        for (id key in bettingDict) {
-            [_bettingTeams addObject:bettingDict[key]];
+        for (NSString *teamName in gd.TEAM_NAMES) {
+            [_bettingTeams addObject:bettingDict[teamName]];
         }
-        
-        [_bettingTeams sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            BettingTeam* bt1 = (BettingTeam*)obj1;
-            BettingTeam* bt2 = (BettingTeam*)obj2;
-            return [bt1.teamName localizedCompare:bt2.teamName];
-        }];
-        
+                
         [_tableView reloadData];
     }];
 }
@@ -166,6 +187,7 @@ static SldBetController *_inst = nil;
         cell.scoreLabel.text = [NSString stringWithFormat:@"%d", bt.score];
         cell.winMulLabel.text = [NSString stringWithFormat:@"%.2f", bt.winMul];
     }
+    cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
 
@@ -205,6 +227,93 @@ static SldBetController *_inst = nil;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 44;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    SldGameData *gd = [SldGameData getInstance];
+    
+    enum EventState state = [gd.eventInfo updateState];
+    
+    //bet time check
+    NSTimeInterval endIntv = [gd.eventInfo.endTime timeIntervalSinceNow];
+    if (state != RUNNING || (int)endIntv <= gd.betCloseBeforeEndSec) {
+        NSString *str = [NSString stringWithFormat:@"投注已结束，请在距离比赛结束%@前投注", formatInterval(gd.betCloseBeforeEndSec)];
+        alert(str, nil);
+        [_tableView deselectRowAtIndexPath:indexPath animated:YES];
+        return;
+    }
+    
+    //
+    SldBetPopupController* vc = (SldBetPopupController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"betPopup"];
+
+    [self.navigationController presentViewController:vc animated:YES completion:nil];
+    
+    BettingTeam *bt = _bettingTeams[indexPath.row];
+    
+    NSDictionary *betMap = gd.eventPlayRecord.bet;
+    int alreadyBet = [(NSNumber*)[betMap objectForKey:bt.teamName] intValue];
+
+    vc.teamNameLabel.text = [NSString stringWithFormat:@"%@  已投注%d金币", bt.teamName, alreadyBet];
+    vc.betRemainLabel.text = [NSString stringWithFormat:@"(1-%lld)", gd.money];
+    vc.teamName = bt.teamName;
+}
+
+@end
+
+//====================
+@interface SldBetPopupController()
+
+@end
+
+@implementation SldBetPopupController
+
+- (void)viewDidLoad {
+    [_betInput becomeFirstResponder];
+}
+
+- (void)dismiss {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)onCancelButton:(id)sender {
+    [self dismiss];
+}
+
+- (IBAction)onBetButton:(id)sender {
+    SldGameData *gd = [SldGameData getInstance];
+    
+    int betMoney = [_betInput.text intValue];
+    if (betMoney <= 0 || betMoney > gd.money) {
+        alert([NSString stringWithFormat:@"投注额需在（1，%lld）之间", gd.money], nil);
+        return;
+    }
+    
+    //post
+    NSDictionary *body = @{@"EventId":@(gd.eventInfo.id), @"TeamName":_teamName, @"Money": @(betMoney)};
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    UIAlertView *alt = alertNoButton(@"提交中...");
+    [session postToApi:@"event/bet" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            NSString *err = getServerErrorType(data);
+            if ([err compare:@"err_bet_close"] == 0) {
+                alert(@"投注已关闭\n请关注其他正在进行中的比赛", nil);
+            } else {
+                alertHTTPError(error, data);
+            }
+            return;
+        }
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            alert(@"Json error", [error localizedDescription]);
+            return;
+        }
+        
+        [[SldBetController getInstance] onHttpBetWithDict:dict];
+        
+        [self dismiss];
+    }];
+
 }
 
 @end

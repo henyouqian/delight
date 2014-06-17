@@ -151,7 +151,12 @@ function Controller($scope, $http) {
 					"name": "setInfo",
 					"method": "POST",
 					"data": {"NickName":"", "Gender":0, "TeamName":"上海", "CustomAvatarKey":"", "GravatarKey":""}
+				},{
+					"name": "addRewardFromCache",
+					"method": "POST",
+					"data": ""
 				}
+
 			]
 		},{
 			"tab":"event",
@@ -181,27 +186,35 @@ function Controller($scope, $http) {
 				},{
 					"name": "getUserPlay",
 					"method": "POST",
-					"data": {"EventId": 1, "UserId": 0}
+					"data": {"EventId": 0, "UserId": 0}
 				},{
 					"name": "playBegin",
 					"method": "POST",
-					"data": {"EventId": 1}
+					"data": {"EventId": 0}
 				},{
 					"name": "playEnd",
 					"method": "POST",
-					"data": {"EventId": 1, "Secret": "", "Score": 100, "Checksum":"cks"}
+					"data": {"EventId": 0, "Secret": "", "Score": 100, "Checksum":"cks"}
 				},{
 					"name": "getRanks",
 					"method": "POST",
-					"data": {"EventId": 1, "Offset": 0, "Limit": 20}
+					"data": {"EventId": 0, "Offset": 0, "Limit": 20}
 				},{
 					"name": "submitChallangeScore",
 					"method": "POST",
-					"data": {"EventId": 1, "Score": 100, "Checksum":"cks"}
+					"data": {"EventId": 0, "Score": 100, "Checksum":"cks"}
 				},{
 					"name": "getBettingPool",
 					"method": "POST",
-					"data": {"EventId": 1}
+					"data": {"EventId": 0}
+				},{
+					"name": "bet",
+					"method": "POST",
+					"data": {"EventId": 0, "TeamName":"", "Money":100}
+				},{
+					"name": "listPlayResult",
+					"method": "POST",
+					"data": {"StartEventId": 0, "Limit":20}
 				}
 			]
 		},{

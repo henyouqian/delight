@@ -15,5 +15,14 @@
 + (instancetype)getInstance;
 - (void)updateTeamScore;
 - (void)onViewShown;
+- (void)onHttpBetWithDict:(NSDictionary*)dict;
 
+@end
+
+//=======================
+@interface SldBetPopupController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextField *betInput;
+@property (weak, nonatomic) IBOutlet UILabel *teamNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *betRemainLabel;
+@property (weak, nonatomic) NSString *teamName;
 @end

@@ -1,5 +1,5 @@
 ;//
-//  util.h
+//  SldUtil.h
 //  Sld
 //
 //  Created by Wei Li on 14-4-7.
@@ -26,6 +26,7 @@ NSDate* getServerNow();
 NSString* sha256(NSString* data, NSString *salt);
 
 NSString* formatScore(int score);
+NSString* formatInterval(int sec);
 
 @interface SldUtil : NSObject
 + (NSString*)sha1WithData:(NSString*)data;

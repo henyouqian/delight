@@ -25,7 +25,7 @@ type Collection struct {
 	Packs []uint64
 }
 
-func newCollection(w http.ResponseWriter, r *http.Request) {
+func apiNewCollection(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -62,7 +62,7 @@ func newCollection(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, col)
 }
 
-func delCollection(w http.ResponseWriter, r *http.Request) {
+func apiDelCollection(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -98,7 +98,7 @@ func delCollection(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, in)
 }
 
-func listCollection(w http.ResponseWriter, r *http.Request) {
+func apiListCollection(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -155,7 +155,7 @@ func listCollection(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &collections)
 }
 
-func modCollection(w http.ResponseWriter, r *http.Request) {
+func apiModCollection(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -190,7 +190,7 @@ func modCollection(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, col)
 }
 
-func listCollectionPack(w http.ResponseWriter, r *http.Request) {
+func apiListCollectionPack(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -246,9 +246,9 @@ func listCollectionPack(w http.ResponseWriter, r *http.Request) {
 }
 
 func regCollection() {
-	http.Handle("/collection/new", lwutil.ReqHandler(newCollection))
-	http.Handle("/collection/del", lwutil.ReqHandler(delCollection))
-	http.Handle("/collection/mod", lwutil.ReqHandler(modCollection))
-	http.Handle("/collection/list", lwutil.ReqHandler(listCollection))
-	http.Handle("/collection/listPack", lwutil.ReqHandler(listCollectionPack))
+	http.Handle("/collection/new", lwutil.ReqHandler(apiNewCollection))
+	http.Handle("/collection/del", lwutil.ReqHandler(apiDelCollection))
+	http.Handle("/collection/mod", lwutil.ReqHandler(apiModCollection))
+	http.Handle("/collection/list", lwutil.ReqHandler(apiListCollection))
+	http.Handle("/collection/listPack", lwutil.ReqHandler(apiListCollectionPack))
 }

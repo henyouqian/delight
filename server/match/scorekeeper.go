@@ -45,8 +45,11 @@ func handleError() {
 	}
 }
 
-func calcReward(rank int) (reward int) {
-	return 0
+func calcReward(rank int) (reward int64) {
+	if rank > 100 {
+		return int64(100)
+	}
+	return int64((101 - rank) * 100)
 }
 
 func scoreKeeper() {
@@ -113,7 +116,7 @@ func scoreKeeper() {
 			for i := 0; i < num; i++ {
 				rank := currRank
 				currRank++
-				userId, err := redisUint64(values[i*2], nil)
+				userId, err := redis.Int64(values[i*2], nil)
 				checkError(err)
 				// score, err := redisInt32(values[i*2+1], nil)
 				// checkError(err)
@@ -125,15 +128,30 @@ func scoreKeeper() {
 				record := EventPlayerRecord{}
 				err = json.Unmarshal([]byte(resp[1]), &record)
 				checkError(err)
+
 				record.FinalRank = rank
+				record.MatchReward = calcReward(rank)
+
 				js, err := json.Marshal(record)
 				checkError(err)
+
 				resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, recordKey, js)
 				checkSsdbError(resp, err)
 
 				//save to H_EVENT_RANK
 				key := makeHashEventRankKey(event.Id)
 				resp, err = ssdb.Do("hset", key, rank, userId)
+				checkSsdbError(resp, err)
+
+				//add player reward
+				playerInfo, err := getPlayerInfo(ssdb, userId)
+				checkError(err)
+				playerInfo.RewardCache += record.MatchReward
+				savePlayerInfo(ssdb, userId, playerInfo)
+
+				//add to Z_EVENT_PLAYER_RECORD
+				key = fmt.Sprintf("Z_EVENT_PLAYER_RECORD/%d", userId)
+				resp, err = ssdb.Do("zset", key, event.Id, event.Id)
 				checkSsdbError(resp, err)
 			}
 		}
@@ -148,6 +166,8 @@ func scoreKeeper() {
 		//del redis leaderboard
 		_, err = rc.Do("del", eventLbLey)
 		checkError(err)
+
+		//bet
 
 		glog.Infof("event end")
 	}
