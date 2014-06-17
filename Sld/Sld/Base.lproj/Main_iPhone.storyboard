@@ -392,7 +392,7 @@
             </objects>
             <point key="canvasLocation" x="678" y="-635"/>
         </scene>
-        <!--Sld Event List View Controller - Events-->
+        <!--Sld Event List View Controller - 赛事-->
         <scene sceneID="wq1-az-FiX">
             <objects>
                 <viewController id="G6w-0m-hNO" customClass="SldEventListViewController" sceneMemberID="viewController">
@@ -508,7 +508,7 @@
                             <outlet property="delegate" destination="G6w-0m-hNO" id="YZe-fl-qqP"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Events" id="eWu-jD-vqF">
+                    <navigationItem key="navigationItem" title="赛事" id="eWu-jD-vqF">
                         <barButtonItem key="leftBarButtonItem" image="otlUser.png" id="a06-ZR-8mR">
                             <color key="tintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -1043,10 +1043,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="7sa-Gn-NGB" kind="modal" id="1i1-Kf-DJm"/>
+                                            <segue destination="UU9-ez-Q5a" kind="push" id="WNO-OR-6j9"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8Az-Vr-N1i">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8Az-Vr-N1i">
                                         <rect key="frame" x="0.0" y="148" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8Az-Vr-N1i" id="ZcI-59-KAk">
@@ -1072,6 +1072,9 @@
                                                     <state key="normal" title="更多金币">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <segue destination="UIZ-Rl-nno" kind="push" id="JCP-Lm-exb"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1336,7 +1339,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7pd-dF-aBY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2002" y="759"/>
+            <point key="canvasLocation" x="1588" y="759"/>
         </scene>
         <!--Sld Avatar Select Controller-->
         <scene sceneID="o5h-MQ-L9P">
@@ -1549,7 +1552,66 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o03-BF-DGU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2010" y="1485"/>
+            <point key="canvasLocation" x="2010" y="2167"/>
+        </scene>
+        <!--Collection View Controller-->
+        <scene sceneID="2Fm-S2-9ts">
+            <objects>
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="UIZ-Rl-nno" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="qIF-we-boL">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="aCA-ft-Zn4">
+                            <size key="itemSize" width="126" height="201"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="iapCell" id="1ul-7L-K9P">
+                                <rect key="frame" x="0.0" y="64" width="126" height="201"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="126" height="201"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqr-gG-rRw">
+                                            <rect key="frame" x="0.0" y="171" width="126" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.29411764709999999" green="0.95686274510000002" blue="0.65115980748302149" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <state key="normal" title="128元">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="12800金币，另送2500金币" translatesAutoresizingMaskIntoConstraints="NO" id="nVC-6m-kl1">
+                                            <rect key="frame" x="10" y="113" width="102" height="44"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iQA-HG-c4H">
+                                            <rect key="frame" x="9" y="6" width="107" height="108"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.4088" green="0.60687333330000004" blue="0.72999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="UIZ-Rl-nno" id="lFk-hO-aFk"/>
+                            <outlet property="delegate" destination="UIZ-Rl-nno" id="GaD-tW-ha9"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="VOy-zs-XVb"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ygH-cU-2ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1595" y="1487"/>
         </scene>
         <!--Sld Offline Event List Controller - OFFLINE-->
         <scene sceneID="MOS-eN-ix4">
@@ -1642,7 +1704,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Ho-s9-nyw" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="gis-nv-p4W" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1588" y="1485"/>
+            <point key="canvasLocation" x="1588" y="2167"/>
         </scene>
         <!--Sld Login View Controller-->
         <scene sceneID="XIZ-kS-SiX">
@@ -2257,25 +2319,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KOC-jK-yTQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2507" y="-1282"/>
-        </scene>
-        <!--Sld Nevigation Controller - Item-->
-        <scene sceneID="cUD-5I-ebI">
-            <objects>
-                <navigationController storyboardIdentifier="playerSetting" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7sa-Gn-NGB" customClass="SldNevigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="pKw-7I-HZh"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="5GD-Do-QSO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="UU9-ez-Q5a" kind="relationship" relationship="rootViewController" id="kwB-br-nyk"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uzg-Yn-aoS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1588" y="759"/>
         </scene>
         <!--Sld Nevigation Controller-->
         <scene sceneID="flO-v7-Waj">

@@ -153,7 +153,8 @@ static NSArray *_genderStrings;
         SldGameData *gamedata = [SldGameData getInstance];
         
         //succeed
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.navigationController popViewControllerAnimated:YES];
+//        [self dismissViewControllerAnimated:YES completion:nil];
         if (self.presentingViewController.class == SldLoginViewController.class) {
             SldLoginViewController *vc = (SldLoginViewController *)self.presentingViewController;
             vc.shouldDismiss = YES;
@@ -177,8 +178,8 @@ static NSArray *_genderStrings;
 }
 
 - (IBAction)onCancel:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)setGravartarWithKey:(NSString*)key url:(NSString*)url {

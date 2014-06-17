@@ -1205,21 +1205,14 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 	session, err := findSession(w, r, nil)
 	lwutil.CheckError(err, "err_auth")
 
-	//out
-	type Out struct {
-		Records []EventPlayerRecord
-	}
-
 	//zrscan
 	key := fmt.Sprintf("Z_EVENT_PLAYER_RECORD/%d", session.Userid)
 	resp, err := ssdb.Do("zrscan", key, in.StartEventId, "", "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
 	if len(resp) == 0 {
-		out := Out{
-			[]EventPlayerRecord{},
-		}
-		lwutil.WriteResponse(w, out)
+		records := []EventPlayerRecord{}
+		lwutil.WriteResponse(w, records)
 		return
 	}
 
@@ -1245,10 +1238,7 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 		lwutil.CheckError(err, "")
 	}
 
-	out := Out{
-		records,
-	}
-	lwutil.WriteResponse(w, out)
+	lwutil.WriteResponse(w, records)
 }
 
 func regMatch() {
