@@ -247,7 +247,7 @@
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-        
+
         _matchResults = [NSMutableArray array];
         for (NSDictionary *record in records) {
             SldMatchResult *mr = [[SldMatchResult alloc] init];
