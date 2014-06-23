@@ -439,6 +439,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 		[]string{to.Address},
 		[]byte(message),
 	)
+	lwutil.CheckError(err, "")
 
 	// host := "mail.pintugame.com"
 	// from := "resetpassword@pintugame.com"
