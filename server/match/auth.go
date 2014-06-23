@@ -404,7 +404,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	// email := "103638667@qq.com"
 	// password := "nmmgbnmmgb"
 	host := "mail.pintugame.com"
-	email := "resetpassword1@pintugame.com"
+	email := "resetpassword@pintugame.com"
 	password := "Nmmgb808313"
 	toEmail := in.Email
 
