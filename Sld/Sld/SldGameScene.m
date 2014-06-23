@@ -19,6 +19,7 @@
 #import "SldDb.h"
 #import "config.h"
 #import "nv-ios-digest/SHA1.h"
+#import "AdMoGoInterstitialManager.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -921,6 +922,7 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onPackFinish {
+    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
     _packHasFinished = YES;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];

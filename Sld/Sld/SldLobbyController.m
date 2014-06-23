@@ -55,19 +55,19 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [_rankController onViewShown];
+    //[_briefController onViewShown];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString * segueName = segue.identifier;
-    UINavigationController* nav = (UINavigationController*) [segue destinationViewController];
+    UIViewController* vc = (UIViewController*) [segue destinationViewController];
     if ([segueName isEqualToString: @"rankController"]) {
-        _rankController = (SldRankController*)nav.topViewController;
-    }else if ([segueName isEqualToString: @"briefController"]) {
-        _briefController = (SldBriefController*)nav;
+        _rankController = (SldRankController*)vc;
+    } else if ([segueName isEqualToString: @"briefController"]) {
+        _briefController = (SldBriefController*)vc;
     } else if ([segueName isEqualToString: @"betController"]) {
-        _betController = (SldBetController*)nav.topViewController;
+        _betController = (SldBetController*)vc;
     }
 }
 

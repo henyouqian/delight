@@ -6,6 +6,8 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
+//#import "DMInterstitialAdController.h"
+
 NSString* getResFullPath(NSString* fileName);
 NSString* makeDocPath(NSString* path);
 UIAlertView* alert(NSString *title, NSString *message);
@@ -36,3 +38,8 @@ NSString* formatInterval(int sec);
 @interface NSData (NSData_Conversion)
 - (NSString *)hexadecimalString;
 @end
+
+//@interface SldAds : NSObject<DMInterstitialAdControllerDelegate>
+//- (instancetype)initWithRootViewController:(UIViewController*)vc;
+//- (void)present;
+//@end

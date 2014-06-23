@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./ssdb"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
@@ -8,10 +9,6 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
-	//. "github.com/qiniu/api/conf"
-	//"github.com/qiniu/api/rs"
-	// "io/ioutil"
-	"./ssdb"
 	"math"
 	"math/rand"
 	"net/http"
@@ -117,6 +114,7 @@ type EventPlayerRecord struct {
 	BetReward          int64
 	Bet                map[string]int64 //[teamName]betMoney
 	BetMoneySum        int64
+	PackThumbKey       string
 }
 
 func getEvent(ssdb *ssdb.Client, eventId int64) *Event {
@@ -149,7 +147,7 @@ func getEventPlayerRecord(ssdb *ssdb.Client, eventId int64, userId int64) *Event
 		err = json.Unmarshal([]byte(resp[1]), &record)
 		lwutil.CheckError(err, "")
 		return &record
-	} else {
+	} else { //create event
 		playerInfo, err := getPlayerInfo(ssdb, userId)
 		lwutil.CheckError(err, "")
 
@@ -160,6 +158,11 @@ func getEventPlayerRecord(ssdb *ssdb.Client, eventId int64, userId int64) *Event
 		record.GravatarKey = playerInfo.GravatarKey
 		record.CustomAvartarKey = playerInfo.CustomAvatarKey
 		record.GameCoinNum = INIT_GAME_COIN_NUM
+
+		//get event
+		event := getEvent(ssdb, eventId)
+		pack := getPack(ssdb, event.PackId)
+		record.PackThumbKey = pack.Thumb
 
 		js, err := json.Marshal(record)
 		resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, key, js)
@@ -1152,13 +1155,16 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	//check money
 	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
 	lwutil.CheckError(err, "")
-	if in.Money < playerInfo.Money {
+	if in.Money > playerInfo.Money {
 		lwutil.SendError("err_money", "")
 	}
 	playerInfo.Money -= in.Money
 
 	//update bet
 	record := getEventPlayerRecord(ssdb, in.EventId, session.Userid)
+	if record.Bet == nil {
+		record.Bet = map[string]int64{}
+	}
 	record.Bet[in.TeamName] += in.Money
 	record.BetMoneySum += in.Money
 	saveEventPlayerRecord(ssdb, in.EventId, session.Userid, record)

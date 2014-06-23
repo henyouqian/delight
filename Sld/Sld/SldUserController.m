@@ -21,15 +21,22 @@
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
-@property (weak, nonatomic) IBOutlet UILabel *assertsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *totalRewardLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 
 @end
 
+static __weak SldUserController *g_inst = nil;
+
 @implementation SldUserController
+
++ (instancetype)getInstance {
+    return g_inst;
+}
 
 - (void)viewDidLoad
 {
+    g_inst = self;
     [super viewDidLoad];
     
     self.clearsSelectionOnViewWillAppear = YES;
@@ -40,9 +47,6 @@
         [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
         return;
     }
-    
-    //
-    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", gd.rewardCache];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,8 +77,7 @@
         _genderLabel.textColor = makeUIColor(128, 128, 128, 255);
     }
     
-    //money
-    _moneyLabel.text = [NSString stringWithFormat:@"%lld", gamedata.money];
+    [self updateMoney];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,9 +89,9 @@
 }
 
 - (IBAction)onLogoutButton:(id)sender {
-    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"否" action:nil];
     
-	RIButtonItem *logoutItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
+	RIButtonItem *logoutItem = [RIButtonItem itemWithLabel:@"是" action:^{
 		[[SldHttpSession defaultSession] logoutWithComplete:^{
             dispatch_async(dispatch_get_main_queue(), ^{
                 Config *conf = [Config sharedConf];
@@ -103,7 +106,7 @@
         }];
 	}];
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Log out?"
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"注销当前账号吗?"
 	                                                    message:nil
 											   cancelButtonItem:cancelItem
 											   otherButtonItems:logoutItem, nil];
@@ -184,7 +187,8 @@
 - (void)updateMoney {
     SldGameData *gd = [SldGameData getInstance];
     _moneyLabel.text = [NSString stringWithFormat:@"%lld", gd.money];
-    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%d", 0];
+    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", gd.rewardCache];
+    _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", gd.rewardCache];
 }
 
 @end
@@ -203,6 +207,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *matchRewardLabel;
 @property (weak, nonatomic) IBOutlet UILabel *betMoneyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *betRewardLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *packThumbView;
 
 @end
 
@@ -251,7 +256,7 @@
         _matchResults = [NSMutableArray array];
         for (NSDictionary *record in records) {
             SldMatchResult *mr = [[SldMatchResult alloc] init];
-            mr.thumbKey = @""; //fixme
+            mr.thumbKey = [record objectForKey:@"PackThumbKey"];
             mr.rank = [(NSNumber*)[record objectForKey:@"FinalRank"] intValue];
             mr.matchReward = [(NSNumber*)[record objectForKey:@"MatchReward"] intValue];
             mr.betMoneySum = [(NSNumber*)[record objectForKey:@"BetMoneySum"] intValue];
@@ -302,6 +307,7 @@
         cell.matchRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", mr.matchReward];
         cell.betMoneyLabel.text = [NSString stringWithFormat:@"投注：%d", mr.betMoneySum];
         cell.betRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", mr.betReward];
+        [cell.packThumbView asyncLoadImageWithKey:mr.thumbKey showIndicator:NO completion:nil];
         return cell;
     }
     

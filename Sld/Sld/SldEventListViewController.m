@@ -139,24 +139,14 @@ static const int FETCH_EVENT_COUNT = 20;
             if (eventInfo.state == CLOSED) {
                 continue;
             }
-            int state = 0;
             
-            NSTimeInterval beginIntv = [eventInfo.beginTime timeIntervalSinceNow];
-            NSTimeInterval endIntv = [eventInfo.endTime timeIntervalSinceNow];
-            if (beginIntv > 0) {
-                state = 1; //comming
-            } else {
-                if (endIntv < 0 || eventInfo.hasResult) {
-                    state = 3; //closed
-                } else {
-                    state = 2; //running
-                }
-            }
-            if (state != eventInfo.state) {
-                if (eventInfo.state != UNDEFINED) {
+            enum EventState prevState = eventInfo.state;
+            [eventInfo updateState];
+            
+            if (prevState != eventInfo.state) {
+                if (prevState != UNDEFINED) {
                     [reloadIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                 }
-                eventInfo.state = state;
             }
         }
         if (reloadIndexPathes.count) {

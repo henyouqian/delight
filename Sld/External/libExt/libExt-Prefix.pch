@@ -5,7 +5,9 @@
 //
 
 #ifdef __OBJC__
-    @import Foundation;
-    @import UIKit;
+//    @import Foundation;
+//    @import UIKit;
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
     #import "Finch/Lib-Prefix.pch"
 #endif

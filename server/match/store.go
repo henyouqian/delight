@@ -1,7 +1,10 @@
 package main
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	"net/http"
@@ -12,16 +15,19 @@ type GameCoinPack struct {
 	CoinNum int
 }
 
-const (
-	K_IAP_PRODUCT_IDS = "K_IAP_PRODUCT_IDS"
-)
-
 var (
 	gameCoinPacks = []GameCoinPack{
 		{50, 1},
 		{100, 3},
 		{150, 5},
 		{250, 10},
+	}
+
+	iapProducts = map[string]int{
+		"com.lw.sld.coin6":   600,
+		"com.lw.sld.coin30":  3000 + 300,
+		"com.lw.sld.coin68":  6800 + 1000,
+		"com.lw.sld.coin128": 12800 + 2500,
 	}
 )
 
@@ -127,6 +133,19 @@ func apiBuyGameCoin(w http.ResponseWriter, r *http.Request) {
 }
 
 func apiListIapProductId(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	out := make([]string, len(iapProducts))
+	i := 0
+	for k, _ := range iapProducts {
+		out[i] = k
+		i++
+	}
+
+	lwutil.WriteResponse(w, out)
+}
+
+func apiGetIapSecret(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -135,17 +154,24 @@ func apiListIapProductId(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
 
-	//
-	resp, err := ssdb.Do("get", K_IAP_PRODUCT_IDS)
-	lwutil.CheckSsdbError(resp, err)
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
 
-	out := []string{}
-	err = json.Unmarshal([]byte(resp[1]), &out)
+	//player
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	lwutil.CheckError(err, "")
+	playerInfo.Secret = lwutil.GenUUID()
+	savePlayerInfo(ssdb, session.Userid, playerInfo)
 
+	//out
+	out := map[string]string{
+		"Secret": playerInfo.Secret,
+	}
 	lwutil.WriteResponse(w, out)
 }
 
-func apiSetIapProductId(w http.ResponseWriter, r *http.Request) {
+func apiBuyIap(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -155,26 +181,55 @@ func apiSetIapProductId(w http.ResponseWriter, r *http.Request) {
 	defer ssdb.Close()
 
 	//in
-	var in []string
+	var in struct {
+		ProductId string
+		Checksum  string
+	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
-	//
-	if len(in) == 0 {
-		lwutil.SendError("err_no_in", "")
+	addMoney, exist := iapProducts[in.ProductId]
+	if !exist {
+		lwutil.SendError("err_product_id", "")
 	}
-	js, err := json.Marshal(in)
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//get player info
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
 	lwutil.CheckError(err, "")
 
-	resp, err := ssdb.Do("set", K_IAP_PRODUCT_IDS, js)
-	lwutil.CheckSsdbError(resp, err)
+	//check checksum
+	if playerInfo.Secret == "" {
+		lwutil.SendError("err_secret", "")
+	}
+	checksum := fmt.Sprintf("%s%d%s,", playerInfo.Secret, session.Userid, session.Username)
+	hasher := sha1.New()
+	hasher.Write([]byte(checksum))
+	checksum = hex.EncodeToString(hasher.Sum(nil))
+	if in.Checksum != checksum {
+		lwutil.SendError("err_checksum", checksum)
+	}
 
-	lwutil.WriteResponse(w, in)
+	//set money
+	playerInfo.Money += int64(addMoney)
+	playerInfo.Secret = ""
+	savePlayerInfo(ssdb, session.Userid, playerInfo)
+
+	//out
+	out := map[string]int64{
+		"AddMoney": int64(addMoney),
+		"Money":    playerInfo.Money,
+	}
+	lwutil.WriteResponse(w, out)
 }
 
 func regStore() {
 	http.Handle("/store/listGameCoinPack", lwutil.ReqHandler(apiListGameCoinPack))
 	http.Handle("/store/buyGameCoin", lwutil.ReqHandler(apiBuyGameCoin))
 	http.Handle("/store/listIapProductId", lwutil.ReqHandler(apiListIapProductId))
-	http.Handle("/store/setIapProductId", lwutil.ReqHandler(apiSetIapProductId))
+	http.Handle("/store/getIapSecret", lwutil.ReqHandler(apiGetIapSecret))
+	http.Handle("/store/buyIap", lwutil.ReqHandler(apiBuyIap))
 }

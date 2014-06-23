@@ -11,9 +11,12 @@
 #endif
 
 #ifdef __OBJC__
-    @import UIKit;
-    @import Foundation;
-    @import SpriteKit;
+//    @import UIKit;
+//    @import Foundation;
+//    @import SpriteKit;
+    #import <UIKit/UIkit.h>
+    #import <Foundation/Foundation.h>
+    #import <SpriteKit/SpriteKit.h>
     #import "lw/lwLog.h"
     #import "libExt/libExt-Prefix.pch"
     #import "fmdb/FMDB.h"

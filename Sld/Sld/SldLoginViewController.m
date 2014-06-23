@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *okButton;
 @property (weak, nonatomic) IBOutlet UIButton *offlineButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
+//@property (nonatomic) SldAds *ads;
 @end
 
 @implementation SldLoginViewController
@@ -43,9 +44,9 @@
 }
 - (IBAction)onChangeMode:(id)sender {
     if ([_seg selectedSegmentIndex] == 0) {
-        [_okButton setTitle:@"Login" forState:UIControlStateNormal];
+        [_okButton setTitle:@"登录" forState:UIControlStateNormal];
     } else {
-        [_okButton setTitle:@"Sign up" forState:UIControlStateNormal];
+        [_okButton setTitle:@"注册" forState:UIControlStateNormal];
     }
 }
 
@@ -94,17 +95,25 @@
     [_usernameInput setDelegate:self];
     
     [self onChangeMode:_seg];
+    
+    //ads
+//    _ads = [[SldAds alloc] initWithRootViewController:self];
+    
+    //ad mogo
+    [AdMoGoInterstitialManager setAppKey:@"8c0728f759464dcda07c81afb00d3bf5"];
+    [[AdMoGoInterstitialManager shareInstance] initDefaultInterstitial];
 }
+
 
 - (void)login {
     NSString *username = self.usernameInput.text;
     NSString *password = self.passwordInput.text;
     if ([username length] == 0 || [password length] == 0) {
-        alert(@"Fill the blank.", nil);
+        alert(@"请填写所有空格", nil);
         return;
     }
     
-    UIAlertView *loginAlert = [[UIAlertView alloc] initWithTitle:@"Login ..."
+    UIAlertView *loginAlert = [[UIAlertView alloc] initWithTitle:@"登录中..."
                                                   message:nil
                                                  delegate:nil
                                         cancelButtonTitle:nil
@@ -149,7 +158,7 @@
         }
         
         //get player info
-        UIAlertView *getUserInfoAlert = [[UIAlertView alloc] initWithTitle:@"Fetching user infos ..."
+        UIAlertView *getUserInfoAlert = [[UIAlertView alloc] initWithTitle:@"获取用户信息..."
                                                                    message:nil
                                                                   delegate:nil
                                                          cancelButtonTitle:nil
@@ -227,5 +236,28 @@
     return NO;
 }
 
+@end
+
+//===================
+@interface SldForgotPasswordControl : UIViewController
+@property (weak, nonatomic) IBOutlet UITextField *emailInput;
+
+@end
+
+@implementation SldForgotPasswordControl
+
+- (void)viewDidLoad {
+    [_emailInput becomeFirstResponder];
+}
+
+- (IBAction)onSendEmail:(id)sender {
+    [[[UIAlertView alloc] initWithTitle:@"重置密码邮件已发送"
+	                            message:@""
+		               cancelButtonItem:[RIButtonItem itemWithLabel:@"知道了" action:^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }]
+				       otherButtonItems:nil] show];
+    
+}
 
 @end

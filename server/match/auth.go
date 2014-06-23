@@ -5,9 +5,12 @@ import (
 	"fmt"
 	// "github.com/garyburd/redigo/redis"
 	"./ssdb"
+	"encoding/base64"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	"net/http"
+	"net/mail"
+	"net/smtp"
 	"strconv"
 	"strings"
 	"time"
@@ -19,8 +22,10 @@ const (
 	SESSION_UPDATE_SEC = 60 * 60
 	H_ACCOUNT          = "H_ACCOUNT"
 	H_NAME_ACCONT      = "H_NAME_ACCONT"
-	H_SESSION          = "H_SESSION"    //key:token, value:session
-	H_USER_TOKEN       = "H_USER_TOKEN" //key:appid/userid, value:token
+	H_SESSION          = "H_SESSION"        //key:token, value:session
+	H_USER_TOKEN       = "H_USER_TOKEN"     //key:appid/userid, value:token
+	K_RESET_PASSWORD   = "K_RESET_PASSWORD" //key:K_RESET_PASSWORD/<resetKey> value:accountEmail
+	RESET_PASSWORD_TTL = 60 * 60
 )
 
 var (
@@ -362,6 +367,81 @@ func apiAuthLoginInfo(w http.ResponseWriter, r *http.Request) {
 // 	lwutil.WriteResponse(w, apps)
 // }
 
+func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	//in
+	var in struct {
+		Email string
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	ssdb, err := ssdbAuthPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//check account exist
+	resp, err := ssdb.Do("hget", H_NAME_ACCONT, in.Email)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		lwutil.SendError("err_not_exist", "account not exist")
+	}
+
+	//gen reset key
+	resetKey := lwutil.GenUUID()
+	key := fmt.Sprintf("K_RESET_PASSWORD/%s", resetKey)
+	resp, err = ssdb.Do("setx", key, in.Email, RESET_PASSWORD_TTL)
+	lwutil.CheckError(err, "")
+
+	//
+	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://pintugame.com/sld/resetpassword?key=%s", resetKey)
+
+	//email
+	b64 := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+
+	host := "smtp.qq.com"
+	email := "103638667@qq.com"
+	password := "nmmgbnmmgb"
+	// host := "smtp.ym.163.com"
+	// email := "resetpassword@pintugame.com"
+	// password := "Nmmgb808313"
+	toEmail := in.Email
+
+	from := mail.Address{"全国拼图大奖赛", email}
+	to := mail.Address{"亲爱的《全国拼图大奖赛》用户", toEmail}
+
+	header := make(map[string]string)
+	header["From"] = from.String()
+	header["To"] = to.String()
+	header["Subject"] = fmt.Sprintf("=?UTF-8?B?%s?=", b64.EncodeToString([]byte("《全国拼图大奖赛》密码重设")))
+	header["MIME-Version"] = "1.0"
+	header["Content-Type"] = "text/html; charset=UTF-8"
+	header["Content-Transfer-Encoding"] = "base64"
+
+	message := ""
+	for k, v := range header {
+		message += fmt.Sprintf("%s: %s\r\n", k, v)
+	}
+	message += "\r\n" + b64.EncodeToString([]byte(body))
+
+	auth := smtp.PlainAuth(
+		"",
+		email,
+		password,
+		host,
+	)
+
+	err = smtp.SendMail(
+		host+":25",
+		auth,
+		email,
+		[]string{to.Address},
+		[]byte(message),
+	)
+	lwutil.CheckError(err, "")
+}
+
 func apiSsdbTest(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
@@ -391,5 +471,6 @@ func regAuth() {
 	http.Handle("/auth/logout", lwutil.ReqHandler(apiAuthLogout))
 	http.Handle("/auth/register", lwutil.ReqHandler(apiAuthRegister))
 	http.Handle("/auth/info", lwutil.ReqHandler(apiAuthLoginInfo))
+	http.Handle("/auth/forgotPassword", lwutil.ReqHandler(apiForgotPassword))
 	http.Handle("/auth/ssdbTest", lwutil.ReqHandler(apiSsdbTest))
 }

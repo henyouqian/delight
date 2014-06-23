@@ -1,9 +1,9 @@
 package main
 
 import (
+	"./ssdb"
 	"encoding/json"
 	"fmt"
-	// "github.com/garyburd/redigo/redis"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	. "github.com/qiniu/api/conf"
@@ -47,6 +47,16 @@ type Pack struct {
 	CoverBlur string
 	Images    []Image
 	Tags      []string
+}
+
+func getPack(ssdb *ssdb.Client, packId int64) *Pack {
+	resp, err := ssdb.Do("hget", H_PACK, packId)
+	lwutil.CheckSsdbError(resp, err)
+
+	pack := Pack{}
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	return &pack
 }
 
 func init() {

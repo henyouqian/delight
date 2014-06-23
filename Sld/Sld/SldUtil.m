@@ -8,6 +8,7 @@
 
 #import "SldUtil.h"
 #import "config.h"
+#import "SldGameData.h"
 #import "nv-ios-digest/SHA1.h"
 #import <CommonCrypto/CommonHMAC.h>
 
@@ -166,5 +167,46 @@ NSString* formatInterval(int sec) {
 
 @end
 
-
+//static SldAds *_ads = nil;
+//
+//@interface SldAds()
+//@property (nonatomic) DMInterstitialAdController *dmInterstitial;
+//@end
+//
+//@implementation SldAds
+//
+//- (instancetype)initWithRootViewController:(UIViewController*)vc {
+//    if (self = [super init]) {
+//        _dmInterstitial = [[DMInterstitialAdController alloc]
+//                            initWithPublisherId:@"56OJyJPouM8jf7a4AW"
+//                                    placementId:@"16TLwo3vAc2U4NUERQaZtLGs"
+//                             rootViewController:vc
+//                                           size:DOMOB_AD_SIZE_300x250];
+//        
+//        _dmInterstitial.delegate = self;
+//        [_dmInterstitial loadAd];
+//        
+//        SldGameData *gd = [SldGameData getInstance];
+//        if (gd.gender == 0) {
+//            [_dmInterstitial setUserGender:DMUserGenderFemale];
+//        } else {
+//            [_dmInterstitial setUserGender:DMUserGenderMale];
+//        }
+//    }
+//    return self;
+//}
+//
+//- (void)present {
+//    if (_dmInterstitial.isReady){
+//        [_dmInterstitial present];
+//    } else {
+//        [_dmInterstitial loadAd];
+//    }
+//}
+//
+//- (void)dmInterstitialDidDismissScreen:(DMInterstitialAdController *)dmInterstitial {
+//    [_dmInterstitial loadAd];
+//}
+//
+//@end
 

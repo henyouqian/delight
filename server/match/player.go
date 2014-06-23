@@ -38,6 +38,7 @@ type PlayerInfo struct {
 	Money           int64
 	BetMax          int
 	RewardCache     int64
+	Secret          string
 	AllowSave       bool
 }
 

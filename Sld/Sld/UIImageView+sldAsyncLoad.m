@@ -55,6 +55,9 @@
 }
 
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+    if (imageKey == nil) {
+        return;
+    }
     UIActivityIndicatorView *indicatorView = nil;
     if (showIndicator) {
         indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];

@@ -93,6 +93,7 @@ enum GameMode{
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
 @property (nonatomic) SInt64 money;
+@property (nonatomic) SInt64 totalReward;
 @property (nonatomic) SInt64 rewardCache;
 
 @property (nonatomic) int betCloseBeforeEndSec;

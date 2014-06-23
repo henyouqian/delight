@@ -21,6 +21,10 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"Username":"?", "Password":"?"}
 				},{
+					"name": "forgotPassword",
+					"method": "POST",
+					"data": {"Email":""}
+				},{
 					"name": "ssdbTest",
 					"method": "POST",
 					"data": ""
@@ -240,13 +244,17 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"EventId":0, "GameCoinPackId":0}
 				},{
-					"name": "setIapProductId",
-					"method": "POST",
-					"data": ["iapProductId1", "iapProductId2"]
-				},{
 					"name": "listIapProductId",
 					"method": "POST",
 					"data": ""
+				},{
+					"name": "getIapSecret",
+					"method": "POST",
+					"data": ""
+				},{
+					"name": "buyIap",
+					"method": "POST",
+					"data": {"ProductId":"", "Checksum":""}
 				}
 			]
 		}
