@@ -5,12 +5,12 @@ import (
 	"fmt"
 	// "github.com/garyburd/redigo/redis"
 	"./ssdb"
-	"encoding/base64"
+	// "encoding/base64"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	"net/http"
-	"net/mail"
-	"net/smtp"
+	// "net/mail"
+	// "net/smtp"
 	"strconv"
 	"strings"
 	"time"
@@ -395,74 +395,73 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//
-	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://pintugame.com/sld/resetpassword?key=%s", resetKey)
+	// body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://pintugame.com/sld/resetpassword?key=%s", resetKey)
 
-	//email
-	b64 := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+	// //email
+	// b64 := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 
-	// host := "smtp.qq.com"
-	// email := "103638667@qq.com"
-	// password := "nmmgbnmmgb"
-	host := "mail.pintugame.com"
-	email := "resetpassword@pintugame.com"
-	password := "Nmmgb808313"
-	toEmail := in.Email
-
-	from := mail.Address{"全国拼图大奖赛", email}
-	to := mail.Address{"亲爱的《全国拼图大奖赛》用户", toEmail}
-
-	header := make(map[string]string)
-	header["From"] = from.String()
-	header["To"] = to.String()
-	header["Subject"] = fmt.Sprintf("=?UTF-8?B?%s?=", b64.EncodeToString([]byte("《全国拼图大奖赛》密码重设")))
-	header["MIME-Version"] = "1.0"
-	header["Content-Type"] = "text/html; charset=UTF-8"
-	header["Content-Transfer-Encoding"] = "base64"
-
-	message := ""
-	for k, v := range header {
-		message += fmt.Sprintf("%s: %s\r\n", k, v)
-	}
-	message += "\r\n" + b64.EncodeToString([]byte(body))
-
-	auth := smtp.PlainAuth(
-		"",
-		email,
-		password,
-		host,
-	)
-
-	err = smtp.SendMail(
-		host+":25",
-		auth,
-		email,
-		[]string{to.Address},
-		[]byte(message),
-	)
-	lwutil.CheckError(err, "")
-
+	// // host := "smtp.qq.com"
+	// // email := "103638667@qq.com"
+	// // password := "nmmgbnmmgb"
 	// host := "mail.pintugame.com"
-	// from := "resetpassword@pintugame.com"
+	// email := "resetpassword1@pintugame.com"
 	// password := "Nmmgb808313"
-	// to := in.Email
+	// toEmail := in.Email
 
-	// auth := lwutil.LoginAuth(
-	// 	from,
+	// from := mail.Address{"全国拼图大奖赛", email}
+	// to := mail.Address{"亲爱的《全国拼图大奖赛》用户", toEmail}
+
+	// header := make(map[string]string)
+	// header["From"] = from.String()
+	// header["To"] = to.String()
+	// header["Subject"] = fmt.Sprintf("=?UTF-8?B?%s?=", b64.EncodeToString([]byte("《全国拼图大奖赛》密码重设")))
+	// header["MIME-Version"] = "1.0"
+	// header["Content-Type"] = "text/html; charset=UTF-8"
+	// header["Content-Transfer-Encoding"] = "base64"
+
+	// message := ""
+	// for k, v := range header {
+	// 	message += fmt.Sprintf("%s: %s\r\n", k, v)
+	// }
+	// message += "\r\n" + b64.EncodeToString([]byte(body))
+
+	// auth := smtp.PlainAuth(
+	// 	"",
+	// 	email,
 	// 	password,
 	// 	host,
 	// )
 
-	// ctype := fmt.Sprintf("Content-Type: %s; charset=%s", "text/html", "utf-8")
-	// msg := fmt.Sprintf("To: %s\r\nCc: %s\r\nFrom: %s\r\nSubject: %s\r\n%s\r\n\r\n%s", "<TTT>trywen@qq.com", "", "TRY<trywen001@126.com>", "Hello", ctype, "<html><body>Hello Hello</body></html>")
-
-	// err = lwutil.SendMail(
+	// err = smtp.SendMail(
 	// 	host+":25",
 	// 	auth,
-	// 	from,
-	// 	[]string{to},
-	// 	[]byte(msg),
+	// 	email,
+	// 	[]string{to.Address},
+	// 	[]byte(message),
 	// )
-	// lwutil.CheckError(err, "")
+
+	host := "mail.pintugame.com"
+	from := "resetpassword@pintugame.com"
+	password := "Nmmgb808313"
+	to := in.Email
+
+	auth := lwutil.LoginAuth(
+		from,
+		password,
+		host,
+	)
+
+	ctype := fmt.Sprintf("Content-Type: %s; charset=%s", "text/html", "utf-8")
+	msg := fmt.Sprintf("To: %s\r\nCc: %s\r\nFrom: %s\r\nSubject: %s\r\n%s\r\n\r\n%s", "<TTT>trywen@qq.com", "", "TRY<trywen001@126.com>", "Hello", ctype, "<html><body>Hello Hello</body></html>")
+
+	err = lwutil.SendMail(
+		host+":25",
+		auth,
+		from,
+		[]string{to},
+		[]byte(msg),
+	)
+	lwutil.CheckError(err, "")
 }
 
 func apiSsdbTest(w http.ResponseWriter, r *http.Request) {
