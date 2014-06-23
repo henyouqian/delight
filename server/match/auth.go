@@ -395,7 +395,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//
-	// body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://pintugame.com/sld/resetpassword?key=%s", resetKey)
+	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://pintugame.com/sld/resetpassword?key=%s", resetKey)
 
 	// //email
 	// b64 := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
@@ -450,6 +450,12 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 		password,
 		host,
 	)
+
+	//auth := LoginAuth(
+	//	"applesabi@126.com",
+	//	"smtpceshi",
+	//	"smtp.126.com",
+	//)
 
 	ctype := fmt.Sprintf("Content-Type: %s; charset=%s", "text/html", "utf-8")
 	msg := fmt.Sprintf("To: %s\r\nCc: %s\r\nFrom: %s\r\nSubject: %s\r\n%s\r\n\r\n%s", "<TTT>trywen@qq.com", "", "TRY<trywen001@126.com>", "Hello", ctype, "<html><body>Hello Hello</body></html>")
