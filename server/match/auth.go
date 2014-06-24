@@ -395,7 +395,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//
-	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://pintugame.com/sld/resetpassword?key=%s", resetKey)
+	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://sld.pintugame.com/www/resetpassword?key=%s", resetKey)
 
 	//email
 	b64 := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
@@ -404,11 +404,11 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	// email := "103638667@qq.com"
 	// password := "nmmgbnmmgb"
 	host := "localhost"
-	email := "resetpassword@pintugame.com"
+	fromEmail := "resetpassword@pintugame.com"
 	password := "Nmmgb808313"
 	toEmail := in.Email
 
-	from := mail.Address{"全国拼图大奖赛", email}
+	from := mail.Address{"全国拼图大奖赛", fromEmail}
 	to := mail.Address{"亲爱的《全国拼图大奖赛》用户", toEmail}
 
 	header := make(map[string]string)
@@ -427,7 +427,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 
 	auth := smtp.PlainAuth(
 		"",
-		email,
+		fromEmail,
 		password,
 		host,
 	)
@@ -435,7 +435,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	err = smtp.SendMail(
 		host+":25",
 		auth,
-		email,
+		fromEmail,
 		[]string{to.Address},
 		[]byte(message),
 	)
