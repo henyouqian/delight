@@ -10,7 +10,7 @@
 		var onFail = function(obj) {
 			json = obj.responseJSON
 			var t = JSON.stringify(json, null, '\t')
-			if (json.Error == "err_not_exist") {
+			if (json.Error && json.Error == "err_not_exist") {
 				alert("账号不存在")
 			} else {
 				alert(t)
