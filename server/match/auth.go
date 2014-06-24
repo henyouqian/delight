@@ -495,7 +495,7 @@ func apiResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	//save
 	account.Password = newPassword
-	js, err := json.Marshal(in)
+	js, err := json.Marshal(account)
 	lwutil.CheckError(err, "")
 	resp, err = ssdb.Do("hset", H_ACCOUNT, userId, js)
 	lwutil.CheckSsdbError(resp, err)
