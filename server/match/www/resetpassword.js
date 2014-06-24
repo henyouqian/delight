@@ -20,7 +20,7 @@
 			var t = JSON.stringify(json, null, '\t')
 			console.log(json)
 			if (json.Error && json.Error == "err_key") {
-				alert("此页面已过期，请重新找回密码")
+				alert("此页面已使用或已过期，请重新找回密码")
 				window.location.href='forgotpassword.html'
 			} else {
 				alert(t)

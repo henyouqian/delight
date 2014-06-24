@@ -500,6 +500,10 @@ func apiResetPassword(w http.ResponseWriter, r *http.Request) {
 	resp, err = ssdb.Do("hset", H_ACCOUNT, userId, js)
 	lwutil.CheckSsdbError(resp, err)
 
+	//delete reset key
+	resp, err = ssdb.Do("del", key)
+	lwutil.CheckSsdbError(resp, err)
+
 	lwutil.WriteResponse(w, "ok")
 }
 
