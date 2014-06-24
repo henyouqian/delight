@@ -369,6 +369,7 @@ func apiAuthLoginInfo(w http.ResponseWriter, r *http.Request) {
 
 func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	var err error
+	lwutil.CheckMathod(r, "POST")
 
 	//in
 	var in struct {
@@ -377,6 +378,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
+	//ssdb
 	ssdb, err := ssdbAuthPool.Get()
 	lwutil.CheckError(err, "")
 	defer ssdb.Close()
@@ -392,10 +394,10 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	resetKey := lwutil.GenUUID()
 	key := fmt.Sprintf("K_RESET_PASSWORD/%s", resetKey)
 	resp, err = ssdb.Do("setx", key, in.Email, RESET_PASSWORD_TTL)
-	lwutil.CheckError(err, "")
+	lwutil.CheckSsdbError(resp, err)
 
 	//
-	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://sld.pintugame.com/www/resetpassword?key=%s", resetKey)
+	body := fmt.Sprintf("请进入以下网址重设《全国拼图大奖赛》密码. \nhttp://sld.pintugame.com/www/resetpassword.html?key=%s", resetKey)
 
 	//email
 	b64 := base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
@@ -441,28 +443,61 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	)
 	lwutil.CheckError(err, "")
 
-	// host := "mail.pintugame.com"
-	// from := "resetpassword@pintugame.com"
-	// password := "Nmmgb808313"
-	// to := in.Email
+}
 
-	// auth := lwutil.LoginAuth(
-	// 	from,
-	// 	password,
-	// 	host,
-	// )
+func apiResetPassword(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
 
-	// ctype := fmt.Sprintf("Content-Type: %s; charset=%s", "text/html", "utf-8")
-	// msg := fmt.Sprintf("To: %s\r\nCc: %s\r\nFrom: %s\r\nSubject: %s\r\n%s\r\n\r\n%s", "<TTT>trywen@qq.com", "", "TRY<trywen001@126.com>", "Hello", ctype, "<html><body>Hello Hello</body></html>")
+	//in
+	var in struct {
+		ResetKey string
+		Password string
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
 
-	// err = lwutil.SendMail(
-	// 	host+":25",
-	// 	auth,
-	// 	from,
-	// 	[]string{to},
-	// 	[]byte(msg),
-	// )
-	// lwutil.CheckError(err, "")
+	//ssdb
+	ssdb, err := ssdbAuthPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//
+	key := fmt.Sprintf("K_RESET_PASSWORD/%s", in.ResetKey)
+	resp, err := ssdb.Do("get", key)
+	if resp[0] == "not_found" {
+		lwutil.SendError("err_key", "reset not found")
+	}
+	lwutil.CheckSsdbError(resp, err)
+	email := resp[1]
+
+	//password
+	newPassword := lwutil.Sha224(in.Password + PASSWORD_SALT)
+
+	//get account
+	resp, err = ssdb.Do("hget", H_NAME_ACCONT, email)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		lwutil.SendError("err_not_match", "name and password not match")
+	}
+	userId, err := strconv.ParseInt(resp[1], 10, 64)
+	lwutil.CheckError(err, "")
+
+	resp, err = ssdb.Do("hget", H_ACCOUNT, userId)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		lwutil.SendError("err_internal", "account not exist")
+	}
+	var account Account
+	err = json.Unmarshal([]byte(resp[1]), &account)
+	lwutil.CheckError(err, "")
+
+	//save
+	account.Password = newPassword
+	js, err := json.Marshal(in)
+	lwutil.CheckError(err, "")
+	resp, err = ssdb.Do("hset", H_ACCOUNT, userId, js)
+	lwutil.CheckSsdbError(resp, err)
 }
 
 func apiSsdbTest(w http.ResponseWriter, r *http.Request) {
@@ -495,5 +530,6 @@ func regAuth() {
 	http.Handle("/auth/register", lwutil.ReqHandler(apiAuthRegister))
 	http.Handle("/auth/info", lwutil.ReqHandler(apiAuthLoginInfo))
 	http.Handle("/auth/forgotPassword", lwutil.ReqHandler(apiForgotPassword))
+	http.Handle("/auth/resetPassword", lwutil.ReqHandler(apiResetPassword))
 	http.Handle("/auth/ssdbTest", lwutil.ReqHandler(apiSsdbTest))
 }
