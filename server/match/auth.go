@@ -443,6 +443,7 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	)
 	lwutil.CheckError(err, "")
 
+	lwutil.WriteResponse(w, "ok")
 }
 
 func apiResetPassword(w http.ResponseWriter, r *http.Request) {
@@ -498,6 +499,8 @@ func apiResetPassword(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 	resp, err = ssdb.Do("hset", H_ACCOUNT, userId, js)
 	lwutil.CheckSsdbError(resp, err)
+
+	lwutil.WriteResponse(w, "ok")
 }
 
 func apiSsdbTest(w http.ResponseWriter, r *http.Request) {
