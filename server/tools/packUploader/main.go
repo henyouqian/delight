@@ -21,7 +21,7 @@ import (
 
 const (
 	USEAGE         = "Useage: \n\tpackUploader new|del|update <uploadDir>\n\tpackUploader image <imagePath>"
-	BUCKET         = "sliderpack"
+	BUCKET         = "pintugame"
 	SERVER_HOST    = "http://localhost:9999/"
 	ADMIN_NAME     = "admin"
 	ADMIN_PASSWORD = "admin"

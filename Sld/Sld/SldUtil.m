@@ -9,7 +9,6 @@
 #import "SldUtil.h"
 #import "config.h"
 #import "SldGameData.h"
-#import "nv-ios-digest/SHA1.h"
 #import <CommonCrypto/CommonHMAC.h>
 
 NSString* getResFullPath(NSString* fileName) {
@@ -52,7 +51,7 @@ NSString* makeImagePath(NSString *imageKey) {
 }
 
 NSString* makeImagePathFromUrl(NSString *imageUrl) {
-    NSString *imageName = [SldUtil sha1WithData:imageUrl];
+    NSString *imageName = [SldUtil sha1WithString:imageUrl];
     return makeImagePath(imageName);
 }
 
@@ -125,8 +124,8 @@ NSString* formatInterval(int sec) {
 
 @implementation SldUtil
 
-+ (NSString*)sha1WithData:(NSString*)data {
-    SHA1 *sha1 = [SHA1 sha1WithString:data];
++ (NSString*)sha1WithString:(NSString*)string {
+    SHA1 *sha1 = [SHA1 sha1WithString:string];
     NSData *nsd = [NSData dataWithBytes:sha1.buffer length:sha1.bufferSize];
     NSString *output = [nsd hexadecimalString];
     return output;
@@ -135,6 +134,21 @@ NSString* formatInterval(int sec) {
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width {
     NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=%u", gravatarKey, (unsigned int)width*2];
     return url;
+}
+
++ (BOOL)validateEmail:(NSString *) candidate {
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    
+    return [emailTest evaluateWithObject:candidate];
+}
+
++ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 1.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 @end

@@ -27,10 +27,10 @@
 
 //=======================
 @interface SldIapController ()
-@property (nonatomic) NSArray *products;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) UIAlertView *altBuy;
 @property (nonatomic) NSString *secret;
+@property (nonatomic) SldGameData *gd;
 @end
 
 @implementation SldIapController
@@ -39,26 +39,34 @@
 {
     [super viewDidLoad];
     
-    UIAlertView *alt = alertNoButton(@"获取商品信息");
+    _gd = [SldGameData getInstance];
     
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        [alt dismissWithClickedButtonIndex:0 animated:YES];
-        if (error) {
-            alertHTTPError(error, data);
-            return;
-        }
+    if (_gd.iapProducts == nil) {
+        _gd.iapProducts = [NSArray array];
+        //UIAlertView *alt = alertNoButton(@"获取商品信息");
+        UIAlertView *alt = alert(@"获取商品信息", nil);
         
-        NSArray *productIds = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            lwError("Json error:%@", [error localizedDescription]);
-            return;
-        }
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [alt dismissWithClickedButtonIndex:0 animated:YES];
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSArray *productIds = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            
+            [self validateProductIdentifiers:productIds];
+        }];
         
-        [self validateProductIdentifiers:productIds];
-    }];
-    
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    } else {
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)dealloc {
@@ -73,7 +81,8 @@
 
 - (void)validateProductIdentifiers:(NSArray *)productIdentifiers
 {
-    _alt = alertNoButton(@"验证商品信息");
+    //_alt = alertNoButton(@"验证商品信息");
+    _alt = alert(@"验证商品信息", nil);
     SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
                                           initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
     productsRequest.delegate = self;
@@ -86,7 +95,7 @@
 {
     [_alt dismissWithClickedButtonIndex:0 animated:YES];
     _alt = nil;
-    _products = [response.products sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    _gd.iapProducts = [response.products sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         int price1 = [((SKProduct*)obj1).price intValue];
         int price2 = [((SKProduct*)obj2).price intValue];
         if (price1 < price2) {
@@ -103,14 +112,14 @@
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _products.count;
+    return _gd.iapProducts.count;
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     SldIapCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"iapCell" forIndexPath:indexPath];
-    if (indexPath.row < _products.count) {
-        SKProduct *product = _products[indexPath.row];
+    if (indexPath.row < _gd.iapProducts.count) {
+        SKProduct *product = _gd.iapProducts[indexPath.row];
         
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
@@ -134,19 +143,16 @@
     UIButton *btn = sender;
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[self.collectionView convertPoint:btn.center fromView:btn.superview]];
     
-    if (indexPath.row < _products.count) {
-        SKProduct *product = _products[indexPath.row];
+    if (indexPath.row < _gd.iapProducts.count) {
+        SKProduct *product = _gd.iapProducts[indexPath.row];
         
         SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:product];
         payment.quantity = 1;
-        payment.applicationUsername = [SldUtil sha1WithData:gd.userName];
+        payment.applicationUsername = [SldUtil sha1WithString:gd.userName];
         
-        _altBuy = alertNoButton(@"提交购买请求中...");
+        //_altBuy = alertNoButton(@"提交购买请求中...");
+        _altBuy = alert(@"提交购买请求中...", nil);
         [[SKPaymentQueue defaultQueue] addPayment:payment];
-        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            
-//        });
     }
 }
 
@@ -163,13 +169,18 @@
                 
                 break;
             case SKPaymentTransactionStateFailed:
+                lwError("%@", [transaction.error localizedDescription]);
                 //lwInfo("Failed: %@", transaction.error);
                 //[self failedTransaction:transaction];
+                alert([transaction.error localizedDescription], nil);
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
                 break;
             case SKPaymentTransactionStateRestored:
                 //lwInfo("Restored");
                 //[self restoreTransaction:transaction];
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
             default:
+                lwError("%@", [transaction.error localizedDescription]);
                 break;
         }
     }
@@ -199,7 +210,7 @@
         SldGameData *gd = [SldGameData getInstance];
         
         NSString *checksum = [NSString stringWithFormat:@"%@%lld%@,", _secret, gd.userId, gd.userName];
-        checksum = [SldUtil sha1WithData:checksum];
+        checksum = [SldUtil sha1WithString:checksum];
         
         NSDictionary *body = @{@"ProductId": transaction.payment.productIdentifier, @"Checksum":checksum};
         

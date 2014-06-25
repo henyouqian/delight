@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AdMoGoInterstitialManager.h"
 
 @interface SldLoginViewController : UIViewController<UITextFieldDelegate>
 @property (nonatomic) BOOL shouldDismiss;

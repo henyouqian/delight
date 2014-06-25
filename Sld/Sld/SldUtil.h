@@ -31,8 +31,10 @@ NSString* formatScore(int score);
 NSString* formatInterval(int sec);
 
 @interface SldUtil : NSObject
-+ (NSString*)sha1WithData:(NSString*)data;
++ (NSString*)sha1WithString:(NSString*)string;
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width;
++ (BOOL)validateEmail:(NSString *) candidate;
++ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 @end
 
 @interface NSData (NSData_Conversion)

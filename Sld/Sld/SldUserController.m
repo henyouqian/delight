@@ -7,6 +7,7 @@
 //
 
 #import "SldUserController.h"
+#import "SldUserInfoController.h"
 #import "SldLoginViewController.h"
 #import "SldHttpSession.h"
 #import "config.h"
@@ -23,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalRewardLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UITableViewCell *userInfoCell;
 
 @end
 
@@ -82,10 +84,10 @@ static __weak SldUserController *g_inst = nil;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//    if (cell == _logoutCell) {
-//        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
-//    }
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell == _userInfoCell) {
+        [SldUserInfoController createAndPresentFromController:self cancelable:YES];
+    }
 }
 
 - (IBAction)onLogoutButton:(id)sender {

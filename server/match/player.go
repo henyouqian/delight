@@ -1,21 +1,23 @@
 package main
 
 import (
+	"./ssdb"
 	"encoding/json"
+	"errors"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
-	//. "github.com/qiniu/api/conf"
-	//"github.com/qiniu/api/rs"
-	"./ssdb"
-	"errors"
+	// . "github.com/qiniu/api/conf"
+	"fmt"
+	"github.com/qiniu/api/rs"
 	"net/http"
 )
 
 const (
-	H_PLAYER_INFO    = "H_PLAYER_INFO" //subkey:(int64)userId value:(PlayerInfo)playerInfo
-	INIT_MONEY       = 500
-	FLD_PLAYER_MONEY = "money"
-	FLD_PLAYER_TEAM  = "team"
+	H_PLAYER_INFO      = "H_PLAYER_INFO" //subkey:(int64)userId value:(PlayerInfo)playerInfo
+	USER_UPLOAD_BUCKET = "pintugame"
+	INIT_MONEY         = 500
+	FLD_PLAYER_MONEY   = "money"
+	FLD_PLAYER_TEAM    = "team"
 )
 
 var (
@@ -23,10 +25,11 @@ var (
 )
 
 func init() {
+	glog.Info("")
+
 	for _, v := range TEAM_IDS {
 		TEAM_MAP[v] = true
 	}
-	glog.Info("")
 }
 
 type PlayerInfo struct {
@@ -190,8 +193,38 @@ func apiAddRewardFromCache(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func apiGetUptoken(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in []string
+	err := lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	inLen := len(in)
+	type outElem struct {
+		Key   string
+		Token string
+	}
+	out := make([]outElem, inLen, inLen)
+	for i, v := range in {
+		scope := fmt.Sprintf("%s:%s", USER_UPLOAD_BUCKET, v)
+		putPolicy := rs.PutPolicy{
+			Scope: scope,
+		}
+		out[i] = outElem{
+			in[i],
+			putPolicy.Token(nil),
+		}
+	}
+
+	//out
+	lwutil.WriteResponse(w, &out)
+}
+
 func regPlayer() {
 	http.Handle("/player/getInfo", lwutil.ReqHandler(apiGetPlayerInfo))
 	http.Handle("/player/setInfo", lwutil.ReqHandler(apiSetPlayerInfo))
 	http.Handle("/player/addRewardFromCache", lwutil.ReqHandler(apiAddRewardFromCache))
+	http.Handle("/player/getUptoken", lwutil.ReqHandler(apiGetUptoken))
 }

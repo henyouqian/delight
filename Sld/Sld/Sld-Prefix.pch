@@ -17,6 +17,7 @@
     #import <UIKit/UIkit.h>
     #import <Foundation/Foundation.h>
     #import <SpriteKit/SpriteKit.h>
+    #import <MobileCoreServices/MobileCoreServices.h>
     #import "lw/lwLog.h"
     #import "libExt/libExt-Prefix.pch"
     #import "fmdb/FMDB.h"
@@ -29,4 +30,7 @@
     #import "MWPhotoBrowser/Classes/MWPhotoBrowser.h"
     #import "SSKeychain/SSkeychain.h"
     #import "UIAlertView-Blocks/UIAlertView+Blocks.h"
+    #import "nv-ios-digest/SHA1.h"
+    #import "AdsMoGoLib/AdsMoGoSDK/AdMoGoInterstitialManager.h"
+    #import "QiniuSDK/QiniuSimpleUploader.h"
 #endif

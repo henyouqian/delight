@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
-	. "github.com/qiniu/api/conf"
-	"github.com/qiniu/api/rs"
 	"math"
 	"net/http"
 	"strconv"
@@ -16,13 +14,12 @@ import (
 )
 
 const (
-	ADMIN_USERID     = uint64(0)
-	USER_PACK_BUCKET = "sliderpack"
-	H_PACK           = "H_PACK"          //key:packId, value:packData
-	Z_USER_PACK_PRE  = "Z_USER_PACK_PRE" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
-	Z_TAG_PRE        = "Z_TAG_PRE"       //name:Z_TAG_PRE/tag, key:packid, score:packid
-	Z_COMMENT        = "Z_COMMENT"       //name:Z_COMMENT/packid, key:commentId, score:commentId
-	H_COMMENT        = "H_COMMENT"       //key:commentId, value:commentData
+	ADMIN_USERID    = uint64(0)
+	H_PACK          = "H_PACK"          //key:packId, value:packData
+	Z_USER_PACK_PRE = "Z_USER_PACK_PRE" //name:Z_USER_PACK_PRE/userId, key:packid, score:packid
+	Z_TAG_PRE       = "Z_TAG_PRE"       //name:Z_TAG_PRE/tag, key:packid, score:packid
+	Z_COMMENT       = "Z_COMMENT"       //name:Z_COMMENT/packid, key:commentId, score:commentId
+	H_COMMENT       = "H_COMMENT"       //key:commentId, value:commentData
 )
 
 func makeZCommentName(packId int64) (name string) {
@@ -60,38 +57,7 @@ func getPack(ssdb *ssdb.Client, packId int64) *Pack {
 }
 
 func init() {
-	ACCESS_KEY = "XLlx3EjYfZJ-kYDAmNZhnH109oadlGjrGsb4plVy"
-	SECRET_KEY = "FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ"
 	glog.Info("init")
-}
-
-func apiGetUptoken(w http.ResponseWriter, r *http.Request) {
-	lwutil.CheckMathod(r, "POST")
-
-	//in
-	var in []string
-	err := lwutil.DecodeRequestBody(r, &in)
-	lwutil.CheckError(err, "err_decode_body")
-
-	inLen := len(in)
-	type outElem struct {
-		Key   string
-		Token string
-	}
-	out := make([]outElem, inLen, inLen)
-	for i, v := range in {
-		scope := fmt.Sprintf("%s:%s", USER_PACK_BUCKET, v)
-		putPolicy := rs.PutPolicy{
-			Scope: scope,
-		}
-		out[i] = outElem{
-			in[i],
-			putPolicy.Token(nil),
-		}
-	}
-
-	//out
-	lwutil.WriteResponse(w, &out)
 }
 
 func makeTagName(tag string) (outName string) {
@@ -659,7 +625,6 @@ func apiGetComments(w http.ResponseWriter, r *http.Request) {
 }
 
 func regPack() {
-	http.Handle("/pack/getUptoken", lwutil.ReqHandler(apiGetUptoken))
 	http.Handle("/pack/new", lwutil.ReqHandler(apiNewPack))
 	http.Handle("/pack/mod", lwutil.ReqHandler(apiModPack))
 	http.Handle("/pack/del", lwutil.ReqHandler(apiDelPack))

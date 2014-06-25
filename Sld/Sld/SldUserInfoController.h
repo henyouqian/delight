@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldUserInfoController : UITableViewController <UITextFieldDelegate>
+@interface SldUserInfoController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, QiniuUploadDelegate>
 + (void)createAndPresentFromController:(UIViewController*)srcController cancelable:(BOOL)cancelable;
 - (void)setGravartarWithKey:(NSString*)key url:(NSString*)url;
 @end

@@ -19,7 +19,6 @@
 #import "SldDb.h"
 #import "config.h"
 #import "nv-ios-digest/SHA1.h"
-#import "AdMoGoInterstitialManager.h"
 
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
@@ -971,7 +970,7 @@ static float lerpf(float a, float b, float t) {
         //checksum
         NSString *checksum = [NSString stringWithFormat:@"%@+%d9d7a", _gameController.matchSecret, score*score];
         
-        checksum = [SldUtil sha1WithData:checksum];
+        checksum = [SldUtil sha1WithString:checksum];
         //post
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"EventId":@(_gameData.eventInfo.id),
@@ -1065,7 +1064,7 @@ static float lerpf(float a, float b, float t) {
 
             //checksum
             NSString *checksum = [NSString stringWithFormat:@"zzzz%d9d7a", score*score];
-            checksum = [SldUtil sha1WithData:checksum];
+            checksum = [SldUtil sha1WithString:checksum];
 
             //post
             SldHttpSession *session = [SldHttpSession defaultSession];

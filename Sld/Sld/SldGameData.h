@@ -102,6 +102,9 @@ enum GameMode{
 
 @property (nonatomic) BOOL needReloadEventList;
 
+//iap
+@property (nonatomic) NSArray *iapProducts;
+
 //const
 @property (nonatomic) NSArray *TEAM_NAMES;
 

@@ -35,10 +35,6 @@ function Controller($scope, $http) {
 			"path":"pack",
 			"apis":[
 				{
-					"name": "getUptoken",
-					"method": "POST",
-					"data": ["test1.jpg", "test2.jpg"]
-				},{
 					"name": "new",
 					"method": "POST",
 					"data": {
@@ -159,8 +155,11 @@ function Controller($scope, $http) {
 					"name": "addRewardFromCache",
 					"method": "POST",
 					"data": ""
+				},{
+					"name": "getUptoken",
+					"method": "POST",
+					"data": ["test1.jpg", "test2.jpg"]
 				}
-
 			]
 		},{
 			"tab":"event",

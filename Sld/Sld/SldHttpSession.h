@@ -8,7 +8,7 @@
 
 #import "SldUtil.h"
 
-@interface SldHttpSession : NSObject
+@interface SldHttpSession : NSObject<NSURLSessionDelegate>
 
 + (instancetype)defaultSession;
 + (instancetype)sessionWithHost:(NSString*)host;

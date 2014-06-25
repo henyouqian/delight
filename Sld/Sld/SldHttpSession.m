@@ -11,6 +11,7 @@
 
 static NSString *defaultHost = @"http://192.168.2.55:9999";
 //static NSString *defaultHost = @"http://192.168.1.43:9999";
+//static NSString *defaultHost = @"https://sld.pintugame.com";
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
@@ -37,10 +38,20 @@ static NSString *defaultHost = @"http://192.168.2.55:9999";
         self.baseUrl = [NSURL URLWithString:host];
         
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
-        self.session = [NSURLSession sessionWithConfiguration:conf delegate:nil delegateQueue: [NSOperationQueue mainQueue]];
+        conf.timeoutIntervalForRequest = 10;
+        self.session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue: [NSOperationQueue mainQueue]];
     }
     
     return self;
+}
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler{
+    if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]){
+        if([challenge.protectionSpace.host isEqualToString:@"sld.pintugame.com"]){
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
+        }
+    }
 }
 
 - (void)logoutWithComplete:(void(^)(void))complete{

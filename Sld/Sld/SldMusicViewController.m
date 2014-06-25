@@ -307,7 +307,8 @@ static NSString *animKey = @"cellRotationAnimation";
         anim.repeatCount = 10000000;
         
         [layer addAnimation:anim forKey:animKey];
-    } else if (layer.speed == 0) {
+    }
+    if (layer.speed == 0) {
         //start
         CFTimeInterval pausedTime = [layer timeOffset];
         layer.speed = 1.0;

@@ -5,9 +5,15 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 	//"github.com/henyouqian/lwutil"
+	qiniuconf "github.com/qiniu/api/conf"
 	"net/http"
 	"runtime"
 )
+
+func init() {
+	qiniuconf.ACCESS_KEY = "XLlx3EjYfZJ-kYDAmNZhnH109oadlGjrGsb4plVy"
+	qiniuconf.SECRET_KEY = "FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ"
+}
 
 func staticFile(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, r.URL.Path[1:])

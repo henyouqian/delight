@@ -578,7 +578,7 @@
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gox-xD-6Sw">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gox-xD-6Sw">
                                                     <rect key="frame" x="15" y="6" width="48" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1021,7 +1021,7 @@
                                                     <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FB4-PD-5iM">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FB4-PD-5iM">
                                                     <rect key="frame" x="15" y="10" width="48" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1043,9 +1043,6 @@
                                                 <constraint firstItem="FB4-PD-5iM" firstAttribute="leading" secondItem="9Xn-ju-wb9" secondAttribute="leading" constant="15" id="xn7-bh-DZv"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="UU9-ez-Q5a" kind="push" id="WNO-OR-6j9"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8Az-Vr-N1i">
                                         <rect key="frame" x="0.0" y="148" width="320" height="44"/>
@@ -1182,6 +1179,7 @@
                         <outlet property="rewardLabel" destination="NEz-rZ-tz7" id="bjm-tf-AVA"/>
                         <outlet property="teamLabel" destination="du4-rS-KnV" id="6Yd-ZZ-ZuU"/>
                         <outlet property="totalRewardLabel" destination="VpN-01-Vdl" id="fQs-zj-GuG"/>
+                        <outlet property="userInfoCell" destination="jgW-GC-fXD" id="FBT-C2-gDz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tBY-hl-CLl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1250,7 +1248,7 @@
                                                         <action selector="onGenderButton:" destination="UU9-ez-Q5a" eventType="touchUpInside" id="mPY-j8-9Tu"/>
                                                     </connections>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FFU-4M-LCG">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FFU-4M-LCG">
                                                     <rect key="frame" x="241" y="6" width="64" height="64"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1260,7 +1258,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="olp-dL-5XY">
-                                                    <rect key="frame" x="231" y="2" width="82" height="90"/>
+                                                    <rect key="frame" x="232" y="1" width="82" height="90"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <state key="normal" title="编辑">
@@ -1324,7 +1322,7 @@
                                 <action selector="onCancel:" destination="UU9-ez-Q5a" id="KbL-SR-F8T"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="7RC-E2-iig">
+                        <barButtonItem key="rightBarButtonItem" title="保存" id="7RC-E2-iig">
                             <connections>
                                 <action selector="onSave:" destination="UU9-ez-Q5a" id="zC4-l4-NC0"/>
                             </connections>
@@ -1340,7 +1338,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7pd-dF-aBY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1588" y="759"/>
+            <point key="canvasLocation" x="2606" y="759"/>
         </scene>
         <!--Sld Avatar Select Controller-->
         <scene sceneID="o5h-MQ-L9P">
@@ -1448,7 +1446,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R1C-0F-tb5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2467" y="757"/>
+            <point key="canvasLocation" x="3020" y="757"/>
         </scene>
         <!--Sld Offline Event Enter Controler-->
         <scene sceneID="HBT-75-6n3">
@@ -1732,10 +1730,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="用户名" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="5UP-Xg-ycZ" userLabel="username">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="邮箱" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="5UP-Xg-ycZ" userLabel="email">
                                 <rect key="frame" x="60" y="100" width="200" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                             </textField>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0V-sf-YvX" userLabel="vline1">
@@ -1746,7 +1744,7 @@
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密码" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZmK-Ht-fAI" userLabel="password">
                                 <rect key="frame" x="60" y="142" width="200" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="go" secureTextEntry="YES"/>
                                 <connections>
                                     <action selector="onOkButton:" destination="hGO-Bw-qgY" eventType="editingDidEndOnExit" id="TAx-hX-1Og"/>
@@ -1841,11 +1839,11 @@
                         <nil key="title"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="emailInput" destination="5UP-Xg-ycZ" id="TyZ-z3-wgf"/>
                         <outlet property="offlineButton" destination="xnK-nS-xPM" id="c5i-DX-2D0"/>
                         <outlet property="okButton" destination="b7w-XO-6lq" id="bFk-De-6kK"/>
                         <outlet property="passwordInput" destination="ZmK-Ht-fAI" id="fHy-09-wHl"/>
                         <outlet property="seg" destination="0QU-4p-7Xy" id="o7K-Oj-5UW"/>
-                        <outlet property="usernameInput" destination="5UP-Xg-ycZ" id="IRh-AY-ZR9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CyP-Wu-BWc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1954,7 +1952,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cEc-D7-1rV">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cEc-D7-1rV">
                                                     <rect key="frame" x="8" y="8" width="48" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.55590439189999996" green="0.70449810719999995" blue="0.79562043800000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2355,7 +2353,7 @@
                                 <rect key="frame" x="54" y="102" width="209" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pe3-Yk-B71">
                                 <rect key="frame" x="67" y="169" width="36" height="34"/>
@@ -2581,6 +2579,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Mi-Ww-0s6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="202" y="1459"/>
+        </scene>
+        <!--Sld Nevigation Controller-->
+        <scene sceneID="0Qf-ih-Nh3">
+            <objects>
+                <navigationController storyboardIdentifier="playerSetting" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="twx-dS-bCu" customClass="SldNevigationController" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="yvg-Z9-ddP"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="t8D-xc-EbD">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="UU9-ez-Q5a" kind="relationship" relationship="rootViewController" id="DsE-F2-jLQ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a3M-Hz-p5n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2080" y="759"/>
         </scene>
     </scenes>
     <resources>
