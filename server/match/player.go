@@ -117,7 +117,7 @@ func apiSetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	stringLimit(&in.NickName, 40)
 	stringLimit(&in.GravatarKey, 20)
-	stringLimit(&in.CustomAvatarKey, 60)
+	stringLimit(&in.CustomAvatarKey, 40)
 	stringLimit(&in.TeamName, 40)
 
 	//check playerInfo
@@ -144,12 +144,8 @@ func apiSetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 		if len(in.NickName) > 0 {
 			playerInfo.NickName = in.NickName
 		}
-		if len(in.GravatarKey) > 0 {
-			playerInfo.GravatarKey = in.GravatarKey
-		}
-		if len(in.CustomAvatarKey) > 0 {
-			playerInfo.CustomAvatarKey = in.CustomAvatarKey
-		}
+		playerInfo.GravatarKey = in.GravatarKey
+		playerInfo.CustomAvatarKey = in.CustomAvatarKey
 		if len(in.TeamName) > 0 {
 			playerInfo.TeamName = in.TeamName
 		}

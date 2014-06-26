@@ -92,6 +92,7 @@ enum GameMode{
 @property (nonatomic) uint gender;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) SInt64 money;
 @property (nonatomic) SInt64 totalReward;
 @property (nonatomic) SInt64 rewardCache;

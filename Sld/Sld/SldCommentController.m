@@ -45,6 +45,7 @@
 @property (nonatomic) UInt64 userId;
 @property (nonatomic) NSString *userName;
 @property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) NSString *team;
 @property (nonatomic) NSString *text;
 @end
@@ -62,6 +63,7 @@
     }
     data.userName = [dict objectForKey:@"UserName"];
     data.gravatarKey = [dict objectForKey:@"GravatarKey"];
+    data.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
     data.team = [dict objectForKey:@"Team"];
     data.text = [dict objectForKey:@"Text"];
     
@@ -289,9 +291,9 @@
         CommentData* commentData = [_commentDatas objectAtIndex:indexPath.row];
         cell.textView.text = commentData.text;
         cell.userNameLabel.text = commentData.userName;
-        cell.iconView.image = nil;
-        NSString *url = [SldUtil makeGravatarUrlWithKey:commentData.gravatarKey width:cell.iconView.frame.size.width];
-        [cell.iconView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+        
+        
+        [SldUtil loadAvatar:cell.iconView gravatarKey:commentData.gravatarKey customAvatarKey:commentData.customAvatarKey];
         
         return cell;
     }
@@ -336,10 +338,10 @@
     NSString *sectionName;
     switch (section) {
         case 0:
-            sectionName = NSLocalizedString(@"Pack", @"Pack");
+            sectionName = NSLocalizedString(@"图集", @"图集");
             break;
         case 1:
-            sectionName = NSLocalizedString(@"Talks", @"Talks");
+            sectionName = NSLocalizedString(@"评论", @"评论");
             break;
         default:
             sectionName = @"";

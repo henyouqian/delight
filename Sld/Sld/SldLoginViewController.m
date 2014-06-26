@@ -14,7 +14,7 @@
 #import "MMPickerView.h"
 #import "SldUserInfoController.h"
 #import "config.h"
-
+#import "SldIapController.h"
 
 @interface SldLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *emailInput;
@@ -192,10 +192,13 @@
                 gameData.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
                 gameData.teamName = [dict objectForKey:@"TeamName"];
                 gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
+                gameData.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
                 gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
                 gameData.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
                 gameData.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
                 [self dismissViewControllerAnimated:YES completion:nil];
+                
+                [SldIapManager getInstance];
             }
         }];
     }];

@@ -57,9 +57,7 @@ static __weak SldUserController *g_inst = nil;
     SldGameData *gamedata = [SldGameData getInstance];
 
     //avatar
-    _avatarView.image = nil;
-    NSString *url = [SldUtil makeGravatarUrlWithKey:gamedata.gravatarKey width:_avatarView.frame.size.width];
-    [_avatarView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+    [SldUtil loadAvatar:_avatarView gravatarKey:gamedata.gravatarKey customAvatarKey:gamedata.customAvatarKey];
     
     //nickname
     _nickNameLabel.text = gamedata.nickName;

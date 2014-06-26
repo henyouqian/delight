@@ -814,14 +814,15 @@ func apiGetRanks(w http.ResponseWriter, r *http.Request) {
 
 	//RankInfo
 	type RankInfo struct {
-		Rank        int
-		UserId      int64
-		NickName    string
-		TeamName    string
-		GravatarKey string
-		Score       int
-		Time        int64
-		Trys        int
+		Rank            int
+		UserId          int64
+		NickName        string
+		TeamName        string
+		GravatarKey     string
+		CustomAvatarKey string
+		Score           int
+		Time            int64
+		Trys            int
 	}
 
 	type Out struct {
@@ -956,6 +957,7 @@ func apiGetRanks(w http.ResponseWriter, r *http.Request) {
 		ranks[i].Trys = record.Trys
 		ranks[i].TeamName = record.TeamName
 		ranks[i].GravatarKey = record.GravatarKey
+		ranks[i].CustomAvatarKey = record.CustomAvartarKey
 	}
 
 	//out

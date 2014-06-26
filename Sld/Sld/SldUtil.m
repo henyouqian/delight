@@ -9,6 +9,7 @@
 #import "SldUtil.h"
 #import "config.h"
 #import "SldGameData.h"
+#import "UIImageView+sldAsyncLoad.h"
 #import <CommonCrypto/CommonHMAC.h>
 
 NSString* getResFullPath(NSString* fileName) {
@@ -35,6 +36,16 @@ UIAlertView* alertNoButton(NSString *title) {
                                                     message:nil
                                                    delegate:nil
                                           cancelButtonTitle:nil
+                                          otherButtonTitles:nil];
+    [alert show];
+    return alert;
+}
+
+UIAlertView* alertWithButton(NSString *title, NSString *message, NSString *buttonTitle) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:buttonTitle
                                           otherButtonTitles:nil];
     [alert show];
     return alert;
@@ -149,6 +160,17 @@ NSString* formatInterval(int sec) {
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+}
+
++ (void)loadAvatar:(UIImageView*)imageView gravatarKey:(NSString*)gravatarKey customAvatarKey:(NSString*)customAvatarKey {
+    
+    imageView.image = nil;
+    if (customAvatarKey && customAvatarKey.length > 0) {
+        [imageView asyncLoadImageWithKey:customAvatarKey showIndicator:NO completion:nil];
+    } else {
+        NSString *url = [SldUtil makeGravatarUrlWithKey:gravatarKey width:imageView.frame.size.width];
+        [imageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+    }
 }
 
 @end

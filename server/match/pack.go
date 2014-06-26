@@ -482,13 +482,14 @@ func apiGetPack(w http.ResponseWriter, r *http.Request) {
 }
 
 type Comment struct {
-	Id          int64
-	PackId      int64
-	UserId      int64
-	UserName    string
-	GravatarKey string
-	Team        string
-	Text        string
+	Id              int64
+	PackId          int64
+	UserId          int64
+	UserName        string
+	GravatarKey     string
+	CustomAvatarKey string
+	Team            string
+	Text            string
 }
 
 func apiAddComment(w http.ResponseWriter, r *http.Request) {
@@ -531,6 +532,7 @@ func apiAddComment(w http.ResponseWriter, r *http.Request) {
 	in.UserName = playerInfo.NickName
 	in.Team = playerInfo.TeamName
 	in.GravatarKey = playerInfo.GravatarKey
+	in.CustomAvatarKey = playerInfo.CustomAvatarKey
 
 	//save
 	zName := makeZCommentName(in.PackId)

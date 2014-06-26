@@ -7,6 +7,7 @@
 //
 
 #import "SldUserInfoController.h"
+#import "SldUserController.h"
 #import "MMPickerView.h"
 #import "SldLoginViewController.h"
 #import "SldUtil.h"
@@ -22,7 +23,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 @property (nonatomic) NSString *gravatarKey;
-//@property (nonatomic) NSString *customAvatarKey;
+@property (nonatomic) NSString *customAvatarKey;
+@property (nonatomic) UIAlertView *avatarUploadAlt;
+@property (nonatomic) SldGameData *gd;
 @end
 
 static NSArray *_genderStrings;
@@ -54,21 +57,25 @@ static NSArray *_genderStrings;
 {
     [super viewDidLoad];
     
-    _nameInput.delegate = self;
+    _gd = [SldGameData getInstance];
     
-    SldGameData *gamedata = [SldGameData getInstance];
+    _nameInput.delegate = self;
     
     _genderStrings = @[@"女", @"男", @"保密"];
     
-    _nameInput.text = gamedata.nickName;
-    _genderInput.text = [_genderStrings objectAtIndex:gamedata.gender];
-    _teamInput.text = gamedata.teamName;
-    _gravatarKey = gamedata.gravatarKey;
-    
-    if (_gravatarKey) {
-        NSString *url = [SldUtil makeGravatarUrlWithKey:_gravatarKey width:_avatarImageView.frame.size.width];
-        [_avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+    _nameInput.text = _gd.nickName;
+    _genderInput.text = [_genderStrings objectAtIndex:_gd.gender];
+    _teamInput.text = _gd.teamName;
+    _gravatarKey = _gd.gravatarKey;
+    if (!_gravatarKey) {
+        _gravatarKey = @"";
     }
+    _customAvatarKey = _gd.customAvatarKey;
+    if (!_customAvatarKey) {
+        _customAvatarKey = @"";
+    }
+    
+    [SldUtil loadAvatar:_avatarImageView gravatarKey:_gd.gravatarKey customAvatarKey:_gd.customAvatarKey];
     
     if (_nameInput.text == nil || _nameInput.text.length == 0) {
         [_nameInput becomeFirstResponder];
@@ -107,10 +114,8 @@ static NSArray *_genderStrings;
     }
     NSDictionary *options = @{MMselectedObject:teamText, MMcaption:@"选择队伍"};
     
-    SldGameData *gd = [SldGameData getInstance];
-    
     [MMPickerView showPickerViewInView:self.navigationController.view
-                           withStrings:gd.TEAM_NAMES
+                           withStrings:_gd.TEAM_NAMES
                            withOptions:options
                             completion:^(NSString *selectedString) {
                                 _teamInput.text = selectedString;
@@ -122,7 +127,7 @@ static NSArray *_genderStrings;
                                                            delegate:self
                                                   cancelButtonTitle:@"取消"
                                              destructiveButtonTitle:nil
-                                                  otherButtonTitles:@"gravatar头像", @"从相册中选取", nil];
+                                                  otherButtonTitles:@"gravatar头像", @"从相册中选取", @"拍照", nil];
     [actionSheet showInView:self.view];
     return;
 }
@@ -136,14 +141,24 @@ static NSArray *_genderStrings;
         [self.navigationController addChildViewController:vc];
         [vc viewWillAppear:YES];
         vc.userInfoController = self;
-    } else {
+    } else if (buttonIndex == 1) {
         UIImagePickerController *imagePicker =
         [[UIImagePickerController alloc] init];
         
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        imagePicker.mediaTypes =
-        @[(NSString *) kUTTypeImage];
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+        imagePicker.allowsEditing = YES;
+        
+        [self presentViewController:imagePicker
+                           animated:YES completion:nil];
+    } else {
+        UIImagePickerController *imagePicker =
+        [[UIImagePickerController alloc] init];
+        
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = YES;
         
         [self presentViewController:imagePicker
@@ -165,7 +180,7 @@ static NSArray *_genderStrings;
     UIImage *scaledImage = [SldUtil imageWithImage:info[UIImagePickerControllerEditedImage] scaledToSize:scaledToSize];
     _avatarImageView.image = scaledImage;
     
-    _gravatarKey = nil;
+    _gravatarKey = @"";
 }
 
 - (IBAction)onSave:(id)sender {
@@ -179,8 +194,14 @@ static NSArray *_genderStrings;
         return;
     }
     
+    //gravatar
+    if (_gravatarKey.length) {
+        _customAvatarKey = @"";
+        [self save];
+    }
+    
     //custum avatar
-    if (!_gravatarKey && _avatarImageView.image) {
+    else {
         //gen file name
         NSData *imageData = UIImageJPEGRepresentation(_avatarImageView.image, 0.85);
         
@@ -202,23 +223,27 @@ static NSArray *_genderStrings;
         }
         
         NSString *key = fileName;
-        
+        _customAvatarKey = key;
+        _avatarUploadAlt = alertNoButton(@"上传头像中...");
         //get upload token
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSArray *body = @[key];
         [session postToApi:@"player/getUptoken" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 alertHTTPError(error, data);
+                [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
                 return;
             }
             
             NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (error) {
                 lwError("Json error:%@", [error localizedDescription]);
+                [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
                 return;
             }
             
             if (array.count == 0) {
+                [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
                 return;
             }
             
@@ -230,63 +255,62 @@ static NSArray *_genderStrings;
             uploader.delegate = self;
             [uploader uploadFile:filePath key:key extra:nil];
         }];
-
     }
-    
-//    UIAlertView *alt = alertNoButton(@"保存中...");
-//    
-//    NSUInteger genderIdx = [_genderStrings indexOfObject:_genderInput.text];
-//    if (genderIdx > 2) {
-//        genderIdx = 2;
-//    }
-//    
-//    NSString *gravatarKey = @"";
-//    if (_gravatarKey != nil) {
-//        gravatarKey = _gravatarKey;
-//    }
-//    
-//    NSDictionary *body = @{@"NickName":_nameInput.text, @"TeamName":_teamInput.text, @"Gender":@(genderIdx), @"GravatarKey":gravatarKey, @"CustomAvatarKey":@""};
-//    SldHttpSession *session = [SldHttpSession defaultSession];
-//    [session postToApi:@"player/setInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//        [alt dismissWithClickedButtonIndex:0 animated:YES];
-//        if (error) {
-//            alertHTTPError(error, data);
-//            return;
-//        }
-//        
-//        SldGameData *gamedata = [SldGameData getInstance];
-//        
-//        //succeed
-//        //[self.navigationController popViewControllerAnimated:YES];
-//        [self dismissViewControllerAnimated:YES completion:nil];
-//        if (self.presentingViewController.class == SldLoginViewController.class) {
-//            SldLoginViewController *vc = (SldLoginViewController *)self.presentingViewController;
-//            vc.shouldDismiss = YES;
-//            gamedata.online = YES;
-//        }
-//        
-//        //update game data
-//        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-//        if (error) {
-//            alert(@"Json parse error!", nil);
-//            return;
-//        }
-//        gamedata.nickName = [dict objectForKey:@"NickName"];
-//        gamedata.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
-//        gamedata.teamName = [dict objectForKey:@"TeamName"];
-//        gamedata.gravatarKey = [dict objectForKey:@"GravatarKey"];
-//        gamedata.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
-//        
-//        [self.presentingViewController viewWillAppear:YES];
-//    }];
+}
+
+- (void)save {
+    UIAlertView *alt = alertNoButton(@"保存中...");
+
+    NSUInteger genderIdx = [_genderStrings indexOfObject:_genderInput.text];
+    if (genderIdx > 2) {
+        genderIdx = 2;
+    }
+
+    NSDictionary *body = @{@"NickName":_nameInput.text, @"TeamName":_teamInput.text, @"Gender":@(genderIdx), @"GravatarKey":_gravatarKey, @"CustomAvatarKey":_customAvatarKey};
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/setInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+
+        //succeed
+        //[self.navigationController popViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        if (self.presentingViewController.class == SldLoginViewController.class) {
+            SldLoginViewController *vc = (SldLoginViewController *)self.presentingViewController;
+            vc.shouldDismiss = YES;
+            _gd.online = YES;
+        }
+
+        //update game data
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            alert(@"Json parse error!", nil);
+            return;
+        }
+        _gd.nickName = [dict objectForKey:@"NickName"];
+        _gd.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
+        _gd.teamName = [dict objectForKey:@"TeamName"];
+        _gd.gravatarKey = [dict objectForKey:@"GravatarKey"];
+        _gd.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
+        _gd.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+        
+        [self.presentingViewController viewWillAppear:YES];
+    }];
 }
 
 - (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
-    
+    [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
+    [self save];
+    _gd.customAvatarKey = _customAvatarKey;
 }
 
 - (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
-    
+    [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
+    alert(@"头像上传失败", nil);
+    _customAvatarKey = _gd.customAvatarKey;
 }
 
 - (IBAction)onCancel:(id)sender {

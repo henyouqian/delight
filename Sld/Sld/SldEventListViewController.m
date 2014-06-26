@@ -482,9 +482,14 @@ static const int FETCH_EVENT_COUNT = 20;
         
         return _footerView;
     }
+//    } else {
+//        UICollectionReusableView *view = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"eventListHeader" forIndexPath:indexPath];
+//        return view;
+//    }
     
     return nil;
 }
+
 
 #pragma mark - Navigation
 

@@ -12,6 +12,7 @@ NSString* getResFullPath(NSString* fileName);
 NSString* makeDocPath(NSString* path);
 UIAlertView* alert(NSString *title, NSString *message);
 UIAlertView* alertNoButton(NSString *title);
+UIAlertView* alertWithButton(NSString *title, NSString *message, NSString *buttonTitle);
 
 BOOL imageExist(NSString *imageKey);
 NSString* makeImagePath(NSString *imageKey);
@@ -35,6 +36,7 @@ NSString* formatInterval(int sec);
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width;
 + (BOOL)validateEmail:(NSString *) candidate;
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
++ (void)loadAvatar:(UIImageView*)imageView gravatarKey:(NSString*)gravatarKey customAvatarKey:(NSString*)customAvatarKey;
 @end
 
 @interface NSData (NSData_Conversion)

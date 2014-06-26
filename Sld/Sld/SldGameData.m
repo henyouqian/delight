@@ -150,7 +150,8 @@ static SldGameData *g_inst = nil;
     _nickName = nil;
     _gender = 0;
     _teamName = nil;
-    _gravatarKey = nil;
+    _gravatarKey = @"";
+    _customAvatarKey = @"";
     _money = 0;
     _rewardCache = 0;
     

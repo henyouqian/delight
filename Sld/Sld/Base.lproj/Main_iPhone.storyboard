@@ -1553,7 +1553,7 @@
             </objects>
             <point key="canvasLocation" x="1168" y="1505"/>
         </scene>
-        <!--Sld Iap Controller-->
+        <!--Sld Iap Controller - 商店-->
         <scene sceneID="2Fm-S2-9ts">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="UIZ-Rl-nno" customClass="SldIapController" sceneMemberID="viewController">
@@ -1561,24 +1561,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="aCA-ft-Zn4">
-                            <size key="itemSize" width="136" height="201"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="0.0" id="aCA-ft-Zn4">
+                            <size key="itemSize" width="153" height="160"/>
+                            <size key="headerReferenceSize" width="0.0" height="5"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="15" minY="0.0" maxX="15" maxY="15"/>
+                            <inset key="sectionInset" minX="5" minY="0.0" maxX="5" maxY="5"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="iapCell" id="1ul-7L-K9P" customClass="SldIapCell">
-                                <rect key="frame" x="15" y="64" width="136" height="201"/>
+                                <rect key="frame" x="5" y="69" width="153" height="160"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="136" height="201"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="153" height="160"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqr-gG-rRw">
-                                            <rect key="frame" x="0.0" y="171" width="136" height="30"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iQA-HG-c4H">
+                                            <rect key="frame" x="0.0" y="0.0" width="153" height="125"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.4088" green="0.60687333330000004" blue="0.72999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="125" id="bbQ-x8-bqa"/>
+                                            </constraints>
+                                        </imageView>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="金币" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nVC-6m-kl1">
+                                            <rect key="frame" x="10" y="6" width="133" height="50"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="50" id="ASy-59-Jnq"/>
+                                            </constraints>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqr-gG-rRw">
+                                            <rect key="frame" x="0.0" y="125" width="153" height="35"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="0.29411764709999999" green="0.95686274510000002" blue="0.65115980748302149" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <state key="normal" title="128元">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -1586,21 +1606,21 @@
                                                 <action selector="onBuyButton:" destination="UIZ-Rl-nno" eventType="touchUpInside" id="azU-vA-Dgp"/>
                                             </connections>
                                         </button>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" scrollEnabled="NO" editable="NO" text="12800金币，另送2500金币" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nVC-6m-kl1">
-                                            <rect key="frame" x="9" y="113" width="117" height="50"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                        </textView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iQA-HG-c4H">
-                                            <rect key="frame" x="9" y="6" width="117" height="108"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" red="0.4088" green="0.60687333330000004" blue="0.72999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="nVC-6m-kl1" secondAttribute="trailing" constant="10" id="4kX-Kt-1HP"/>
+                                    <constraint firstItem="vqr-gG-rRw" firstAttribute="leading" secondItem="1ul-7L-K9P" secondAttribute="leading" id="FVn-LL-RDf"/>
+                                    <constraint firstAttribute="trailing" secondItem="iQA-HG-c4H" secondAttribute="trailing" id="Kk2-TO-Awe"/>
+                                    <constraint firstAttribute="bottom" secondItem="vqr-gG-rRw" secondAttribute="bottom" id="MuC-ew-ZKZ"/>
+                                    <constraint firstItem="iQA-HG-c4H" firstAttribute="top" secondItem="1ul-7L-K9P" secondAttribute="top" id="kYa-dD-wlB"/>
+                                    <constraint firstItem="nVC-6m-kl1" firstAttribute="top" secondItem="1ul-7L-K9P" secondAttribute="top" constant="6" id="mAT-oM-nPT"/>
+                                    <constraint firstItem="iQA-HG-c4H" firstAttribute="leading" secondItem="1ul-7L-K9P" secondAttribute="leading" id="qJs-Fy-Tb5"/>
+                                    <constraint firstItem="vqr-gG-rRw" firstAttribute="top" secondItem="iQA-HG-c4H" secondAttribute="bottom" id="tgy-jX-owa"/>
+                                    <constraint firstAttribute="trailing" secondItem="vqr-gG-rRw" secondAttribute="trailing" id="w11-Cl-cHA"/>
+                                    <constraint firstItem="nVC-6m-kl1" firstAttribute="leading" secondItem="1ul-7L-K9P" secondAttribute="leading" constant="10" id="yog-NS-1rV"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="buyButton" destination="vqr-gG-rRw" id="0S8-Zx-g53"/>
                                     <outlet property="descTextView" destination="nVC-6m-kl1" id="dz4-eU-btm"/>
@@ -1608,12 +1628,16 @@
                                 </connections>
                             </collectionViewCell>
                         </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="iapHeader" id="JX9-0O-WST">
+                            <rect key="frame" x="0.0" y="64" width="320" height="5"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="UIZ-Rl-nno" id="lFk-hO-aFk"/>
                             <outlet property="delegate" destination="UIZ-Rl-nno" id="GaD-tW-ha9"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="VOy-zs-XVb"/>
+                    <navigationItem key="navigationItem" title="商店" id="VOy-zs-XVb"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ygH-cU-2ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1868,7 +1892,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3n-DC-VaQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="202" y="76"/>
+            <point key="canvasLocation" x="-319" y="90"/>
         </scene>
         <!--Sld Comment Controller-->
         <scene sceneID="GQG-5l-QtS">
@@ -2084,13 +2108,13 @@
                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Comment" id="v57-BI-ruB">
+                                    <navigationItem title="评论" id="v57-BI-ruB">
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="pOI-ZW-vtK">
                                             <connections>
                                                 <segue destination="jOM-8Z-76P" kind="unwind" unwindAction="cancelComment:" id="rMX-9t-DGh"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Send" id="UVg-ig-gGb">
+                                        <barButtonItem key="rightBarButtonItem" title="发送" id="UVg-ig-gGb">
                                             <connections>
                                                 <action selector="onSendButton:" destination="My7-b9-kOW" id="Oj3-Xu-3Jm"/>
                                             </connections>

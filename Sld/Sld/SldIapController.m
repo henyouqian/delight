@@ -14,6 +14,116 @@
 #import "SldUserController.h"
 
 //=======================
+static SldIapManager *_sldIapManager = nil;
+
+@interface SldIapManager()
+@property (nonatomic) SldGameData *gd;
+@property (nonatomic) NSArray *productIds;
+@end
+
+@implementation SldIapManager
++ (instancetype)getInstance {
+    if (_sldIapManager == nil) {
+        _sldIapManager = [[SldIapManager alloc]init];
+    }
+    return _sldIapManager;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _gd = [SldGameData getInstance];
+        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
+    if (_alt) {
+        [_alt dismissWithClickedButtonIndex:0 animated:YES];
+        _alt = nil;
+    }
+    for (SKPaymentTransaction *transaction in transactions) {
+        switch (transaction.transactionState) {
+            case SKPaymentTransactionStatePurchased:
+                [self purchase:transaction];
+                break;
+            case SKPaymentTransactionStateFailed:
+                lwError("%@", [transaction.error localizedDescription]);
+                alert([transaction.error localizedDescription], nil);
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+                break;
+            case SKPaymentTransactionStateRestored:
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+            default:
+                //lwError("%@", [transaction.error localizedDescription]);
+                break;
+        }
+    }
+}
+
+- (void)purchase:(SKPaymentTransaction*)transaction {
+    if (_gd.userId == 0) {
+        return;
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"store/getIapSecret" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSString *secret = [dict objectForKey:@"Secret"];
+        if (!secret) {
+            alert(@"服务器错误，请稍后重试", nil);
+            return;
+        }
+        
+        //checksum
+        SldGameData *gd = [SldGameData getInstance];
+        
+        NSString *checksum = [NSString stringWithFormat:@"%@%lld%@,", secret, gd.userId, gd.userName];
+        checksum = [SldUtil sha1WithString:checksum];
+        
+        NSDictionary *body = @{@"ProductId": transaction.payment.productIdentifier, @"Checksum":checksum};
+        
+        //buy
+        [session postToApi:@"store/buyIap" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            SInt64 addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] longLongValue];
+            SInt64 money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+            gd.money = money;
+            alert([NSString stringWithFormat:@"获得%lld个金币，现有%lld个金币", addMoney, money], nil);
+            [[SldUserController getInstance] updateMoney];
+            
+            [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+        }];
+        
+    }];
+}
+
+@end
+
+//=======================
 @interface SldIapCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextView *descTextView;
@@ -31,6 +141,7 @@
 @property (nonatomic) UIAlertView *altBuy;
 @property (nonatomic) NSString *secret;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) NSArray *productIds;
 @end
 
 @implementation SldIapController
@@ -41,36 +152,29 @@
     
     _gd = [SldGameData getInstance];
     
-    if (_gd.iapProducts == nil) {
-        _gd.iapProducts = [NSArray array];
-        //UIAlertView *alt = alertNoButton(@"获取商品信息");
-        UIAlertView *alt = alert(@"获取商品信息", nil);
+    _gd.iapProducts = [NSArray array];
+    //UIAlertView *alt = alertNoButton(@"获取商品信息");
+    UIAlertView *alt = alertWithButton(@"获取商品信息...", nil, @"关闭");
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
         
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            [alt dismissWithClickedButtonIndex:0 animated:YES];
-            if (error) {
-                alertHTTPError(error, data);
-                return;
-            }
-            
-            NSArray *productIds = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if (error) {
-                lwError("Json error:%@", [error localizedDescription]);
-                return;
-            }
-            
-            [self validateProductIdentifiers:productIds];
-        }];
+        _productIds = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
         
-        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-    } else {
-        [self.collectionView reloadData];
-    }
+        [self validateProductIdentifiers];
+    }];
 }
 
 - (void)dealloc {
-    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -79,12 +183,12 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)validateProductIdentifiers:(NSArray *)productIdentifiers
+- (void)validateProductIdentifiers
 {
     //_alt = alertNoButton(@"验证商品信息");
-    _alt = alert(@"验证商品信息", nil);
+    _alt = alertWithButton(@"验证商品信息...", nil, @"关闭");
     SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
-                                          initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
+                                          initWithProductIdentifiers:[NSSet setWithArray:_productIds]];
     productsRequest.delegate = self;
     [productsRequest start];
 }
@@ -99,9 +203,9 @@
         int price1 = [((SKProduct*)obj1).price intValue];
         int price2 = [((SKProduct*)obj2).price intValue];
         if (price1 < price2) {
-            return NSOrderedAscending;
-        } else if (price1 > price2) {
             return NSOrderedDescending;
+        } else if (price1 > price2) {
+            return NSOrderedAscending;
         }
         return NSOrderedSame;
     }];
@@ -129,6 +233,9 @@
         
         [cell.buyButton setTitle:formattedPrice forState:UIControlStateNormal];
         cell.descTextView.text = product.localizedDescription;
+        cell.descTextView.textColor = [UIColor whiteColor];
+        NSString *coinFile = [NSString stringWithFormat:@"coin%d.png", indexPath.row];
+        cell.imageView.image = [UIImage imageNamed:coinFile];
     }
     return cell;
 }
@@ -151,91 +258,9 @@
         payment.applicationUsername = [SldUtil sha1WithString:gd.userName];
         
         //_altBuy = alertNoButton(@"提交购买请求中...");
-        _altBuy = alert(@"提交购买请求中...", nil);
+        [SldIapManager getInstance].alt = alert(@"提交购买请求中...", nil);
         [[SKPaymentQueue defaultQueue] addPayment:payment];
     }
-}
-
-- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
-    if (_altBuy) {
-        [_altBuy dismissWithClickedButtonIndex:0 animated:YES];
-        _altBuy = nil;
-    }
-    for (SKPaymentTransaction *transaction in transactions) {
-        switch (transaction.transactionState) {
-                // Call the appropriate custom method.
-            case SKPaymentTransactionStatePurchased:
-                [self purchase:transaction];
-                
-                break;
-            case SKPaymentTransactionStateFailed:
-                lwError("%@", [transaction.error localizedDescription]);
-                //lwInfo("Failed: %@", transaction.error);
-                //[self failedTransaction:transaction];
-                alert([transaction.error localizedDescription], nil);
-                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
-                break;
-            case SKPaymentTransactionStateRestored:
-                //lwInfo("Restored");
-                //[self restoreTransaction:transaction];
-                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-            default:
-                lwError("%@", [transaction.error localizedDescription]);
-                break;
-        }
-    }
-}
-
-- (void)purchase:(SKPaymentTransaction*)transaction {
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"store/getIapSecret" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            alertHTTPError(error, data);
-            return;
-        }
-        
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            lwError("Json error:%@", [error localizedDescription]);
-            return;
-        }
-        
-        _secret = [dict objectForKey:@"Secret"];
-        if (!_secret) {
-            alert(@"服务器错误，请稍后重试", nil);
-            return;
-        }
-        
-        //checksum
-        SldGameData *gd = [SldGameData getInstance];
-        
-        NSString *checksum = [NSString stringWithFormat:@"%@%lld%@,", _secret, gd.userId, gd.userName];
-        checksum = [SldUtil sha1WithString:checksum];
-        
-        NSDictionary *body = @{@"ProductId": transaction.payment.productIdentifier, @"Checksum":checksum};
-        
-        //buy
-        [session postToApi:@"store/buyIap" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                alertHTTPError(error, data);
-                return;
-            }
-            
-            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if (error) {
-                lwError("Json error:%@", [error localizedDescription]);
-                return;
-            }
-            SInt64 addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] longLongValue];
-            SInt64 money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-            gd.money = money;
-            alert([NSString stringWithFormat:@"获得%lld个金币，现有%lld个金币", addMoney, money], nil);
-            [[SldUserController getInstance] updateMoney];
-            
-            [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
-        }];
-        
-    }];
 }
 
 /*

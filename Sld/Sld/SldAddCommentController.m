@@ -33,13 +33,13 @@
     if (_textView.text.length == 0) {
         return;
     }
-    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"取消" action:nil];
     
-	RIButtonItem *sendItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
+	RIButtonItem *sendItem = [RIButtonItem itemWithLabel:@"发送" action:^{
         SldGameData *gd = [SldGameData getInstance];
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"PackId":@(gd.packInfo.id), @"Text": _textView.text};
-        UIAlertView *alert = alertNoButton(@"Sending comment ...");
+        UIAlertView *alert = alertNoButton(@"发送中...");
         [session postToApi:@"pack/addComment" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             [alert dismissWithClickedButtonIndex:0 animated:YES];
             if (error) {
@@ -52,7 +52,7 @@
         }];
 	}];
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Send this comment?"
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"是否发送此评论?"
 	                                                    message:nil
 											   cancelButtonItem:cancelItem
 											   otherButtonItems:sendItem, nil];

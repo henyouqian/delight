@@ -28,6 +28,8 @@ var (
 		"com.lw.sld.coin30":  3000 + 300,
 		"com.lw.sld.coin68":  6800 + 1000,
 		"com.lw.sld.coin128": 12800 + 2500,
+		"com.lw.sld.coin328": 32800 + 10000,
+		"com.lw.sld.coin588": 58800 + 25000,
 	}
 )
 

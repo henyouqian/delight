@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
 
-@interface SldIapController : UICollectionViewController <SKProductsRequestDelegate, SKPaymentTransactionObserver>
+@interface SldIapManager : NSObject<SKPaymentTransactionObserver>
++ (instancetype)getInstance;
+@property (nonatomic) UIAlertView *alt;
+@end
+
+@interface SldIapController : UICollectionViewController <SKProductsRequestDelegate>
 
 @end

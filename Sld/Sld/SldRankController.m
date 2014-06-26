@@ -45,6 +45,7 @@
 @property (nonatomic) NSString *score;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) NSString *customAvatarKey;
 @end
 
 @implementation RankInfo
@@ -316,9 +317,7 @@ static SldRankController *_inst = nil;
         setLabelColor(cell, meColor);
         
         //avatar
-        cell.avatarImageView.image = nil;
-        NSString *url = [SldUtil makeGravatarUrlWithKey:gamedata.gravatarKey width:cell.avatarImageView.frame.size.width];
-        [cell.avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+        [SldUtil loadAvatar:cell.avatarImageView gravatarKey:gamedata.gravatarKey customAvatarKey:gamedata.customAvatarKey];
         
         return cell;
     } else if (indexPath.section == 1) {
@@ -340,9 +339,7 @@ static SldRankController *_inst = nil;
                 }
                 
                 //avatar
-                cell.avatarImageView.image = nil;
-                NSString *url = [SldUtil makeGravatarUrlWithKey:rankInfo.gravatarKey width:cell.avatarImageView.frame.size.width];
-                [cell.avatarImageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
+                [SldUtil loadAvatar:cell.avatarImageView gravatarKey:rankInfo.gravatarKey customAvatarKey:rankInfo.customAvatarKey];
                 
                 return cell;
             }
