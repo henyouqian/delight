@@ -63,6 +63,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     self.view.backgroundColor = [UIColor clearColor];
     
     _playButton.enabled = _gamedata.eventInfo.state == RUNNING;
+    _titleLabel.text = _gamedata.packInfo.title;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -144,8 +145,6 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 }
 
 - (void)reloadData {
-    _titleLabel.text = _gamedata.packInfo.title;
-    
     [self onTimer];
     //NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     //_event.endTime;

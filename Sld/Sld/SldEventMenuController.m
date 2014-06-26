@@ -15,6 +15,7 @@
 #import "MSWeakTimer.h"
 
 @interface SldEventMenuController ()
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *challangeButton;
@@ -52,6 +53,8 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             return;
         }
         _gd.packInfo = [PackInfo packWithDictionary:dict];
+        
+        _titleLabel.text = _gd.packInfo.title;
         
         [self loadBackground];
 //        [self reloadData];

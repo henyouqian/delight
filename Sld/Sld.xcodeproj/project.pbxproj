@@ -103,6 +103,10 @@
 		D05E995F195C7189002A6B83 /* coin3.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9959195C7189002A6B83 /* coin3.png */; };
 		D05E9960195C7189002A6B83 /* coin4.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E995A195C7189002A6B83 /* coin4.png */; };
 		D05E9961195C7189002A6B83 /* coin5.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E995B195C7189002A6B83 /* coin5.png */; };
+		D05E9963195CB194002A6B83 /* libTalkingData.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9962195CB194002A6B83 /* libTalkingData.a */; };
+		D05E9965195CB1B5002A6B83 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9964195CB1B5002A6B83 /* Security.framework */; };
+		D05E9966195CB1BF002A6B83 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667F221953172C00AD9282 /* CoreTelephony.framework */; };
+		D05E9968195CB1D5002A6B83 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9967195CB1D5002A6B83 /* AdSupport.framework */; };
 		D0667D6419514DD700AD9282 /* SldIapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0667D6319514DD700AD9282 /* SldIapController.m */; };
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D751952BE9700AD9282 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D741952BE9700AD9282 /* PassKit.framework */; };
@@ -369,6 +373,9 @@
 		D05E9959195C7189002A6B83 /* coin3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin3.png; sourceTree = "<group>"; };
 		D05E995A195C7189002A6B83 /* coin4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin4.png; sourceTree = "<group>"; };
 		D05E995B195C7189002A6B83 /* coin5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin5.png; sourceTree = "<group>"; };
+		D05E9962195CB194002A6B83 /* libTalkingData.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTalkingData.a; path = External/TalkingData_Analytics/libTalkingData.a; sourceTree = "<group>"; };
+		D05E9964195CB1B5002A6B83 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		D05E9967195CB1D5002A6B83 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D0667D6219514DD700AD9282 /* SldIapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldIapController.h; sourceTree = "<group>"; };
 		D0667D6319514DD700AD9282 /* SldIapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldIapController.m; sourceTree = "<group>"; };
 		D0667D721952BE9000AD9282 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -479,10 +486,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D05E9968195CB1D5002A6B83 /* AdSupport.framework in Frameworks */,
+				D05E9963195CB194002A6B83 /* libTalkingData.a in Frameworks */,
 				D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */,
 				D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */,
 				D0D14AA6195B375A009193E6 /* libBaiduMobAdSdk.a in Frameworks */,
 				D0D14AA4195B3744009193E6 /* libAdsMogo.a in Frameworks */,
+				D05E9966195CB1BF002A6B83 /* CoreTelephony.framework in Frameworks */,
+				D05E9965195CB1B5002A6B83 /* Security.framework in Frameworks */,
 				D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */,
 				D0667D751952BE9700AD9282 /* PassKit.framework in Frameworks */,
 				D0667D731952BE9000AD9282 /* Social.framework in Frameworks */,
@@ -536,6 +547,9 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D05E9967195CB1D5002A6B83 /* AdSupport.framework */,
+				D05E9964195CB1B5002A6B83 /* Security.framework */,
+				D05E9962195CB194002A6B83 /* libTalkingData.a */,
 				D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */,
 				D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */,
 				D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */,
@@ -694,8 +708,6 @@
 				B3691E1B1900C36A0055C419 /* SldEventListViewController.m */,
 				D010449C19461D69008DFF8D /* SldEventMenuController.h */,
 				D010449D19461D69008DFF8D /* SldEventMenuController.m */,
-				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
-				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				B383536B191ACA4700D259F5 /* SldLobbyController.h */,
 				B383536C191ACA4700D259F5 /* SldLobbyController.m */,
 				B31CBE9F190894EC00621165 /* SldBriefController.h */,
@@ -714,6 +726,8 @@
 				B3118975192B31AD00DFB549 /* SldOfflineEventEnterControler.m */,
 				D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */,
 				D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */,
+				B31EE7E518F05BE60047E9FD /* SldGameController.h */,
+				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -1419,6 +1433,7 @@
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
+					"$(PROJECT_DIR)/External/TalkingData_Analytics",
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -1458,6 +1473,7 @@
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
+					"$(PROJECT_DIR)/External/TalkingData_Analytics",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

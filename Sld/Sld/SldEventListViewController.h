@@ -12,7 +12,7 @@
 @interface EventCell : UICollectionViewCell
 @end
 
-@interface SldEventListViewController : UICollectionViewController
+@interface SldEventListViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
 @end
 
 @interface EventListFooterView : UICollectionReusableView

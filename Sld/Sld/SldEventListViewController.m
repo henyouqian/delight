@@ -76,7 +76,9 @@ static const int FETCH_EVENT_COUNT = 20;
 
 
 @interface SldEventListViewController ()
+@property (weak, nonatomic) IBOutlet SldCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *musicButton;
+@property (weak, nonatomic) IBOutlet UIButton *rewardButton;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) UIImage *loadingImage;
 @property (nonatomic) SldGameData *gameData;
@@ -103,6 +105,9 @@ static const int FETCH_EVENT_COUNT = 20;
     _bottomFetched = NO;
     _appendable = YES;
     _reachBottom = NO;
+    
+    _collectionView.delegate = self;
+    _collectionView.dataSource = self;
     
     //creat image cache dir
     NSString *imgCacheDir = makeDocPath(@"imgCache");
@@ -194,6 +199,25 @@ static const int FETCH_EVENT_COUNT = 20;
      _gameData.needReloadEventList = NO;
     
     [self didBecomeActiveNotification];
+    
+    if (_gameData.rewardCache == 0) {
+        _rewardButton.hidden = NO;
+//        _rewardButton.alpha = 0;
+//        [UIView animateWithDuration:0.4 animations:^{
+//            _rewardButton.alpha = 1.0;
+//        }];
+        CGRect frame = _rewardButton.frame;
+        frame.origin.y = 0;
+        _rewardButton.frame = frame;
+        [UIView animateWithDuration:.5 delay:0.5 usingSpringWithDamping:.4 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^
+        {
+            CGRect frame = _rewardButton.frame;
+            frame.origin.y = 64;
+            _rewardButton.frame = frame;
+        } completion:nil];
+    } else {
+        _rewardButton.hidden = YES;
+    }
 }
 
 - (void)didBecomeActiveNotification {
