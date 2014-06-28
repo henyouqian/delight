@@ -161,6 +161,63 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (IBAction)onClickMatch:(id)sender {
     _gamedata.gameMode = MATCH;
     
+    [self loadPacks];
+}
+
+- (void)loadPacks {
+    NSArray *imageKeys = _gamedata.packInfo.images;
+    __block int localNum = 0;
+    NSUInteger totalNum = [imageKeys count];
+    if (totalNum == 0) {
+        alert(@"Not downloaded", nil);
+        return;
+    }
+    for (NSString *imageKey in imageKeys) {
+        if (imageExist(imageKey)) {
+            localNum++;
+        }
+    }
+    if (localNum == totalNum) {
+        [self checkGameCoin];
+        return;
+    } else if (localNum < totalNum) {
+        NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"图集下载中..."
+                                                        message:msg
+                                                       delegate:self
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        //download
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        [session cancelAllTask];
+        for (NSString *imageKey in imageKeys) {
+            if (!imageExist(imageKey)) {
+                [session downloadFromUrl:makeImageServerUrl(imageKey)
+                                  toPath:makeImagePath(imageKey)
+                                withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                {
+                    if (error) {
+                        lwError("Download error: %@", error.localizedDescription);
+                        [alert dismissWithClickedButtonIndex:0 animated:YES];
+                        return;
+                    }
+                    localNum++;
+                    [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
+                    
+                    //download complete
+                    if (localNum == totalNum) {
+                        [alert dismissWithClickedButtonIndex:0 animated:YES];
+                        [self checkGameCoin];
+                    }
+                }];
+            }
+        }
+    }
+}
+
+- (void)checkGameCoin {
     if (_gamedata.eventPlayRecord.gameCoinNum == 0) {
         SldHttpSession *session = [SldHttpSession defaultSession];
         self.view.userInteractionEnabled = NO;
@@ -198,70 +255,18 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             }
         }];
     } else {
-        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:^{
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"否" action:^{
         }];
         
-        RIButtonItem *okItem = [RIButtonItem itemWithLabel:@"Yes" action:^{
-            [self loadPacks];
+        RIButtonItem *okItem = [RIButtonItem itemWithLabel:@"是" action:^{
+            [self enterGame];
         }];
         
-        [[[UIAlertView alloc] initWithTitle:@"确定花费一个游戏币开始比赛?"
+        NSString *title = [NSString stringWithFormat:@"花费一个游戏币开始比赛?\n(现有%d个游戏币)", _gamedata.eventPlayRecord.gameCoinNum];
+        [[[UIAlertView alloc] initWithTitle:title
                                     message:nil
                            cancelButtonItem:cancelItem
                            otherButtonItems:okItem, nil] show];
-    }
-}
-
-- (void)loadPacks {
-    NSArray *imageKeys = _gamedata.packInfo.images;
-    __block int localNum = 0;
-    NSUInteger totalNum = [imageKeys count];
-    if (totalNum == 0) {
-        alert(@"Not downloaded", nil);
-        return;
-    }
-    for (NSString *imageKey in imageKeys) {
-        if (imageExist(imageKey)) {
-            localNum++;
-        }
-    }
-    if (localNum == totalNum) {
-        [self enterGame];
-        return;
-    } else if (localNum < totalNum) {
-        NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download..."
-                                                        message:msg
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:nil];
-        [alert show];
-        
-        //download
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session cancelAllTask];
-        for (NSString *imageKey in imageKeys) {
-            if (!imageExist(imageKey)) {
-                [session downloadFromUrl:makeImageServerUrl(imageKey)
-                                  toPath:makeImagePath(imageKey)
-                                withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
-                {
-                    if (error) {
-                        lwError("Download error: %@", error.localizedDescription);
-                        [alert dismissWithClickedButtonIndex:0 animated:YES];
-                        return;
-                    }
-                    localNum++;
-                    [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
-                    
-                    //download complete
-                    if (localNum == totalNum) {
-                        [alert dismissWithClickedButtonIndex:0 animated:YES];
-                        [self enterGame];
-                    }
-                }];
-            }
-        }
     }
 }
 

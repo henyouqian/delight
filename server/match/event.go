@@ -28,9 +28,10 @@ const (
 	TRY_EXPIRE_SECONDS          = 600
 	TEAM_CHAMPIONSHIP_ROUND_NUM = 6
 	H_EVENT_TEAM_SCORE          = "H_EVENT_TEAM_SCORE"   //subkey:eventId value:map[(string)teamName](int)score
-	H_EVENT_BETTING_POOL        = "H_EVENT_BETTING_POOL" //subkey:eventId value:map[(stringteamName](int64)money
+	H_EVENT_BETTING_POOL        = "H_EVENT_BETTING_POOL" //subkey:eventId value:map[(string)teamName](int64)money
 	INIT_GAME_COIN_NUM          = 3
 	BET_CLOSE_BEFORE_END_SEC    = 60 * 60
+	Z_EVENT_BET_PLAYER          = "Z_EVENT_BET_PLAYER" //key:Z_EVENT_BET_PLAYER/eventId subkey:playerId score:playerId
 )
 
 var (
@@ -337,7 +338,7 @@ func apiListEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//zrscan
-	resp, err := ssdb.Do("zrscan", Z_EVENT, startId, "", "", in.Limit)
+	resp, err := ssdb.Do("zrscan", Z_EVENT, startId, startId, "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
 	if len(resp) == 0 {
@@ -1064,6 +1065,7 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 		playerInfo, err := getPlayerInfo(ssdb, session.Userid)
 		lwutil.CheckError(err, "")
 		playerInfo.Money += int64(reward)
+		playerInfo.TotalReward += int64(reward)
 		savePlayerInfo(ssdb, session.Userid, playerInfo)
 		newMoney = playerInfo.Money
 	}
@@ -1144,6 +1146,8 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	session, err := findSession(w, r, nil)
 	lwutil.CheckError(err, "err_auth")
 
+	userId := session.Userid
+
 	//check event
 	event := getEvent(ssdb, in.EventId)
 	if !isEventRunning(event) {
@@ -1155,7 +1159,7 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//check money
-	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	playerInfo, err := getPlayerInfo(ssdb, userId)
 	lwutil.CheckError(err, "")
 	if in.Money > playerInfo.Money {
 		lwutil.SendError("err_money", "")
@@ -1163,16 +1167,23 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	playerInfo.Money -= in.Money
 
 	//update bet
-	record := getEventPlayerRecord(ssdb, in.EventId, session.Userid)
+	record := getEventPlayerRecord(ssdb, in.EventId, userId)
 	if record.Bet == nil {
 		record.Bet = map[string]int64{}
 	}
 	record.Bet[in.TeamName] += in.Money
 	record.BetMoneySum += in.Money
-	saveEventPlayerRecord(ssdb, in.EventId, session.Userid, record)
+	saveEventPlayerRecord(ssdb, in.EventId, userId, record)
 
 	//update money
-	savePlayerInfo(ssdb, session.Userid, playerInfo)
+	savePlayerInfo(ssdb, userId, playerInfo)
+
+	//add to bet zset
+	key := fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, in.EventId)
+	resp, err := ssdb.Do("zset", key, userId, userId)
+	lwutil.CheckSsdbError(resp, err)
+
+	//fixme: add to betting pool
 
 	//out
 	out := map[string]interface{}{
@@ -1215,7 +1226,7 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 
 	//zrscan
 	key := fmt.Sprintf("Z_EVENT_PLAYER_RECORD/%d", session.Userid)
-	resp, err := ssdb.Do("zrscan", key, in.StartEventId, "", "", in.Limit)
+	resp, err := ssdb.Do("zrscan", key, in.StartEventId, in.StartEventId, "", in.Limit)
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
 	if len(resp) == 0 {

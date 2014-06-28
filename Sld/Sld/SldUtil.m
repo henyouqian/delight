@@ -167,7 +167,7 @@ NSString* formatInterval(int sec) {
     imageView.image = nil;
     if (customAvatarKey && customAvatarKey.length > 0) {
         [imageView asyncLoadImageWithKey:customAvatarKey showIndicator:NO completion:nil];
-    } else {
+    } else if (gravatarKey && gravatarKey.length > 0){
         NSString *url = [SldUtil makeGravatarUrlWithKey:gravatarKey width:imageView.frame.size.width];
         [imageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];
     }

@@ -132,7 +132,7 @@ NSDate *_gameBeginTime;
         
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];
-        [self.btnExit setLabelWithText:@"Exit" color:fontColorDark fontSize:BUTTON_FONT_SIZE];
+        [self.btnExit setLabelWithText:@"返" color:fontColorDark fontSize:BUTTON_FONT_SIZE];
         [self.btnExit setPosition:BUTTON_POS1];
         [self.btnExit setAlpha:BUTTON_ALPHA];
         self.btnExit.zPosition = buttonZ;
@@ -146,7 +146,7 @@ NSDate *_gameBeginTime;
         
         //yes button
         self.btnYes = [SldButton buttonWithImageNamed:BUTTON_BG];
-        [self.btnYes setLabelWithText:@"Yes" color:[UIColor whiteColor] fontSize:BUTTON_FONT_SIZE];
+        [self.btnYes setLabelWithText:@"是" color:[UIColor whiteColor] fontSize:BUTTON_FONT_SIZE];
         [self.btnYes setPosition:BUTTON_POS_HIDE];
         [self.btnYes setBackgroundColor:BUTTON_COLOR_RED];
         [self.btnYes setAlpha:0.f];
@@ -160,7 +160,7 @@ NSDate *_gameBeginTime;
         
         //no button
         self.btnNo = [SldButton buttonWithImageNamed:BUTTON_BG];
-        [self.btnNo setLabelWithText:@"No" color:fontColorDark fontSize:BUTTON_FONT_SIZE];
+        [self.btnNo setLabelWithText:@"否" color:fontColorDark fontSize:BUTTON_FONT_SIZE];
         [self.btnNo setPosition:BUTTON_POS_HIDE];
         [self.btnNo setAlpha:0.f];
         self.btnNo.zPosition = buttonZ;
@@ -173,7 +173,7 @@ NSDate *_gameBeginTime;
         
         //next button
         self.btnNext = [SldButton buttonWithImageNamed:BUTTON_BG];
-        [self.btnNext setLabelWithText:@"Next" color:[UIColor whiteColor] fontSize:BUTTON_FONT_SIZE];
+        [self.btnNext setLabelWithText:@"次" color:[UIColor whiteColor] fontSize:BUTTON_FONT_SIZE];
         [self.btnNext setPosition:BUTTON_POS_HIDE];
         [self.btnNext setBackgroundColor:BUTTON_COLOR_GREEN];
         [self.btnNext setAlpha:0.f];
@@ -246,7 +246,7 @@ NSDate *_gameBeginTime;
         
         self.curtainLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
         [self.curtainLabel setFontColor:colorCtText];
-        [self.curtainLabel setText:@"TAP TO START"];
+        [self.curtainLabel setText:@"点击开始游戏"];
         [self.curtainLabel setFontSize:22];
         [self.curtainLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
         //[self.curtainLabel setAlpha:0.f];
@@ -371,13 +371,13 @@ static float lerpf(float a, float b, float t) {
 
 - (void)onBackYes {
     if (_gameData.gameMode == MATCH) {
-        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"No" action:nil];
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"否" action:nil];
         
-        RIButtonItem *yesItem = [RIButtonItem itemWithLabel:@"Yes, Exit!" action:^{
+        RIButtonItem *yesItem = [RIButtonItem itemWithLabel:@"退出!" action:^{
             [self.navigationController popViewControllerAnimated:YES];
         }];
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Exit this match?"
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"确定退出游戏?"
                                                             message:nil
                                                    cancelButtonItem:cancelItem
                                                    otherButtonItems:yesItem, nil];
@@ -921,7 +921,11 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onPackFinish {
-    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+    float rd = (float)(arc4random() % 100);
+    if (rd/100.f < _gameData.adsPercent) {
+        [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+    }
+    
     _packHasFinished = YES;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];
@@ -954,7 +958,7 @@ static float lerpf(float a, float b, float t) {
             pos.y -= 25;
         }
         rankLabel.position = pos;
-        rankLabel.text = @"Submitting score ...";
+        rankLabel.text = @"提交成绩...";
         
         //rankLabel action
         float dur = .4f;
@@ -1008,7 +1012,7 @@ static float lerpf(float a, float b, float t) {
                         [node setYScale:lerpf(1.f, 0.f, t)];
                     }];
                     SKAction *setText = [SKAction runBlock:^{
-                        rankLabel.text = [NSString stringWithFormat:@"Current rank: %d", record.rank];
+                        rankLabel.text = [NSString stringWithFormat:@"当前排名: %d", record.rank];
                     }];
                     SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
                         float t = QuarticEaseOut(elapsedTime/dur);
@@ -1206,28 +1210,39 @@ static float lerpf(float a, float b, float t) {
     //dur = .4f;
     completeLabel.xScale = 0.f;
     completeLabel.yScale = 2.f;
+    
+    completeLabel.text = formatScore(score);
     SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         float t = QuarticEaseOut(elapsedTime/dur);
         [node setYScale:lerpf(0.f, 1.f, t)];
         [node setXScale:2.0-lerpf(0.f, 1.f, t)];
     }];
     
-    SKAction *wait = [SKAction waitForDuration:1.f];
-    dur = .3f;
-    SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-        float t = QuarticEaseIn(elapsedTime/dur);
-        [node setYScale:lerpf(1.f, 0.f, t)];
-    }];
-    SKAction *setText = [SKAction runBlock:^{
-        completeLabel.text = formatScore(score);
-    }];
-    SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-        float t = QuarticEaseOut(elapsedTime/dur);
-        [node setYScale:lerpf(0.f, 1.f, t)];
-    }];
-    SKAction *seq = [SKAction sequence:@[appear, wait, flip1, setText, flip2]];
+    [completeLabel runAction:appear];
     
-    [completeLabel runAction:seq];
+    
+//    SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+//        float t = QuarticEaseOut(elapsedTime/dur);
+//        [node setYScale:lerpf(0.f, 1.f, t)];
+//        [node setXScale:2.0-lerpf(0.f, 1.f, t)];
+//    }];
+//    
+//    SKAction *wait = [SKAction waitForDuration:1.f];
+//    dur = .3f;
+//    SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+//        float t = QuarticEaseIn(elapsedTime/dur);
+//        [node setYScale:lerpf(1.f, 0.f, t)];
+//    }];
+//    SKAction *setText = [SKAction runBlock:^{
+//        completeLabel.text = formatScore(score);
+//    }];
+//    SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+//        float t = QuarticEaseOut(elapsedTime/dur);
+//        [node setYScale:lerpf(0.f, 1.f, t)];
+//    }];
+//    SKAction *seq = [SKAction sequence:@[appear, wait, flip1, setText, flip2]];
+    
+//    [completeLabel runAction:seq];
 }
 
 - (void)onNextImageWithRotate:(BOOL)rotate {

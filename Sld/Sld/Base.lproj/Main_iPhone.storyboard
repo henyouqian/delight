@@ -649,7 +649,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Tap to load more">
+                                                    <state key="normal" title="更多...">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -801,14 +801,28 @@
             </objects>
             <point key="canvasLocation" x="884" y="77"/>
         </scene>
-        <!--Sld Match Result Controller-->
+        <!--Sld Event Result Controller-->
         <scene sceneID="e9y-7P-vPx">
             <objects>
-                <tableViewController id="VkF-K5-zTO" customClass="SldMatchResultController" sceneMemberID="viewController">
+                <tableViewController id="VkF-K5-zTO" customClass="SldEventResultController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Wu2-Aa-gJo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="o5N-YN-fox" customClass="SldEventResultFooterView">
+                            <rect key="frame" x="0.0" y="233" width="320" height="40"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="erN-2L-17R">
+                                    <rect key="frame" x="150" y="10" width="20" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </activityIndicatorView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <outlet property="spinner" destination="erN-2L-17R" id="L1A-Ey-x7E"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rewardCacheCell" id="ybP-Vm-yhf" customClass="SldGetRewardCacheCell">
                                 <rect key="frame" x="0.0" y="119" width="320" height="44"/>
@@ -836,7 +850,7 @@
                                     <outlet property="getRewardButton" destination="W5v-mG-cz0" id="623-Oy-dJe"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchResultCell" rowHeight="60" id="nm8-2e-PiE" customClass="SldMatchResultCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchResultCell" rowHeight="60" id="nm8-2e-PiE" customClass="SldEventResultCell">
                                 <rect key="frame" x="0.0" y="163" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nm8-2e-PiE" id="J47-lj-2Rr">
@@ -894,6 +908,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="3tP-N2-NeL"/>
+                    <connections>
+                        <outlet property="footerView" destination="o5N-YN-fox" id="AdI-zl-Haa"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s2g-tj-SPt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -967,7 +984,6 @@
                                 <segments>
                                     <segment title="概览"/>
                                     <segment title="排名"/>
-                                    <segment title="竞猜"/>
                                 </segments>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -1016,6 +1032,7 @@
                         <outlet property="betView" destination="qaC-he-Dhs" id="q5g-is-kRg"/>
                         <outlet property="bgImageView" destination="weE-DP-R8o" id="Hu8-U1-iRv"/>
                         <outlet property="commentView" destination="dJ8-HU-iZC" id="5Jr-a2-JIz"/>
+                        <outlet property="helpButton" destination="j0o-FA-nkm" id="6tz-Ei-GwP"/>
                         <outlet property="rankView" destination="qkE-0h-r5s" id="fdW-6N-q6u"/>
                         <outlet property="seg" destination="vtN-GL-vff" id="DYa-A8-2Rc"/>
                     </connections>
@@ -1296,7 +1313,7 @@
                                                     <rect key="frame" x="232" y="1" width="82" height="90"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <state key="normal" title="编辑">
+                                                    <state key="normal" title="选择头像">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
@@ -1373,7 +1390,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7pd-dF-aBY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2606" y="759"/>
+            <point key="canvasLocation" x="2090" y="789"/>
         </scene>
         <!--Sld Avatar Select Controller-->
         <scene sceneID="o5h-MQ-L9P">
@@ -1481,7 +1498,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R1C-0F-tb5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3020" y="757"/>
+            <point key="canvasLocation" x="2504" y="787"/>
         </scene>
         <!--Sld Offline Event Enter Controler-->
         <scene sceneID="HBT-75-6n3">
@@ -2050,7 +2067,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="79"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Tap to load more">
+                                                    <state key="normal" title="更多...">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -2657,7 +2674,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a3M-Hz-p5n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2080" y="759"/>
+            <point key="canvasLocation" x="1668" y="787"/>
         </scene>
     </scenes>
     <resources>

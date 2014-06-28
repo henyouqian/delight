@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+const (
+	NOT_FOUND = "not_found"
+)
+
 type Pool struct {
 	Ip      string
 	Port    int

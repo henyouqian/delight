@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./ssdb"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	"runtime"
+	"strconv"
 	"time"
 )
 
@@ -54,6 +56,8 @@ func calcReward(rank int) (reward int64) {
 
 func scoreKeeper() {
 	defer handleError()
+
+	not_found := ssdb.NOT_FOUND
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
@@ -147,6 +151,7 @@ func scoreKeeper() {
 				playerInfo, err := getPlayerInfo(ssdb, userId)
 				checkError(err)
 				playerInfo.RewardCache += record.MatchReward
+				playerInfo.TotalReward += record.MatchReward
 				savePlayerInfo(ssdb, userId, playerInfo)
 
 				//add to Z_EVENT_PLAYER_RECORD
@@ -168,6 +173,50 @@ func scoreKeeper() {
 		checkError(err)
 
 		//bet
+		//fixme: get winning team
+
+		//fixme: calc betting pool reward sum
+
+		key := fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, event.Id)
+		userId := int64(0)
+		for true {
+			resp, err = ssdb.Do("zkey", key, userId, userId, "", 100)
+			if resp[0] == not_found {
+				break
+			} else {
+				checkSsdbError(resp, err)
+			}
+			userIds := resp[1:]
+
+			//batch get user bet data
+			cmds := make([]interface{}, 0, 2+len(userIds))
+			cmds[0] = "multi_hget"
+			cmds[1] = H_PLAYER_INFO
+			for _, userId := range userIds {
+				cmds = append(cmds, userId)
+			}
+			resp, err = ssdb.Do(cmds...)
+			checkSsdbError(resp, err)
+			resp = resp[1:]
+			for i := 0; i < len(resp)/2; i++ {
+				var playerInfo PlayerInfo
+				err = json.Unmarshal([]byte(resp[i+1]), &playerInfo)
+				checkError(err)
+
+				userId, err := strconv.ParseInt(resp[i], 10, 64)
+				checkError(err)
+
+				recordKey := fmt.Sprintf("%d/%d", event.Id, userId)
+				respRecord, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+				checkSsdbError(respRecord, err)
+				record := EventPlayerRecord{}
+				err = json.Unmarshal([]byte(respRecord[1]), &record)
+				checkError(err)
+
+				//fixme
+				//record.Bet
+			}
+		}
 
 		glog.Infof("event end")
 	}

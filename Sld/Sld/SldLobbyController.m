@@ -23,7 +23,7 @@
 @property (weak, nonatomic) SldBriefController *briefController;
 @property (weak, nonatomic) SldBetController *betController;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
-
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *helpButton;
 @end
 
 @implementation SldLobbyController
@@ -37,6 +37,8 @@
     _betView.hidden = YES;
     _rankController.tableView.scrollsToTop = NO;
     _betController.tableView.scrollsToTop = NO;
+    _helpButton.enabled = NO;
+    _helpButton.title = nil;
     
     if (idx == 0) {
         _commentView.hidden = NO;
@@ -50,6 +52,8 @@
         _betView.hidden = NO;
         _betController.tableView.scrollsToTop = YES;
         [_betController onViewShown];
+        _helpButton.enabled = YES;
+        _helpButton.title = @"帮助";
     }
     self.title = [seg titleForSegmentAtIndex:idx];
 }

@@ -184,10 +184,10 @@
         return;
     } else if (localNum < totalNum) {
         NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download..."
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"图集下载中..."
                                                         message:msg
                                                        delegate:self
-                                              cancelButtonTitle:@"Cancel"
+                                              cancelButtonTitle:@"取消"
                                               otherButtonTitles:nil];
         [alert show];
         

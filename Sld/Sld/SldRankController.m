@@ -196,6 +196,7 @@ static SldRankController *_inst = nil;
             rankInfo.nickName = [rankDict objectForKey:@"NickName"];
             rankInfo.teamName = [rankDict objectForKey:@"TeamName"];
             rankInfo.gravatarKey = [rankDict objectForKey:@"GravatarKey"];
+            rankInfo.customAvatarKey = [rankDict objectForKey:@"CustomAvatarKey"];
             NSNumber *score = [rankDict objectForKey:@"Score"];
             rankInfo.score = @"0";
             if (score) {

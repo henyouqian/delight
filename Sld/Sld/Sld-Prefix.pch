@@ -33,5 +33,5 @@
     #import "nv-ios-digest/SHA1.h"
     #import "AdsMoGoLib/AdsMoGoSDK/AdMoGoInterstitialManager.h"
     #import "QiniuSDK/QiniuSimpleUploader.h"
-    #import "TalkingData_Analytics/TalkingData.h"
+#import "Flurry/Flurry.h"
 #endif

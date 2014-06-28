@@ -29,7 +29,7 @@ const (
 )
 
 var (
-	ADMIN_SET = map[string]bool{"henyouqian": true}
+	ADMIN_SET = map[string]bool{"henyouqian@gmail.com": true}
 )
 
 type Session struct {
@@ -85,6 +85,8 @@ func newSession(w http.ResponseWriter, userid int64, username string, appid int,
 
 func checkAdmin(session *Session) {
 	if !ADMIN_SET[session.Username] {
+		glog.Info(ADMIN_SET)
+		glog.Info(session)
 		lwutil.SendError("err_denied", "")
 	}
 }
@@ -446,6 +448,26 @@ func apiForgotPassword(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, "ok")
 }
 
+func apiCheckVersion(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//in
+	var in struct {
+		Version string
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//out
+	out := struct {
+		UpdateUrl string
+	}{
+		"",
+	}
+	lwutil.WriteResponse(w, out)
+}
+
 func apiResetPassword(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -538,5 +560,6 @@ func regAuth() {
 	http.Handle("/auth/info", lwutil.ReqHandler(apiAuthLoginInfo))
 	http.Handle("/auth/forgotPassword", lwutil.ReqHandler(apiForgotPassword))
 	http.Handle("/auth/resetPassword", lwutil.ReqHandler(apiResetPassword))
+	http.Handle("/auth/checkVersion", lwutil.ReqHandler(apiCheckVersion))
 	http.Handle("/auth/ssdbTest", lwutil.ReqHandler(apiSsdbTest))
 }

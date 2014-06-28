@@ -25,6 +25,10 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"Email":""}
 				},{
+					"name": "checkVersion",
+					"method": "POST",
+					"data": {"Version":""}
+				},{
 					"name": "ssdbTest",
 					"method": "POST",
 					"data": ""

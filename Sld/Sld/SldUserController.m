@@ -179,8 +179,8 @@ static __weak SldUserController *g_inst = nil;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.destinationViewController isKindOfClass:[SldMatchResultController class]]) {
-        ((SldMatchResultController*)segue.destinationViewController).userController = self;
+    if ([segue.destinationViewController isKindOfClass:[SldEventResultController class]]) {
+        ((SldEventResultController*)segue.destinationViewController).userController = self;
     }
 }
 
@@ -188,7 +188,7 @@ static __weak SldUserController *g_inst = nil;
     SldGameData *gd = [SldGameData getInstance];
     _moneyLabel.text = [NSString stringWithFormat:@"%lld", gd.money];
     _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", gd.rewardCache];
-    _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", gd.rewardCache];
+    _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", gd.totalReward];
 }
 
 @end
@@ -202,7 +202,7 @@ static __weak SldUserController *g_inst = nil;
 @end
 
 //=================
-@interface SldMatchResultCell : UITableViewCell
+@interface SldEventResultCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *matchRewardLabel;
 @property (weak, nonatomic) IBOutlet UILabel *betMoneyLabel;
@@ -211,37 +211,84 @@ static __weak SldUserController *g_inst = nil;
 
 @end
 
-@implementation SldMatchResultCell
+@implementation SldEventResultCell
 @end
 
 //=================
-@interface SldMatchResult : NSObject
+@interface SldEventResultFooterView: UIView
+@property (weak, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@end
+
+@implementation SldEventResultFooterView
+@end
+
+
+//=================
+@interface SldEventResult : NSObject
+@property (nonatomic) int eventId;
 @property (nonatomic) NSString* thumbKey;
 @property (nonatomic) int rank;
 @property (nonatomic) int matchReward;
 @property (nonatomic) int betMoneySum;
 @property (nonatomic) int betReward;
+
+- (instancetype)initWithDict:(NSDictionary*)dict;
 @end
 
-@implementation SldMatchResult
-
+@implementation SldEventResult
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _eventId = [(NSNumber*)[dict objectForKey:@"EventId"] intValue];
+        _thumbKey = [dict objectForKey:@"PackThumbKey"];
+        _rank = [(NSNumber*)[dict objectForKey:@"FinalRank"] intValue];
+        _matchReward = [(NSNumber*)[dict objectForKey:@"MatchReward"] intValue];
+        _betMoneySum = [(NSNumber*)[dict objectForKey:@"BetMoneySum"] intValue];
+        _betReward = [(NSNumber*)[dict objectForKey:@"BetReward"] intValue];
+    }
+    return self;
+}
 @end
 
 //=================
-@interface SldMatchResultController()
-@property (nonatomic) NSMutableArray *matchResults; //SldMatchResult
+@interface SldEventResultController()
+@property (nonatomic) NSMutableArray *eventResults; //SldEventResult
+@property (weak, nonatomic) IBOutlet SldEventResultFooterView *footerView;
+@property (nonatomic) BOOL reachBottom;
+@property (nonatomic) BOOL loadingData;
 @end
 
-@implementation SldMatchResultController
+const int RESULT_LIMIT = 20;
+
+@implementation SldEventResultController
 
 - (void)viewDidLoad {
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.tableView.tableFooterView.backgroundColor = [UIColor clearColor];
+    _reachBottom = NO;
     
+    //footer
+    self.tableView.tableFooterView = _footerView;
+    _footerView.spinner.hidden = YES;
+    
+    //refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.tableView addSubview:self.refreshControl];
+    [self.refreshControl addTarget:self action:@selector(refershList) forControlEvents:UIControlEventValueChanged];
+    
+    [self refershList];
+}
+
+- (void)refershList {
+    if (_loadingData) {
+        [self.refreshControl endRefreshing];
+        return;
+    }
     //get play result
+    _loadingData = YES;
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"StartEventId":@0, @"Limit":@20};
+    NSDictionary *body = @{@"StartEventId":@0, @"Limit":@(RESULT_LIMIT)};
     [session postToApi:@"event/listPlayResult" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _loadingData = NO;
+        [self.refreshControl endRefreshing];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -252,16 +299,11 @@ static __weak SldUserController *g_inst = nil;
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-
-        _matchResults = [NSMutableArray array];
+        
+        _eventResults = [NSMutableArray array];
         for (NSDictionary *record in records) {
-            SldMatchResult *mr = [[SldMatchResult alloc] init];
-            mr.thumbKey = [record objectForKey:@"PackThumbKey"];
-            mr.rank = [(NSNumber*)[record objectForKey:@"FinalRank"] intValue];
-            mr.matchReward = [(NSNumber*)[record objectForKey:@"MatchReward"] intValue];
-            mr.betMoneySum = [(NSNumber*)[record objectForKey:@"BetMoneySum"] intValue];
-            mr.betReward = [(NSNumber*)[record objectForKey:@"BetReward"] intValue];
-            [_matchResults addObject:mr];
+            SldEventResult *result = [[SldEventResult alloc] initWithDict:record];
+            [_eventResults addObject:result];
         }
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
@@ -277,7 +319,7 @@ static __weak SldUserController *g_inst = nil;
     if (section == 0) {
         return 1;
     } else if (section == 1) {
-        return _matchResults.count;
+        return _eventResults.count;
     }
     return 0;
 }
@@ -300,14 +342,14 @@ static __weak SldUserController *g_inst = nil;
         }
         return cell;
     } else if (indexPath.section == 1) {
-        SldMatchResultCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchResultCell" forIndexPath:indexPath];
+        SldEventResultCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchResultCell" forIndexPath:indexPath];
         
-        SldMatchResult *mr = [_matchResults objectAtIndex:indexPath.row];
-        cell.rankLabel.text = [NSString stringWithFormat:@"名次：%d", mr.rank];
-        cell.matchRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", mr.matchReward];
-        cell.betMoneyLabel.text = [NSString stringWithFormat:@"投注：%d", mr.betMoneySum];
-        cell.betRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", mr.betReward];
-        [cell.packThumbView asyncLoadImageWithKey:mr.thumbKey showIndicator:NO completion:nil];
+        SldEventResult *er = [_eventResults objectAtIndex:indexPath.row];
+        cell.rankLabel.text = [NSString stringWithFormat:@"名次：%d", er.rank];
+        cell.matchRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", er.matchReward];
+        cell.betMoneyLabel.text = [NSString stringWithFormat:@"投注：%d", er.betMoneySum];
+        cell.betRewardLabel.text = [NSString stringWithFormat:@"奖金：%d", er.betReward];
+        [cell.packThumbView asyncLoadImageWithKey:er.thumbKey showIndicator:NO completion:nil];
         return cell;
     }
     
@@ -355,6 +397,52 @@ static __weak SldUserController *g_inst = nil;
         
         alert(@"金币领取成功", [NSString stringWithFormat:@"%lld + %lld = %lld", prevMoney, gd.money-prevMoney, gd.money]);
     }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (_eventResults.count == 0 || _reachBottom || _loadingData) {
+        return;
+    }
+    
+    if ((scrollView.contentOffset.y + scrollView.frame.size.height + _footerView.frame.size.height) >= scrollView.contentSize.height) {
+        SldEventResult *lastResult = [_eventResults lastObject];
+        
+        //post
+        _loadingData = YES;
+        _footerView.spinner.hidden = NO;
+        [_footerView.spinner startAnimating];
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"StartEventId":@(lastResult.eventId), @"Limit":@(RESULT_LIMIT)};
+        [session postToApi:@"event/listPlayResult" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            _loadingData = NO;
+            _footerView.spinner.hidden = YES;
+            [_footerView.spinner stopAnimating];
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSArray *records = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            if (records.count < RESULT_LIMIT) {
+                _reachBottom = YES;
+            }
+            if (records.count == 0) {
+                return;
+            }
+            
+            NSMutableArray *insertedIndexPathes = [NSMutableArray arrayWithCapacity:records.count];
+            for (NSDictionary *record in records) {
+                SldEventResult *mr = [[SldEventResult alloc] initWithDict:record];
+                [_eventResults addObject:mr];
+                [insertedIndexPathes addObject:[NSIndexPath indexPathForRow:_eventResults.count inSection:0]];
+            }
+            [self.tableView insertRowsAtIndexPaths:insertedIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
+        }];
+    }
 }
 
 @end

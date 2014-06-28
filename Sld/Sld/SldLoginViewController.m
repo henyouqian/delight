@@ -94,16 +94,9 @@
     
     //
     [_emailInput setDelegate:self];
-    
     [self onChangeMode:_seg];
     
-    //ads
-//    _ads = [[SldAds alloc] initWithRootViewController:self];
-    
-    //ad mogo
-    [AdMoGoInterstitialManager setAppKey:@"8c0728f759464dcda07c81afb00d3bf5"];
-    [[AdMoGoInterstitialManager shareInstance] initDefaultInterstitial];
-    
+    //
     if (self.emailInput.text.length && self.passwordInput.text.length) {
         [self login];
     }
@@ -118,7 +111,7 @@
     }
     
     if (![SldUtil validateEmail:email]) {
-        alert(@"Email格式错误", nil);
+        alert(@"邮箱格式错误", nil);
         return;
     }
     
@@ -137,7 +130,7 @@
         if (error) {
             NSString *errType = getServerErrorType(data);
             if ([errType compare:@"err_not_match"] == 0) {
-                alert(@"Username and password dismatch.", nil);
+                alert(@"邮箱或密码错误.", nil);
             } else {
                 alertHTTPError(error, data);
             }
@@ -195,7 +188,9 @@
                 gameData.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
                 gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
                 gameData.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
+                gameData.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
                 gameData.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
+                gameData.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
                 [self dismissViewControllerAnimated:YES completion:nil];
                 
                 [SldIapManager getInstance];

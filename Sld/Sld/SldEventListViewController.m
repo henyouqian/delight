@@ -200,12 +200,9 @@ static const int FETCH_EVENT_COUNT = 20;
     
     [self didBecomeActiveNotification];
     
-    if (_gameData.rewardCache == 0) {
+    if (_gameData.rewardCache > 0) {
+        [_rewardButton setTitle:[NSString stringWithFormat:@"可领取奖金%lld", _gameData.rewardCache] forState:UIControlStateNormal];
         _rewardButton.hidden = NO;
-//        _rewardButton.alpha = 0;
-//        [UIView animateWithDuration:0.4 animations:^{
-//            _rewardButton.alpha = 1.0;
-//        }];
         CGRect frame = _rewardButton.frame;
         frame.origin.y = 0;
         _rewardButton.frame = frame;
@@ -218,6 +215,8 @@ static const int FETCH_EVENT_COUNT = 20;
     } else {
         _rewardButton.hidden = YES;
     }
+    
+    [self.collectionView reloadData];
 }
 
 - (void)didBecomeActiveNotification {
@@ -434,6 +433,7 @@ static const int FETCH_EVENT_COUNT = 20;
         [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
          {
              void(^onReachBottom)() = ^(){
+                 _reachBottom = YES;
                  [_footerView.spinner stopAnimating];
                  _footerView.spinner.hidden = YES;
                  _footerView.label.text = @"NO MORE DATA";
@@ -442,7 +442,6 @@ static const int FETCH_EVENT_COUNT = 20;
              if (error) {
                  NSString *errType = getServerErrorType(data);
                  if ([errType compare:@"err_not_found"] == 0) {
-                     _reachBottom = YES;
                      onReachBottom();
                  } else {
                      alertHTTPError(error, data);
@@ -455,7 +454,6 @@ static const int FETCH_EVENT_COUNT = 20;
                  return;
              }
              if (array.count < FETCH_EVENT_COUNT) {
-                 _reachBottom = YES;
                  onReachBottom();
              }
              

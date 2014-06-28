@@ -18,6 +18,7 @@ const (
 	INIT_MONEY         = 500
 	FLD_PLAYER_MONEY   = "money"
 	FLD_PLAYER_TEAM    = "team"
+	ADS_PERCENT_DEFAUT = 0.5
 )
 
 var (
@@ -41,6 +42,7 @@ type PlayerInfo struct {
 	Money           int64
 	BetMax          int
 	RewardCache     int64
+	TotalReward     int64
 	Secret          string
 	AllowSave       bool
 }
@@ -92,9 +94,11 @@ func apiGetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	out := struct {
 		*PlayerInfo
 		BetCloseBeforeEndSec int
+		AdsPercent           float32
 	}{
 		playerInfo,
 		BET_CLOSE_BEFORE_END_SEC,
+		ADS_PERCENT_DEFAUT,
 	}
 	lwutil.WriteResponse(w, out)
 }
@@ -157,7 +161,16 @@ func apiSetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	savePlayerInfo(ssdb, session.Userid, &playerInfo)
 
 	//out
-	lwutil.WriteResponse(w, playerInfo)
+	out := struct {
+		PlayerInfo
+		BetCloseBeforeEndSec int
+		AdsPercent           float32
+	}{
+		playerInfo,
+		BET_CLOSE_BEFORE_END_SEC,
+		ADS_PERCENT_DEFAUT,
+	}
+	lwutil.WriteResponse(w, out)
 }
 
 func apiAddRewardFromCache(w http.ResponseWriter, r *http.Request) {

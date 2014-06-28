@@ -13,7 +13,7 @@
 - (void)updateMoney;
 @end
 
-@interface SldMatchResultController : UITableViewController
+@interface SldEventResultController : UITableViewController
 @property (nonatomic) SldUserController *userController;
 
 @end

@@ -201,7 +201,7 @@ static NSArray *_genderStrings;
     }
     
     //custum avatar
-    else {
+    else if (_avatarImageView.image) {
         //gen file name
         NSData *imageData = UIImageJPEGRepresentation(_avatarImageView.image, 0.85);
         
@@ -296,6 +296,10 @@ static NSArray *_genderStrings;
         _gd.gravatarKey = [dict objectForKey:@"GravatarKey"];
         _gd.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
         _gd.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+        _gd.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
+        _gd.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
+        _gd.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
+        _gd.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
         
         [self.presentingViewController viewWillAppear:YES];
     }];

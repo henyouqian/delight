@@ -32,8 +32,28 @@
     scene.scaleMode = SKSceneScaleModeAspectFill;
     scene.navigationController = self.navigationController;
     
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillResignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
     // Present the scene.
     [skView presentScene:scene];
+}
+
+- (void)applicationWillResignActive
+{
+    [(SKView *)self.view setPaused:YES];
+}
+
+- (void)applicationDidBecomeActive
+{
+    [(SKView *)self.view setPaused:NO];
 }
 
 -(void)dealloc {
