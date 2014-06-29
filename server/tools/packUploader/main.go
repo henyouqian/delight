@@ -22,9 +22,9 @@ import (
 const (
 	USEAGE         = "Useage: \n\tpackUploader new|del|update <uploadDir>\n\tpackUploader image <imagePath>"
 	BUCKET         = "pintugame"
-	SERVER_HOST    = "http://localhost:9999/"
-	ADMIN_NAME     = "admin"
-	ADMIN_PASSWORD = "admin"
+	SERVER_HOST    = "http://sld.pintugame.com/"
+	ADMIN_NAME     = "henyouqian@gmail.com"
+	ADMIN_PASSWORD = "Nmmgb808313"
 )
 
 var (

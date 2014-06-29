@@ -15,3 +15,14 @@
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 
 @end
+
+
+@interface SldAsyncImageView : UIImageView
+@property (atomic) BOOL loading;
+@property (atomic) BOOL loadCanceling;
+
+- (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion;
+- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)releaseImage;
+@end

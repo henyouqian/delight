@@ -436,7 +436,7 @@ static const int FETCH_EVENT_COUNT = 20;
                  _reachBottom = YES;
                  [_footerView.spinner stopAnimating];
                  _footerView.spinner.hidden = YES;
-                 _footerView.label.text = @"NO MORE DATA";
+                 _footerView.label.text = @"后面没有了";
              };
              _fetchStartId = -1;
              if (error) {

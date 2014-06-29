@@ -98,6 +98,7 @@
 @property (nonatomic) CommentHeaderCell *imageSlideCell;
 @property (nonatomic) NSString *commentText;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@property (nonatomic) NSMutableArray *imageViews;
 @end
 
 @implementation SldCommentController
@@ -113,7 +114,7 @@
     _gameData = [SldGameData getInstance];
     _ready = NO;
     _photos = [NSMutableDictionary dictionary];
-    _currPage = 0;
+    _currPage = 1;
     
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -247,6 +248,7 @@
         
         //image
         int imageIndex = 0;
+        _imageViews = [NSMutableArray array];
         for(NSString *imageKey in images) {
             CGRect frame;
             frame.origin.x = (cell.scrollView.frame.size.width) * (imageIndex+1);
@@ -254,11 +256,14 @@
             frame.size = cell.frame.size;
             //frame = CGRectInset(frame, 5.0, 0.0);
             
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:nil];
+            SldAsyncImageView *imageView = [[SldAsyncImageView alloc] initWithImage:nil];
             imageView.contentMode = UIViewContentModeScaleAspectFit;
             imageView.frame = frame;
             [cell.scrollView addSubview:imageView];
-            [imageView asyncLoadImageWithKey:imageKey showIndicator:YES completion:nil];
+            if (imageIndex <= 1) {
+                [imageView asyncLoadImageWithKey:imageKey showIndicator:YES completion:nil];
+            }
+            [_imageViews addObject:imageView];
             
             imageIndex++;
         }
@@ -353,9 +358,30 @@
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    if (cell == nil) {
+        return;
+    }
     CGFloat pageWidth = cell.frame.size.width;
-    _currPage = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth) ;
-    cell.pageControl.currentPage = _currPage;
+    _currPage = floor((cell.scrollView.contentOffset.x + pageWidth/2)/pageWidth);
+    if (cell.pageControl.currentPage != _currPage) {
+        cell.pageControl.currentPage = _currPage;
+        
+        //load image
+        int currImageIdx = _currPage - 1;
+        for (int i = 0; i < _imageViews.count; i++) {
+            SldAsyncImageView *imageView = _imageViews[i];
+            if (i >= currImageIdx-1 && i <= currImageIdx+1) {
+                NSMutableArray *imageKeys = _gameData.packInfo.images;
+                if (!imageView.image) {
+                    [imageView asyncLoadImageWithKey:imageKeys[i] showIndicator:YES completion:^{
+                        lwInfo("%d", i);
+                    }];
+                }
+            } else {
+                [imageView releaseImage];
+            }
+        }
+    }
 }
 
 - (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
@@ -424,14 +450,16 @@
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
     CommentHeaderCell *cell = (CommentHeaderCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     _currPage = (int)index + 1;
-    if (cell) {
-        [cell.pageControl setCurrentPage:_currPage];
-    }
+//    if (cell) {
+//        [cell.pageControl setCurrentPage:_currPage];
+//    }
     
     CGRect frame = cell.scrollView.frame;
     frame.origin.x = cell.scrollView.frame.size.width * _currPage;
     frame.origin.y = 0;
     [cell.scrollView scrollRectToVisible:frame animated:NO];
+    
+    [self scrollViewDidScroll:cell.scrollView];
 }
 
 //- (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index {

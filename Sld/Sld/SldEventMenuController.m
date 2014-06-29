@@ -85,6 +85,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             [self loadBackground];
 //            [self reloadData];
             [g_updatedPackIdSet addObject:@(packId)];
+            _titleLabel.text = _gd.packInfo.title;
             
             [self onTimer];
         }];
