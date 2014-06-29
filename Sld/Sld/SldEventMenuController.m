@@ -160,6 +160,11 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         
         _timeRemainLabel.hidden = NO;
         _timeRemainLabel.text = [NSString stringWithFormat:@"距离比赛开始%@", str];
+        
+        //
+        if ([_gd.userName compare:@"lw@pintu.com"] == 0) {
+            _challangeButton.enabled = YES;
+        }
     } else if (state == RUNNING) {
         NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
         NSString *str = formatInterval((int)endIntv);

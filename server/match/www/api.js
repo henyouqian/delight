@@ -183,6 +183,10 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"EventId": 0}
 				},{
+					"name": "mod",
+					"method": "POST",
+					"data": ""
+				},{
 					"name": "list",
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}

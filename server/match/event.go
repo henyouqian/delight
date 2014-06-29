@@ -240,13 +240,6 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 		event.SliderNum = 10
 	}
 
-	// //check pack
-	// resp, err := ssdb.Do("hexists", H_PACK, event.PackId)
-	// lwutil.CheckSsdbError(resp, err)
-	// if resp[1] == "0" {
-	// 	lwutil.SendError("err_pack", "pack not exist")
-	// }
-
 	//get pack
 	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
 	lwutil.CheckSsdbError(resp, err)
@@ -272,6 +265,37 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	js, err = json.Marshal(EVENT_INIT_BETTING_POOL)
 	lwutil.CheckError(err, "")
 	resp, err = ssdb.Do("hset", H_EVENT_BETTING_POOL, event.Id, js)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, event)
+}
+
+func apiModEvent(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+	checkAdmin(session)
+
+	//in
+	var event Event
+	err = lwutil.DecodeRequestBody(r, &event)
+	lwutil.CheckError(err, "err_decode_body")
+	if _, ok := EVENT_TYPES[event.Type]; ok == false {
+		lwutil.SendError("err_match_type", "")
+	}
+
+	//save to ssdb
+	js, err := json.Marshal(event)
+	lwutil.CheckError(err, "")
+	resp, err := ssdb.Do("hset", H_EVENT, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
@@ -1263,6 +1287,7 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(apiNewEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(apiDelEvent))
+	http.Handle("/event/mod", lwutil.ReqHandler(apiModEvent))
 	http.Handle("/event/list", lwutil.ReqHandler(apiListEvent))
 	http.Handle("/event/get", lwutil.ReqHandler(apiGetEvent))
 	http.Handle("/event/getUserPlay", lwutil.ReqHandler(apiGetUserPlay))
