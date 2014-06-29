@@ -461,6 +461,8 @@ func apiCheckVersion(w http.ResponseWriter, r *http.Request) {
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
 
+	glog.Info(in.Version)
+
 	//out
 	url := ""
 	if in.Version != CLIENT_VERSION {
