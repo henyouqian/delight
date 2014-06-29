@@ -1019,7 +1019,7 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "err_decode_body")
 
 	//checksum
-	checksum := fmt.Sprintf("zzzz%d9d7a", in.Score*in.Score)
+	checksum := fmt.Sprintf("zzzz%d9d7a", in.Score+8703)
 	hasher := sha1.New()
 	hasher.Write([]byte(checksum))
 	checksum = hex.EncodeToString(hasher.Sum(nil))
@@ -1287,7 +1287,7 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(apiNewEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(apiDelEvent))
-	http.Handle("/event/mod", lwutil.ReqHandler(apiModEvent))
+	http.Handle("/event/mod", lwutil.ReqHandler(apiNewEvent))
 	http.Handle("/event/list", lwutil.ReqHandler(apiListEvent))
 	http.Handle("/event/get", lwutil.ReqHandler(apiGetEvent))
 	http.Handle("/event/getUserPlay", lwutil.ReqHandler(apiGetUserPlay))
