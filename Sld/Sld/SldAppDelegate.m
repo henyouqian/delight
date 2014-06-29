@@ -24,7 +24,7 @@
     [[AdMoGoInterstitialManager shareInstance] initDefaultInterstitial];
     
     //check version
-    NSString *appVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    NSString *appVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     SldHttpSession *session = [SldHttpSession defaultSession];
     NSDictionary *body = @{@"Version":appVer};
     [session postToApi:@"auth/checkVersion" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
