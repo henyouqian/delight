@@ -41,7 +41,8 @@
         
         NSString *updateUrl = [dict objectForKey:@"UpdateUrl"];
         if (updateUrl && updateUrl.length > 0) {
-            [[[UIAlertView alloc] initWithTitle:@"发现新版本💝，请更新"
+            NSString *str = [NSString stringWithFormat:@"发现新版本💝，请更新\n当前版本为：%@", appVer];
+            [[[UIAlertView alloc] initWithTitle:str
                                         message:nil
                                cancelButtonItem:[RIButtonItem itemWithLabel:@"更新" action:^{
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:updateUrl]];

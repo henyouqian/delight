@@ -27,7 +27,7 @@ const (
 	K_RESET_PASSWORD   = "K_RESET_PASSWORD" //key:K_RESET_PASSWORD/<resetKey> value:accountEmail
 	RESET_PASSWORD_TTL = 60 * 60
 	CLIENT_VERSION     = "1.1"
-	APP_STORE_URL      = "http://lwswap.qiniudn.com/sldInstall.html"
+	APP_STORE_URL      = "http://lwswap.qiniudn.com/sldInstall1.1.html"
 )
 
 var (
