@@ -1067,7 +1067,7 @@ static float lerpf(float a, float b, float t) {
             [submitLabel runAction:appear];
 
             //checksum
-            NSString *checksum = [NSString stringWithFormat:@"zzzz%d9d7a", score*score];
+            NSString *checksum = [NSString stringWithFormat:@"zzzz%d9d7a", score+8703];
             checksum = [SldUtil sha1WithString:checksum];
 
             //post
