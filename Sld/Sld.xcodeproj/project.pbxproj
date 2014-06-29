@@ -1446,7 +1446,7 @@
 					./External,
 				);
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
@@ -1484,7 +1484,7 @@
 					./External,
 				);
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",

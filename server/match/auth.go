@@ -26,6 +26,8 @@ const (
 	H_USER_TOKEN       = "H_USER_TOKEN"     //key:appid/userid, value:token
 	K_RESET_PASSWORD   = "K_RESET_PASSWORD" //key:K_RESET_PASSWORD/<resetKey> value:accountEmail
 	RESET_PASSWORD_TTL = 60 * 60
+	CLIENT_VERSION     = "1.1"
+	APP_STORE_URL      = "http://lwswap.qiniudn.com/sldInstall.html"
 )
 
 var (
@@ -460,10 +462,14 @@ func apiCheckVersion(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "err_decode_body")
 
 	//out
+	url := ""
+	if in.Version != CLIENT_VERSION {
+		url = APP_STORE_URL
+	}
 	out := struct {
 		UpdateUrl string
 	}{
-		"",
+		url,
 	}
 	lwutil.WriteResponse(w, out)
 }
