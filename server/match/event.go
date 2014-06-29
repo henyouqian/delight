@@ -649,12 +649,12 @@ func apiPlayEnd(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "err_decode_body")
 
 	//checksum
-	checksum := fmt.Sprintf("%s+%d9d7a", in.Secret, in.Score*in.Score)
+	checksum := fmt.Sprintf("%s+%d9d7a", in.Secret, in.Score+8703)
 	hasher := sha1.New()
 	hasher.Write([]byte(checksum))
 	checksum = hex.EncodeToString(hasher.Sum(nil))
 	if in.Checksum != checksum {
-		lwutil.SendError("err_checksum", checksum)
+		lwutil.SendError("err_checksum", "")
 	}
 
 	//check event record
@@ -1023,8 +1023,9 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	hasher := sha1.New()
 	hasher.Write([]byte(checksum))
 	checksumHex := hex.EncodeToString(hasher.Sum(nil))
+
 	if in.Checksum != checksumHex {
-		lwutil.SendError("err_checksum", checksum)
+		lwutil.SendError("err_checksum", "")
 	}
 
 	//check event record

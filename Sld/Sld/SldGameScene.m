@@ -972,9 +972,9 @@ static float lerpf(float a, float b, float t) {
         [rankLabel runAction:appear];
         
         //checksum
-        NSString *checksum = [NSString stringWithFormat:@"%@+%d9d7a", _gameController.matchSecret, score*score];
-        
+        NSString *checksum = [NSString stringWithFormat:@"%@+%d9d7a", _gameController.matchSecret, score+8703];
         checksum = [SldUtil sha1WithString:checksum];
+        
         //post
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"EventId":@(_gameData.eventInfo.id),

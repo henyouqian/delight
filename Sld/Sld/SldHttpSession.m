@@ -9,9 +9,9 @@
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 
-//static NSString *defaultHost = @"http://192.168.2.55:9999";
+static NSString *defaultHost = @"http://192.168.2.55:9999";
 //static NSString *defaultHost = @"http://192.168.1.43:9999";
-static NSString *defaultHost = @"http://sld.pintugame.com";
+//static NSString *defaultHost = @"http://sld.pintugame.com";
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
