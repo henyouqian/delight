@@ -1022,8 +1022,8 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	checksum := fmt.Sprintf("zzzz%d9d7a", in.Score+8703)
 	hasher := sha1.New()
 	hasher.Write([]byte(checksum))
-	checksum = hex.EncodeToString(hasher.Sum(nil))
-	if in.Checksum != checksum {
+	checksumHex = hex.EncodeToString(hasher.Sum(nil))
+	if in.Checksum != checksumHex {
 		lwutil.SendError("err_checksum", checksum)
 	}
 

@@ -1068,6 +1068,7 @@ static float lerpf(float a, float b, float t) {
 
             //checksum
             NSString *checksum = [NSString stringWithFormat:@"zzzz%d9d7a", score+8703];
+            lwInfo("%@", checksum);
             checksum = [SldUtil sha1WithString:checksum];
 
             //post
