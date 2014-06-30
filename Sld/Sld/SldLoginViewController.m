@@ -28,7 +28,7 @@
 @implementation SldLoginViewController
 
 + (void)createAndPresentWithCurrentController:(UIViewController*)currController animated:(BOOL)animated{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
+    UIStoryboard *storyboard = getStoryboard();
     SldLoginViewController* controller = (SldLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"login"];
     UIViewController *vc = currController.navigationController;
     if (vc) {

@@ -14,6 +14,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //
 //    [TalkingData setExceptionReportEnabled:YES];
 //    [TalkingData sessionStarted:@"A3E09989D8D0FD60D090570D5F60E1F5" withChannelId:@"appstore"];
     //[MobClick startWithAppkey:@"53aeb00356240bdcb8050c26"];

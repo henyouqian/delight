@@ -18,7 +18,6 @@
 		B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7D618F05BE60047E9FD /* InfoPlist.strings */; };
 		B31EE7DA18F05BE60047E9FD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7D918F05BE60047E9FD /* main.m */; };
 		B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */; };
-		B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */; };
 		B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */ = {isa = PBXBuildFile; fileRef = B31EE7E618F05BE60047E9FD /* SldGameController.m */; };
 		B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B31EE7ED18F05BE60047E9FD /* Images.xcassets */; };
 		B31EE7F518F05BE60047E9FD /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31EE7F418F05BE60047E9FD /* XCTest.framework */; };
@@ -112,8 +111,10 @@
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
 		D06684A01953548D00AD9282 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D066849F1953548D00AD9282 /* libz.dylib */; };
-		D0CFB4BF195FF28200DC4400 /* Main_iPhone_ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0CFB4BD195FF28200DC4400 /* Main_iPhone_ipad.storyboard */; };
+		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
+		D096769B1961A5F60052C178 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D096769A1961A5F60052C178 /* Main_iPhone.storyboard */; };
 		D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA3195B3744009193E6 /* libAdsMogo.a */; };
+		D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */; };
 		D0D14AA6195B375A009193E6 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */; };
 		D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */; };
 		D0D14B0C195B3807009193E6 /* adsmogo_fsclosebtn.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14AAB195B3806009193E6 /* adsmogo_fsclosebtn.png */; };
@@ -257,7 +258,6 @@
 		B31EE7DB18F05BE60047E9FD /* Sld-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sld-Prefix.pch"; sourceTree = "<group>"; };
 		B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldAppDelegate.h; sourceTree = "<group>"; };
 		B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldAppDelegate.m; sourceTree = "<group>"; };
-		B31EE7E018F05BE60047E9FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		B31EE7E518F05BE60047E9FD /* SldGameController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldGameController.h; sourceTree = "<group>"; };
 		B31EE7E618F05BE60047E9FD /* SldGameController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldGameController.m; sourceTree = "<group>"; };
 		B31EE7ED18F05BE60047E9FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -387,7 +387,8 @@
 		D0667D761952BEC700AD9282 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		D0667F221953172C00AD9282 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D066849F1953548D00AD9282 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		D0CFB4BE195FF28200DC4400 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone_ipad.storyboard; sourceTree = "<group>"; };
+		D09676961961A08A0052C178 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
+		D096769A1961A5F60052C178 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D0D14AA3195B3744009193E6 /* libAdsMogo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAdsMogo.a; path = External/AdsMoGoLib/AdsMoGoSDK/libAdsMogo.a; sourceTree = "<group>"; };
 		D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDomobAdSDK.a; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK/libDomobAdSDK.a; sourceTree = "<group>"; };
@@ -491,6 +492,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */,
 				D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */,
 				D03252B8195F064F00D9620C /* libFlurry_5.1.0.a in Frameworks */,
 				D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */,
@@ -608,6 +610,8 @@
 		B31EE7D418F05BE60047E9FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D096769A1961A5F60052C178 /* Main_iPhone.storyboard */,
+				D09676961961A08A0052C178 /* Main_iPad.storyboard */,
 				B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */,
 				B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */,
 				B31EE7D518F05BE60047E9FD /* Sld-Info.plist */,
@@ -701,8 +705,6 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */,
-				D0CFB4BD195FF28200DC4400 /* Main_iPhone_ipad.storyboard */,
 				B38110471914F5B00093F321 /* SldNevigationController.h */,
 				B38110481914F5B00093F321 /* SldNevigationController.m */,
 				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
@@ -1184,6 +1186,7 @@
 				D0D14B38195B3807009193E6 /* webview_bar_next_hover@2x.png in Resources */,
 				D0D14B5D195B3807009193E6 /* webview_bar_close_hover.png in Resources */,
 				B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */,
+				D096769B1961A5F60052C178 /* Main_iPhone.storyboard in Resources */,
 				D01044A419464790008DFF8D /* btnBgYellow90@2x.png in Resources */,
 				D01044951945DF03008DFF8D /* cupWhite@2x.png in Resources */,
 				D0D14B0E195B3807009193E6 /* adsMoGoFullScreen.html in Resources */,
@@ -1224,11 +1227,10 @@
 				D0D14B19195B3807009193E6 /* adsmogo_rm_closeBtn.png in Resources */,
 				D0D14B30195B3807009193E6 /* sms@2x.png in Resources */,
 				D0D14B0F195B3807009193E6 /* loading.gif in Resources */,
-				D0CFB4BF195FF28200DC4400 /* Main_iPhone_ipad.storyboard in Resources */,
 				D0D14B3A195B3807009193E6 /* webview_bar_pause_hover@2x.png in Resources */,
 				D0D14B1E195B3807009193E6 /* download-320x50.gif in Resources */,
+				D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */,
 				D0D14B58195B3807009193E6 /* shareviewhead_icon.png in Resources */,
-				B31EE7E118F05BE60047E9FD /* Main_iPhone.storyboard in Resources */,
 				D0D14B12195B3807009193E6 /* adsmogo_bannerbg@2x.png in Resources */,
 				B31EE7D818F05BE60047E9FD /* InfoPlist.strings in Resources */,
 				D0D14B20195B3807009193E6 /* download-640x100.gif in Resources */,
@@ -1332,28 +1334,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		B31EE7DF18F05BE60047E9FD /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B31EE7E018F05BE60047E9FD /* Base */,
-			);
-			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
 		B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B31EE7FE18F05BE60047E9FD /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		D0CFB4BD195FF28200DC4400 /* Main_iPhone_ipad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D0CFB4BE195FF28200DC4400 /* Base */,
-			);
-			name = Main_iPhone_ipad.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1446,7 +1432,7 @@
 					./External,
 				);
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
@@ -1456,12 +1442,11 @@
 					"$(PROJECT_DIR)/External/Flurry",
 				);
 				OTHER_LDFLAGS = (
-					"-all_load",
 					"-ObjC",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Sld;
-				PROVISIONING_PROFILE = "F44C7F4D-7315-4D24-A665-50ACE5F7D2C4";
+				PROVISIONING_PROFILE = "AF9DCAA5-5138-4872-B79E-E187CCFE7DFF";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s";
@@ -1484,7 +1469,7 @@
 					./External,
 				);
 				INFOPLIST_FILE = "Sld/Sld-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
@@ -1495,12 +1480,11 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
-					"-all_load",
 					"-ObjC",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Sld;
-				PROVISIONING_PROFILE = "F44C7F4D-7315-4D24-A665-50ACE5F7D2C4";
+				PROVISIONING_PROFILE = "AF9DCAA5-5138-4872-B79E-E187CCFE7DFF";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s";

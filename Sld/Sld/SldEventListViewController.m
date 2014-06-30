@@ -109,6 +109,8 @@ static const int FETCH_EVENT_COUNT = 20;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     
+    _footerView.hidden = YES;
+    
     //creat image cache dir
     NSString *imgCacheDir = makeDocPath(@"imgCache");
     [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];

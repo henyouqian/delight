@@ -8,6 +8,14 @@ import (
 	"strconv"
 )
 
+const (
+	ADS_PERCENT_KEY = "ADS_PERCENT_KEY"
+)
+
+var (
+	_adsPercent = float32(-1.0)
+)
+
 func glogAdmin() {
 	glog.Info("")
 }
@@ -61,6 +69,44 @@ func apiAddMoney(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, playerInfo)
 }
 
+func apiSetAdsPercent(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	checkAdmin(session)
+
+	//in
+	var in struct {
+		AdsPercent float32
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+	if in.AdsPercent < 0 {
+		in.AdsPercent = 0
+	} else if in.AdsPercent > 1 {
+		in.AdsPercent = 1
+	}
+
+	_adsPercent = in.AdsPercent
+
+	//save
+	resp, err := ssdb.Do("set", ADS_PERCENT_KEY, in.AdsPercent)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, in)
+}
+
 func regAdmin() {
 	http.Handle("/admin/addMoney", lwutil.ReqHandler(apiAddMoney))
+	http.Handle("/admin/setAdsPercent", lwutil.ReqHandler(apiSetAdsPercent))
 }

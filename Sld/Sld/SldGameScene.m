@@ -106,6 +106,8 @@ NSDate *_gameBeginTime;
         
         _gameData = [SldGameData getInstance];
         
+        BUTTON_POS3.x = size.width - BUTTON_POS1.x;
+        
         NSMutableArray *files = [NSMutableArray arrayWithCapacity:[_gameData.packInfo.images count]];
         for (NSString *img in _gameData.packInfo.images) {
             [files addObject:makeImagePath(img)];

@@ -236,6 +236,10 @@ function Controller($scope, $http) {
 					"name": "addMoney",
 					"method": "POST",
 					"data": {"UserId": 0, "UserName": "aa", "AddMoney": 100}
+				},{
+					"name": "setAdsPercent",
+					"method": "POST",
+					"data": {"AdsPercent": 0.5}
 				}
 			]
 		},{
