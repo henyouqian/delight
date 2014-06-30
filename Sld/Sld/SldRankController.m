@@ -346,6 +346,7 @@ static SldRankController *_inst = nil;
             }
         } else if (indexPath.row == [_rankInfos count]) {
             BottomCell *bottomCell = [tableView dequeueReusableCellWithIdentifier:@"bottomCell" forIndexPath:indexPath];
+            bottomCell.backgroundColor = [UIColor clearColor];
             return bottomCell;
         }
     }

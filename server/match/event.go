@@ -1288,7 +1288,7 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(apiNewEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(apiDelEvent))
-	http.Handle("/event/mod", lwutil.ReqHandler(apiNewEvent))
+	http.Handle("/event/mod", lwutil.ReqHandler(apiModEvent))
 	http.Handle("/event/list", lwutil.ReqHandler(apiListEvent))
 	http.Handle("/event/get", lwutil.ReqHandler(apiGetEvent))
 	http.Handle("/event/getUserPlay", lwutil.ReqHandler(apiGetUserPlay))

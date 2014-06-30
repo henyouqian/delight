@@ -282,11 +282,12 @@
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
         singleTap.cancelsTouchesInView = NO;
         [cell.scrollView addGestureRecognizer:singleTap];
-        
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     } else if (indexPath.section == 1) {
         if (indexPath.row >= [_commentDatas count]) {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"moreCommentCell" forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor clearColor];
             return cell;
         }
         
@@ -300,6 +301,7 @@
         
         [SldUtil loadAvatar:cell.iconView gravatarKey:commentData.gravatarKey customAvatarKey:commentData.customAvatarKey];
         
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
     return nil;
@@ -373,9 +375,7 @@
             if (i >= currImageIdx-1 && i <= currImageIdx+1) {
                 NSMutableArray *imageKeys = _gameData.packInfo.images;
                 if (!imageView.image) {
-                    [imageView asyncLoadImageWithKey:imageKeys[i] showIndicator:YES completion:^{
-                        lwInfo("%d", i);
-                    }];
+                    [imageView asyncLoadImageWithKey:imageKeys[i] showIndicator:YES completion:nil];
                 }
             } else {
                 [imageView releaseImage];
