@@ -1086,23 +1086,30 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 
 	//add money
 	newMoney := int64(0)
+	totalReward := int64(0)
 	if reward > 0 {
-		playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+		key := makePlayerInfoKey(session.Userid)
+		resp, err := ssdb.Do("hincr", key, playerMoney, reward)
+		lwutil.CheckSsdbError(resp, err)
+		newMoney, err = strconv.ParseInt(resp[1], 10, 64)
 		lwutil.CheckError(err, "")
-		playerInfo.Money += int64(reward)
-		playerInfo.TotalReward += int64(reward)
-		savePlayerInfo(ssdb, session.Userid, playerInfo)
-		newMoney = playerInfo.Money
+
+		resp, err = ssdb.Do("hincr", key, playerTotalReward, reward)
+		lwutil.CheckSsdbError(resp, err)
+		totalReward, err = strconv.ParseInt(resp[1], 10, 64)
+		lwutil.CheckError(err, "")
 	}
 
 	//out
 	out := struct {
-		Reward   int
-		NewMoney int64
-		CupType  int
+		Reward      int
+		Money       int64
+		TotalReward int64
+		CupType     int
 	}{
 		reward,
 		newMoney,
+		totalReward,
 		record.CupType,
 	}
 
@@ -1184,12 +1191,13 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//check money
-	playerInfo, err := getPlayerInfo(ssdb, userId)
+	playerKey := makePlayerInfoKey(userId)
+	var money int64
+	err = ssdb.HGet(playerKey, playerMoney, &money)
 	lwutil.CheckError(err, "")
-	if in.Money > playerInfo.Money {
+	if in.Money > money {
 		lwutil.SendError("err_money", "")
 	}
-	playerInfo.Money -= in.Money
 
 	//update bet
 	record := getEventPlayerRecord(ssdb, in.EventId, userId)
@@ -1201,11 +1209,13 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	saveEventPlayerRecord(ssdb, in.EventId, userId, record)
 
 	//update money
-	savePlayerInfo(ssdb, userId, playerInfo)
+	resp, err := ssdb.Do("hincr", playerKey, playerMoney, -in.Money)
+	lwutil.CheckSsdbError(resp, err)
+	money -= in.Money
 
 	//add to bet zset
 	key := fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, in.EventId)
-	resp, err := ssdb.Do("zset", key, userId, userId)
+	resp, err = ssdb.Do("zset", key, userId, userId)
 	lwutil.CheckSsdbError(resp, err)
 
 	//fixme: add to betting pool
@@ -1215,7 +1225,7 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 		"TeamName":    in.TeamName,
 		"BetMoney":    record.Bet[in.TeamName],
 		"BetMoneySum": record.BetMoneySum,
-		"UserMoney":   playerInfo.Money,
+		"UserMoney":   money,
 	}
 	lwutil.WriteResponse(w, out)
 }

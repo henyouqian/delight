@@ -1105,10 +1105,12 @@ static float lerpf(float a, float b, float t) {
                         }];
                         SKAction *setText = [SKAction runBlock:^{
                             int reward = [(NSNumber*)[dict objectForKey:@"Reward"] intValue];
-                            int newMoney = [(NSNumber*)[dict objectForKey:@"NewMoney"] intValue];
+                            SInt64 newMoney = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+                            SInt64 totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
                             if (reward > 0) {
                                 submitLabel.text = [NSString stringWithFormat:@"获得奖金: %d金币", reward];
                                 _gameData.money = newMoney;
+                                _gameData.totalReward = totalReward;
                             } else {
                                 submitLabel.text = @"提交完毕";
                             }
@@ -1272,5 +1274,33 @@ static float lerpf(float a, float b, float t) {
         [self.btnNext runAction:action];
     }
 }
+
+static BOOL _storeViewLoaded = NO;
+
+- (void)popupRatingView {
+    SKStoreProductViewController *storeProductViewContorller =[[SKStoreProductViewController alloc] init];
+    storeProductViewContorller.delegate = self;
+    
+    [storeProductViewContorller loadProductWithParameters:
+        @{SKStoreProductParameterITunesItemIdentifier: @"873521060"}completionBlock:^(BOOL result, NSError *error) {
+            if(error){
+                NSLog(@"error %@ with userInfo %@",error,[error userInfo]);
+            } else {
+                _storeViewLoaded = YES;
+            }
+        }
+    ];
+    
+    [_gameController presentViewController:storeProductViewContorller animated:YES completion:nil];
+}
+
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    if (_storeViewLoaded) {
+        _storeViewLoaded = NO;
+        alert(@"评价完成", nil);
+    }
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end

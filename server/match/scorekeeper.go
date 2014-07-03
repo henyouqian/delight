@@ -148,11 +148,11 @@ func scoreKeeper() {
 				checkSsdbError(resp, err)
 
 				//add player reward
-				playerInfo, err := getPlayerInfo(ssdb, userId)
-				checkError(err)
-				playerInfo.RewardCache += record.MatchReward
-				playerInfo.TotalReward += record.MatchReward
-				savePlayerInfo(ssdb, userId, playerInfo)
+				playerKey := makePlayerInfoKey(userId)
+				resp, err = ssdb.Do("hincr", playerKey, playerRewardCache, record.MatchReward)
+				lwutil.CheckSsdbError(resp, err)
+				resp, err = ssdb.Do("hincr", playerKey, playerTotalReward, record.MatchReward)
+				lwutil.CheckSsdbError(resp, err)
 
 				//add to Z_EVENT_PLAYER_RECORD
 				key = fmt.Sprintf("Z_EVENT_PLAYER_RECORD/%d", userId)

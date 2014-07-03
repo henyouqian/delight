@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <StoreKit/StoreKit.h>
 
 @interface SldIapManager : NSObject<SKPaymentTransactionObserver>
 + (instancetype)getInstance;

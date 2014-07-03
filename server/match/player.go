@@ -3,7 +3,7 @@ package main
 import (
 	"./ssdb"
 	"encoding/json"
-	"errors"
+	// "errors"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	// . "github.com/qiniu/api/conf"
@@ -26,14 +26,6 @@ var (
 	TEAM_MAP = make(map[uint32]bool)
 )
 
-func init() {
-	glog.Info("")
-
-	for _, v := range TEAM_IDS {
-		TEAM_MAP[v] = true
-	}
-}
-
 type PlayerInfo struct {
 	NickName        string
 	TeamName        string
@@ -48,31 +40,60 @@ type PlayerInfo struct {
 	AllowSave       bool
 }
 
+//player property
+const (
+	playerMoney       = "Money"
+	playerRewardCache = "RewardCache"
+	playerTotalReward = "TotalReward"
+	playerIapSecret   = "IapSecret"
+)
+
+func init() {
+	glog.Info("")
+
+	for _, v := range TEAM_IDS {
+		TEAM_MAP[v] = true
+	}
+}
+
+func makePlayerInfoKey(userId int64) string {
+	return fmt.Sprintf("%s/%d", H_PLAYER_INFO, userId)
+}
+
 func getPlayerInfo(ssdb *ssdb.Client, userId int64) (*PlayerInfo, error) {
-	resp, err := ssdb.Do("hget", H_PLAYER_INFO, userId)
-	lwutil.CheckSsdbError(resp, err)
+	key := makePlayerInfoKey(userId)
 
 	var playerInfo PlayerInfo
-	if resp[0] == "not_found" {
-		return nil, errors.New("not_found")
-	} else {
-		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
-		lwutil.CheckError(err, "")
-	}
-	playerInfo.AllowSave = true
-	return &playerInfo, nil
+	err := ssdb.HGetStruct(key, &playerInfo)
+
+	return &playerInfo, err
+	// resp, err := ssdb.Do("hget", H_PLAYER_INFO, userId)
+	// lwutil.CheckSsdbError(resp, err)
+
+	// var playerInfo PlayerInfo
+	// if resp[0] == "not_found" {
+	// 	return nil, errors.New("not_found")
+	// } else {
+	// 	err = json.Unmarshal([]byte(resp[1]), &playerInfo)
+	// 	lwutil.CheckError(err, "")
+	// }
+	// playerInfo.AllowSave = true
+	// return &playerInfo, nil
 }
 
-func savePlayerInfo(ssdb *ssdb.Client, userId int64, playerInfo *PlayerInfo) {
-	if !playerInfo.AllowSave {
-		lwutil.SendError("err_player_save_locked", "")
-	}
-	js, err := json.Marshal(playerInfo)
-	lwutil.CheckError(err, "")
+// func savePlayerInfo(ssdb *ssdb.Client, userId int64, playerInfo *PlayerInfo) {
+// 	key := makePlayerInfoKey(userId)
+// 	ssdb.HSetStruct(key, playerInfo)
 
-	resp, err := ssdb.Do("hset", H_PLAYER_INFO, userId, js)
-	lwutil.CheckSsdbError(resp, err)
-}
+// 	// if !playerInfo.AllowSave {
+// 	// 	lwutil.SendError("err_player_save_locked", "")
+// 	// }
+// 	// js, err := json.Marshal(playerInfo)
+// 	// lwutil.CheckError(err, "")
+
+// 	// resp, err := ssdb.Do("hset", H_PLAYER_INFO, userId, js)
+// 	// lwutil.CheckSsdbError(resp, err)
+// }
 
 func apiGetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -173,7 +194,10 @@ func apiSetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 
 	//set
 	playerInfo.AllowSave = true
-	savePlayerInfo(ssdb, session.Userid, &playerInfo)
+
+	//save
+	key := makePlayerInfoKey(session.Userid)
+	ssdb.HSetStruct(key, playerInfo)
 
 	//out
 	out := struct {
@@ -202,17 +226,30 @@ func apiAddRewardFromCache(w http.ResponseWriter, r *http.Request) {
 	defer ssdb.Close()
 
 	//
-	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	key := makePlayerInfoKey(session.Userid)
+	var rewardCache int64
+	err = ssdb.HGet(key, playerRewardCache, &rewardCache)
 	lwutil.CheckError(err, "")
-	if playerInfo.RewardCache > 0 {
-		playerInfo.Money += playerInfo.RewardCache
-		playerInfo.RewardCache = 0
-		savePlayerInfo(ssdb, session.Userid, playerInfo)
+	if rewardCache > 0 {
+		ssdb.Do("hincr", key, playerRewardCache, -rewardCache)
+		ssdb.Do("hincr", key, playerMoney, rewardCache)
 	}
+
+	var money int64
+	err = ssdb.HGet(key, playerMoney, &money)
+
+	// //
+	// playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	// lwutil.CheckError(err, "")
+	// if playerInfo.RewardCache > 0 {
+	// 	playerInfo.Money += playerInfo.RewardCache
+	// 	playerInfo.RewardCache = 0
+	// 	savePlayerInfo(ssdb, session.Userid, playerInfo)
+	// }
 
 	//out
 	out := map[string]interface{}{
-		"Money": playerInfo.Money,
+		"Money": money,
 	}
 	lwutil.WriteResponse(w, out)
 }

@@ -88,12 +88,14 @@ static const int FETCH_EVENT_COUNT = 20;
 @property (nonatomic) BOOL appendable;
 @property (nonatomic) BOOL reachBottom;
 @property (nonatomic) MSWeakTimer *timer;
+@property (nonatomic) MSWeakTimer *checkNewTimer;
 @end
 
 @implementation SldEventListViewController
 
 -(void)dealloc {
     [_timer invalidate];
+    [_checkNewTimer invalidate];
 }
 
 - (void)viewDidLoad
@@ -135,6 +137,8 @@ static const int FETCH_EVENT_COUNT = 20;
     
     //timer
     _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    _checkNewTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60*2 target:self selector:@selector(onCheckNewTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
 }
 
 - (void)onTimer {
@@ -186,6 +190,38 @@ static const int FETCH_EVENT_COUNT = 20;
 //            }
 //        }
 //    }
+}
+
+- (void)onCheckNewTimer {
+    if (_gameData.eventInfos && _gameData.eventInfos.count > 0) {
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"StartId":@0, @"Limit":@1};
+        [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            if (!array || array.count == 0) {
+                return;
+            }
+            NSDictionary *dict = [array firstObject];
+            int eventId = [(NSNumber*)[dict objectForKey:@"Id"] intValue];
+            EventInfo *eventInfo = _gameData.eventInfos.firstObject;
+            if (eventId != eventInfo.id) {
+                UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+                label.textColor = [_rewardButton.backgroundColor colorWithAlphaComponent:1.0];
+                label.text = @"有新赛事，请下拉更新";
+                [label sizeToFit];
+                self.navigationItem.titleView = label;
+            }
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -262,6 +298,7 @@ static const int FETCH_EVENT_COUNT = 20;
         
         [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
          {
+             self.navigationItem.titleView = nil;
              _fetchStartId = -1;
              [self.refreshControl endRefreshing];
              

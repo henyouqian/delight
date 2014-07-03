@@ -18,6 +18,7 @@
     #import <Foundation/Foundation.h>
     #import <SpriteKit/SpriteKit.h>
     #import <MobileCoreServices/MobileCoreServices.h>
+    #import <StoreKit/StoreKit.h>
     #import "lw/lwLog.h"
     #import "libExt/libExt-Prefix.pch"
     #import "fmdb/FMDB.h"
@@ -33,5 +34,5 @@
     #import "nv-ios-digest/SHA1.h"
     #import "AdsMoGoLib/AdsMoGoSDK/AdMoGoInterstitialManager.h"
     #import "QiniuSDK/QiniuSimpleUploader.h"
-#import "Flurry/Flurry.h"
+    #import "Flurry/Flurry.h"
 #endif

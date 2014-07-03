@@ -8,6 +8,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
 	"net/http"
+	"strconv"
 )
 
 type GameCoinPack struct {
@@ -90,12 +91,12 @@ func apiBuyGameCoin(w http.ResponseWriter, r *http.Request) {
 		lwutil.SendError("err_event_closed", "")
 	}
 
-	//player
-	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
-	lwutil.CheckError(err, "")
-
 	//check money
-	if int(playerInfo.Money) < gameCoinPack.Price {
+	var money int64
+	playerKey := makePlayerInfoKey(session.Userid)
+	ssdb.HGet(playerKey, playerMoney, &money)
+
+	if int(money) < gameCoinPack.Price {
 		lwutil.SendError("err_money", "")
 	}
 
@@ -118,17 +119,15 @@ func apiBuyGameCoin(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 
 	//spend money
-	playerInfo.Money -= int64(gameCoinPack.Price)
-
-	//save player info
-	savePlayerInfo(ssdb, session.Userid, playerInfo)
+	money -= int64(gameCoinPack.Price)
+	resp, err = ssdb.Do("hincr", playerKey, playerMoney, -gameCoinPack.Price)
 
 	//out
 	out := struct {
-		Money       int
+		Money       int64
 		GameCoinNum int
 	}{
-		int(playerInfo.Money),
+		money,
 		record.GameCoinNum,
 	}
 	lwutil.WriteResponse(w, out)
@@ -161,14 +160,14 @@ func apiGetIapSecret(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "err_auth")
 
 	//player
-	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	secret := lwutil.GenUUID()
+	playerKey := makePlayerInfoKey(session.Userid)
+	err = ssdb.HSet(playerKey, playerIapSecret, secret)
 	lwutil.CheckError(err, "")
-	playerInfo.Secret = lwutil.GenUUID()
-	savePlayerInfo(ssdb, session.Userid, playerInfo)
 
 	//out
 	out := map[string]string{
-		"Secret": playerInfo.Secret,
+		"Secret": secret,
 	}
 	lwutil.WriteResponse(w, out)
 }
@@ -199,15 +198,17 @@ func apiBuyIap(w http.ResponseWriter, r *http.Request) {
 	session, err := findSession(w, r, nil)
 	lwutil.CheckError(err, "err_auth")
 
-	//get player info
-	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	//get iap secret
+	playerKey := makePlayerInfoKey(session.Userid)
+	var secret string
+	err = ssdb.HGet(playerKey, playerIapSecret, &secret)
 	lwutil.CheckError(err, "")
 
 	//check checksum
-	if playerInfo.Secret == "" {
+	if secret == "" {
 		lwutil.SendError("err_secret", "")
 	}
-	checksum := fmt.Sprintf("%s%d%s,", playerInfo.Secret, session.Userid, session.Username)
+	checksum := fmt.Sprintf("%s%d%s,", secret, session.Userid, session.Username)
 	hasher := sha1.New()
 	hasher.Write([]byte(checksum))
 	checksum = hex.EncodeToString(hasher.Sum(nil))
@@ -216,14 +217,18 @@ func apiBuyIap(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//set money
-	playerInfo.Money += int64(addMoney)
-	playerInfo.Secret = ""
-	savePlayerInfo(ssdb, session.Userid, playerInfo)
+	resp, err := ssdb.Do("hincr", playerKey, playerMoney, addMoney)
+	lwutil.CheckSsdbError(resp, err)
+	money, err := strconv.ParseInt(resp[1], 10, 64)
+
+	//update secret
+	err = ssdb.HSet(playerKey, playerIapSecret, "")
+	lwutil.CheckError(err, "")
 
 	//out
 	out := map[string]int64{
 		"AddMoney": int64(addMoney),
-		"Money":    playerInfo.Money,
+		"Money":    money,
 	}
 	lwutil.WriteResponse(w, out)
 }

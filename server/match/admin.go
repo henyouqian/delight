@@ -60,10 +60,12 @@ func apiAddMoney(w http.ResponseWriter, r *http.Request) {
 		lwutil.CheckError(err, "")
 	}
 
-	playerInfo, err := getPlayerInfo(ssdb, userId)
-	lwutil.CheckError(err, "")
-	playerInfo.Money += in.AddMoney
-	savePlayerInfo(ssdb, userId, playerInfo)
+	key := makePlayerInfoKey(userId)
+	resp, err := ssdb.Do("hincr", key, playerMoney, in.AddMoney)
+	lwutil.CheckSsdbError(resp, err)
+
+	var playerInfo PlayerInfo
+	ssdb.HGetStruct(key, &playerInfo)
 
 	//out
 	lwutil.WriteResponse(w, playerInfo)

@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"container/list"
 	"fmt"
+	"github.com/golang/glog"
 	"net"
+	"reflect"
 	"strconv"
 	"sync"
 	"time"
@@ -22,6 +24,10 @@ type Pool struct {
 
 	mu          sync.Mutex
 	idleClients list.List
+}
+
+func _ssdbGlog() {
+	glog.Info("ssdb")
 }
 
 func NewPool(ip string, port int, maxIdel uint32, timeOutSec uint32) *Pool {
@@ -280,4 +286,267 @@ func (c *Client) parse() []string {
 	}
 
 	return []string{}
+}
+
+func (c *Client) HSet(key string, subKey string, obj interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	_, err := c.Do("hset", key, subKey, obj)
+	return err
+}
+
+func (c *Client) HGet(key string, subKey string, obj interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	resp, err := c.Do("hget", key, subKey)
+	if err != nil {
+		return err
+	}
+
+	if resp[0] != "ok" {
+		return fmt.Errorf("ssdb error:%s", resp[0])
+	}
+
+	//
+	val := reflect.ValueOf(obj)
+	if val.Kind() != reflect.Ptr {
+		return fmt.Errorf("need Ptr")
+	}
+	val = val.Elem()
+	str := resp[1]
+
+	glog.Info(val)
+
+	//
+	switch val.Interface().(type) {
+	case string:
+		val.SetString(str)
+	case []byte:
+		val.SetBytes([]byte(str))
+	case int, int8, int16, int32, int64:
+		intv, _ := strconv.ParseInt(str, 0, 64)
+		val.SetInt(intv)
+	case uint, uint8, uint16, uint32, uint64:
+		intv, _ := strconv.ParseUint(str, 0, 64)
+		val.SetUint(intv)
+	case float32, float64:
+		intv, _ := strconv.ParseFloat(str, 64)
+		val.SetFloat(intv)
+	case bool:
+		b := true
+		if str == "0" || str == "false" {
+			b = false
+		}
+		val.SetBool(b)
+	case nil:
+		val.SetPointer(nil)
+	default:
+		return fmt.Errorf("bad arguments")
+	}
+
+	return nil
+}
+
+func (c *Client) HSetStruct(key string, obj interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	objVal := reflect.ValueOf(obj)
+
+	objType := objVal.Type()
+	if objVal.Kind() != reflect.Struct {
+		return fmt.Errorf("need struct")
+	}
+
+	numField := objType.NumField()
+	cmds := make([]interface{}, 2, 2+numField*2)
+	cmds[0] = "multi_hset"
+	cmds[1] = key
+	for i := 0; i < numField; i++ {
+		field := objType.Field(i)
+		val := objVal.Field(i)
+		cmds = append(cmds, field.Name)
+		cmds = append(cmds, val.Interface())
+	}
+
+	resp, err := c.Do(cmds...)
+
+	if err != nil {
+		return err
+	}
+	if len(resp) > 0 && resp[0] == "ok" {
+		return nil
+	}
+
+	return fmt.Errorf("bad response")
+}
+
+func (c *Client) HGetStruct(key string, objPtr interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	objVal := reflect.ValueOf(objPtr)
+
+	objVal = objVal.Elem()
+	if objVal.Kind() != reflect.Struct {
+		return fmt.Errorf("need struct pointer")
+	}
+
+	objType := objVal.Type()
+
+	numField := objType.NumField()
+	cmds := make([]interface{}, 2, 2+numField)
+	cmds[0] = "multi_hget"
+	cmds[1] = key
+	for i := 0; i < numField; i++ {
+		field := objType.Field(i)
+		cmds = append(cmds, field.Name)
+	}
+
+	resp, err := c.Do(cmds...)
+
+	if err != nil {
+		return err
+	}
+	if resp[0] != "ok" {
+		return fmt.Errorf("%s", resp[0])
+	}
+	if len(resp) == 1 {
+		return fmt.Errorf("not_found")
+	}
+
+	resp = resp[1:]
+	numResp := len(resp)
+	for i := 0; i < numResp/2; i++ {
+		k := resp[i*2]
+		v := resp[i*2+1]
+		fieldValue := objVal.FieldByName(k)
+		if !fieldValue.IsValid() {
+			continue
+		}
+		switch fieldValue.Interface().(type) {
+		case string:
+			fieldValue.SetString(v)
+		case []byte:
+			fieldValue.SetBytes([]byte(v))
+		case int, int8, int16, int32, int64:
+			intv, _ := strconv.ParseInt(v, 0, 64)
+			fieldValue.SetInt(intv)
+		case uint, uint8, uint16, uint32, uint64:
+			intv, _ := strconv.ParseUint(v, 0, 64)
+			fieldValue.SetUint(intv)
+		case float32, float64:
+			intv, _ := strconv.ParseFloat(v, 64)
+			fieldValue.SetFloat(intv)
+		case bool:
+			b := true
+			if v == "0" || v == "false" {
+				b = false
+			}
+			fieldValue.SetBool(b)
+		default:
+			return fmt.Errorf("bad arguments")
+		}
+	}
+
+	return nil
+}
+
+func (c *Client) HSetMap(key string, mp map[string]interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	num := len(mp)
+	cmds := make([]interface{}, 0, 2+num*2)
+	cmds = append(cmds, "multi_hset")
+	cmds = append(cmds, key)
+
+	for k, v := range mp {
+		cmds = append(cmds, k)
+		cmds = append(cmds, v)
+	}
+
+	resp, err := c.Do(cmds...)
+
+	if err != nil {
+		return err
+	}
+	if resp[0] != "ok" {
+		return fmt.Errorf("ssdbErr:", resp[0])
+	}
+	return nil
+}
+
+func (c *Client) HGetMap(key string, mp map[string]interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	num := len(mp)
+	cmds := make([]interface{}, 0, 2+num)
+	cmds = append(cmds, "multi_hget")
+	cmds = append(cmds, key)
+
+	for k, _ := range mp {
+		cmds = append(cmds, k)
+	}
+
+	resp, err := c.Do(cmds...)
+	if err != nil {
+		return err
+	}
+	if resp[0] != "ok" {
+		return fmt.Errorf("ssdbErr:", resp[0])
+	}
+
+	resp = resp[1:]
+	for i := 0; i < len(resp)/2; i++ {
+		k := resp[i*2]
+		v := resp[i*2+1]
+
+		switch mp[k].(type) {
+		case string:
+			mp[k] = v
+		case []byte:
+			mp[k] = []byte(v)
+		case int, int8, int16, int32, int64:
+			intv, _ := strconv.ParseInt(v, 0, 64)
+			mp[k] = intv
+		case uint, uint8, uint16, uint32, uint64:
+			intv, _ := strconv.ParseUint(v, 0, 64)
+			mp[k] = intv
+		case float32, float64:
+			intv, _ := strconv.ParseFloat(v, 64)
+			mp[k] = intv
+		case bool:
+			b := true
+			if v == "0" || v == "false" {
+				b = false
+			}
+			mp[k] = b
+		default:
+			return fmt.Errorf("bad arguments")
+		}
+	}
+
+	return nil
 }
