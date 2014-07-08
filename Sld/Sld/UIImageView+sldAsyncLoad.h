@@ -20,6 +20,9 @@
 @interface SldAsyncImageView : UIImageView
 @property (atomic) BOOL loading;
 @property (atomic) BOOL loadCanceling;
+@property (atomic) NSString *serverUrl;
+@property (atomic) NSString *localPath;
+@property (atomic) NSURLSessionDownloadTask *task;
 
 - (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion;
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;

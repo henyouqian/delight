@@ -14,7 +14,7 @@
 #import "SldGameScene.h"
 #import "SldGameData.h"
 #import "SldOfflineEventEnterControler.h"
-#import "SldMatchPrepareController.h"
+//#import "SldMatchPrepareController.h"
 #import "SldUtil.h"
 #import "config.h"
 #import "UIImageView+sldAsyncLoad.h"
@@ -196,7 +196,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             if (!imageExist(imageKey)) {
                 [session downloadFromUrl:makeImageServerUrl(imageKey)
                                   toPath:makeImagePath(imageKey)
-                                withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                                withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
                 {
                     if (error) {
                         lwError("Download error: %@", error.localizedDescription);

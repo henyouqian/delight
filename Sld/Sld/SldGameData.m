@@ -29,6 +29,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         event.sliderNum = DEFUALT_SLIDER_NUM;
     }
     event.cupType = [(NSNumber*)[dict valueForKey:@"CupType"] intValue];
+    event.isLoading = NO;
     
     return event;
 }

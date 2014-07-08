@@ -9,9 +9,9 @@
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 
-//static NSString *defaultHost = @"http://192.168.2.55:9999";
+static NSString *defaultHost = @"http://192.168.2.55:9999";
 //static NSString *defaultHost = @"http://192.168.1.43:9999";
-static NSString *defaultHost = @"http://sld.pintugame.com";
+//static NSString *defaultHost = @"http://sld.pintugame.com";
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
@@ -96,10 +96,10 @@ static NSString *defaultHost = @"http://sld.pintugame.com";
     [task resume];
 }
 
-- (void)downloadFromUrl:(NSString*)url
+- (NSURLSessionDownloadTask*)downloadFromUrl:(NSString*)url
                  toPath:(NSString*)path
                withData:(id)data
-      completionHandler:(void (^)(NSURL *location, NSError *error, id data))completionHandler
+      completionHandler:(void (^)(NSURL *location, NSURLResponse *response, NSError *error, id data))completionHandler
 {
     NSURL * nsurl = [NSURL URLWithString:url];
     
@@ -112,15 +112,16 @@ static NSString *defaultHost = @"http://sld.pintugame.com";
             if ([fileManager moveItemAtURL:location
                                        toURL:destURL
                                        error: &err]) {
-                completionHandler(destURL, nil, data);
+                completionHandler(destURL, response, nil, data);
             } else {
-                completionHandler(nil, err, data);
+                completionHandler(nil, response, err, data);
             }
         } else {
-            completionHandler(nil, error, data);
+            completionHandler(nil, response, error, data);
         }
     }];
     [task resume];
+    return task;
 }
 
 - (void)loadImageFromUrl:(NSString*)url

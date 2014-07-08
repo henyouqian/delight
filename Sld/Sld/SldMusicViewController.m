@@ -191,7 +191,7 @@ NSArray *_channels = nil;
         SldHttpSession *session = [SldHttpSession defaultSession];
         [session downloadFromUrl:thumbRemote
                           toPath:thumbLocal
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
              [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
          }];

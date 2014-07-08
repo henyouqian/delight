@@ -19,10 +19,10 @@
              body:(id)body
 completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler;
 
-- (void)downloadFromUrl:(NSString*)url
+- (NSURLSessionDownloadTask*)downloadFromUrl:(NSString*)url
                  toPath:(NSString*)path
                withData:(id)data
-      completionHandler:(void (^)(NSURL *location, NSError *error, id data))completionHandler;
+      completionHandler:(void (^)(NSURL *location, NSURLResponse *response, NSError *error, id data))completionHandler;
 
 - (void)cancelAllTask;
 

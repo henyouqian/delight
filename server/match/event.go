@@ -9,6 +9,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/golang/glog"
 	"github.com/henyouqian/lwutil"
+	"github.com/robfig/cron"
 	"math"
 	"math/rand"
 	"net/http"
@@ -18,7 +19,6 @@ import (
 
 const (
 	H_EVENT                     = "H_EVENT"
-	Z_EVENT                     = "Z_EVENT"
 	H_EVENT_PLAYER_RECORD       = "H_EVENT_PLAYER_RECORD" //subkey:(int)eventId
 	Z_EVENT_PLAYER_RECORD       = "Z_EVENT_PLAYER_RECORD" //key:Z_EVENT_PLAYER_RECORD/<(int64)userId> subkey:(int)eventId score:(int)eventId
 	RDS_Z_EVENT_LEADERBOARD_PRE = "RDS_Z_EVENT_LEADERBOARD_PRE"
@@ -32,10 +32,13 @@ const (
 	INIT_GAME_COIN_NUM          = 3
 	BET_CLOSE_BEFORE_END_SEC    = 60 * 60
 	Z_EVENT_BET_PLAYER          = "Z_EVENT_BET_PLAYER" //key:Z_EVENT_BET_PLAYER/eventId subkey:playerId score:playerId
+	TIME_FORMAT                 = "2006-01-02T15:04"
 )
 
 var (
-	challageRewards = []int{100, 50, 50} //gold, silver, bronze
+	Z_EVENT            = "Z_EVENT"
+	Z_EVENT_BUFF       = "Z_EVENT_BUFF"
+	EventPublishInfoes []EventPublishInfo
 )
 
 func makeRedisLeaderboardKey(evnetId int64) string {
@@ -52,6 +55,8 @@ func makeEventPlayerRecordSubkey(eventId int64, userId int64) string {
 }
 
 var (
+	CHALLANGE_REWARDS = []int{100, 50, 50} //gold, silver, bronze
+
 	EVENT_TYPES = map[string]int{
 		"PERSONAL_RANK":     1,
 		"TEAM_CHAMPIONSHIP": 1,
@@ -71,6 +76,8 @@ var (
 	TEAM_NAMES              = []string{"安徽", "澳门", "北京", "重庆", "福建", "甘肃", "广东", "广西", "贵州", "海南", "河北", "黑龙江", "河南", "湖北", "湖南", "江苏", "江西", "吉林", "辽宁", "内蒙古", "宁夏", "青海", "陕西", "山东", "上海", "山西", "四川", "台湾", "天津", "香港", "新疆", "西藏", "云南", "浙江"}
 	EVENT_INIT_BETTING_POOL = map[string]int64{}
 	INIT_BET_MONEY          = int64(10000)
+
+	_cron cron.Cron
 )
 
 func init() {
@@ -78,7 +85,103 @@ func init() {
 	for _, teamName := range TEAM_NAMES {
 		EVENT_INIT_BETTING_POOL[teamName] = INIT_BET_MONEY
 	}
-	//fmt.Printf("%v", EVENT_INIT_BETTING_POOL)
+
+	//cron
+	_cron.AddFunc("0 * * * * *", eventPublishTask)
+	_cron.Start()
+}
+
+func eventPublishTask() {
+	defer handleError()
+
+	//ssdb
+	ssdbc, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdbc.Close()
+
+	//
+	now := time.Now()
+	for _, pubInfo := range EventPublishInfoes {
+		if pubInfo.PublishTime[0] == now.Hour() && pubInfo.PublishTime[1] == now.Minute() {
+			//pop from Z_EVENT_BUFF and push to Z_EVENT
+			for i := 0; i < pubInfo.EventNum; i++ {
+				//get front event
+				resp, err := ssdbc.Do("zkeys", Z_EVENT_BUFF, "", "", "", 1)
+				if err != nil || resp[0] != ssdb.OK || len(resp) <= 1 {
+					glog.Errorln(err, resp)
+					return
+				}
+				eventId, err := strconv.ParseInt(resp[1], 10, 64)
+				if err != nil {
+					glog.Errorln(err)
+					return
+				}
+
+				//del front event
+				resp, err = ssdbc.Do("zdel", Z_EVENT_BUFF, eventId)
+				if err != nil || resp[0] != ssdb.OK {
+					glog.Errorln(err, resp[0])
+					return
+				}
+
+				//get event
+				resp, err = ssdbc.Do("hget", H_EVENT, eventId)
+				if err != nil || resp[0] != ssdb.OK {
+					glog.Errorln(err, resp[0])
+					return
+				}
+
+				var event Event
+				err = json.Unmarshal([]byte(resp[1]), &event)
+				if err != nil {
+					glog.Errorln(err)
+					return
+				}
+
+				//fill event's begin and end time
+				hour := pubInfo.BeginTime[0]
+				addDay := hour / 24
+				hour = hour % 24
+				min := pubInfo.BeginTime[1]
+				beginTime := time.Date(now.Year(), now.Month(), now.Day(), hour, min, 0, 0, time.Local)
+				if addDay > 0 {
+					beginTime = beginTime.AddDate(0, 0, addDay)
+				}
+				event.BeginTime = beginTime.Unix()
+				event.BeginTimeString = beginTime.Format(TIME_FORMAT)
+
+				hour = pubInfo.EndTime[0]
+				addDay = hour / 24
+				hour = hour % 24
+				min = pubInfo.EndTime[1]
+				endTime := time.Date(now.Year(), now.Month(), now.Day(), hour, min, 0, 0, time.Local)
+				if addDay > 0 {
+					endTime = endTime.AddDate(0, 0, addDay)
+				}
+				event.EndTime = endTime.Unix()
+				event.EndTimeString = endTime.Format(TIME_FORMAT)
+
+				//save event
+				bts, err := json.Marshal(event)
+				if err != nil {
+					glog.Errorln(err)
+					return
+				}
+				resp, err = ssdbc.Do("hset", H_EVENT, eventId, bts)
+				if err != nil || resp[0] != ssdb.OK {
+					glog.Errorln(err, resp[0])
+					return
+				}
+
+				//push to Z_EVENT
+				resp, err = ssdbc.Do("zset", Z_EVENT, eventId, eventId)
+				if err != nil || resp[0] != ssdb.OK {
+					glog.Errorln(err)
+					return
+				}
+			}
+		}
+	}
 }
 
 type Event struct {
@@ -116,6 +219,13 @@ type EventPlayerRecord struct {
 	Bet                map[string]int64 //[teamName]betMoney
 	BetMoneySum        int64
 	PackThumbKey       string
+}
+
+type EventPublishInfo struct {
+	PublishTime [2]int
+	BeginTime   [2]int
+	EndTime     [2]int
+	EventNum    int
 }
 
 func getEvent(ssdb *ssdb.Client, eventId int64) *Event {
@@ -214,14 +324,14 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	//fill TimePoints
 	now := lwutil.GetRedisTimeUnix()
 
-	t, err := time.ParseInLocation("2006-01-02T15:04", event.BeginTimeString, time.Local)
+	t, err := time.ParseInLocation(TIME_FORMAT, event.BeginTimeString, time.Local)
 	lwutil.CheckError(err, "")
 	event.BeginTime = t.Unix()
 	if event.BeginTime < now {
 		lwutil.SendError("err_time", "BeginTime must larger than now")
 	}
 
-	t, err = time.ParseInLocation("2006-01-02T15:04", event.EndTimeString, time.Local)
+	t, err = time.ParseInLocation(TIME_FORMAT, event.EndTimeString, time.Local)
 	lwutil.CheckError(err, "")
 	event.EndTime = t.Unix()
 	if event.EndTime < now {
@@ -257,7 +367,6 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
-	//resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.EndTime)
 	resp, err = ssdb.Do("zset", Z_EVENT, event.Id, event.Id)
 	lwutil.CheckSsdbError(resp, err)
 
@@ -430,6 +539,115 @@ func apiListEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func apiRevListEvent(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		StartId uint32
+		Limit   uint32
+	}
+
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+	if in.Limit > 50 {
+		in.Limit = 50
+	}
+
+	//fixme
+	__s := in.StartId
+	in.StartId = 0
+	//fixme end
+
+	var startId interface{}
+	if in.StartId == 0 {
+		startId = ""
+	} else {
+		startId = in.StartId
+	}
+
+	//zrscan
+	resp, err := ssdb.Do("zscan", Z_EVENT, startId, startId, "", in.Limit)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+	if len(resp) == 0 {
+		lwutil.SendError("err_not_found", "")
+	}
+
+	//multi_hget
+	keyNum := len(resp) / 2
+	cmds := make([]interface{}, keyNum+2)
+	cmds[0] = "multi_hget"
+	cmds[1] = H_EVENT
+	for i := 0; i < keyNum; i++ {
+		cmds[2+i] = resp[i*2]
+	}
+	resp, err = ssdb.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	//out
+	type OutEvent struct {
+		Event
+		CupType int
+	}
+
+	eventNum := len(resp) / 2
+	out := make([]OutEvent, eventNum)
+	for i := 0; i < eventNum; i++ {
+		err = json.Unmarshal([]byte(resp[i*2+1]), &out[i])
+		lwutil.CheckError(err, "")
+
+		//fixme
+		out[i].Id += int64(__s)
+		//fixme end
+	}
+
+	//event index map:
+	//map[recordKey:string]eventIndexInOut:int
+	idxMap := map[string]int{}
+	for i := 0; i < eventNum; i++ {
+		recordKey := makeEventPlayerRecordSubkey(out[i].Id, session.Userid)
+		idxMap[recordKey] = i
+	}
+
+	//cup type
+	cmds = make([]interface{}, 0, eventNum+2)
+	cmds = append(cmds, "multi_hget")
+	cmds = append(cmds, H_EVENT_PLAYER_RECORD)
+
+	for i := 0; i < eventNum; i++ {
+		recordKey := makeEventPlayerRecordSubkey(out[i].Id, session.Userid)
+		cmds = append(cmds, recordKey)
+	}
+
+	//get event player record
+	resp, err = ssdb.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	var record EventPlayerRecord
+	recordNum := len(resp) / 2
+	for i := 0; i < recordNum; i++ {
+		recordKey := resp[i*2]
+		err = json.Unmarshal([]byte(resp[i*2+1]), &record)
+		lwutil.CheckError(err, "")
+
+		out[idxMap[recordKey]].CupType = record.CupType
+	}
+
+	lwutil.WriteResponse(w, out)
+}
+
 func apiGetEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
@@ -459,6 +677,138 @@ func apiGetEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	lwutil.WriteResponse(w, out)
+}
+
+func apiAddEventToBuff(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+	checkAdmin(session)
+
+	//in
+	var event Event
+	err = lwutil.DecodeRequestBody(r, &event)
+	lwutil.CheckError(err, "err_decode_body")
+	if _, ok := EVENT_TYPES[event.Type]; ok == false {
+		lwutil.SendError("err_match_type", "")
+	}
+	event.HasResult = false
+
+	//sliderNum
+	if event.SliderNum <= 0 {
+		event.SliderNum = 5
+	} else if event.SliderNum > 10 {
+		event.SliderNum = 10
+	}
+
+	//get pack
+	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	event.Thumb = pack.Thumb
+
+	//gen serial
+	event.Id = GenSerial(ssdb, EVENT_SERIAL)
+
+	//save to ssdb
+	js, err := json.Marshal(event)
+	lwutil.CheckError(err, "")
+	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
+	lwutil.CheckSsdbError(resp, err)
+
+	resp, err = ssdb.Do("zset", Z_EVENT_BUFF, event.Id, event.Id)
+	lwutil.CheckSsdbError(resp, err)
+
+	//init betting pool
+	js, err = json.Marshal(EVENT_INIT_BETTING_POOL)
+	lwutil.CheckError(err, "")
+	resp, err = ssdb.Do("hset", H_EVENT_BETTING_POOL, event.Id, js)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, event)
+}
+
+func apiListEventBuff(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdbc, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdbc.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+	checkAdmin(session)
+
+	//zkeys
+	resp, err := ssdbc.Do("zkeys", Z_EVENT_BUFF, "", "", "", 100)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+	if len(resp) == 0 {
+		lwutil.SendError("err_not_found", "")
+	}
+
+	//multi_hget
+	keyNum := len(resp)
+	cmds := make([]interface{}, keyNum+2)
+	cmds[0] = "multi_hget"
+	cmds[1] = H_EVENT
+	for i := 0; i < keyNum; i++ {
+		cmds[2+i] = resp[i]
+	}
+	resp, err = ssdbc.Do(cmds...)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+
+	//out
+	eventNum := len(resp) / 2
+	out := make([]Event, eventNum)
+	for i := 0; i < eventNum; i++ {
+		err = json.Unmarshal([]byte(resp[i*2+1]), &out[i])
+		lwutil.CheckError(err, "")
+	}
+
+	lwutil.WriteResponse(w, out)
+}
+
+func apiDelEventFromBuff(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+	checkAdmin(session)
+
+	//in
+	var in struct {
+		EventId uint64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	//del
+	resp, err := ssdb.Do("zdel", Z_EVENT_BUFF, in.EventId)
+	lwutil.CheckSsdbError(resp, err)
+	resp, err = ssdb.Do("hdel", H_EVENT, in.EventId)
+	lwutil.CheckSsdbError(resp, err)
+
+	lwutil.WriteResponse(w, in)
 }
 
 func apiGetUserPlay(w http.ResponseWriter, r *http.Request) {
@@ -1069,7 +1419,7 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 		for i, sec := range event.ChallengeSecs {
 			refScore := -int(sec * 1000)
 			if refScore > oldScore && refScore <= in.Score {
-				reward += challageRewards[i]
+				reward += CHALLANGE_REWARDS[i]
 			}
 			if record.CupType == 0 && in.Score >= refScore {
 				record.CupType = i + 1
@@ -1300,7 +1650,11 @@ func regMatch() {
 	http.Handle("/event/del", lwutil.ReqHandler(apiDelEvent))
 	http.Handle("/event/mod", lwutil.ReqHandler(apiModEvent))
 	http.Handle("/event/list", lwutil.ReqHandler(apiListEvent))
+	http.Handle("/event/revList", lwutil.ReqHandler(apiRevListEvent))
 	http.Handle("/event/get", lwutil.ReqHandler(apiGetEvent))
+	http.Handle("/event/addToBuff", lwutil.ReqHandler(apiAddEventToBuff))
+	http.Handle("/event/listBuff", lwutil.ReqHandler(apiListEventBuff))
+	http.Handle("/event/delFromBuff", lwutil.ReqHandler(apiDelEventFromBuff))
 	http.Handle("/event/getUserPlay", lwutil.ReqHandler(apiGetUserPlay))
 	http.Handle("/event/playBegin", lwutil.ReqHandler(apiPlayBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(apiPlayEnd))

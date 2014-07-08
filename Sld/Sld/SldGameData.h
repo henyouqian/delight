@@ -28,6 +28,7 @@ enum EventState{
 @property (nonatomic) NSArray *challengeSecs;
 @property (nonatomic) enum EventState state; //undefined:0, comming:1, running:2, closed:3
 @property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
+@property (nonatomic) BOOL isLoading;
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
 - (enum EventState)updateState;
@@ -110,6 +111,11 @@ enum GameMode{
 //const
 @property (nonatomic) NSArray *TEAM_NAMES;
 
+//star mode
+@property (nonatomic) NSMutableArray *starModeEventInfos;
+
+
+//
 + (instancetype)getInstance;
 - (void)reset;
 

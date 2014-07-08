@@ -89,7 +89,7 @@
         SldHttpSession *session = [SldHttpSession defaultSession];
         [session downloadFromUrl:makeImageServerUrl(imageKey)
                           toPath:localPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
              if (error) {
                  if (indicatorView) {
@@ -144,7 +144,7 @@
         SldHttpSession *session = [SldHttpSession defaultSession];
         [session downloadFromUrl:url
                           toPath:localPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
              if (error) {
                  if (indicatorView) {
@@ -180,6 +180,7 @@
         return;
     }
     _loading = YES;
+    _localPath = localPath;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL isGif = [[[localPath pathExtension] lowercaseString] compare:@"gif"] == 0;
         if (isGif) {
@@ -194,6 +195,9 @@
             self.animationDuration = [duration doubleValue];
             self.animationRepeatCount = 0;
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([_localPath compare:localPath] != 0) {
+                    return;
+                }
                 self.animationImages = frames;
                 self.image = frames[0];
                 if (completion) {
@@ -211,6 +215,9 @@
         } else {
             UIImage *image = [UIImage imageWithContentsOfFile:localPath];
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([_localPath compare:localPath] != 0) {
+                    return;
+                }
                 self.image = image;
                 self.animationImages = nil;
                 if (completion) {
@@ -259,23 +266,32 @@
     }
     //remote
     else {
+        if (_task) {
+            [_task cancel];
+        }
+        
+        _serverUrl = makeImageServerUrl(imageKey);
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:makeImageServerUrl(imageKey)
+        _task = [session downloadFromUrl:_serverUrl
                           toPath:localPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
+             if (indicatorView) {
+                 [indicatorView removeFromSuperview];
+             }
+             
+             _task = nil;
+             NSURL *nsurl = [NSURL URLWithString:_serverUrl];
+             if (![response.URL isEqual:nsurl]) {
+                 lwInfo("![response.URL isEqual:nsurl]");
+                 return;
+             }
              if (error) {
-                 if (indicatorView) {
-                     [indicatorView removeFromSuperview];
-                 }
                  lwError("Download error: %@", error.localizedDescription);
                  return;
              }
              
              [self asyncLoadLocalImageWithPath:localPath completion:^{
-                 if (indicatorView) {
-                     [indicatorView removeFromSuperview];
-                 }
                  if (completion) {
                      completion();
                  }
@@ -317,23 +333,33 @@
     }
     //remote
     else {
+        _serverUrl = url;
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:url
+        if (_task) {
+            [_task cancel];
+            lwInfo("_task cancel");
+        }
+        _task = [session downloadFromUrl:url
                           toPath:localPath
-                        withData:nil completionHandler:^(NSURL *location, NSError *error, id data)
+                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
+             if (indicatorView) {
+                 [indicatorView removeFromSuperview];
+             }
+             
+             _task = nil;
+             NSURL *nsurl = [NSURL URLWithString:_serverUrl];
+             if (![response.URL isEqual:nsurl]) {
+                 lwInfo("![response.URL isEqual:nsurl]");
+                 return;
+             }
+             
              if (error) {
-                 if (indicatorView) {
-                     [indicatorView removeFromSuperview];
-                 }
                  lwError("Download error: %@", error.localizedDescription);
                  return;
              }
              
              [self asyncLoadLocalImageWithPath:localPath completion:^{
-                 if (indicatorView) {
-                     [indicatorView removeFromSuperview];
-                 }
                  if (completion) {
                      completion();
                  }

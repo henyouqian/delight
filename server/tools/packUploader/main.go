@@ -20,20 +20,40 @@ import (
 )
 
 const (
-	USEAGE         = "Useage: \n\tpackUploader new|del|update <uploadDir>\n\tpackUploader image <imagePath>"
-	BUCKET         = "pintugame"
-	SERVER_HOST    = "http://sld.pintugame.com/"
-	ADMIN_NAME     = "henyouqian@gmail.com"
-	ADMIN_PASSWORD = "Nmmgb808313"
+	USEAGE = "Useage: \n\tpackUploader new|del|update <uploadDir>\n\tpackUploader image <imagePath>"
 )
 
 var (
 	_userToken = ""
+	_conf      Conf
 )
+
+type Conf struct {
+	UserName    string
+	Password    string
+	ServerHost  string
+	QiniuBucket string
+}
 
 func init() {
 	qiniuconf.ACCESS_KEY = "XLlx3EjYfZJ-kYDAmNZhnH109oadlGjrGsb4plVy"
 	qiniuconf.SECRET_KEY = "FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ"
+
+	//conf
+	var f *os.File
+	var err error
+
+	if f, err = os.Open("conf.json"); err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	//json decode
+	decoder := json.NewDecoder(f)
+	err = decoder.Decode(&_conf)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func checkErr(err error) {
@@ -93,6 +113,10 @@ type Pack struct {
 type Account struct {
 	Name     string
 	Password string
+}
+
+func upload() {
+
 }
 
 func newPack() {
@@ -216,7 +240,7 @@ func newPack() {
 	entryPathes := make([]qiniurs.EntryPath, imgNum)
 	imgExists := make([]bool, imgNum)
 	for i, img := range uploadImgs {
-		entryPathes[i].Bucket = BUCKET
+		entryPathes[i].Bucket = _conf.QiniuBucket
 		entryPathes[i].Key = img.Key
 		imgExists[i] = false
 	}
@@ -231,7 +255,7 @@ func newPack() {
 
 	///gen token
 	putPolicy := qiniurs.PutPolicy{
-		Scope: BUCKET,
+		Scope: _conf.QiniuBucket,
 	}
 	token := putPolicy.Token(nil)
 
@@ -303,7 +327,182 @@ func delPack() {
 }
 
 func updatePack() {
-	glog.Fatalln("not implement")
+	var err error
+
+	pack := Pack{}
+	err = loadPack(&pack)
+	checkErr(err)
+	packRaw := pack
+
+	if pack.Title == "" {
+		glog.Errorln("need title")
+		return
+	}
+
+	if pack.Id == 0 {
+		glog.Errorln("Pack not uploaded? Use new to create a pack.")
+		return
+	}
+
+	//dir walk
+	err = filepath.Walk(".", func(path string, f os.FileInfo, err error) error {
+		_, fileName := filepath.Split(path)
+		parts := strings.Split(fileName, ".")
+		if len(parts) > 1 {
+			ext := parts[len(parts)-1]
+			lower := strings.ToLower(ext)
+			if lower == "jpg" || lower == "jpeg" || lower == "gif" || lower == "png" {
+				if parts[0] == "thumb" {
+					pack.Thumb = path
+				} else if parts[0] == "cover" {
+					pack.Cover = path
+				} else if parts[0] == "coverBlur" {
+					pack.CoverBlur = path
+				} else {
+					key := genImageKey(path)
+
+					//search defined image
+					found := false
+					for i, img := range pack.Images {
+						if path == img.File {
+							pack.Images[i].Key = key
+							found = true
+							break
+						}
+					}
+					if !found {
+						img := Image{}
+						img.File = path
+						img.Key = key
+						pack.Images = append(pack.Images, img)
+					}
+				}
+			}
+		}
+		return nil
+	})
+
+	//check thumb
+	if pack.Thumb == "" {
+		glog.Errorln("Need thumb")
+		return
+	}
+
+	//check cover
+	if pack.Cover == "" {
+		glog.Errorln("Need cover")
+		return
+	}
+
+	//check cover blur
+	if pack.CoverBlur == "" {
+		glog.Warning("No cover blur")
+	}
+
+	//upload to qiniu
+	glog.Info("upload begin")
+
+	uploadImgs := pack.Images
+
+	///append cover image
+	coverKey := genImageKey(pack.Cover)
+	coverImg := Image{
+		File: pack.Cover,
+		Key:  coverKey,
+	}
+	uploadImgs = append(uploadImgs, coverImg)
+	pack.Cover = coverKey
+
+	///append thumb image
+	thumbKey := genImageKey(pack.Thumb)
+	thumbImg := Image{
+		File: pack.Thumb,
+		Key:  thumbKey,
+	}
+	uploadImgs = append(uploadImgs, thumbImg)
+	pack.Thumb = thumbKey
+
+	///append coverBlur image
+	if len(pack.CoverBlur) != 0 {
+		coverBlurKey := genImageKey(pack.CoverBlur)
+		coverBlurImg := Image{
+			File: pack.CoverBlur,
+			Key:  coverBlurKey,
+		}
+		uploadImgs = append(uploadImgs, coverBlurImg)
+		pack.CoverBlur = coverBlurKey
+	}
+
+	///upload
+	rsCli := qiniurs.New(nil)
+	imgNum := len(uploadImgs)
+	entryPathes := make([]qiniurs.EntryPath, imgNum)
+	imgExists := make([]bool, imgNum)
+	for i, img := range uploadImgs {
+		entryPathes[i].Bucket = _conf.QiniuBucket
+		entryPathes[i].Key = img.Key
+		imgExists[i] = false
+	}
+	var batchStatRets []qiniurs.BatchStatItemRet
+	batchStatRets, _ = rsCli.BatchStat(nil, entryPathes)
+
+	for i, item := range batchStatRets {
+		if item.Code == 200 {
+			imgExists[i] = true
+		}
+	}
+
+	///gen token
+	putPolicy := qiniurs.PutPolicy{
+		Scope: _conf.QiniuBucket,
+	}
+	token := putPolicy.Token(nil)
+
+	///upload images
+	for i, img := range uploadImgs {
+		if imgExists[i] {
+			glog.Infof("image exist: %s", img.File)
+			continue
+		}
+		var ret qiniuio.PutRet
+		err = qiniuio.PutFile(nil, &ret, token, img.Key, img.File, nil)
+		checkErr(err)
+		glog.Infof("upload image ok: %s", img.File)
+	}
+
+	glog.Info("upload complete")
+
+	//update pack to server
+	packjs, err := json.Marshal(pack)
+	checkErr(err)
+
+	packBytes := postReq("pack/mod", packjs)
+
+	//update pack.js
+	var dwpack Pack
+	err = json.Unmarshal(packBytes, &dwpack)
+	checkErr(err)
+
+	packRaw.Id = dwpack.Id
+
+	//packjs, err = json.Marshal(packRaw)
+	packjs, err = json.Marshal(dwpack)
+	checkErr(err)
+
+	var f *os.File
+	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open pack.js error: err=%s", err.Error())
+		return
+	}
+	defer f.Close()
+
+	f.Seek(0, os.SEEK_SET)
+	f.Truncate(0)
+	buf := bytes.NewBuffer([]byte(""))
+	json.Indent(buf, packjs, "", "\t")
+	f.Write(buf.Bytes())
+
+	glog.Infof("update pack succeed: packId=%d", packRaw.Id)
 }
 
 func loadPack(pack *Pack) (err error) {
@@ -326,8 +525,8 @@ func loadAccount(account *Account) {
 	var err error
 	if f, err = os.Open("account.json"); err != nil {
 		glog.Infoln("not found account.json, use admin")
-		account.Name = ADMIN_NAME
-		account.Password = ADMIN_PASSWORD
+		account.Name = _conf.UserName
+		account.Password = _conf.Password
 		return
 	}
 	defer f.Close()
@@ -348,7 +547,7 @@ func uploadImage() {
 
 	//gen token
 	putPolicy := qiniurs.PutPolicy{
-		Scope: BUCKET,
+		Scope: _conf.QiniuBucket,
 	}
 	token := putPolicy.Token(nil)
 
@@ -365,7 +564,7 @@ func login() {
 	var account Account
 	loadAccount(&account)
 
-	url := SERVER_HOST + "auth/login"
+	url := _conf.ServerHost + "auth/login"
 	body := fmt.Sprintf(`{
 	    "Username": "%s",
 	    "Password": "%s"
@@ -390,7 +589,7 @@ func login() {
 }
 
 func postReq(partialUrl string, body []byte) (respBytes []byte) {
-	url := SERVER_HOST + partialUrl
+	url := _conf.ServerHost + partialUrl
 
 	req, err := http.NewRequest("POST", url, bytes.NewReader(body))
 	req.AddCookie(&http.Cookie{Name: "usertoken", Value: _userToken})

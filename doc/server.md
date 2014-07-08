@@ -1,1 +1,1 @@
-* 别忘了设置iap：store/setIapProductId   
+* 记得改timezone

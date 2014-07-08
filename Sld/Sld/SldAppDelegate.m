@@ -14,6 +14,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //creat image cache dir
+    NSString *imgCacheDir = makeDocPath(@"imgCache");
+    [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
     //
 //    [TalkingData setExceptionReportEnabled:YES];
 //    [TalkingData sessionStarted:@"A3E09989D8D0FD60D090570D5F60E1F5" withChannelId:@"appstore"];

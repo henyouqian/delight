@@ -172,7 +172,9 @@ function Controller($scope, $http) {
 				{
 					"name": "new",
 					"method": "POST",
-					"data": {"Type": "PERSONAL_RANK", "PackId": 1, 
+					"data": {
+						"Type": "PERSONAL_RANK", 
+						"PackId": 1, 
 						"SliderNum": 6,
 						"BeginTimeString": "2014-04-01T00:00",				
 						"EndTimeString": "2014-04-02T00:00",
@@ -191,7 +193,28 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"StartId": 0, "Limit": 20}
 				},{
+					"name": "revList",
+					"method": "POST",
+					"data": {"StartId": 0, "Limit": 20}
+				},{
 					"name": "get",
+					"method": "POST",
+					"data": {"EventId": 0}
+				},{
+					"name": "addToBuff",
+					"method": "POST",
+					"data": {
+						"Type": "PERSONAL_RANK", 
+						"PackId": 0,
+						"SliderNum": 5,
+						"ChallengeSecs": [32, 35, 40]
+						}
+				},{
+					"name": "listBuff",
+					"method": "POST",
+					"data": ""
+				},{
+					"name": "delFromBuff",
 					"method": "POST",
 					"data": {"EventId": 0}
 				},{

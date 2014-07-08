@@ -13,6 +13,7 @@ import (
 )
 
 const (
+	OK        = "ok"
 	NOT_FOUND = "not_found"
 )
 
@@ -141,10 +142,10 @@ func (c *Client) Set(key string, val string) (_ interface{}, rErr error) {
 	if err != nil {
 		return nil, err
 	}
-	if len(resp) == 1 && resp[0] == "ok" {
+	if resp[0] == "ok" {
 		return true, nil
 	}
-	return nil, fmt.Errorf("bad response")
+	return nil, fmt.Errorf(resp[0])
 }
 
 // TODO: Will somebody write addition semantic methods?

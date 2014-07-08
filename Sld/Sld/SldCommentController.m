@@ -406,7 +406,8 @@
     //[self.navigationController pushViewController:browser animated:YES];
     PhotoBrowserNavController *nc = [[PhotoBrowserNavController alloc] initWithRootViewController:browser];
     nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:nc animated:YES completion:nil];}
+    [self presentViewController:nc animated:YES completion:nil];
+}
 
 - (void)onSendComment {
     _commentText = nil;
