@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldChallangeListController : UICollectionViewController
+@interface SldChallengeListController : UICollectionViewController
 
 @end

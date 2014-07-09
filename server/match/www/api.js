@@ -234,7 +234,7 @@ function Controller($scope, $http) {
 					"method": "POST",
 					"data": {"EventId": 0, "Offset": 0, "Limit": 20}
 				},{
-					"name": "submitChallangeScore",
+					"name": "submitChallengeScore",
 					"method": "POST",
 					"data": {"EventId": 0, "Score": 100, "Checksum":"cks"}
 				},{

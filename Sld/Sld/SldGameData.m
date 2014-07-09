@@ -24,6 +24,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     if ([event.challengeSecs isKindOfClass:[NSNull class]]) {
         event.challengeSecs = [NSArray array];
     }
+    event.challengeRewards = [dict valueForKey:@"ChallengeRewards"];
     event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] unsignedLongValue];
     if (event.sliderNum == 0) {
         event.sliderNum = DEFUALT_SLIDER_NUM;
@@ -91,7 +92,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         record.teamName = [SldGameData getInstance].teamName;
     }
     record.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
-    record.challangeHighScore = [(NSNumber*)[dict objectForKey:@"ChallangeHighScore"] intValue];
+    record.challengeHighScore = [(NSNumber*)[dict objectForKey:@"ChallengeHighScore"] intValue];
     
     record.matchReward = [(NSNumber*)[dict objectForKey:@"MatchReward"] longLongValue];
     record.betReward = [(NSNumber*)[dict objectForKey:@"BetReward"] longLongValue];

@@ -191,9 +191,15 @@
                 gameData.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
                 gameData.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
                 gameData.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
-                [self dismissViewControllerAnimated:YES completion:nil];
+                gameData.challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
                 
                 [SldIapManager getInstance];
+                
+                if (gameData.nickName.length == 0) {
+                    [SldUserInfoController createAndPresentFromController:self cancelable:NO];
+                } else {
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                }
             }
         }];
     }];

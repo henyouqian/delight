@@ -1,18 +1,18 @@
 //
-//  SldMainMenuControllerViewController.m
+//  SldMainMenuController.m
 //  Sld
 //
 //  Created by 李炜 on 14-7-6.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldMainMenuControllerViewController.h"
+#import "SldMainMenuController.h"
 #import "SldLoginViewController.h"
 
-@interface SldMainMenuControllerViewController ()
+@interface SldMainMenuController ()
 @end
 
-@implementation SldMainMenuControllerViewController
+@implementation SldMainMenuController
 
 - (void)viewDidLoad
 {

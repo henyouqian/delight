@@ -22,6 +22,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    self.interactivePopGestureRecognizer.enabled = NO;
+    
 //    [[NSNotificationCenter defaultCenter]
 //        addObserver:self
 //           selector:@selector(showAuthenticationViewController)

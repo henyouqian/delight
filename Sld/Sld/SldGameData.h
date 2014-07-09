@@ -17,6 +17,13 @@ enum EventState{
     CLOSED,
 };
 
+enum CupType{
+    CUP_NONE = 0,
+    CUP_GOLD = 1,
+    CUP_SILVER = 2,
+    CUP_BRONZE = 3,
+};
+
 @interface EventInfo : NSObject
 @property (nonatomic) UInt64 id;
 @property (nonatomic) UInt64 packId;
@@ -26,6 +33,7 @@ enum EventState{
 @property (nonatomic) BOOL hasResult;
 @property (nonatomic) BOOL sliderNum;
 @property (nonatomic) NSArray *challengeSecs;
+@property (nonatomic) NSArray *challengeRewards;
 @property (nonatomic) enum EventState state; //undefined:0, comming:1, running:2, closed:3
 @property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
 @property (nonatomic) BOOL isLoading;
@@ -55,7 +63,7 @@ enum EventState{
 @property (nonatomic) int rankNum;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) int gameCoinNum;
-@property (nonatomic) int challangeHighScore;
+@property (nonatomic) int challengeHighScore;
 @property (nonatomic) SInt64 matchReward;
 @property (nonatomic) SInt64 betReward;
 @property (nonatomic) NSMutableDictionary *bet;    //[teamName:string]betMoney:int64
@@ -68,7 +76,7 @@ enum EventState{
 //=================
 enum GameMode{
     PRACTICE,
-    CHALLANGE,
+    CHALLENGE,
     MATCH,
     OFFLINE,
 };
@@ -98,12 +106,14 @@ enum GameMode{
 @property (nonatomic) SInt64 totalReward;
 @property (nonatomic) SInt64 rewardCache;
 @property (nonatomic) float adsPercent;
+@property (nonatomic) int challengeEventId;
 
 @property (nonatomic) int betCloseBeforeEndSec;
 
 @property (nonatomic) enum GameMode gameMode;
 
 @property (nonatomic) BOOL needReloadEventList;
+@property (nonatomic) BOOL needReloadChallengeTime;
 
 //iap
 @property (nonatomic) NSArray *iapProducts;
@@ -112,7 +122,7 @@ enum GameMode{
 @property (nonatomic) NSArray *TEAM_NAMES;
 
 //star mode
-@property (nonatomic) NSMutableArray *starModeEventInfos;
+@property (nonatomic) NSMutableArray *challengeEventInfos;
 
 
 //

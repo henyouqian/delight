@@ -55,7 +55,7 @@ func makeEventPlayerRecordSubkey(eventId int64, userId int64) string {
 }
 
 var (
-	CHALLANGE_REWARDS = []int{100, 50, 50} //gold, silver, bronze
+	DEFAULT_CHALLENGE_REWARDS = []int{100, 50, 50} //gold, silver, bronze. additive.
 
 	EVENT_TYPES = map[string]int{
 		"PERSONAL_RANK":     1,
@@ -79,6 +79,51 @@ var (
 
 	_cron cron.Cron
 )
+
+type Event struct {
+	Type             string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
+	Id               int64
+	PackId           int64
+	BeginTime        int64
+	EndTime          int64
+	BeginTimeString  string
+	EndTimeString    string
+	HasResult        bool
+	Thumb            string
+	SliderNum        int
+	ChallengeSecs    []int
+	ChallengeRewards []int
+}
+
+type EventPlayerRecord struct {
+	EventId            int64
+	PlayerName         string
+	TeamName           string
+	Secret             string
+	SecretExpire       int64
+	Trys               int
+	HighScore          int
+	HighScoreTime      int64
+	FinalRank          int
+	GravatarKey        string
+	CustomAvartarKey   string
+	Gender             int
+	GameCoinNum        int
+	ChallengeHighScore int
+	CupType            int
+	MatchReward        int64
+	BetReward          int64
+	Bet                map[string]int64 //[teamName]betMoney
+	BetMoneySum        int64
+	PackThumbKey       string
+}
+
+type EventPublishInfo struct {
+	PublishTime [2]int
+	BeginTime   [2]int
+	EndTime     [2]int
+	EventNum    int
+}
 
 func init() {
 	glog.Info("match init")
@@ -182,50 +227,6 @@ func eventPublishTask() {
 			}
 		}
 	}
-}
-
-type Event struct {
-	Type            string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
-	Id              int64
-	PackId          int64
-	BeginTime       int64
-	EndTime         int64
-	BeginTimeString string
-	EndTimeString   string
-	HasResult       bool
-	Thumb           string
-	SliderNum       int
-	ChallengeSecs   []int
-}
-
-type EventPlayerRecord struct {
-	EventId            int64
-	PlayerName         string
-	TeamName           string
-	Secret             string
-	SecretExpire       int64
-	Trys               int
-	HighScore          int
-	HighScoreTime      int64
-	FinalRank          int
-	GravatarKey        string
-	CustomAvartarKey   string
-	Gender             int
-	GameCoinNum        int
-	ChallangeHighScore int
-	CupType            int
-	MatchReward        int64
-	BetReward          int64
-	Bet                map[string]int64 //[teamName]betMoney
-	BetMoneySum        int64
-	PackThumbKey       string
-}
-
-type EventPublishInfo struct {
-	PublishTime [2]int
-	BeginTime   [2]int
-	EndTime     [2]int
-	EventNum    int
 }
 
 func getEvent(ssdb *ssdb.Client, eventId int64) *Event {
@@ -349,6 +350,9 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	} else if event.SliderNum > 10 {
 		event.SliderNum = 10
 	}
+
+	//challengeRewards
+	event.ChallengeRewards = _conf.ChallengeRewards
 
 	//get pack
 	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
@@ -536,6 +540,13 @@ func apiListEvent(w http.ResponseWriter, r *http.Request) {
 		out[idxMap[recordKey]].CupType = record.CupType
 	}
 
+	//challengeRewards
+	for i := 0; i < eventNum; i++ {
+		if out[i].ChallengeRewards == nil {
+			out[i].ChallengeRewards = DEFAULT_CHALLENGE_REWARDS
+		}
+	}
+
 	lwutil.WriteResponse(w, out)
 }
 
@@ -562,11 +573,6 @@ func apiRevListEvent(w http.ResponseWriter, r *http.Request) {
 	if in.Limit > 50 {
 		in.Limit = 50
 	}
-
-	//fixme
-	__s := in.StartId
-	in.StartId = 0
-	//fixme end
 
 	var startId interface{}
 	if in.StartId == 0 {
@@ -606,10 +612,6 @@ func apiRevListEvent(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < eventNum; i++ {
 		err = json.Unmarshal([]byte(resp[i*2+1]), &out[i])
 		lwutil.CheckError(err, "")
-
-		//fixme
-		out[i].Id += int64(__s)
-		//fixme end
 	}
 
 	//event index map:
@@ -643,6 +645,13 @@ func apiRevListEvent(w http.ResponseWriter, r *http.Request) {
 		lwutil.CheckError(err, "")
 
 		out[idxMap[recordKey]].CupType = record.CupType
+	}
+
+	//challengeRewards
+	for i := 0; i < eventNum; i++ {
+		if out[i].ChallengeRewards == nil {
+			out[i].ChallengeRewards = DEFAULT_CHALLENGE_REWARDS
+		}
 	}
 
 	lwutil.WriteResponse(w, out)
@@ -850,7 +859,7 @@ func apiGetUserPlay(w http.ResponseWriter, r *http.Request) {
 		RankNum            int
 		TeamName           string
 		GameCoinNum        int
-		ChallangeHighScore int
+		ChallengeHighScore int
 		CupType            int
 		MatchReward        int64
 		BetReward          int64
@@ -903,7 +912,7 @@ func apiGetUserPlay(w http.ResponseWriter, r *http.Request) {
 		rankNum,
 		record.TeamName,
 		record.GameCoinNum,
-		record.ChallangeHighScore,
+		record.ChallengeHighScore,
 		record.CupType,
 		record.MatchReward,
 		record.BetReward,
@@ -1346,7 +1355,7 @@ func apiGetRanks(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
-func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
+func apiSubmitChallengeScore(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
 
@@ -1367,6 +1376,16 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+
+	playerKey := makePlayerInfoKey(session.Userid)
+
+	//check eventId
+	var challengeEventId int64
+	err = ssdb.HGet(playerKey, playerChallengeEventId, &challengeEventId)
+	lwutil.CheckError(err, "")
+	if in.EventId > challengeEventId {
+		lwutil.SendError("err_invalid_event", "")
+	}
 
 	//checksum
 	checksum := fmt.Sprintf("zzzz%d9d7a", in.Score+8703)
@@ -1390,13 +1409,13 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	//update score
 	scoreUpdate := false
 	reward := 0
-	oldScore := record.ChallangeHighScore
-	if record.ChallangeHighScore == 0 {
-		record.ChallangeHighScore = in.Score
+	oldScore := record.ChallengeHighScore
+	if record.ChallengeHighScore == 0 {
+		record.ChallengeHighScore = in.Score
 		scoreUpdate = true
 	} else {
-		if in.Score > record.ChallangeHighScore {
-			record.ChallangeHighScore = in.Score
+		if in.Score > record.ChallengeHighScore {
+			record.ChallengeHighScore = in.Score
 			scoreUpdate = true
 		}
 	}
@@ -1416,10 +1435,14 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 		lwutil.CheckError(err, "")
 
 		record.CupType = 0
+		challengeRewards := event.ChallengeRewards
+		if challengeRewards == nil {
+			challengeRewards = DEFAULT_CHALLENGE_REWARDS
+		}
 		for i, sec := range event.ChallengeSecs {
 			refScore := -int(sec * 1000)
 			if refScore > oldScore && refScore <= in.Score {
-				reward += CHALLANGE_REWARDS[i]
+				reward += challengeRewards[i]
 			}
 			if record.CupType == 0 && in.Score >= refScore {
 				record.CupType = i + 1
@@ -1438,29 +1461,37 @@ func apiSubmitChallangeScore(w http.ResponseWriter, r *http.Request) {
 	newMoney := int64(0)
 	totalReward := int64(0)
 	if reward > 0 {
-		key := makePlayerInfoKey(session.Userid)
-		resp, err := ssdb.Do("hincr", key, playerMoney, reward)
+		resp, err := ssdb.Do("hincr", playerKey, playerMoney, reward)
 		lwutil.CheckSsdbError(resp, err)
 		newMoney, err = strconv.ParseInt(resp[1], 10, 64)
 		lwutil.CheckError(err, "")
 
-		resp, err = ssdb.Do("hincr", key, playerTotalReward, reward)
+		resp, err = ssdb.Do("hincr", playerKey, playerTotalReward, reward)
 		lwutil.CheckSsdbError(resp, err)
 		totalReward, err = strconv.ParseInt(resp[1], 10, 64)
 		lwutil.CheckError(err, "")
 	}
 
+	//update ChallangeEventId
+	if challengeEventId == in.EventId && record.CupType > 0 {
+		challengeEventId++
+		resp, err = ssdb.Do("hset", playerKey, playerChallengeEventId, challengeEventId)
+		lwutil.CheckSsdbError(resp, err)
+	}
+
 	//out
 	out := struct {
-		Reward      int
-		Money       int64
-		TotalReward int64
-		CupType     int
+		Reward           int
+		Money            int64
+		TotalReward      int64
+		CupType          int
+		ChallengeEventId int64
 	}{
 		reward,
 		newMoney,
 		totalReward,
 		record.CupType,
+		challengeEventId,
 	}
 
 	//out
@@ -1659,7 +1690,7 @@ func regMatch() {
 	http.Handle("/event/playBegin", lwutil.ReqHandler(apiPlayBegin))
 	http.Handle("/event/playEnd", lwutil.ReqHandler(apiPlayEnd))
 	http.Handle("/event/getRanks", lwutil.ReqHandler(apiGetRanks))
-	http.Handle("/event/submitChallangeScore", lwutil.ReqHandler(apiSubmitChallangeScore))
+	http.Handle("/event/submitChallengeScore", lwutil.ReqHandler(apiSubmitChallengeScore))
 	http.Handle("/event/getBettingPool", lwutil.ReqHandler(apiGetBettingPool))
 	http.Handle("/event/bet", lwutil.ReqHandler(apiBet))
 	http.Handle("/event/listPlayResult", lwutil.ReqHandler(apiListPlayResult))

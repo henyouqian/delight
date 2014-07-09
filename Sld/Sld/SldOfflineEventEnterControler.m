@@ -127,7 +127,7 @@
     }
     
     //cup highlight
-    int hs = gd.eventPlayRecord.challangeHighScore;
+    int hs = gd.eventPlayRecord.challengeHighScore;
     NSArray *secs = gd.eventInfo.challengeSecs;
     if (hs != 0 && secs.count == 3) {
         _goldLabel.textColor = [UIColor whiteColor];

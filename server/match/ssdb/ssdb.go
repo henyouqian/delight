@@ -324,8 +324,6 @@ func (c *Client) HGet(key string, subKey string, obj interface{}) (rErr error) {
 	val = val.Elem()
 	str := resp[1]
 
-	glog.Info(val)
-
 	//
 	switch val.Interface().(type) {
 	case string:

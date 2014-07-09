@@ -27,25 +27,27 @@ var (
 )
 
 type PlayerInfo struct {
-	NickName        string
-	TeamName        string
-	Gender          int
-	CustomAvatarKey string
-	GravatarKey     string
-	Money           int64
-	BetMax          int
-	RewardCache     int64
-	TotalReward     int64
-	Secret          string
-	AllowSave       bool
+	NickName         string
+	TeamName         string
+	Gender           int
+	CustomAvatarKey  string
+	GravatarKey      string
+	Money            int64
+	BetMax           int
+	RewardCache      int64
+	TotalReward      int64
+	Secret           string
+	ChallengeEventId int
+	AllowSave        bool
 }
 
 //player property
 const (
-	playerMoney       = "Money"
-	playerRewardCache = "RewardCache"
-	playerTotalReward = "TotalReward"
-	playerIapSecret   = "IapSecret"
+	playerMoney            = "Money"
+	playerRewardCache      = "RewardCache"
+	playerTotalReward      = "TotalReward"
+	playerIapSecret        = "IapSecret"
+	playerChallengeEventId = "ChallengeEventId"
 )
 
 func init() {
@@ -65,6 +67,11 @@ func getPlayerInfo(ssdb *ssdb.Client, userId int64) (*PlayerInfo, error) {
 
 	var playerInfo PlayerInfo
 	err := ssdb.HGetStruct(key, &playerInfo)
+
+	if playerInfo.ChallengeEventId == 0 {
+		playerInfo.ChallengeEventId = 1
+		ssdb.HSet(key, playerChallengeEventId, 1)
+	}
 
 	return &playerInfo, err
 	// resp, err := ssdb.Do("hget", H_PLAYER_INFO, userId)
@@ -178,6 +185,7 @@ func apiSetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 		playerInfo = in
 		playerInfo.BetMax = 100
 		playerInfo.Money = INIT_MONEY
+		playerInfo.ChallengeEventId = 1
 	} else {
 		err = json.Unmarshal([]byte(resp[1]), &playerInfo)
 		lwutil.CheckError(err, "")

@@ -1,5 +1,5 @@
 //
-//  SldChallangeBriefController.h
+//  SldChallengeBriefController.h
 //  Sld
 //
 //  Created by 李炜 on 14-7-8.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldChallangeBriefController : UIViewController
-
+@interface SldChallengeBriefController : UIViewController
+- (void)updateTime;
 @end

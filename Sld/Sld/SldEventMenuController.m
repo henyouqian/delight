@@ -18,7 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
-@property (weak, nonatomic) IBOutlet UIButton *challangeButton;
+@property (weak, nonatomic) IBOutlet UIButton *challengeButton;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) MSWeakTimer *timer;
@@ -37,7 +37,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     [_gd resetEvent];
     
     _matchButton.enabled = NO;
-    _challangeButton.enabled = NO;
+    _challengeButton.enabled = NO;
     
     //load pack data
     UInt64 packId = _gd.eventInfo.packId;
@@ -140,7 +140,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (void)onTimer {
     if (!_gd.packInfo || !_gd.eventPlayRecord) {
         _matchButton.enabled = NO;
-        _challangeButton.enabled = NO;
+        _challengeButton.enabled = NO;
         return;
     }
     
@@ -149,21 +149,21 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     if (state == CLOSED) {
         _matchButton.enabled = YES;
         [_matchButton setTitle:@"已结束" forState:UIControlStateNormal];
-        _challangeButton.enabled = YES;
+        _challengeButton.enabled = YES;
         _timeRemainLabel.hidden = YES;
     } else if (state == COMMING) {
         NSTimeInterval beginIntv = [_gd.eventInfo.beginTime timeIntervalSinceNow];
         NSString *str = formatInterval((int)beginIntv);
         
         _matchButton.enabled = NO;
-        _challangeButton.enabled = NO;
+        _challengeButton.enabled = NO;
         
         _timeRemainLabel.hidden = NO;
         _timeRemainLabel.text = [NSString stringWithFormat:@"距离比赛开始%@", str];
         
         //
         if ([_gd.userName compare:@"lw@pintu.com"] == 0) {
-            _challangeButton.enabled = YES;
+            _challengeButton.enabled = YES;
         }
     } else if (state == RUNNING) {
         NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
@@ -171,7 +171,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         
         _timeRemainLabel.text = [NSString stringWithFormat:@"比赛剩余%@", str];
         _matchButton.enabled = YES;
-        _challangeButton.enabled = YES;
+        _challengeButton.enabled = YES;
         _timeRemainLabel.hidden = NO;
     }
 }
@@ -180,8 +180,8 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     _gd.gameMode = MATCH;
 }
 
-- (IBAction)onChallangeButton:(id)sender {
-    _gd.gameMode = CHALLANGE;
+- (IBAction)onChallengeButton:(id)sender {
+    _gd.gameMode = CHALLENGE;
     SldOfflineEventEnterControler *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"offlineEnter"];
     [self.navigationController pushViewController:controller animated:YES];
 }

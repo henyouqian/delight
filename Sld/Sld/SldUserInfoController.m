@@ -152,7 +152,7 @@ static NSArray *_genderStrings;
         
         [self presentViewController:imagePicker
                            animated:YES completion:nil];
-    } else {
+    } else if (buttonIndex == 2) {
         UIImagePickerController *imagePicker =
         [[UIImagePickerController alloc] init];
         
@@ -160,6 +160,7 @@ static NSArray *_genderStrings;
         imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = YES;
+        imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
         
         [self presentViewController:imagePicker
                            animated:YES completion:nil];

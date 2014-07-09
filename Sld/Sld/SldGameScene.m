@@ -1032,16 +1032,16 @@ static float lerpf(float a, float b, float t) {
         [_btnExit setHidden:NO];
     }
     
-    // challange
-    else if (_gameData.gameMode == CHALLANGE) {
-        int oldScore = record.challangeHighScore;
+    // challenge
+    else if (_gameData.gameMode == CHALLENGE) {
+        int oldScore = record.challengeHighScore;
         if (oldScore == 0 || score > oldScore) {
-            record.challangeHighScore = score;
+            record.challengeHighScore = score;
             
             //submit label
             SKLabelNode *submitLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
             [submitLabel setFontColor:makeUIColor(255, 197, 131, 255)];
-            [submitLabel setFontSize:32];
+            [submitLabel setFontSize:24];
             [submitLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
             [submitLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
             [_lastImageCover addChild:submitLabel];
@@ -1079,7 +1079,7 @@ static float lerpf(float a, float b, float t) {
                                    @"Score":@(score),
                                    @"Checksum":checksum};
 
-            [session postToApi:@"event/submitChallangeScore" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [session postToApi:@"event/submitChallengeScore" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 if (error) {
                     alertHTTPError(error, data);
                 } else {
@@ -1089,11 +1089,16 @@ static float lerpf(float a, float b, float t) {
                         return;
                     }
                     
+                    _gameData.needReloadEventList = YES;
+                    
                     int cupType = [(NSNumber*)[dict objectForKey:@"CupType"] intValue];
                     if (_gameData.eventInfo.cupType != cupType) {
-                        _gameData.needReloadEventList = YES;
+                        _gameData.needReloadChallengeTime = YES;
                         _gameData.eventInfo.cupType = cupType;
                     }
+                    
+                    //ChallengeEventId
+                    _gameData.challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
 
                     //money label
                     double delayInSeconds = .4f;
@@ -1108,7 +1113,15 @@ static float lerpf(float a, float b, float t) {
                             SInt64 newMoney = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
                             SInt64 totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
                             if (reward > 0) {
-                                submitLabel.text = [NSString stringWithFormat:@"获得奖金: %d金币", reward];
+                                NSString *starStr = @"";
+                                if (cupType == CUP_GOLD) {
+                                    starStr = @"⭐️⭐️⭐️";
+                                } else if (cupType == CUP_SILVER) {
+                                    starStr = @"⭐️⭐️";
+                                } else if (cupType == CUP_BRONZE) {
+                                    starStr = @"⭐️";
+                                }
+                                submitLabel.text = [NSString stringWithFormat:@"%@获得奖金: %d金币", starStr, reward];
                                 _gameData.money = newMoney;
                                 _gameData.totalReward = totalReward;
                             } else {
@@ -1182,7 +1195,7 @@ static float lerpf(float a, float b, float t) {
     _targetW = self.view.frame.size.width;
     _targetH = self.view.frame.size.height;
     float scale2 = _targetW/texW;
-    scale2 = MAX(_targetH/texH, scale2);
+    scale2 = MAX(_targetH/texH, scale2)*1.2;
     
     //blur action
     float dur = .5f;

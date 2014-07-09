@@ -1,5 +1,5 @@
 //
-//  SldMainMenuControllerViewController.h
+//  SldMainMenuController.h
 //  Sld
 //
 //  Created by 李炜 on 14-7-6.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldMainMenuControllerViewController : UIViewController
+@interface SldMainMenuController : UIViewController
 
 @end

@@ -110,11 +110,6 @@ type Pack struct {
 	Tags      []string
 }
 
-type Account struct {
-	Name     string
-	Password string
-}
-
 func upload() {
 
 }
@@ -520,25 +515,6 @@ func loadPack(pack *Pack) (err error) {
 	return nil
 }
 
-func loadAccount(account *Account) {
-	var f *os.File
-	var err error
-	if f, err = os.Open("account.json"); err != nil {
-		glog.Infoln("not found account.json, use admin")
-		account.Name = _conf.UserName
-		account.Password = _conf.Password
-		return
-	}
-	defer f.Close()
-
-	//json decode
-	decoder := json.NewDecoder(f)
-	err = decoder.Decode(&account)
-	checkErr(err)
-
-	glog.Infof("account: %s", account.Name)
-}
-
 func uploadImage() {
 	path := flag.Arg(1)
 	key := genImageKey(path)
@@ -561,20 +537,17 @@ func uploadImage() {
 func login() {
 	client := &http.Client{}
 
-	var account Account
-	loadAccount(&account)
-
 	url := _conf.ServerHost + "auth/login"
 	body := fmt.Sprintf(`{
 	    "Username": "%s",
 	    "Password": "%s"
-	}`, account.Name, account.Password)
+	}`, _conf.UserName, _conf.Password)
 
 	resp, err := client.Post(url, "application/json", bytes.NewReader([]byte(body)))
 	checkErr(err)
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		glog.Fatalf("Login Error: username=%s", account.Name)
+		glog.Fatalf("Login Error: username=%s", _conf.UserName)
 		//glog.Fatalf("login error: resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
 	}
 	bts, err := ioutil.ReadAll(resp.Body)

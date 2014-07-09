@@ -113,9 +113,10 @@
 		D06684A01953548D00AD9282 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D066849F1953548D00AD9282 /* libz.dylib */; };
 		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
 		D096769B1961A5F60052C178 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D096769A1961A5F60052C178 /* Main_iPhone.storyboard */; };
-		D0A555FE1969A8A600369401 /* SldMainMenuControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A555FD1969A8A600369401 /* SldMainMenuControllerViewController.m */; };
-		D0A556011969B38B00369401 /* SldChallangeListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A556001969B38B00369401 /* SldChallangeListController.m */; };
-		D0A55606196C277E00369401 /* SldChallangeBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A55605196C277E00369401 /* SldChallangeBriefController.m */; };
+		D0A555FE1969A8A600369401 /* SldMainMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A555FD1969A8A600369401 /* SldMainMenuController.m */; };
+		D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A556001969B38B00369401 /* SldChallengeListController.m */; };
+		D0A55606196C277E00369401 /* SldChallengeBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A55605196C277E00369401 /* SldChallengeBriefController.m */; };
+		D0A55609196C8A4700369401 /* locker.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55608196C8A4700369401 /* locker.png */; };
 		D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA3195B3744009193E6 /* libAdsMogo.a */; };
 		D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */; };
 		D0D14AA6195B375A009193E6 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */; };
@@ -392,12 +393,13 @@
 		D066849F1953548D00AD9282 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D09676961961A08A0052C178 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
 		D096769A1961A5F60052C178 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
-		D0A555FC1969A8A600369401 /* SldMainMenuControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMainMenuControllerViewController.h; sourceTree = "<group>"; };
-		D0A555FD1969A8A600369401 /* SldMainMenuControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMainMenuControllerViewController.m; sourceTree = "<group>"; };
-		D0A555FF1969B38B00369401 /* SldChallangeListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallangeListController.h; sourceTree = "<group>"; };
-		D0A556001969B38B00369401 /* SldChallangeListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldChallangeListController.m; sourceTree = "<group>"; };
-		D0A55604196C277D00369401 /* SldChallangeBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallangeBriefController.h; sourceTree = "<group>"; };
-		D0A55605196C277E00369401 /* SldChallangeBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldChallangeBriefController.m; sourceTree = "<group>"; };
+		D0A555FC1969A8A600369401 /* SldMainMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMainMenuController.h; sourceTree = "<group>"; };
+		D0A555FD1969A8A600369401 /* SldMainMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMainMenuController.m; sourceTree = "<group>"; };
+		D0A555FF1969B38B00369401 /* SldChallengeListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallengeListController.h; sourceTree = "<group>"; };
+		D0A556001969B38B00369401 /* SldChallengeListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldChallengeListController.m; sourceTree = "<group>"; };
+		D0A55604196C277D00369401 /* SldChallengeBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallengeBriefController.h; sourceTree = "<group>"; };
+		D0A55605196C277E00369401 /* SldChallengeBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldChallengeBriefController.m; sourceTree = "<group>"; };
+		D0A55608196C8A4700369401 /* locker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locker.png; sourceTree = "<group>"; };
 		D0D14AA3195B3744009193E6 /* libAdsMogo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAdsMogo.a; path = External/AdsMoGoLib/AdsMoGoSDK/libAdsMogo.a; sourceTree = "<group>"; };
 		D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDomobAdSDK.a; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK/libDomobAdSDK.a; sourceTree = "<group>"; };
@@ -714,12 +716,12 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				D0A555FC1969A8A600369401 /* SldMainMenuControllerViewController.h */,
-				D0A555FD1969A8A600369401 /* SldMainMenuControllerViewController.m */,
-				D0A555FF1969B38B00369401 /* SldChallangeListController.h */,
-				D0A556001969B38B00369401 /* SldChallangeListController.m */,
-				D0A55604196C277D00369401 /* SldChallangeBriefController.h */,
-				D0A55605196C277E00369401 /* SldChallangeBriefController.m */,
+				D0A555FC1969A8A600369401 /* SldMainMenuController.h */,
+				D0A555FD1969A8A600369401 /* SldMainMenuController.m */,
+				D0A555FF1969B38B00369401 /* SldChallengeListController.h */,
+				D0A556001969B38B00369401 /* SldChallengeListController.m */,
+				D0A55604196C277D00369401 /* SldChallengeBriefController.h */,
+				D0A55605196C277E00369401 /* SldChallengeBriefController.m */,
 				B38110471914F5B00093F321 /* SldNevigationController.h */,
 				B38110481914F5B00093F321 /* SldNevigationController.m */,
 				B3F517721903B1BF00499209 /* SldLoginViewController.h */,
@@ -772,6 +774,7 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D0A55608196C8A4700369401 /* locker.png */,
 				D05E9956195C7189002A6B83 /* coin0.png */,
 				D05E9957195C7189002A6B83 /* coin1.png */,
 				D05E9958195C7189002A6B83 /* coin2.png */,
@@ -1153,6 +1156,7 @@
 				D0D14B51195B3807009193E6 /* webview_bar_share_ipad.png in Resources */,
 				D0D14B3C195B3807009193E6 /* webview_bar_refresh_hover@2x.png in Resources */,
 				B3DB83211929494B00544759 /* otlFastForward@2x.png in Resources */,
+				D0A55609196C8A4700369401 /* locker.png in Resources */,
 				D0D14B26195B3807009193E6 /* adsmogo_close.png in Resources */,
 				D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */,
 				D0D14B43195B3807009193E6 /* webview_bar_next_grey_ipad@2x.png in Resources */,
@@ -1283,12 +1287,12 @@
 				B37A9C3618F2E4850080E8F0 /* SldUtil.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
-				D0A55606196C277E00369401 /* SldChallangeBriefController.m in Sources */,
+				D0A55606196C277E00369401 /* SldChallengeBriefController.m in Sources */,
 				B34D52B51923648100277EBC /* MarqueeLabel.m in Sources */,
 				D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */,
 				B383536D191ACA4700D259F5 /* SldLobbyController.m in Sources */,
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
-				D0A555FE1969A8A600369401 /* SldMainMenuControllerViewController.m in Sources */,
+				D0A555FE1969A8A600369401 /* SldMainMenuController.m in Sources */,
 				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */,
@@ -1296,7 +1300,7 @@
 				D0667D6419514DD700AD9282 /* SldIapController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
-				D0A556011969B38B00369401 /* SldChallangeListController.m in Sources */,
+				D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */,
 				D010449E19461D69008DFF8D /* SldEventMenuController.m in Sources */,
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
