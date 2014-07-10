@@ -25,6 +25,9 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         event.challengeSecs = [NSArray array];
     }
     event.challengeRewards = [dict valueForKey:@"ChallengeRewards"];
+    if (event.challengeRewards == nil) {
+        event.challengeRewards = @[@100, @50, @50];
+    }
     event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] unsignedLongValue];
     if (event.sliderNum == 0) {
         event.sliderNum = DEFUALT_SLIDER_NUM;

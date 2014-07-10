@@ -184,7 +184,7 @@ static NSString *STR_BOTTOM = @"当前";
             index = _rowNum-1;
         }
         NSIndexPath *indexPath = [self getEventIndexPath:index];
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section] atScrollPosition:UICollectionViewScrollPositionBottom animated:NO];
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }
 }
 

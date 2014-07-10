@@ -261,7 +261,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T87-PN-Shh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1247" y="-671"/>
+            <point key="canvasLocation" x="915" y="-583"/>
         </scene>
         <!--Sld Event Menu Controller-->
         <scene sceneID="qOK-Ad-VZu">
@@ -519,7 +519,7 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" alpha="0.59999999999999998" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQG-gE-iUJ">
-                                        <rect key="frame" x="115" y="438" width="90" height="90"/>
+                                        <rect key="frame" x="50" y="438" width="90" height="90"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="90" id="mzZ-1W-0Xr"/>
@@ -534,14 +534,36 @@
                                             <action selector="onStartButton:" destination="Tnw-Ma-Hq1" eventType="touchUpInside" id="IbG-PB-YXy"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" alpha="0.60000002384185791" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M5j-kz-dmh">
+                                        <rect key="frame" x="180" y="438" width="90" height="90"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="90" id="5nI-IP-OYp"/>
+                                            <constraint firstAttribute="width" constant="90" id="CFK-29-1UA"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="tintColor" red="0.72778854930000003" green="0.41075064280000001" blue="0.48766516450000003" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="欣赏" backgroundImage="btnBgBlue90.png">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="fpn-Hy-mNs" kind="push" id="P1s-93-KzK"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="PQG-gE-iUJ" firstAttribute="leading" secondItem="xo3-EA-GJk" secondAttribute="leading" constant="50" id="0JT-sa-eQ4"/>
                                     <constraint firstAttribute="trailing" secondItem="2FT-Mj-NrE" secondAttribute="trailing" id="61a-jO-Vn9"/>
                                     <constraint firstAttribute="trailing" secondItem="uOZ-ty-sq9" secondAttribute="trailing" constant="20" id="C0R-Mi-gVX"/>
                                     <constraint firstItem="2FT-Mj-NrE" firstAttribute="leading" secondItem="xo3-EA-GJk" secondAttribute="leading" id="FAK-Ml-ire"/>
                                     <constraint firstItem="dHc-gB-wPS" firstAttribute="top" secondItem="2FT-Mj-NrE" secondAttribute="bottom" constant="8" id="JTd-7e-Cj1"/>
-                                    <constraint firstAttribute="centerX" secondItem="PQG-gE-iUJ" secondAttribute="centerX" id="bqa-Hj-MsY"/>
+                                    <constraint firstItem="M5j-kz-dmh" firstAttribute="centerY" secondItem="PQG-gE-iUJ" secondAttribute="centerY" id="atS-cd-9qp"/>
+                                    <constraint firstAttribute="trailing" secondItem="M5j-kz-dmh" secondAttribute="trailing" constant="50" id="dBk-hZ-dpW"/>
                                     <constraint firstAttribute="centerX" secondItem="dHc-gB-wPS" secondAttribute="centerX" id="dDD-s3-BKm"/>
                                     <constraint firstItem="uOZ-ty-sq9" firstAttribute="leading" secondItem="xo3-EA-GJk" secondAttribute="leading" constant="20" id="hQy-9x-8Uw"/>
                                     <constraint firstAttribute="bottom" secondItem="PQG-gE-iUJ" secondAttribute="bottom" constant="40" id="hS0-qG-kCz"/>
@@ -644,9 +666,6 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <state key="highlighted" backgroundImage="black32.png"/>
-                                                    <connections>
-                                                        <segue destination="xvU-Cu-iFA" kind="push" identifier="toEventMenu" id="VqQ-8r-fPM"/>
-                                                    </connections>
                                                 </button>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cupGold.png" translatesAutoresizingMaskIntoConstraints="NO" id="ar6-mo-le6" userLabel="cup">
                                                     <rect key="frame" x="3" y="132" width="20" height="20"/>
@@ -1213,7 +1232,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hIG-1f-t95" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2516" y="-598"/>
+            <point key="canvasLocation" x="2320" y="-598"/>
         </scene>
         <!--Sld User Controller-->
         <scene sceneID="hGH-xz-a0n">
@@ -2139,6 +2158,9 @@
                                 <state key="normal" title="对战">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="1jQ-Kk-WuP" kind="push" id="Eqy-hG-9kq"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXB-M3-T2M">
                                 <rect key="frame" x="100" y="342" width="120" height="34"/>
@@ -3060,5 +3082,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="jGm-bM-BXV"/>
         <segue reference="DQE-9R-GEV"/>
+        <segue reference="P1s-93-KzK"/>
+        <segue reference="9EQ-sE-XKR"/>
     </inferredMetricsTieBreakers>
 </document>
