@@ -103,7 +103,7 @@
     
     UIColor *color = [_greenColor colorWithAlphaComponent:1.0];
     if (f == 1.0) {
-        color = makeUIColor(230, 10, 30, 255);
+        color = makeUIColor(130, 0, 5, 255);
         starNum = 0;
     } else if (width > _yellowWidth) {
         color = [_redColor colorWithAlphaComponent:1.0];
@@ -1317,12 +1317,12 @@ static float lerpf(float a, float b, float t) {
     _targetW = self.view.frame.size.width;
     _targetH = self.view.frame.size.height;
     float scale2 = _targetW/texW;
-    scale2 = MAX(_targetH/texH, scale2)*1.2;
+    scale2 = MAX(_targetH/texH, scale2)*1.1;
     
     //blur action
-    float dur = .5f;
+    float dur = .9f;
     SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-        float t = QuarticEaseOut(elapsedTime/dur);
+        float t = ExponentialEaseOut(elapsedTime/dur);
         [_lastImageBlurSprite setAlpha:lerpf(0.f, 1.f, t)];
         [_lastImageBlurSprite setScale:lerpf(scale, scale2, t)];
         [_lastImageCover setAlpha:lerpf(0.f, 1.f, t)];
