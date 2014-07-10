@@ -20,6 +20,7 @@
 #import "config.h"
 #import "nv-ios-digest/SHA1.h"
 
+//=========================================================
 @interface Slider : SKSpriteNode
 @property (nonatomic) NSUInteger idx;
 @property (nonatomic) UITouch *touch;
@@ -28,7 +29,109 @@
 @implementation Slider
 @end
 
+//=========================================================
+@interface TimeBar : SKNode
+-(instancetype)initWithChallengeSecs:(NSArray*)secs size:(CGSize)size;
+-(void)update:(NSTimeInterval)timeFromStart;
+@property (nonatomic) SKSpriteNode *bar;
+@property (nonatomic) UIColor *greenColor;
+@property (nonatomic) UIColor *yellowColor;
+@property (nonatomic) UIColor *redColor;
+@property (nonatomic) float greenWidth;
+@property (nonatomic) float yellowWidth;
+@property (nonatomic) float redTime;
+@property (nonatomic) CGSize size;
+@property (nonatomic) int starNum;
+
+@end
+
+@implementation TimeBar
+-(instancetype)initWithChallengeSecs:(NSArray*)secs size:(CGSize)size {
+    if (self = [super init]) {
+        if (secs.count != 3) {
+            return self;
+        }
+        _size = size;
+        
+        int redSec = [(NSNumber*)[secs lastObject] intValue];
+        float redTime = (float)redSec;
+        int yellowSec = [(NSNumber*)[secs objectAtIndex:1] intValue];
+        float yellowTime = (float)yellowSec;
+        int greenSec = [(NSNumber*)[secs firstObject] intValue];
+        float greenTime = (float)greenSec;
+        
+        _redTime = redTime;
+        
+        int alpha = 80;
+        _redColor = makeUIColor(240, 78, 82, alpha);
+        _yellowColor = makeUIColor(255, 214, 91, alpha);
+        _greenColor = makeUIColor(52, 214, 125, alpha);
+        
+        SKSpriteNode* bar = [SKSpriteNode spriteNodeWithColor:_redColor size:size];
+        bar.anchorPoint = CGPointMake(0.f, 1.f);
+        [self addChild:bar];
+        
+        _yellowWidth = size.width*yellowTime/redTime;
+        bar = [SKSpriteNode spriteNodeWithColor:_yellowColor size:CGSizeMake(_yellowWidth, size.height)];
+        bar.anchorPoint = CGPointMake(0.f, 1.f);
+        [self addChild:bar];
+        
+        _greenWidth = size.width*greenTime/redTime;
+        bar = [SKSpriteNode spriteNodeWithColor:_greenColor size:CGSizeMake(_greenWidth, size.height)];
+        bar.anchorPoint = CGPointMake(0.f, 1.f);
+        [self addChild:bar];
+        
+        //
+        _bar = [SKSpriteNode spriteNodeWithColor:[_greenColor colorWithAlphaComponent:1.0] size:CGSizeMake(1.0, size.height)];
+        _bar.anchorPoint = CGPointMake(0.f, 1.f);
+        [_bar setXScale:0.0];
+        [self addChild:_bar];
+        
+        _starNum = 3;
+    }
+    return self;
+}
+
+-(void)update:(NSTimeInterval)timeFromStart {
+    float f = (float)timeFromStart / _redTime;
+    if (f > 1.0) {
+        f = 1.0;
+    }
+    
+    float width = f * _size.width;
+    int starNum = 3;
+    
+    UIColor *color = [_greenColor colorWithAlphaComponent:1.0];
+    if (f == 1.0) {
+        color = makeUIColor(230, 10, 30, 255);
+        starNum = 0;
+    } else if (width > _yellowWidth) {
+        color = [_redColor colorWithAlphaComponent:1.0];
+        starNum = 1;
+    } else if(width > _greenWidth) {
+        color = [_yellowColor colorWithAlphaComponent:1.0];
+        starNum = 2;
+    }
+
+    __block BOOL inAction = NO;
+    if (_starNum != starNum && !inAction) {
+        inAction = YES;
+        SKAction *action = [SKAction colorizeWithColor:color colorBlendFactor:1.0 duration:0.3];
+        [_bar runAction:action completion:^{
+            inAction = NO;
+        }];
+    }
+    //_bar.color = color;
+    
+    [_bar setXScale:width];
+    _starNum = starNum;
+}
+
+@end
+
+//=========================================================
 @interface SldGameScene()
+@property (nonatomic) TimeBar *timeBar;
 @property (nonatomic) NSMutableArray *uiRotateNodes;
 @property (nonatomic) SldButton *btnExit;
 @property (nonatomic) SldButton *btnYes;
@@ -61,6 +164,7 @@
 @property (nonatomic) BOOL packHasFinished;
 @property (nonatomic) SKSpriteNode *lastImageBlurSprite;
 @property (nonatomic) SKSpriteNode *lastImageCover;
+@property (nonatomic) BOOL gameRunning;
 
 @property (nonatomic) SldGameData *gameData;
 
@@ -121,7 +225,8 @@ NSDate *_gameBeginTime;
         [self.scene addChild:self.sliderParent];
         _nextSliderParent = [SKNode node];
         [self.scene addChild:self.nextSliderParent];
-        _isLoaded = false;
+        _isLoaded = NO;
+        _gameRunning = NO;
         
         
         __weak typeof(self) weakSelf = self;
@@ -131,6 +236,15 @@ NSDate *_gameBeginTime;
         BUTTON_COLOR_GREEN = makeUIColor(76, 217, 100, 255);
         
         float buttonZ = 10.f;
+        
+        //time bar
+        _timeBar = [[TimeBar alloc] initWithChallengeSecs:_gameData.eventInfo.challengeSecs size:CGSizeMake(size.width, 3)];
+        [_timeBar setPosition:CGPointMake(0, size.height)];
+        _timeBar.zPosition = buttonZ;
+        [self addChild:_timeBar];
+        if (_gameData.gameMode != CHALLENGE) {
+            _timeBar.hidden = YES;
+        }
         
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];
@@ -739,6 +853,12 @@ static float lerpf(float a, float b, float t) {
             //sprite.texture = [SKTexture textureWithRect:CGRectMake(0, 0, .5, .5) inTexture:sprite.texture];
         }
     }
+    
+    if (_gameRunning) {
+        NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
+        NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
+        [_timeBar update:dt];
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -773,6 +893,7 @@ static float lerpf(float a, float b, float t) {
             [self.curtainBottom runAction:down completion:^{
                 //game begin
                 _gameBeginTime = [NSDate dateWithTimeIntervalSinceNow:0];
+                _gameRunning = YES;
             }];
         }];
         
@@ -929,6 +1050,7 @@ static float lerpf(float a, float b, float t) {
     }
     
     _packHasFinished = YES;
+    _gameRunning = NO;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];
     
@@ -1002,7 +1124,7 @@ static float lerpf(float a, float b, float t) {
                 }
                 record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
                 record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
-                [briefVC updatePlayRecordWithHighscore];
+                [briefVC updatePlayRecord];
                 
                 //rank label
                 double delayInSeconds = .4f;

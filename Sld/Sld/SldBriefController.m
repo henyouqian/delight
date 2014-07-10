@@ -30,8 +30,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *gameCoinLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
+@property (weak, nonatomic) IBOutlet UIButton *practiceButton;
+@property (weak, nonatomic) IBOutlet UIButton *commentButton;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@property (weak, nonatomic) IBOutlet UIButton *rankButton;
+@property (weak, nonatomic) IBOutlet UIButton *betButton;
 @property (nonatomic) MSWeakTimer *timer;
-@property (nonatomic) SldGameData *gamedata;
+@property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSMutableArray *gameCoinPrices;
 @end
 
@@ -51,27 +56,140 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
     g_briefController = self;
     if (g_updatedPackIdSet == nil) {
         g_updatedPackIdSet = [NSMutableSet set];
     }
-    _gamedata = [SldGameData getInstance];
+    _gd = [SldGameData getInstance];
+    
+    [_gd resetEvent];
     
     //timer
     _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
-    self.view.backgroundColor = [UIColor clearColor];
+    //disable all buttons
+    //_playButton.enabled = _gd.eventInfo.state == RUNNING;
+    _playButton.enabled = NO;
+    _practiceButton.enabled = NO;
+    _commentButton.enabled = NO;
+    _rankButton.enabled = NO;
+    _betButton.enabled = NO;
     
-    _playButton.enabled = _gamedata.eventInfo.state == RUNNING;
-    _titleLabel.text = _gamedata.packInfo.title;
+    
+    //load pack data
+    UInt64 packId = _gd.eventInfo.packId;
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
+    if ([rs next]) { //local
+        NSString *data = [rs stringForColumnIndex:0];
+        NSError *error = nil;
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        _gd.packInfo = [PackInfo packWithDictionary:dict];
+        
+        [self updatePackInfo];
+    } else {
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"Id":@(packId)};
+        [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            _gd.packInfo = [PackInfo packWithDictionary:dict];
+            
+            //save to db
+            BOOL ok = [db executeUpdate:@"REPLACE INTO pack (id, data) VALUES(?, ?)", dict[@"Id"], data];
+            if (!ok) {
+                lwError("Sql error:%@", [db lastErrorMessage]);
+                return;
+            }
+            
+            [self updatePackInfo];
+        }];
+    }
+    
+    //get play result
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"EventId":@(_gd.eventInfo.id), @"UserId":@0};
+    [session postToApi:@"event/getUserPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        BOOL hasErr = NO;
+        if (error) {
+            alertHTTPError(error, data);
+            hasErr = YES;
+        }
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            hasErr = YES;
+        }
+        
+        if (hasErr) {
+            [UIView animateWithDuration:.3f animations:^{
+                _bestRecordLabel.alpha = 0.f;
+            } completion:^(BOOL finished) {
+                _bestRecordLabel.text = @"读取错误";
+                [UIView animateWithDuration:.3f animations:^{
+                    _bestRecordLabel.alpha = 1.f;
+                }];
+            }];
+            return;
+        }
+        
+        _gd.eventPlayRecord = [EventPlayRecored recordWithDictionary:dict];
+        
+        [self updatePlayRecord];
+    }];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [self updatePlayRecordWithHighscore];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self updatePlayRecord];
 }
 
-- (void)updatePlayRecordWithHighscore {
-    EventPlayRecored *record = _gamedata.eventPlayRecord;
+- (void)updatePackInfo {
+    [self checkAndEnableButtons];
+    [self loadBackground];
+    
+    _titleLabel.text = _gd.packInfo.title;
+}
+
+- (void)loadBackground{
+    NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
+    
+    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+        _bgImageView.alpha = 0.0;
+        [UIView animateWithDuration:1.f animations:^{
+            _bgImageView.alpha = 1.0;
+        }];
+    }];
+}
+
+- (void)checkAndEnableButtons {
+    if (_gd.packInfo && _gd.eventPlayRecord) {
+        _practiceButton.enabled = YES;
+        _commentButton.enabled = YES;
+        _rankButton.enabled = YES;
+        _betButton.enabled = YES;
+    }
+    [self onTimer];
+}
+
+- (void)updatePlayRecord {
+    [self checkAndEnableButtons];
+    
+    EventPlayRecored *record = _gd.eventPlayRecord;
     _highScoreStr = formatScore(record.highScore);
     
     if ([_bestRecordLabel.text compare:_highScoreStr] != 0) {
@@ -121,51 +239,47 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 
 
 - (void)onTimer {
-    enum EventState state = [_gamedata.eventInfo updateState];
+    enum EventState state = [_gd.eventInfo updateState];
     
     if (state == CLOSED) {
         _timeRemainLabel.text = @"比赛已结束";
         _playButton.enabled = NO;
+        [_playButton setTitle:@"已结束" forState:UIControlStateNormal|UIControlStateDisabled];
     } else if (state == COMMING) {
-        NSTimeInterval beginIntv = [_gamedata.eventInfo.beginTime timeIntervalSinceNow];
+        NSTimeInterval beginIntv = [_gd.eventInfo.beginTime timeIntervalSinceNow];
         NSString *str = formatInterval((int)beginIntv);
         _timeRemainLabel.text = [NSString stringWithFormat:@"距离开始%@", str];
         _playButton.enabled = NO;
+        [_playButton setTitle:@"未开始" forState:UIControlStateNormal|UIControlStateDisabled];
     } else if (state == RUNNING) {
-        NSTimeInterval endIntv = [_gamedata.eventInfo.endTime timeIntervalSinceNow];
+        NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
         NSString *str = formatInterval((int)endIntv);
         
         _timeRemainLabel.text = [NSString stringWithFormat:@"比赛剩余%@", str];
-        if (_gamedata.packInfo) {
+        if (_gd.packInfo) {
             _playButton.enabled = YES;
         } else {
             _playButton.enabled = NO;
         }
+        [_playButton setTitle:@"开始" forState:UIControlStateNormal|UIControlStateDisabled];
     }
-}
-
-- (void)reloadData {
-    [self onTimer];
-    //NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
-    //_event.endTime;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Button callback
 
 - (IBAction)onClickMatch:(id)sender {
-    _gamedata.gameMode = MATCH;
+    _gd.gameMode = MATCH;
     
     [self loadPacks];
 }
 
+- (IBAction)onClickParactice:(id)sender {
+    _gd.gameMode = PRACTICE;
+    [self loadPacks];
+}
+
 - (void)loadPacks {
-    NSArray *imageKeys = _gamedata.packInfo.images;
+    NSArray *imageKeys = _gd.packInfo.images;
     __block int localNum = 0;
     NSUInteger totalNum = [imageKeys count];
     if (totalNum == 0) {
@@ -178,7 +292,11 @@ static NSMutableSet *g_updatedPackIdSet = nil;
         }
     }
     if (localNum == totalNum) {
-        [self checkGameCoin];
+        if (_gd.gameMode == MATCH) {
+            [self checkGameCoin];
+        } else if (_gd.gameMode == PRACTICE) {
+            [self enterGame];
+        }
         return;
     } else if (localNum < totalNum) {
         NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
@@ -209,7 +327,11 @@ static NSMutableSet *g_updatedPackIdSet = nil;
                     //download complete
                     if (localNum == totalNum) {
                         [alert dismissWithClickedButtonIndex:0 animated:YES];
-                        [self checkGameCoin];
+                        if (_gd.gameMode == MATCH) {
+                            [self checkGameCoin];
+                        } else if (_gd.gameMode == PRACTICE) {
+                            [self enterGame];
+                        }
                     }
                 }];
             }
@@ -218,7 +340,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 }
 
 - (void)checkGameCoin {
-    if (_gamedata.eventPlayRecord.gameCoinNum == 0) {
+    if (_gd.eventPlayRecord.gameCoinNum == 0) {
         SldHttpSession *session = [SldHttpSession defaultSession];
         self.view.userInteractionEnabled = NO;
         [session postToApi:@"store/listGameCoinPack" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -262,7 +384,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             [self enterGame];
         }];
         
-        NSString *title = [NSString stringWithFormat:@"花费一个游戏币开始比赛?\n(现有%d个游戏币)", _gamedata.eventPlayRecord.gameCoinNum];
+        NSString *title = [NSString stringWithFormat:@"花费一个游戏币开始比赛?\n(现有%d个游戏币)", _gd.eventPlayRecord.gameCoinNum];
         [[[UIAlertView alloc] initWithTitle:title
                                     message:nil
                            cancelButtonItem:cancelItem
@@ -275,9 +397,9 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 }
 
 - (void)enterGame {
-    if (_gamedata.gameMode == MATCH) {
+    if (_gd.gameMode == MATCH) {
         SldHttpSession *session = [SldHttpSession defaultSession];
-        NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id)};
+        NSDictionary *body = @{@"EventId":@(_gd.eventInfo.id)};
         self.view.userInteractionEnabled = NO;
         [session postToApi:@"event/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             self.view.userInteractionEnabled = YES;
@@ -303,14 +425,17 @@ static NSMutableSet *g_updatedPackIdSet = nil;
                 [self.navigationController pushViewController:controller animated:YES];
                 
                 //
-                _gamedata.eventPlayRecord.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
-                _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", _gamedata.eventPlayRecord.gameCoinNum];
+                _gd.eventPlayRecord.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
+                _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", _gd.eventPlayRecord.gameCoinNum];
             }
         }];
+    } else if (_gd.gameMode == PRACTICE) {
+        SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
+        [self.navigationController pushViewController:controller animated:YES];
     }
     //update db
     FMDatabase *db = [SldDb defaultDb].fmdb;
-    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gamedata.eventInfo.id)];
+    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gd.eventInfo.id)];
     if (!ok) {
         lwError("Sql error:%@", [db lastErrorMessage]);
         return;
@@ -320,14 +445,14 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (void)onBuyGameCoinWithPackId:(NSInteger)packId {
     if (packId < _gameCoinPrices.count) {
         int price = [(NSNumber*)_gameCoinPrices[packId] intValue];
-        if (_gamedata.money < price) {
+        if (_gd.money < price) {
             alert(@"买不起😱", nil);
             return;
         }
     }
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"EventId":@(_gamedata.eventInfo.id), @"GameCoinPackId":@(packId)};
+    NSDictionary *body = @{@"EventId":@(_gd.eventInfo.id), @"GameCoinPackId":@(packId)};
     [session postToApi:@"store/buyGameCoin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
@@ -339,11 +464,11 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-        _gamedata.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+        _gd.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
         int gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
         _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", gameCoinNum];
         
-        _gamedata.eventPlayRecord.gameCoinNum = gameCoinNum;
+        _gd.eventPlayRecord.gameCoinNum = gameCoinNum;
         if (gameCoinNum > 0) {
             [self onClickMatch:nil];
         }

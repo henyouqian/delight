@@ -56,6 +56,7 @@
 @property (nonatomic) UITableViewController *tableViewController;
 @property (nonatomic) NSMutableArray *rankInfos;
 @property (nonatomic) BOOL loadingRank;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @end
 
 static SldRankController *_inst = nil;
@@ -64,10 +65,6 @@ static SldRankController *_inst = nil;
 
 + (instancetype)getInstance {
     return _inst;
-}
-
-- (void)dealloc {
-    
 }
 
 - (void)viewDidLoad
@@ -95,6 +92,9 @@ static SldRankController *_inst = nil;
     int navBottomY = [SldNevigationController getBottomY];
     _tableView.contentInset = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
     _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
+    
+    //
+    [self loadBackground];
     
 //    //header
 //    CGRect frame = self.view.frame;
@@ -270,10 +270,15 @@ static SldRankController *_inst = nil;
     }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)loadBackground{
+    NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
+    
+    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+        _bgImageView.alpha = 0.0;
+        [UIView animateWithDuration:1.f animations:^{
+            _bgImageView.alpha = 1.0;
+        }];
+    }];
 }
 
 #pragma mark - Table view data source

@@ -117,6 +117,11 @@
 		D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A556001969B38B00369401 /* SldChallengeListController.m */; };
 		D0A55606196C277E00369401 /* SldChallengeBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A55605196C277E00369401 /* SldChallengeBriefController.m */; };
 		D0A55609196C8A4700369401 /* locker.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55608196C8A4700369401 /* locker.png */; };
+		D0A5560D196E98A300369401 /* btnBgGreen90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A5560C196E98A300369401 /* btnBgGreen90@2x.png */; };
+		D0A5560F196EAB6B00369401 /* otlSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A5560E196EAB6B00369401 /* otlSettings@2x.png */; };
+		D0A55613196EADD800369401 /* otlBattle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55610196EADD800369401 /* otlBattle@2x.png */; };
+		D0A55614196EADD800369401 /* otlCup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55611196EADD800369401 /* otlCup@2x.png */; };
+		D0A55615196EADD800369401 /* otlTimer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55612196EADD800369401 /* otlTimer@2x.png */; };
 		D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA3195B3744009193E6 /* libAdsMogo.a */; };
 		D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */; };
 		D0D14AA6195B375A009193E6 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */; };
@@ -400,6 +405,11 @@
 		D0A55604196C277D00369401 /* SldChallengeBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallengeBriefController.h; sourceTree = "<group>"; };
 		D0A55605196C277E00369401 /* SldChallengeBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldChallengeBriefController.m; sourceTree = "<group>"; };
 		D0A55608196C8A4700369401 /* locker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locker.png; sourceTree = "<group>"; };
+		D0A5560C196E98A300369401 /* btnBgGreen90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgGreen90@2x.png"; sourceTree = "<group>"; };
+		D0A5560E196EAB6B00369401 /* otlSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlSettings@2x.png"; sourceTree = "<group>"; };
+		D0A55610196EADD800369401 /* otlBattle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBattle@2x.png"; sourceTree = "<group>"; };
+		D0A55611196EADD800369401 /* otlCup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlCup@2x.png"; sourceTree = "<group>"; };
+		D0A55612196EADD800369401 /* otlTimer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlTimer@2x.png"; sourceTree = "<group>"; };
 		D0D14AA3195B3744009193E6 /* libAdsMogo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAdsMogo.a; path = External/AdsMoGoLib/AdsMoGoSDK/libAdsMogo.a; sourceTree = "<group>"; };
 		D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDomobAdSDK.a; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK/libDomobAdSDK.a; sourceTree = "<group>"; };
@@ -785,6 +795,10 @@
 				D01044901945DCE9008DFF8D /* cupBronze@2x.png */,
 				D00F63F819407FD200C8EA3F /* cupGold@2x.png */,
 				D00F63F919407FD200C8EA3F /* cupSilver@2x.png */,
+				D0A55610196EADD800369401 /* otlBattle@2x.png */,
+				D0A55611196EADD800369401 /* otlCup@2x.png */,
+				D0A55612196EADD800369401 /* otlTimer@2x.png */,
+				D0A5560E196EAB6B00369401 /* otlSettings@2x.png */,
 				B3DB83201929494B00544759 /* otlFastForward@2x.png */,
 				B3A522141928FF0B00D5A38C /* otlNextTrack@2x.png */,
 				B3A522121928FDDC00D5A38C /* otlMusic@2x.png */,
@@ -805,6 +819,7 @@
 				B383536F191AD68400D259F5 /* glyphicons_245_chat.png */,
 				B3835370191AD68400D259F5 /* glyphicons_245_chat@2x.png */,
 				B33121FA1916D02C003E05DB /* thumbDarker.png */,
+				D0A5560C196E98A300369401 /* btnBgGreen90@2x.png */,
 				D010449F19464790008DFF8D /* btnBgBlue90@2x.png */,
 				D01044A019464790008DFF8D /* btnBgRed90@2x.png */,
 				D01044A119464790008DFF8D /* btnBgYellow90@2x.png */,
@@ -1144,6 +1159,7 @@
 				D0D14B41195B3807009193E6 /* webview_bar_close_hover_ipad@2x.png in Resources */,
 				D0D14B25195B3807009193E6 /* website-728x90.gif in Resources */,
 				B3C1BB7B1910D8BE0062D50C /* btnBgWhite90.png in Resources */,
+				D0A5560D196E98A300369401 /* btnBgGreen90@2x.png in Resources */,
 				D0D14B5F195B3807009193E6 /* webview_bar_next_grey.png in Resources */,
 				D0D14B15195B3807009193E6 /* adsmogo_btnbg@2x.png in Resources */,
 				B3A522151928FF0B00D5A38C /* otlNextTrack@2x.png in Resources */,
@@ -1165,10 +1181,13 @@
 				D0D14B3B195B3807009193E6 /* webview_bar_refresh@2x.png in Resources */,
 				B3815E79190C0D7A003AF183 /* ui in Resources */,
 				B3835375191AD83500D259F5 /* glyphicons_150_edit.png in Resources */,
+				D0A5560F196EAB6B00369401 /* otlSettings@2x.png in Resources */,
 				D0D14B60195B3807009193E6 /* webview_bar_pause.png in Resources */,
 				B3C1BB89191133910062D50C /* btnBgBlack90.png in Resources */,
 				D0D14B27195B3807009193E6 /* adsmogo_corner.png in Resources */,
 				D0D14B2A195B3807009193E6 /* hengtiao@2x.png in Resources */,
+				D0A55615196EADD800369401 /* otlTimer@2x.png in Resources */,
+				D0A55613196EADD800369401 /* otlBattle@2x.png in Resources */,
 				B39E447C191E794800CBB247 /* glyphicons_003_user.png in Resources */,
 				D0D14B16195B3807009193E6 /* adsmogo_close@2x.png in Resources */,
 				D0D14B55195B3807009193E6 /* safari.png in Resources */,
@@ -1217,6 +1236,7 @@
 				B3835371191AD68400D259F5 /* glyphicons_245_chat.png in Resources */,
 				D0D14B13195B3807009193E6 /* adsmogo_bannerface305.png in Resources */,
 				D0D14B31195B3807009193E6 /* webview_bar_back@2x.png in Resources */,
+				D0A55614196EADD800369401 /* otlCup@2x.png in Resources */,
 				D0D14B4B195B3807009193E6 /* webview_bar_close_hover_ipad.png in Resources */,
 				D0D14B45195B3807009193E6 /* webview_bar_pause_ipad@2x.png in Resources */,
 				B39E447D191E794800CBB247 /* glyphicons_003_user@2x.png in Resources */,

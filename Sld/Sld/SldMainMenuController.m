@@ -8,8 +8,11 @@
 
 #import "SldMainMenuController.h"
 #import "SldLoginViewController.h"
+#import "SldStreamPlayer.h"
 
 @interface SldMainMenuController ()
+@property (weak, nonatomic) IBOutlet UIImageView *discIcon;
+
 @end
 
 @implementation SldMainMenuController
@@ -21,24 +24,44 @@
     
     //login view
     [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    //
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(didBecomeActiveNotification)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [self rotateDisc];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
+- (void)didBecomeActiveNotification {
+    [self rotateDisc];
+}
+
+- (void)rotateDisc {
+    if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
+        CABasicAnimation* rotationAnimation;
+        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+        rotationAnimation.duration = 2.f;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = 10000000;
+        
+        [_discIcon.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    } else {
+        [_discIcon.layer removeAllAnimations];
+    }
 }
 
 /*

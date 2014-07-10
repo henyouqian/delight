@@ -10,7 +10,6 @@
 #import "SldHttpSession.h"
 //#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
-#import "SldLoginViewController.h"
 #import "SldUtil.h"
 #import "config.h"
 #import "SldStreamPlayer.h"
@@ -77,7 +76,6 @@ static const int FETCH_EVENT_COUNT = 20;
 
 @interface SldEventListViewController ()
 @property (weak, nonatomic) IBOutlet SldCollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *musicButton;
 @property (weak, nonatomic) IBOutlet UIButton *rewardButton;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) UIImage *loadingImage;
@@ -120,15 +118,6 @@ static const int FETCH_EVENT_COUNT = 20;
     [self.collectionView addSubview:self.refreshControl];
     [self.refreshControl addTarget:self action:@selector(refershControlAction) forControlEvents:UIControlEventValueChanged];
     
-    //login view
-    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-    
-    //
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(didBecomeActiveNotification)
-                                                name:UIApplicationDidBecomeActiveNotification
-                                              object:nil];
-    
     //
     _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
     
@@ -136,6 +125,8 @@ static const int FETCH_EVENT_COUNT = 20;
     _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     _checkNewTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60*2 target:self selector:@selector(onCheckNewTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    //
 }
 
 - (void)onTimer {
@@ -233,8 +224,6 @@ static const int FETCH_EVENT_COUNT = 20;
     }
      _gameData.needReloadEventList = NO;
     
-    [self didBecomeActiveNotification];
-    
     if (_gameData.rewardCache > 0) {
         [_rewardButton setTitle:[NSString stringWithFormat:@"可领取奖金%lld", _gameData.rewardCache] forState:UIControlStateNormal];
         _rewardButton.hidden = NO;
@@ -252,22 +241,6 @@ static const int FETCH_EVENT_COUNT = 20;
     }
     
     [self.collectionView reloadData];
-}
-
-- (void)didBecomeActiveNotification {
-    UIView *view = [_musicButton valueForKey:@"view"];
-    if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
-        CABasicAnimation* rotationAnimation;
-        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
-        rotationAnimation.duration = 2.f;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = 10000000;
-        
-        [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-    } else {
-        [view.layer removeAllAnimations];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -553,7 +526,7 @@ static const int FETCH_EVENT_COUNT = 20;
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if (segue.identifier && [segue.identifier compare:@"toEventMenu"] == 0) {
+    if (segue.identifier && [segue.identifier compare:@"matchBriefSeg"] == 0) {
         UIButton *button = sender;
         UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];

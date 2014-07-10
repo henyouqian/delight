@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel3;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
+@property (weak, nonatomic) IBOutlet UIButton *commentButton;
 @property (nonatomic) SldGameData *gd;
 
 @end
@@ -37,6 +38,7 @@
     
     _gd = [SldGameData getInstance];
     _startButton.enabled = NO;
+    _commentButton.enabled = NO;
     
     [self updateEventInfo];
     
@@ -153,6 +155,7 @@
     [self loadBackground];
     _titleLabel.text = _gd.packInfo.title;
     _startButton.enabled = YES;
+    _commentButton.enabled = YES;
 }
 
 - (void)updateTime {

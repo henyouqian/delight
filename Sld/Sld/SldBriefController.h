@@ -16,7 +16,7 @@
 @property (nonatomic) NSString *rankStr;
 
 + (instancetype)getInstance;
-- (void)updatePlayRecordWithHighscore;
+- (void)updatePlayRecord;
 @end
 
 
