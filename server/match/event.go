@@ -19,6 +19,7 @@ import (
 
 const (
 	H_EVENT                     = "H_EVENT"
+	H_EVENT_BUFF                = "H_EVENT_BUFF"
 	H_EVENT_PLAYER_RECORD       = "H_EVENT_PLAYER_RECORD" //subkey:(int)eventId
 	Z_EVENT_PLAYER_RECORD       = "Z_EVENT_PLAYER_RECORD" //key:Z_EVENT_PLAYER_RECORD/<(int64)userId> subkey:(int)eventId score:(int)eventId
 	RDS_Z_EVENT_LEADERBOARD_PRE = "RDS_Z_EVENT_LEADERBOARD_PRE"
@@ -28,11 +29,12 @@ const (
 	TRY_EXPIRE_SECONDS          = 600
 	TEAM_CHAMPIONSHIP_ROUND_NUM = 6
 	H_EVENT_TEAM_SCORE          = "H_EVENT_TEAM_SCORE"   //subkey:eventId value:map[(string)teamName](int)score
-	H_EVENT_BETTING_POOL        = "H_EVENT_BETTING_POOL" //subkey:eventId value:map[(string)teamName](int64)money
+	H_EVENT_BETTING_POOL        = "H_EVENT_BETTING_POOL" //key:H_EVENT_BETTING_POOL/eventId subkey:(string)teamName value:(int64)money
 	INIT_GAME_COIN_NUM          = 3
 	BET_CLOSE_BEFORE_END_SEC    = 60 * 60
-	Z_EVENT_BET_PLAYER          = "Z_EVENT_BET_PLAYER" //key:Z_EVENT_BET_PLAYER/eventId subkey:playerId score:playerId
+	H_EVENT_TEAM_PLAYER_BET     = "H_EVENT_TEAM_PLAYER_BET" //key:H_EVENT_TEAM_PLAYER_BET/eventId/teamName subKey:playerId value:betMoney
 	TIME_FORMAT                 = "2006-01-02T15:04"
+	TEAM_SCORE_RANK_MAX         = 100
 )
 
 var (
@@ -54,6 +56,14 @@ func makeEventPlayerRecordSubkey(eventId int64, userId int64) string {
 	return key
 }
 
+func makeEventBettingPoolKey(eventId int64) string {
+	return fmt.Sprintf("%s/%d", H_EVENT_BETTING_POOL, eventId)
+}
+
+func makeEventTeamPlayerBetKey(eventId int64, teamName string) string {
+	return fmt.Sprintf("%s/%d/%s", H_EVENT_TEAM_PLAYER_BET, eventId, teamName)
+}
+
 var (
 	DEFAULT_CHALLENGE_REWARDS = []int{100, 50, 50} //gold, silver, bronze. additive.
 
@@ -62,19 +72,8 @@ var (
 		"TEAM_CHAMPIONSHIP": 1,
 	}
 
-	TEAM_IDS = []uint32{
-		11, 12, 13, 14, 15,
-		21, 22, 23,
-		31, 32, 33, 34, 35, 36, 37,
-		41, 42, 43, 44, 45, 46,
-		50, 51, 52, 53, 54,
-		61, 62, 63, 64, 65,
-		91, 92,
-		71,
-	}
-
 	TEAM_NAMES              = []string{"安徽", "澳门", "北京", "重庆", "福建", "甘肃", "广东", "广西", "贵州", "海南", "河北", "黑龙江", "河南", "湖北", "湖南", "江苏", "江西", "吉林", "辽宁", "内蒙古", "宁夏", "青海", "陕西", "山东", "上海", "山西", "四川", "台湾", "天津", "香港", "新疆", "西藏", "云南", "浙江"}
-	EVENT_INIT_BETTING_POOL = map[string]int64{}
+	EVENT_INIT_BETTING_POOL = map[string]interface{}{}
 	INIT_BET_MONEY          = int64(10000)
 
 	_cron cron.Cron
@@ -170,7 +169,7 @@ func eventPublishTask() {
 				}
 
 				//get event
-				resp, err = ssdbc.Do("hget", H_EVENT, eventId)
+				resp, err = ssdbc.Do("hget", H_EVENT_BUFF, eventId)
 				if err != nil || resp[0] != ssdb.OK {
 					glog.Errorln(err, resp[0])
 					return
@@ -205,6 +204,17 @@ func eventPublishTask() {
 				}
 				event.EndTime = endTime.Unix()
 				event.EndTimeString = endTime.Format(TIME_FORMAT)
+
+				//change event id
+				resp, err = ssdbc.Do("zrscan", Z_EVENT, "", "", "", 1)
+				lwutil.CheckError(err, "")
+				if resp[0] == "not_found" {
+					event.Id = 1
+				} else {
+					maxId, err := strconv.ParseInt(resp[1], 10, 64)
+					lwutil.CheckError(err, "")
+					event.Id = maxId + 1
+				}
 
 				//save event
 				bts, err := json.Marshal(event)
@@ -314,7 +324,10 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	checkAdmin(session)
 
 	//in
-	var event Event
+	var event struct {
+		Event
+		Force bool
+	}
 	err = lwutil.DecodeRequestBody(r, &event)
 	lwutil.CheckError(err, "err_decode_body")
 	if _, ok := EVENT_TYPES[event.Type]; ok == false {
@@ -363,7 +376,24 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	event.Thumb = pack.Thumb
 
 	//gen serial
-	event.Id = GenSerial(ssdb, EVENT_SERIAL)
+	if event.Force {
+		resp, err := ssdb.Do("hget", H_EVENT, event.Id)
+		if resp[0] != "not_found" {
+			lwutil.SendError("err_exist", "Force == true, but event exist")
+		}
+		lwutil.CheckError(err, "")
+	} else {
+		//event.Id = GenSerial(ssdb, EVENT_SERIAL)
+		resp, err := ssdb.Do("zrscan", Z_EVENT, "", "", "", 1)
+		lwutil.CheckError(err, "")
+		if resp[0] == "not_found" {
+			event.Id = 1
+		} else {
+			maxId, err := strconv.ParseInt(resp[1], 10, 64)
+			lwutil.CheckError(err, "")
+			event.Id = maxId + 1
+		}
+	}
 
 	//save to ssdb
 	js, err := json.Marshal(event)
@@ -375,10 +405,9 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 
 	//init betting pool
-	js, err = json.Marshal(EVENT_INIT_BETTING_POOL)
+	key := makeEventBettingPoolKey(event.Id)
+	err = ssdb.HSetMap(key, EVENT_INIT_BETTING_POOL)
 	lwutil.CheckError(err, "")
-	resp, err = ssdb.Do("hset", H_EVENT_BETTING_POOL, event.Id, js)
-	lwutil.CheckSsdbError(resp, err)
 
 	//out
 	lwutil.WriteResponse(w, event)
@@ -405,10 +434,18 @@ func apiModEvent(w http.ResponseWriter, r *http.Request) {
 		lwutil.SendError("err_match_type", "")
 	}
 
+	//get pack
+	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	event.Thumb = pack.Thumb
+
 	//save to ssdb
 	js, err := json.Marshal(event)
 	lwutil.CheckError(err, "")
-	resp, err := ssdb.Do("hset", H_EVENT, event.Id, js)
+	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	//out
@@ -731,17 +768,16 @@ func apiAddEventToBuff(w http.ResponseWriter, r *http.Request) {
 	//save to ssdb
 	js, err := json.Marshal(event)
 	lwutil.CheckError(err, "")
-	resp, err = ssdb.Do("hset", H_EVENT, event.Id, js)
+	resp, err = ssdb.Do("hset", H_EVENT_BUFF, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	resp, err = ssdb.Do("zset", Z_EVENT_BUFF, event.Id, event.Id)
 	lwutil.CheckSsdbError(resp, err)
 
 	//init betting pool
-	js, err = json.Marshal(EVENT_INIT_BETTING_POOL)
+	key := makeEventBettingPoolKey(event.Id)
+	err = ssdb.HSetMap(key, EVENT_INIT_BETTING_POOL)
 	lwutil.CheckError(err, "")
-	resp, err = ssdb.Do("hset", H_EVENT_BETTING_POOL, event.Id, js)
-	lwutil.CheckSsdbError(resp, err)
 
 	//out
 	lwutil.WriteResponse(w, event)
@@ -772,7 +808,7 @@ func apiListEventBuff(w http.ResponseWriter, r *http.Request) {
 	keyNum := len(resp)
 	cmds := make([]interface{}, keyNum+2)
 	cmds[0] = "multi_hget"
-	cmds[1] = H_EVENT
+	cmds[1] = H_EVENT_BUFF
 	for i := 0; i < keyNum; i++ {
 		cmds[2+i] = resp[i]
 	}
@@ -814,7 +850,7 @@ func apiDelEventFromBuff(w http.ResponseWriter, r *http.Request) {
 	//del
 	resp, err := ssdb.Do("zdel", Z_EVENT_BUFF, in.EventId)
 	lwutil.CheckSsdbError(resp, err)
-	resp, err = ssdb.Do("hdel", H_EVENT, in.EventId)
+	resp, err = ssdb.Do("hdel", H_EVENT_BUFF, in.EventId)
 	lwutil.CheckSsdbError(resp, err)
 
 	lwutil.WriteResponse(w, in)
@@ -1078,67 +1114,8 @@ func apiPlayEnd(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckError(err, "")
 
 	//recaculate team score
-	if scoreUpdate && rank <= 100 {
-		resp, err := ssdb.Do("hget", H_EVENT, in.EventId)
-		lwutil.CheckSsdbError(resp, err)
-		var event Event
-		err = json.Unmarshal([]byte(resp[1]), &event)
-		lwutil.CheckError(err, "")
-		if event.HasResult == false {
-			//redis
-			rc := redisPool.Get()
-			defer rc.Close()
-
-			//get ranks from redis
-			eventLbLey := makeRedisLeaderboardKey(in.EventId)
-			values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, 0, 99))
-			lwutil.CheckError(err, "")
-
-			num := len(values)
-			userIds := make([]int64, 0, 100)
-			if num > 0 {
-				cmds := make([]interface{}, 0, num+2)
-				cmds = append(cmds, "multi_hget")
-				cmds = append(cmds, H_EVENT_PLAYER_RECORD)
-
-				for i := 0; i < num; i++ {
-					userId, err := redis.Int64(values[i], nil)
-					lwutil.CheckError(err, "")
-					userIds = append(userIds, userId)
-					recordKey := makeEventPlayerRecordSubkey(in.EventId, userId)
-					cmds = append(cmds, recordKey)
-				}
-
-				//get event player record
-				resp, err = ssdb.Do(cmds...)
-				lwutil.CheckSsdbError(resp, err)
-				resp = resp[1:]
-
-				if num*2 != len(resp) {
-					lwutil.SendError("err_data_missing", "")
-				}
-				var record EventPlayerRecord
-				scoreMap := make(map[string]int)
-				for i := range userIds {
-					err = json.Unmarshal([]byte(resp[i*2+1]), &record)
-					lwutil.CheckError(err, "")
-					score := scoreMap[record.TeamName]
-					score += 100 - i
-					if i == 0 {
-						score += 50
-					}
-					scoreMap[record.TeamName] = score
-				}
-				// glog.Info(scoreMap)
-
-				js, err := json.Marshal(scoreMap)
-				lwutil.CheckError(err, "")
-
-				resp, err := ssdb.Do("hset", H_EVENT_TEAM_SCORE, in.EventId, js)
-				// glog.Info(string(js))
-				lwutil.CheckSsdbError(resp, err)
-			}
-		}
+	if scoreUpdate && rank <= TEAM_SCORE_RANK_MAX {
+		recaculateTeamScore(ssdb, rc, in.EventId)
 	}
 
 	//out
@@ -1152,6 +1129,68 @@ func apiPlayEnd(w http.ResponseWriter, r *http.Request) {
 
 	//out
 	lwutil.WriteResponse(w, out)
+}
+
+func recaculateTeamScore(ssdb *ssdb.Client, rc redis.Conn, eventId int64) map[string]int {
+	resp, err := ssdb.Do("hget", H_EVENT, eventId)
+	lwutil.CheckSsdbError(resp, err)
+	var event Event
+	err = json.Unmarshal([]byte(resp[1]), &event)
+	lwutil.CheckError(err, "")
+	if event.HasResult == false {
+		//get ranks from redis
+		eventLbLey := makeRedisLeaderboardKey(eventId)
+		values, err := redis.Values(rc.Do("ZREVRANGE", eventLbLey, 0, TEAM_SCORE_RANK_MAX-1))
+		lwutil.CheckError(err, "")
+
+		num := len(values)
+		userIds := make([]int64, 0, TEAM_SCORE_RANK_MAX)
+		if num > 0 {
+			cmds := make([]interface{}, 0, num+2)
+			cmds = append(cmds, "multi_hget")
+			cmds = append(cmds, H_EVENT_PLAYER_RECORD)
+
+			for i := 0; i < num; i++ {
+				userId, err := redis.Int64(values[i], nil)
+				lwutil.CheckError(err, "")
+				userIds = append(userIds, userId)
+				recordKey := makeEventPlayerRecordSubkey(eventId, userId)
+				cmds = append(cmds, recordKey)
+			}
+
+			//get event player record
+			resp, err = ssdb.Do(cmds...)
+			lwutil.CheckSsdbError(resp, err)
+			resp = resp[1:]
+
+			if num*2 != len(resp) {
+				lwutil.SendError("err_data_missing", "")
+			}
+			var record EventPlayerRecord
+			scoreMap := make(map[string]int)
+			for i := range userIds {
+				err = json.Unmarshal([]byte(resp[i*2+1]), &record)
+				lwutil.CheckError(err, "")
+				score := scoreMap[record.TeamName]
+				score += 100 - i
+				if i == 0 {
+					score += 50
+				}
+				scoreMap[record.TeamName] = score
+			}
+			// glog.Info(scoreMap)
+
+			js, err := json.Marshal(scoreMap)
+			lwutil.CheckError(err, "")
+
+			resp, err := ssdb.Do("hset", H_EVENT_TEAM_SCORE, eventId, js)
+			// glog.Info(string(js))
+			lwutil.CheckSsdbError(resp, err)
+
+			return scoreMap
+		}
+	}
+	return nil
 }
 
 func _redisInt(reply interface{}, err error) (int, error) {
@@ -1504,7 +1543,7 @@ func apiGetBettingPool(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		EventId uint64
+		EventId int64
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
@@ -1515,14 +1554,13 @@ func apiGetBettingPool(w http.ResponseWriter, r *http.Request) {
 	defer ssdb.Close()
 
 	//betting pool
-	resp, err := ssdb.Do("hget", H_EVENT_BETTING_POOL, in.EventId)
-	lwutil.CheckSsdbError(resp, err)
-	var bettingPool map[string]int64
-	err = json.Unmarshal([]byte(resp[1]), &bettingPool)
+	key := makeEventBettingPoolKey(in.EventId)
+	bettingPool := map[string]int64{}
+	err = ssdb.HGetMapAll(key, bettingPool)
 	lwutil.CheckError(err, "")
 
 	//team score
-	resp, err = ssdb.Do("hget", H_EVENT_TEAM_SCORE, in.EventId)
+	resp, err := ssdb.Do("hget", H_EVENT_TEAM_SCORE, in.EventId)
 	teamScores := map[string]int{}
 	if resp[0] == "ok" {
 		err = json.Unmarshal([]byte(resp[1]), &teamScores)
@@ -1572,13 +1610,12 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//check money
-	playerKey := makePlayerInfoKey(userId)
-	var money int64
-	err = ssdb.HGet(playerKey, playerMoney, &money)
+	playerInfo, err := getPlayerInfo(ssdb, userId)
 	lwutil.CheckError(err, "")
-	if in.Money > money {
+	if in.Money > playerInfo.Money {
 		lwutil.SendError("err_money", "")
 	}
+	money := playerInfo.Money
 
 	//update bet
 	record := getEventPlayerRecord(ssdb, in.EventId, userId)
@@ -1590,16 +1627,19 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 	saveEventPlayerRecord(ssdb, in.EventId, userId, record)
 
 	//update money
+	playerKey := makePlayerInfoKey(userId)
 	resp, err := ssdb.Do("hincr", playerKey, playerMoney, -in.Money)
 	lwutil.CheckSsdbError(resp, err)
 	money -= in.Money
 
-	//add to bet zset
-	key := fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, in.EventId)
-	resp, err = ssdb.Do("zset", key, userId, userId)
+	// add to H_EVENT_TEAM_PLAYER_BET
+	key := makeEventTeamPlayerBetKey(in.EventId, playerInfo.TeamName)
+	resp, err = ssdb.Do("hincr", key, userId, in.Money)
 	lwutil.CheckSsdbError(resp, err)
 
-	//fixme: add to betting pool
+	//add to betting pool
+	bettingPoolKey := makeEventBettingPoolKey(in.EventId)
+	resp, err = ssdb.Do("hincr", bettingPoolKey, in.TeamName, in.Money)
 
 	//out
 	out := map[string]interface{}{

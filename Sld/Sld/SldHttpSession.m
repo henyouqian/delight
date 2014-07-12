@@ -179,6 +179,8 @@ NSString* getServerErrorType(NSData *data) {
     }
 }
 
+static BOOL _ishttpErrorShown = NO;
+
 void alertHTTPError(NSError *error, NSData *data) {
     if (!error) return;
     if (error.code == 400 || error.code == 500) {
@@ -199,7 +201,17 @@ void alertHTTPError(NSError *error, NSData *data) {
         }
     }
     
-    alert(@"HTTP error", [error localizedDescription]);
+    //alert(@"HTTP error", [error localizedDescription]);
+    
+    if (!_ishttpErrorShown) {
+        _ishttpErrorShown = YES;
+        [[[UIAlertView alloc] initWithTitle:@"HTTP error"
+                                    message:[error localizedDescription]
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"OK" action:^{
+            _ishttpErrorShown = NO;
+        }]
+                           otherButtonItems:nil] show];
+    }
 }
 
 @end

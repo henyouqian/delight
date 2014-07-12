@@ -25,7 +25,6 @@ static const int FETCH_EVENT_COUNT = 20;
 //@property (weak, nonatomic) IBOutlet UIView *highlight;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *cupIcon;
 
 @end
 
@@ -273,7 +272,7 @@ static const int FETCH_EVENT_COUNT = 20;
              [self.refreshControl endRefreshing];
              
              if (error) {
-                 lwError("Http Error: event/list, error=%@", [error localizedDescription]);
+                 alertHTTPError(error, data);
                  return;
              }
              NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -412,13 +411,6 @@ static const int FETCH_EVENT_COUNT = 20;
     NSString *strDate = [dateFormatter stringFromDate:event.beginTime];
     NSArray *comps = [strDate componentsSeparatedByString:@","];
     cell.dateLabel.text = [comps objectAtIndex:0];
-    
-    //cup icon
-    NSArray *pathes = @[@"cupWhite@2x.png", @"cupGold@2x.png", @"cupSilver@2x.png", @"cupBronze@2x.png"];
-    if (event.cupType >= 0 && event.cupType < pathes.count){
-        NSString *path = getResFullPath(pathes[event.cupType]);
-        [cell.cupIcon asyncLoadLocalImageWithPath:path completion:nil];
-    }
     
     return cell;
 }

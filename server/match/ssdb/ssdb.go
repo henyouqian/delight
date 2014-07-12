@@ -549,3 +549,85 @@ func (c *Client) HGetMap(key string, mp map[string]interface{}) (rErr error) {
 
 	return nil
 }
+
+func (c *Client) HGetMapAll(key string, mp interface{}) (rErr error) {
+	defer func() {
+		if rErr != nil {
+			c.err = rErr
+		}
+	}()
+
+	val := reflect.ValueOf(mp)
+	if val.Kind() != reflect.Map {
+		return fmt.Errorf("second arg must be map")
+	}
+
+	tp := val.Type()
+
+	//
+	resp, err := c.Do("hgetall", key)
+	if err != nil {
+		return err
+	}
+	if resp[0] != "ok" {
+		return fmt.Errorf("ssdbErr:", resp[0])
+	}
+
+	//
+	resp = resp[1:]
+	for i := 0; i < len(resp)/2; i++ {
+		k := resp[i*2]
+		v := resp[i*2+1]
+
+		mapkeyVal := reflect.New(tp.Key()).Elem()
+		switch mapkeyVal.Interface().(type) {
+		case string:
+			mapkeyVal.SetString(k)
+		case []byte:
+			mapkeyVal.SetBytes([]byte(k))
+		case int, int8, int16, int32, int64:
+			intv, _ := strconv.ParseInt(k, 0, 64)
+			mapkeyVal.SetInt(intv)
+		case uint, uint8, uint16, uint32, uint64:
+			uiv, _ := strconv.ParseUint(k, 0, 64)
+			mapkeyVal.SetUint(uiv)
+		case float32, float64:
+			f, _ := strconv.ParseFloat(k, 64)
+			mapkeyVal.SetFloat(f)
+		case bool:
+			b := true
+			if k == "0" || k == "false" {
+				b = false
+			}
+			mapkeyVal.SetBool(b)
+		default:
+			return fmt.Errorf("bad arguments")
+		}
+
+		switch reflect.New(tp.Elem()).Elem().Interface().(type) {
+		case string:
+			val.SetMapIndex(mapkeyVal, reflect.ValueOf(v))
+		case []byte:
+			val.SetMapIndex(mapkeyVal, reflect.ValueOf([]byte(v)))
+		case int, int8, int16, int32, int64:
+			iv, _ := strconv.ParseInt(v, 0, 64)
+			val.SetMapIndex(mapkeyVal, reflect.ValueOf(iv))
+		case uint, uint8, uint16, uint32, uint64:
+			uv, _ := strconv.ParseUint(v, 0, 64)
+			val.SetMapIndex(mapkeyVal, reflect.ValueOf(uv))
+		case float32, float64:
+			fv, _ := strconv.ParseFloat(v, 64)
+			val.SetMapIndex(mapkeyVal, reflect.ValueOf(fv))
+		case bool:
+			b := true
+			if v == "0" || v == "false" {
+				b = false
+			}
+			val.SetMapIndex(mapkeyVal, reflect.ValueOf(b))
+		default:
+			return fmt.Errorf("bad arguments")
+		}
+	}
+
+	return nil
+}

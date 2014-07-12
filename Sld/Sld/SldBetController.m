@@ -2,169 +2,141 @@
 //  SldBetController.m
 //  Sld
 //
-//  Created by Wei Li on 14-5-4.
+//  Created by 李炜 on 14-7-12.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
 #import "SldBetController.h"
-//#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
-#import "SldHttpSession.h"
-#import "SldNevigationController.h"
-#import "config.h"
-#import "SldUtil.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "SldNevigationController.h"
+#import "SldUtil.h"
+#import "SldHttpSession.h"
 
-@interface BettingTeam : NSObject
+@interface TeamBetData : NSObject
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) int score;
-@property (nonatomic) SInt64 betMoney;
 @property (nonatomic) float winMul;
+@property (nonatomic) int myBet;
+@property (nonatomic) SInt64 betMoney;
 @end
 
-@implementation BettingTeam
+@implementation TeamBetData
+
 @end
 
-//========================
-@interface TeamScoreCell : UITableViewCell
+
+@interface SldBetContainerController ()
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@end
+
+@implementation SldBetContainerController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self loadBackground];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    //[self loadBackground];
+}
+
+- (void)loadBackground{
+    NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
+   
+    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+        _bgImageView.alpha = 0.0;
+        [UIView animateWithDuration:1.f delay:0 options:UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                _bgImageView.alpha = 1.0;
+            } completion:nil
+        ];
+    }];
+}
+
+@end
+
+//=============================
+@interface SldBetCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
-@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *winMulLabel;
+    
+@end
+
+@implementation SldBetCell
 
 @end
 
-@implementation TeamScoreCell
 
-@end
-
-
-//========================
+//=============================
 @interface SldBetController ()
-@property (nonatomic) UITableViewController *tableViewController;
-@property (nonatomic) IBOutlet UIView *headerView;
-@property (nonatomic) NSMutableArray *bettingTeams;
+@property (weak, nonatomic) IBOutlet UIView *headerView;
+@property (weak, nonatomic) IBOutlet UILabel *myCoinLabel;
+@property (weak, nonatomic) IBOutlet UILabel *betSumLabel;
+@property (nonatomic) SldGameData *gd;
+@property (nonatomic) NSMutableArray *teamBetDatas;
 @end
-
-static SldBetController *_inst = nil;
 
 @implementation SldBetController
-
-+ (instancetype)getInstance {
-    return _inst;
-}
-
-- (void)dealloc {
-    
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    _inst = self;
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
+    _gd = [SldGameData getInstance];
     
     //set tableView inset
     int navBottomY = [SldNevigationController getBottomY];
-    _tableView.contentInset = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
-    _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(navBottomY, 0, 100, 0);
-    _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.contentInset = UIEdgeInsetsMake(navBottomY, 0, 0, 0);
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(navBottomY, 0, 0, 0);
     
-    //refreshControl
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(updateTeamScore) forControlEvents:UIControlEventValueChanged];
-    refreshControl.tintColor = [UIColor whiteColor];
+    self.tableView.tableHeaderView = _headerView;
     
-    _tableViewController = [[UITableViewController alloc] init];
-    _tableViewController.tableView = _tableView;
-    _tableViewController.refreshControl = refreshControl;
-    _tableViewController.clearsSelectionOnViewWillAppear = YES;
-    [self addChildViewController:_tableViewController];
+    _myCoinLabel.text = [NSString stringWithFormat:@"我的金币：%lld", _gd.money];
     
-    [self updateTeamScore];
-}
-
-- (void)onViewShown {
-    //[_tableView reloadData];
-}
-
-- (void)onHttpBetWithDict:(NSDictionary*)dict {
-    SldGameData *gd = [SldGameData getInstance];
-    
-    NSString *teamName = [dict objectForKey:@"TeamName"];
-    SInt64 betMoney = [(NSNumber*)[dict objectForKey:@"BetMoney"]longLongValue];
-    SInt64 betMoneySum = [(NSNumber*)[dict objectForKey:@"BetMoneySum"] longLongValue];
-    SInt64 userMoney = [(NSNumber*)[dict objectForKey:@"UserMoney"] longLongValue];
-    
-    for (int i = 0; i < _bettingTeams.count; ++i) {
-        BettingTeam *bt = (BettingTeam*)_bettingTeams[i];
-        if ([teamName compare:bt.teamName] == 0) {
-            bt.betMoney = betMoney;
-            gd.eventPlayRecord.BetMoneySum = betMoneySum;
-            gd.money = userMoney;
-            
-            NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
-            NSArray* rowsToReload = [NSArray arrayWithObjects:path, nil];
-            [_tableView reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationAutomatic];
-            
-            return;
-        }
+    //
+    _teamBetDatas = [NSMutableArray array];
+    for (NSString *teamName in _gd.TEAM_NAMES) {
+        TeamBetData *data = [[TeamBetData alloc] init];
+        data.teamName = teamName;
+        [_teamBetDatas addObject:data];
     }
-}
-
-- (void)updateTeamScore {
-    SldGameData *gd = [SldGameData getInstance];
-    NSDictionary *body = @{@"EventId":@(gd.eventInfo.id)};
+    
+    //
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"event/getBettingPool" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-    {
-        [_tableViewController.refreshControl endRefreshing];
+    NSDictionary *body = @{@"EventId":@(_gd.eventInfo.id)};
+    [session postToApi:@"event/getBettingPool" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
             return;
         }
+        
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
-            alert(@"Json error", [error localizedDescription]);
+            lwError("Json error:%@", [error localizedDescription]);
             return;
         }
         
-        NSDictionary *bettingPool = [dict objectForKey:@"BettingPool"];
-        NSDictionary *teamScores = [dict objectForKey:@"TeamScores"];
+        NSDictionary *bettingPoolDict = [dict objectForKey:@"BettingPool"];
         
-        NSMutableDictionary *bettingDict = [NSMutableDictionary dictionary];
-        int betSum = 0;
-        for (id key in bettingPool) {
-            BettingTeam *bt = [[BettingTeam alloc] init];
-            bt.teamName = (NSString*)key;
-            bt.betMoney = [(NSNumber*)bettingPool[key] longLongValue];
-            bettingDict[key] = bt;
-            betSum += bt.betMoney;
-        }
-        for (id key in bettingPool) {
-            BettingTeam *bt = bettingDict[key];
-            bt.winMul = (float)betSum / bt.betMoney;
-            bettingDict[key] = bt;
-        }
-        
-        for (id key in teamScores) {
-            BettingTeam *bt = [bettingDict objectForKey:key];
-            if (bt) {
-                bt.score = [(NSNumber*)teamScores[key] intValue];
-                bettingDict[key] = bt;
+        SInt64 totleBetMoney = 0;
+        for (TeamBetData *data in _teamBetDatas) {
+            NSNumber *betMoney = [bettingPoolDict objectForKey:data.teamName];
+            if (betMoney) {
+                data.betMoney = [betMoney longLongValue];
+                totleBetMoney += data.betMoney;
             }
+            
+            
         }
         
-        _bettingTeams = [NSMutableArray array];
-        for (NSString *teamName in gd.TEAM_NAMES) {
-            [_bettingTeams addObject:bettingDict[teamName]];
-        }
-                
-        [_tableView reloadData];
+        
+        
     }];
-}
 
+}
 
 #pragma mark - Table view data source
 
@@ -175,145 +147,73 @@ static SldBetController *_inst = nil;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _bettingTeams.count;
+    return _teamBetDatas.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TeamScoreCell *cell = [tableView dequeueReusableCellWithIdentifier:@"teamScoreCell" forIndexPath:indexPath];
-    if (indexPath.row < _bettingTeams.count) {
-        BettingTeam *bt = _bettingTeams[indexPath.row];
-        cell.teamLabel.text = bt.teamName;
-        cell.scoreLabel.text = [NSString stringWithFormat:@"%d", bt.score];
-        cell.winMulLabel.text = [NSString stringWithFormat:@"%.2f", bt.winMul];
-    }
+    SldBetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"betCell" forIndexPath:indexPath];
     cell.backgroundColor = [UIColor clearColor];
+    TeamBetData *data = [_teamBetDatas objectAtIndex:indexPath.row];
+    cell.teamLabel.text = data.teamName;
+    cell.rankLabel.text = [NSString stringWithFormat:@"%d", indexPath.row+1];
     return cell;
 }
 
-//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-//{
-//    NSString *sectionName;
-//    switch (section)
-//    {
-//        case 0:
-//            sectionName = NSLocalizedString(@"Team rank", @"team rank");
-//            break;
-//        default:
-//            sectionName = @"";
-//            break;
+//- (UITableViewHeaderFooterView *)headerViewForSection:(NSInteger)section {
+//    if (section == 0) {
+//        return _headerView;
 //    }
-//    return sectionName;
+//    return nil;
 //}
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 30)];
-//    /* Create custom view to display section header... */
-//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.frame.size.width, 18)];
-//    [label setFont:[UIFont boldSystemFontOfSize:12]];
-//    NSString *string =@"xxxxxxx";
-//    /* Section header is in 0th index... */
-//    [label setText:string];
-//    [view addSubview:label];
-//    [view setBackgroundColor:[UIColor colorWithRed:166/255.0 green:177/255.0 blue:186/255.0 alpha:1.0]]; //your background color...
-//    return view;
-    return _headerView;
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
 }
+*/
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return _headerView.frame.size.height;
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
 }
+*/
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44;
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
 }
+*/
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    SldGameData *gd = [SldGameData getInstance];
-    
-    enum EventState state = [gd.eventInfo updateState];
-    
-    //bet time check
-    NSTimeInterval endIntv = [gd.eventInfo.endTime timeIntervalSinceNow];
-    if (state != RUNNING || (int)endIntv <= gd.betCloseBeforeEndSec) {
-        NSString *str = [NSString stringWithFormat:@"投注已结束，请在距离比赛结束%@前投注", formatInterval(gd.betCloseBeforeEndSec)];
-        alert(str, nil);
-        [_tableView deselectRowAtIndexPath:indexPath animated:YES];
-        return;
-    }
-    
-    //
-    SldBetPopupController* vc = (SldBetPopupController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"betPopup"];
-
-    [self.navigationController presentViewController:vc animated:YES completion:nil];
-    
-    BettingTeam *bt = _bettingTeams[indexPath.row];
-    
-    NSDictionary *betMap = gd.eventPlayRecord.bet;
-    int alreadyBet = [(NSNumber*)[betMap objectForKey:bt.teamName] intValue];
-
-    vc.teamNameLabel.text = [NSString stringWithFormat:@"%@  已投注%d金币", bt.teamName, alreadyBet];
-    vc.betRemainLabel.text = [NSString stringWithFormat:@"(1-%lld)", gd.money];
-    vc.teamName = bt.teamName;
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
 }
+*/
 
-@end
+/*
+#pragma mark - Navigation
 
-//====================
-@interface SldBetPopupController()
-
-@end
-
-@implementation SldBetPopupController
-
-- (void)viewDidLoad {
-    [_betInput becomeFirstResponder];
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
 }
-
-- (void)dismiss {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)onCancelButton:(id)sender {
-    [self dismiss];
-}
-
-- (IBAction)onBetButton:(id)sender {
-    SldGameData *gd = [SldGameData getInstance];
-    
-    int betMoney = [_betInput.text intValue];
-    if (betMoney <= 0 || betMoney > gd.money) {
-        alert([NSString stringWithFormat:@"投注额需在（1，%lld）之间", gd.money], nil);
-        return;
-    }
-    
-    //post
-    NSDictionary *body = @{@"EventId":@(gd.eventInfo.id), @"TeamName":_teamName, @"Money": @(betMoney)};
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    UIAlertView *alt = alertNoButton(@"提交中...");
-    [session postToApi:@"event/bet" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        [alt dismissWithClickedButtonIndex:0 animated:YES];
-        if (error) {
-            NSString *err = getServerErrorType(data);
-            if ([err compare:@"err_bet_close"] == 0) {
-                alert(@"投注已关闭\n请关注其他正在进行中的比赛", nil);
-            } else {
-                alertHTTPError(error, data);
-            }
-            return;
-        }
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            alert(@"Json error", [error localizedDescription]);
-            return;
-        }
-        
-        [[SldBetController getInstance] onHttpBetWithDict:dict];
-        
-        [self dismiss];
-    }];
-
-}
+*/
 
 @end

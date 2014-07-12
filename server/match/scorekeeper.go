@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./ssdb"
+	// "./ssdb"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -56,8 +56,6 @@ func calcReward(rank int) (reward int64) {
 
 func scoreKeeper() {
 	defer handleError()
-
-	not_found := ssdb.NOT_FOUND
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()
@@ -150,9 +148,9 @@ func scoreKeeper() {
 				//add player reward
 				playerKey := makePlayerInfoKey(userId)
 				resp, err = ssdb.Do("hincr", playerKey, playerRewardCache, record.MatchReward)
-				lwutil.CheckSsdbError(resp, err)
+				checkSsdbError(resp, err)
 				resp, err = ssdb.Do("hincr", playerKey, playerTotalReward, record.MatchReward)
-				lwutil.CheckSsdbError(resp, err)
+				checkSsdbError(resp, err)
 
 				//add to Z_EVENT_PLAYER_RECORD
 				key = fmt.Sprintf("Z_EVENT_PLAYER_RECORD/%d", userId)
@@ -173,50 +171,126 @@ func scoreKeeper() {
 		checkError(err)
 
 		//bet
-		//fixme: get winning team
+		//recalc team score
+		scoreMap := recaculateTeamScore(ssdb, rc, event.Id)
+		if scoreMap == nil {
+			glog.Errorln("scoreMap == nil. eventId=%d", event.Id)
+			continue
+		}
 
-		//fixme: calc betting pool reward sum
-
-		key := fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, event.Id)
-		userId := int64(0)
-		for true {
-			resp, err = ssdb.Do("zkey", key, userId, userId, "", 100)
-			if resp[0] == not_found {
-				break
-			} else {
-				checkSsdbError(resp, err)
-			}
-			userIds := resp[1:]
-
-			//batch get user bet data
-			cmds := make([]interface{}, 0, 2+len(userIds))
-			cmds[0] = "multi_hget"
-			cmds[1] = H_PLAYER_INFO
-			for _, userId := range userIds {
-				cmds = append(cmds, userId)
-			}
-			resp, err = ssdb.Do(cmds...)
-			checkSsdbError(resp, err)
-			resp = resp[1:]
-			for i := 0; i < len(resp)/2; i++ {
-				var playerInfo PlayerInfo
-				err = json.Unmarshal([]byte(resp[i+1]), &playerInfo)
-				checkError(err)
-
-				userId, err := strconv.ParseInt(resp[i], 10, 64)
-				checkError(err)
-
-				recordKey := fmt.Sprintf("%d/%d", event.Id, userId)
-				respRecord, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
-				checkSsdbError(respRecord, err)
-				record := EventPlayerRecord{}
-				err = json.Unmarshal([]byte(respRecord[1]), &record)
-				checkError(err)
-
-				//fixme
-				//record.Bet
+		//calc winning teams
+		maxScore := 0
+		winTeams := make([]string, 0, 10)
+		for teamName, score := range scoreMap {
+			if score > 0 {
+				if score > maxScore {
+					winTeams = winTeams[:1]
+					winTeams[0] = teamName
+					score = maxScore
+				} else if score == maxScore {
+					winTeams = append(winTeams, teamName)
+				}
 			}
 		}
+
+		//calc betting pool reward sum
+		key := makeEventBettingPoolKey(event.Id)
+		bettingPool := map[string]int64{}
+		err = ssdb.HGetMapAll(key, bettingPool)
+		checkError(err)
+
+		betMoneySum := int64(0)
+		winTeamsMoneySum := int64(0)
+		for team, money := range bettingPool {
+			betMoneySum += money
+
+			for _, winTeam := range winTeams {
+				if team == winTeam {
+					winTeamsMoneySum += money
+					break
+				}
+			}
+		}
+
+		if winTeamsMoneySum == 0 {
+			glog.Errorln("winTeamsMoneySum == 0")
+			continue
+		}
+
+		winMult := float32(betMoneySum) / float32(winTeamsMoneySum)
+
+		//bet reward
+		for _, team := range winTeams {
+			key = makeEventTeamPlayerBetKey(event.Id, team)
+
+			subKey := ""
+			for true {
+				resp, err := ssdb.Do("hscan", subKey, "", 100)
+				if err != nil || resp[0] != "ok" {
+					glog.Errorln(err, resp[0])
+					break
+				}
+				resp = resp[1:]
+				num := len(resp) / 2
+				for i := 0; i < num; i++ {
+					playerIdStr := resp[2*i]
+					playerBetStr := resp[2*i+1]
+					playerId, err := strconv.ParseInt(playerIdStr, 10, 64)
+					checkError(err)
+					playerBet, err := strconv.ParseInt(playerBetStr, 10, 64)
+					checkError(err)
+
+					//add reward to player
+					playerKey := makePlayerInfoKey(playerId)
+					addMoney := int64(float32(playerBet) * winMult)
+					resp, err = ssdb.Do("hincr", playerKey, playerMoney, addMoney)
+
+					subKey = playerIdStr
+				}
+			}
+		}
+
+		// ////
+		// key = fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, event.Id)
+		// userId := int64(0)
+		// for true {
+		// 	resp, err = ssdb.Do("zkey", key, userId, userId, "", 100)
+		// 	if resp[0] == not_found {
+		// 		break
+		// 	} else {
+		// 		checkSsdbError(resp, err)
+		// 	}
+		// 	userIds := resp[1:]
+
+		// 	//batch get user bet data
+		// 	cmds := make([]interface{}, 0, 2+len(userIds))
+		// 	cmds[0] = "multi_hget"
+		// 	cmds[1] = H_PLAYER_INFO
+		// 	for _, userId := range userIds {
+		// 		cmds = append(cmds, userId)
+		// 	}
+		// 	resp, err = ssdb.Do(cmds...)
+		// 	checkSsdbError(resp, err)
+		// 	resp = resp[1:]
+		// 	for i := 0; i < len(resp)/2; i++ {
+		// 		var playerInfo PlayerInfo
+		// 		err = json.Unmarshal([]byte(resp[i+1]), &playerInfo)
+		// 		checkError(err)
+
+		// 		userId, err := strconv.ParseInt(resp[i], 10, 64)
+		// 		checkError(err)
+
+		// 		recordKey := fmt.Sprintf("%d/%d", event.Id, userId)
+		// 		respRecord, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
+		// 		checkSsdbError(respRecord, err)
+		// 		record := EventPlayerRecord{}
+		// 		err = json.Unmarshal([]byte(respRecord[1]), &record)
+		// 		checkError(err)
+
+		// 		//add reward
+		// 		//record.Bet
+		// 	}
+		// }
 
 		glog.Infof("event end")
 	}

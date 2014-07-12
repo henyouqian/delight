@@ -22,10 +22,6 @@ const (
 	ADS_PERCENT_DEFAUT = 0.5
 )
 
-var (
-	TEAM_MAP = make(map[uint32]bool)
-)
-
 type PlayerInfo struct {
 	NickName         string
 	TeamName         string
@@ -52,10 +48,6 @@ const (
 
 func init() {
 	glog.Info("")
-
-	for _, v := range TEAM_IDS {
-		TEAM_MAP[v] = true
-	}
 }
 
 func makePlayerInfoKey(userId int64) string {

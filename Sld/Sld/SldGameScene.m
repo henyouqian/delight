@@ -9,7 +9,7 @@
 #import "SldGameScene.h"
 #import "SldBriefController.h"
 #import "SldRankController.h"
-#import "SldBetController.h"
+//#import "SldBetController.h"
 #import "SldUtil.h"
 #import "SldButton.h"
 #import "SldSprite.h"
@@ -1148,7 +1148,7 @@ static float lerpf(float a, float b, float t) {
                 
                 //update rank controller
                 [[SldRankController getInstance] updateRanks];
-                [[SldBetController getInstance] updateTeamScore];
+                //fixme [[SldBetController getInstance] updateTeamScore];
             }
         }];
         [_btnExit setHidden:NO];

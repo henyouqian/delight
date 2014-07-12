@@ -160,7 +160,7 @@
     [session postToApi:@"pack/getComments" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_tableViewController.refreshControl endRefreshing];
         if (error) {
-            lwError("Http error:%@", [error localizedDescription]);
+            alertHTTPError(error, data);
             return;
         }
         NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
