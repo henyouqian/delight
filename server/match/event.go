@@ -359,6 +359,7 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	}
 	err = lwutil.DecodeRequestBody(r, &event)
 	lwutil.CheckError(err, "err_decode_body")
+	event.Type = "PERSONAL_RANK"
 	if _, ok := EVENT_TYPES[event.Type]; ok == false {
 		lwutil.SendError("err_match_type", "")
 	}
@@ -789,6 +790,7 @@ func apiAddEventToBuff(w http.ResponseWriter, r *http.Request) {
 	var event Event
 	err = lwutil.DecodeRequestBody(r, &event)
 	lwutil.CheckError(err, "err_decode_body")
+	event.Type = "PERSONAL_RANK"
 	if _, ok := EVENT_TYPES[event.Type]; ok == false {
 		lwutil.SendError("err_match_type", "")
 	}

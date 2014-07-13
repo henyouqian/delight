@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	USEAGE = "Useage: \n\tpackUploader new|del|update <uploadDir>\n\tpackUploader image <imagePath>"
+	USEAGE = "Useage: \n\tpackUploader new|del|update|newEvent <uploadDir>\n\tpackUploader image <imagePath>"
 )
 
 var (
@@ -88,6 +88,11 @@ func main() {
 		updatePack()
 	case "image":
 		uploadImage()
+	case "newEvent":
+		packId := newPack()
+		if packId > 0 {
+			newEvent(packId)
+		}
 	default:
 		glog.Errorln(USEAGE)
 	}
@@ -101,7 +106,7 @@ type Image struct {
 }
 
 type Pack struct {
-	Id        uint64
+	Id        int64
 	Title     string
 	Text      string
 	Cover     string
@@ -111,11 +116,18 @@ type Pack struct {
 	Tags      []string
 }
 
+type Event struct {
+	Id            int64
+	PackId        int64
+	SliderNum     int
+	ChallengeSecs [3]int
+}
+
 func upload() {
 
 }
 
-func newPack() {
+func newPack() (rPackId int64) {
 	var err error
 
 	pack := Pack{}
@@ -125,19 +137,19 @@ func newPack() {
 
 	if pack.Title == "" {
 		glog.Errorln("need title")
-		return
+		return 0
 	}
 
 	if pack.Id != 0 {
 		glog.Errorln("Pack already uploaded?")
-		return
+		return pack.Id
 	}
 
 	//check image file exist
 	for _, img := range pack.Images {
 		if _, err := os.Stat(img.File); os.IsNotExist(err) {
 			glog.Errorf("no such file: file=%s", img.File)
-			return
+			return 0
 		}
 	}
 
@@ -182,13 +194,13 @@ func newPack() {
 	//check thumb
 	if pack.Thumb == "" {
 		glog.Errorln("Need thumb")
-		return
+		return 0
 	}
 
 	//check cover
 	if pack.Cover == "" {
 		glog.Errorln("Need cover")
-		return
+		return 0
 	}
 
 	//check cover blur
@@ -294,7 +306,7 @@ func newPack() {
 	var f *os.File
 	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
 		glog.Errorf("Open pack.js error: err=%s", err.Error())
-		return
+		return 0
 	}
 	defer f.Close()
 
@@ -305,6 +317,8 @@ func newPack() {
 	f.Write(buf.Bytes())
 
 	glog.Infof("add pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
+
+	return packRaw.Id
 }
 
 func delPack() {
@@ -506,6 +520,37 @@ func updatePack() {
 	glog.Infof("update pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
 }
 
+func newEvent(packId int64) {
+	event, err := loadEvent()
+	checkErr(err)
+	event.PackId = packId
+
+	js, err := json.Marshal(event)
+	checkErr(err)
+	resp := postReq("event/addToBuff", js)
+
+	//backup event.js to eventOrig.js
+	cpCmd := exec.Command("cp", "-f", "event.js", "eventOrig.js")
+	err = cpCmd.Run()
+	checkErr(err)
+
+	//save to event.js
+	var f *os.File
+	if f, err = os.OpenFile("event.js", os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open event.js error: err=%s", err.Error())
+		return
+	}
+	defer f.Close()
+
+	f.Seek(0, os.SEEK_SET)
+	f.Truncate(0)
+	buf := bytes.NewBuffer([]byte(""))
+	json.Indent(buf, resp, "", "\t")
+	f.Write(buf.Bytes())
+
+	glog.Infof("update event succeed: eventId=%d, server=%s", event.Id, _conf.ServerHost)
+}
+
 func loadPack(pack *Pack) (err error) {
 	var f *os.File
 	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
@@ -519,6 +564,24 @@ func loadPack(pack *Pack) (err error) {
 	err = decoder.Decode(&pack)
 	checkErr(err)
 	return nil
+}
+
+func loadEvent() (rEvent *Event, rErr error) {
+	var f *os.File
+	var err error
+	if f, err = os.OpenFile("event.js", os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open event.js error: err=%s", err.Error())
+		return nil, err
+	}
+	defer f.Close()
+
+	event := new(Event)
+
+	//json decode
+	decoder := json.NewDecoder(f)
+	err = decoder.Decode(event)
+	checkErr(err)
+	return event, nil
 }
 
 func uploadImage() {

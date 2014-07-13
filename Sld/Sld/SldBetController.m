@@ -146,8 +146,8 @@ static float MAX_BAR_WIDTH = 170;
 @property (weak, nonatomic) IBOutlet UIView *headerView;
 @property (weak, nonatomic) IBOutlet UILabel *myCoinLabel;
 @property (weak, nonatomic) IBOutlet UILabel *myBetSumLabel;
-@property (weak, nonatomic) IBOutlet UILabel *playerNumLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalBetLabel;
+@property (weak, nonatomic) IBOutlet UILabel *myBetTeamNumLabel;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSMutableArray *teamBetDatas;
 @property (nonatomic) SInt64 maxBetMoney;
@@ -245,15 +245,27 @@ static float MAX_BAR_WIDTH = 170;
             }
         }
         
-        //
-        
+        //resort
+        [_teamBetDatas sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            TeamBetData *td1 = obj1;
+            TeamBetData *td2 = obj2;
+            if (td1.score < td2.score) {
+                return NSOrderedDescending;
+            } else if (td1.score > td2.score) {
+                return NSOrderedAscending;
+            } else {
+                return NSOrderedSame;
+            }
+        }];
         
         //update ui
         _totalBetLabel.text = [NSString stringWithFormat:@"奖池总额：%lld", _totalBetMoney];
         
-        _myBetSumLabel.text = [NSString stringWithFormat:@"我已投注：%lld", _gd.eventPlayRecord.BetMoneySum];
+        _myBetSumLabel.text = [NSString stringWithFormat:@"投注金额：%lld", _gd.eventPlayRecord.BetMoneySum];
         
+        _myBetTeamNumLabel.text = [NSString stringWithFormat:@"已买队伍：%d", _gd.eventPlayRecord.bet.count];
         
+        //
         [self.tableView reloadData];
     }];
 }
@@ -300,8 +312,9 @@ static float MAX_BAR_WIDTH = 170;
         CGRect frame = cell.winMulBar.frame;
         frame.size.width = width;
         cell.winMulBar.frame = frame;
-    } else {
-        CGRect frame = cell.winMulBar.frame;
+    }
+    CGRect frame = cell.winMulBar.frame;
+    if (data.winMul == 0){
         frame.size.width = 2;
         cell.winMulBar.frame = frame;
     }
@@ -311,8 +324,9 @@ static float MAX_BAR_WIDTH = 170;
         CGRect frame = cell.scoreBar.frame;
         frame.size.width = width;
         cell.scoreBar.frame = frame;
-    } else {
-        CGRect frame = cell.scoreBar.frame;
+    }
+    frame = cell.scoreBar.frame;
+    if (data.score == 0) {
         frame.size.width = 2;
         cell.scoreBar.frame = frame;
     }
