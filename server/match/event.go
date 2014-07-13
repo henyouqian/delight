@@ -41,30 +41,7 @@ var (
 	Z_EVENT            = "Z_EVENT"
 	Z_EVENT_BUFF       = "Z_EVENT_BUFF"
 	EventPublishInfoes []EventPublishInfo
-)
 
-func makeRedisLeaderboardKey(evnetId int64) string {
-	return fmt.Sprintf("%s/%d", RDS_Z_EVENT_LEADERBOARD_PRE, evnetId)
-}
-
-func makeHashEventRankKey(eventId int64) string {
-	return fmt.Sprintf("%s/%d", H_EVENT_RANK, eventId)
-}
-
-func makeEventPlayerRecordSubkey(eventId int64, userId int64) string {
-	key := fmt.Sprintf("%d/%d", eventId, userId)
-	return key
-}
-
-func makeEventBettingPoolKey(eventId int64) string {
-	return fmt.Sprintf("%s/%d", H_EVENT_BETTING_POOL, eventId)
-}
-
-func makeEventTeamPlayerBetKey(eventId int64, teamName string) string {
-	return fmt.Sprintf("%s/%d/%s", H_EVENT_TEAM_PLAYER_BET, eventId, teamName)
-}
-
-var (
 	DEFAULT_CHALLENGE_REWARDS = []int{100, 50, 50} //gold, silver, bronze. additive.
 
 	EVENT_TYPES = map[string]int{
@@ -83,12 +60,13 @@ type Event struct {
 	Type             string //"PERSONAL_RANK", "TEAM_CHAMPIONSHIP"
 	Id               int64
 	PackId           int64
+	PackTimeUnix     int64
+	Thumb            string
 	BeginTime        int64
 	EndTime          int64
 	BeginTimeString  string
 	EndTimeString    string
 	HasResult        bool
-	Thumb            string
 	SliderNum        int
 	ChallengeSecs    []int
 	ChallengeRewards []int
@@ -122,6 +100,27 @@ type EventPublishInfo struct {
 	BeginTime   [2]int
 	EndTime     [2]int
 	EventNum    int
+}
+
+func makeRedisLeaderboardKey(evnetId int64) string {
+	return fmt.Sprintf("%s/%d", RDS_Z_EVENT_LEADERBOARD_PRE, evnetId)
+}
+
+func makeHashEventRankKey(eventId int64) string {
+	return fmt.Sprintf("%s/%d", H_EVENT_RANK, eventId)
+}
+
+func makeEventPlayerRecordSubkey(eventId int64, userId int64) string {
+	key := fmt.Sprintf("%d/%d", eventId, userId)
+	return key
+}
+
+func makeEventBettingPoolKey(eventId int64) string {
+	return fmt.Sprintf("%s/%d", H_EVENT_BETTING_POOL, eventId)
+}
+
+func makeEventTeamPlayerBetKey(eventId int64, teamName string) string {
+	return fmt.Sprintf("%s/%d/%s", H_EVENT_TEAM_PLAYER_BET, eventId, teamName)
 }
 
 func init() {
@@ -216,6 +215,18 @@ func eventPublishTask() {
 					event.Id = maxId + 1
 				}
 
+				//get pack
+				pack := getPack(ssdbc, event.PackId)
+
+				event.Thumb = pack.Thumb
+				event.PackTimeUnix = pack.TimeUnix
+
+				//add event id to pack
+				pack.EventIds[fmt.Sprintf("%d", event.Id)] = true
+
+				//save pack
+				savePack(ssdbc, pack)
+
 				//save event
 				bts, err := json.Marshal(event)
 				if err != nil {
@@ -249,6 +260,24 @@ func getEvent(ssdb *ssdb.Client, eventId int64) *Event {
 	return &event
 }
 
+func saveEvent(ssdb *ssdb.Client, event *Event) {
+	js, err := json.Marshal(event)
+	lwutil.CheckError(err, "")
+
+	resp, err := ssdb.Do("hset", H_EVENT, event.Id, js)
+	lwutil.CheckSsdbError(resp, err)
+}
+
+func getEventFromBuff(ssdb *ssdb.Client, eventId int64) *Event {
+	resp, err := ssdb.Do("hget", H_EVENT_BUFF, eventId)
+	lwutil.CheckSsdbError(resp, err)
+
+	event := Event{}
+	err = json.Unmarshal([]byte(resp[1]), &event)
+	lwutil.CheckError(err, "")
+	return &event
+}
+
 func isEventRunning(event *Event) bool {
 	if event.HasResult {
 		return true
@@ -269,7 +298,7 @@ func getEventPlayerRecord(ssdb *ssdb.Client, eventId int64, userId int64) *Event
 		err = json.Unmarshal([]byte(resp[1]), &record)
 		lwutil.CheckError(err, "")
 		return &record
-	} else { //create event
+	} else { //create record
 		playerInfo, err := getPlayerInfo(ssdb, userId)
 		lwutil.CheckError(err, "")
 
@@ -367,14 +396,6 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	//challengeRewards
 	event.ChallengeRewards = _conf.ChallengeRewards
 
-	//get pack
-	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
-	lwutil.CheckSsdbError(resp, err)
-	var pack Pack
-	err = json.Unmarshal([]byte(resp[1]), &pack)
-	lwutil.CheckError(err, "")
-	event.Thumb = pack.Thumb
-
 	//gen serial
 	if event.Force {
 		resp, err := ssdb.Do("hget", H_EVENT, event.Id)
@@ -394,6 +415,24 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 			event.Id = maxId + 1
 		}
 	}
+
+	//get pack
+	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
+	if resp[0] == "not_found" {
+		lwutil.SendError("err_pack_not_found", "")
+	}
+	lwutil.CheckSsdbError(resp, err)
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	event.Thumb = pack.Thumb
+	event.PackTimeUnix = pack.TimeUnix
+
+	//add event id to pack
+	pack.EventIds[fmt.Sprintf("%d", event.Id)] = true
+
+	//save pack
+	savePack(ssdb, &pack)
 
 	//save to ssdb
 	js, err := json.Marshal(event)
@@ -441,6 +480,14 @@ func apiModEvent(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal([]byte(resp[1]), &pack)
 	lwutil.CheckError(err, "")
 	event.Thumb = pack.Thumb
+	event.PackTimeUnix = pack.TimeUnix
+
+	//check exist
+	resp, err = ssdb.Do("hget", H_EVENT_BUFF, event.Id)
+	if resp[0] == "not_found" {
+		lwutil.SendError("err_not_found", "event not found from H_EVENT_BUFF")
+	}
+	lwutil.CheckSsdbError(resp, err)
 
 	//save to ssdb
 	js, err := json.Marshal(event)
@@ -467,7 +514,7 @@ func apiDelEvent(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		EventId uint64
+		EventId int64
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
@@ -754,21 +801,13 @@ func apiAddEventToBuff(w http.ResponseWriter, r *http.Request) {
 		event.SliderNum = 10
 	}
 
-	//get pack
-	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
-	lwutil.CheckSsdbError(resp, err)
-	var pack Pack
-	err = json.Unmarshal([]byte(resp[1]), &pack)
-	lwutil.CheckError(err, "")
-	event.Thumb = pack.Thumb
-
 	//gen serial
 	event.Id = GenSerial(ssdb, EVENT_SERIAL)
 
 	//save to ssdb
 	js, err := json.Marshal(event)
 	lwutil.CheckError(err, "")
-	resp, err = ssdb.Do("hset", H_EVENT_BUFF, event.Id, js)
+	resp, err := ssdb.Do("hset", H_EVENT_BUFF, event.Id, js)
 	lwutil.CheckSsdbError(resp, err)
 
 	resp, err = ssdb.Do("zset", Z_EVENT_BUFF, event.Id, event.Id)
@@ -842,7 +881,7 @@ func apiDelEventFromBuff(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		EventId uint64
+		EventId int64
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
@@ -854,6 +893,53 @@ func apiDelEventFromBuff(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 
 	lwutil.WriteResponse(w, in)
+}
+
+func apiModEventInBuff(w http.ResponseWriter, r *http.Request) {
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+	checkAdmin(session)
+
+	//in
+	var event Event
+	err = lwutil.DecodeRequestBody(r, &event)
+	lwutil.CheckError(err, "err_decode_body")
+	if _, ok := EVENT_TYPES[event.Type]; ok == false {
+		lwutil.SendError("err_match_type", "")
+	}
+
+	//get pack
+	resp, err := ssdb.Do("hget", H_PACK, event.PackId)
+	lwutil.CheckSsdbError(resp, err)
+	var pack Pack
+	err = json.Unmarshal([]byte(resp[1]), &pack)
+	lwutil.CheckError(err, "")
+	event.Thumb = pack.Thumb
+	event.PackTimeUnix = pack.TimeUnix
+
+	//check exist
+	resp, err = ssdb.Do("hget", H_EVENT_BUFF, event.Id)
+	if resp[0] == "not_found" {
+		lwutil.SendError("err_not_found", "event not found from H_EVENT_BUFF")
+	}
+	lwutil.CheckSsdbError(resp, err)
+
+	//save to ssdb
+	js, err := json.Marshal(event)
+	lwutil.CheckError(err, "")
+	resp, err = ssdb.Do("hset", H_EVENT_BUFF, event.Id, js)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, event)
 }
 
 func apiGetUserPlay(w http.ResponseWriter, r *http.Request) {

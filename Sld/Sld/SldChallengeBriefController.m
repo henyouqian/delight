@@ -43,9 +43,13 @@
     [self updateEventInfo];
     
     //load pack data
-    UInt64 packId = _gd.eventInfo.packId;
+    EventInfo *event = _gd.eventInfo;
+    UInt64 packId = event.packId;
+    
     FMDatabase *db = [SldDb defaultDb].fmdb;
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
+    
+    BOOL needGetFromServer = NO;
     if ([rs next]) { //local
         NSString *data = [rs stringForColumnIndex:0];
         NSError *error = nil;
@@ -54,10 +58,19 @@
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-        _gd.packInfo = [PackInfo packWithDictionary:dict];
         
-        [self updatePackInfo];
+        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
+        if (packInfo.timeUnix != event.packTimeUnix) {
+            needGetFromServer = YES;
+        } else {
+            _gd.packInfo = packInfo;
+            [self updatePackInfo];
+        }
     } else {
+        needGetFromServer = YES;
+    }
+    
+    if (needGetFromServer) {
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"Id":@(packId)};
         [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {

@@ -14,9 +14,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 + (instancetype)eventWithDictionary:(NSDictionary*)dict {
     EventInfo *event = [[EventInfo alloc] init];
     
-    event.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
+    event.id = [(NSNumber*)dict[@"Id"] longLongValue];
     event.thumb = dict[@"Thumb"];
-    event.packId = [(NSNumber*)dict[@"PackId"] unsignedLongLongValue];
+    event.packId = [(NSNumber*)dict[@"PackId"] longLongValue];
+    event.packTimeUnix = [(NSNumber*)dict[@"PackTimeUnix"] longLongValue];
     event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
     event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
     event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
@@ -28,7 +29,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     if (event.challengeRewards == nil) {
         event.challengeRewards = @[@100, @50, @50];
     }
-    event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] unsignedLongValue];
+    event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] intValue];
     if (event.sliderNum == 0) {
         event.sliderNum = DEFUALT_SLIDER_NUM;
     }
@@ -59,7 +60,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 + (instancetype)packWithDictionary:(NSDictionary*)dict {
     PackInfo *packInfo = [[PackInfo alloc] init];
     
-    packInfo.id = [(NSNumber*)dict[@"Id"] unsignedLongLongValue];
+    packInfo.id = [(NSNumber*)dict[@"Id"] longLongValue];
     packInfo.title = dict[@"Title"];
     packInfo.text = dict[@"Text"];
     packInfo.thumb = dict[@"Thumb"];
@@ -68,6 +69,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     if ([packInfo.coverBlur length] == 0) {
         packInfo.coverBlur = packInfo.cover;
     }
+    packInfo.timeUnix = [(NSNumber*)dict[@"TimeUnix"] longLongValue];
     NSArray *imgs = dict[@"Images"];
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:[imgs count]];
     for (NSDictionary *img in imgs) {
@@ -132,7 +134,7 @@ static SldGameData *g_inst = nil;
         
         [self reset];
         
-        _TEAM_NAMES = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西",@"贵州",@"海南",@"河北",@"黑龙江",@"河南",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
+        _TEAM_NAMES = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西",@"贵州",@"海南",@"河北",@"河南",@"黑龙江",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
     }
     return self;
 }

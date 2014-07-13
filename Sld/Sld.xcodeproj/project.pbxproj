@@ -84,6 +84,7 @@
 		B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F517731903B1BF00499209 /* SldLoginViewController.m */; };
 		B3FB76C31920ACAE000E67B2 /* black32.png in Resources */ = {isa = PBXBuildFile; fileRef = B3FB76C21920ACAE000E67B2 /* black32.png */; };
 		D005210E19715BA100F7F915 /* SldBetController.m in Sources */ = {isa = PBXBuildFile; fileRef = D005210D19715BA100F7F915 /* SldBetController.m */; };
+		D00521161972FE5300F7F915 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D00521151972FE5300F7F915 /* Main_iPhone.storyboard */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -111,7 +112,6 @@
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
 		D06684A01953548D00AD9282 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D066849F1953548D00AD9282 /* libz.dylib */; };
 		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
-		D096769B1961A5F60052C178 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D096769A1961A5F60052C178 /* Main_iPhone.storyboard */; };
 		D0A555FE1969A8A600369401 /* SldMainMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A555FD1969A8A600369401 /* SldMainMenuController.m */; };
 		D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A556001969B38B00369401 /* SldChallengeListController.m */; };
 		D0A55606196C277E00369401 /* SldChallengeBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A55605196C277E00369401 /* SldChallengeBriefController.m */; };
@@ -361,6 +361,7 @@
 		B3FB76C21920ACAE000E67B2 /* black32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black32.png; sourceTree = "<group>"; };
 		D005210C19715BA100F7F915 /* SldBetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBetController.h; sourceTree = "<group>"; };
 		D005210D19715BA100F7F915 /* SldBetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBetController.m; sourceTree = "<group>"; };
+		D00521151972FE5300F7F915 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
@@ -394,7 +395,6 @@
 		D0667F221953172C00AD9282 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D066849F1953548D00AD9282 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D09676961961A08A0052C178 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
-		D096769A1961A5F60052C178 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D0A555FC1969A8A600369401 /* SldMainMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMainMenuController.h; sourceTree = "<group>"; };
 		D0A555FD1969A8A600369401 /* SldMainMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMainMenuController.m; sourceTree = "<group>"; };
 		D0A555FF1969B38B00369401 /* SldChallengeListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallengeListController.h; sourceTree = "<group>"; };
@@ -628,7 +628,7 @@
 		B31EE7D418F05BE60047E9FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D096769A1961A5F60052C178 /* Main_iPhone.storyboard */,
+				D00521151972FE5300F7F915 /* Main_iPhone.storyboard */,
 				D09676961961A08A0052C178 /* Main_iPad.storyboard */,
 				B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */,
 				B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */,
@@ -1219,7 +1219,6 @@
 				D0D14B38195B3807009193E6 /* webview_bar_next_hover@2x.png in Resources */,
 				D0D14B5D195B3807009193E6 /* webview_bar_close_hover.png in Resources */,
 				B33121FB1916D02C003E05DB /* thumbDarker.png in Resources */,
-				D096769B1961A5F60052C178 /* Main_iPhone.storyboard in Resources */,
 				D01044A419464790008DFF8D /* btnBgYellow90@2x.png in Resources */,
 				D01044951945DF03008DFF8D /* cupWhite@2x.png in Resources */,
 				D0D14B0E195B3807009193E6 /* adsMoGoFullScreen.html in Resources */,
@@ -1227,6 +1226,7 @@
 				D0D14B5E195B3807009193E6 /* webview_bar_next.png in Resources */,
 				D0D14B0D195B3807009193E6 /* adsmogo_fsclosebtn@2x.png in Resources */,
 				D0D14B5C195B3807009193E6 /* webview_bar_close.png in Resources */,
+				D00521161972FE5300F7F915 /* Main_iPhone.storyboard in Resources */,
 				B3024C5F18FE7EF600F9EEA3 /* audio in Resources */,
 				B3835371191AD68400D259F5 /* glyphicons_245_chat.png in Resources */,
 				D0D14B13195B3807009193E6 /* adsmogo_bannerface305.png in Resources */,

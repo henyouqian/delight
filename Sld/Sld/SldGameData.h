@@ -25,13 +25,14 @@ enum CupType{
 };
 
 @interface EventInfo : NSObject
-@property (nonatomic) UInt64 id;
-@property (nonatomic) UInt64 packId;
+@property (nonatomic) SInt64 id;
+@property (nonatomic) SInt64 packId;
+@property (nonatomic) SInt64 packTimeUnix;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSDate *beginTime;
 @property (nonatomic) NSDate *endTime;
 @property (nonatomic) BOOL hasResult;
-@property (nonatomic) BOOL sliderNum;
+@property (nonatomic) int sliderNum;
 @property (nonatomic) NSArray *challengeSecs;
 @property (nonatomic) NSArray *challengeRewards;
 @property (nonatomic) enum EventState state; //undefined:0, comming:1, running:2, closed:3
@@ -44,13 +45,14 @@ enum CupType{
 
 //=================
 @interface PackInfo : NSObject
-@property (nonatomic) UInt64 id;
+@property (nonatomic) SInt64 id;
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSString *text;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *cover;
 @property (nonatomic) NSString *coverBlur;
 @property (nonatomic) NSMutableArray *images;
+@property (nonatomic) SInt64 timeUnix;
 
 + (instancetype)packWithDictionary:(NSDictionary*)dict;
 @end

@@ -37,6 +37,7 @@ type Pack struct {
 	Id        int64
 	AuthorId  int64
 	Time      string
+	TimeUnix  int64
 	Title     string
 	Text      string
 	Thumb     string
@@ -44,6 +45,7 @@ type Pack struct {
 	CoverBlur string
 	Images    []Image
 	Tags      []string
+	EventIds  map[string]bool
 }
 
 func getPack(ssdb *ssdb.Client, packId int64) *Pack {
@@ -54,6 +56,13 @@ func getPack(ssdb *ssdb.Client, packId int64) *Pack {
 	err = json.Unmarshal([]byte(resp[1]), &pack)
 	lwutil.CheckError(err, "")
 	return &pack
+}
+
+func savePack(ssdb *ssdb.Client, pack *Pack) {
+	js, err := json.Marshal(pack)
+	lwutil.CheckError(err, "")
+	resp, err := ssdb.Do("hset", H_PACK, pack.Id, js)
+	lwutil.CheckSsdbError(resp, err)
 }
 
 func init() {
@@ -82,8 +91,11 @@ func apiNewPack(w http.ResponseWriter, r *http.Request) {
 	} else {
 		pack.AuthorId = session.Userid
 	}
+	pack.EventIds = make(map[string]bool)
 
-	pack.Time = time.Now().Format(time.RFC3339)
+	now := time.Now()
+	pack.Time = now.Format(time.RFC3339)
+	pack.TimeUnix = now.Unix()
 	if len(pack.Tags) > 8 {
 		pack.Tags = pack.Tags[:8]
 	}
@@ -151,7 +163,9 @@ func apiModPack(w http.ResponseWriter, r *http.Request) {
 	var pack Pack
 	err = lwutil.DecodeRequestBody(r, &pack)
 	lwutil.CheckError(err, "err_decode_body")
-	pack.Time = time.Now().Format(time.RFC3339)
+	now := time.Now()
+	pack.Time = now.Format(time.RFC3339)
+	pack.TimeUnix = now.Unix()
 	if len(pack.Tags) > 8 {
 		pack.Tags = pack.Tags[:8]
 	}
@@ -206,6 +220,17 @@ func apiModPack(w http.ResponseWriter, r *http.Request) {
 	resp, err = ssdb.Do("zset", name, pack.Id, pack.Id)
 	lwutil.CheckSsdbError(resp, err)
 
+	//update event which use this pack
+	pack.EventIds = oldPack.EventIds
+	for eventIdStr, _ := range pack.EventIds {
+		eventId, err := strconv.ParseInt(eventIdStr, 10, 64)
+		lwutil.CheckError(err, "")
+		event := getEvent(ssdb, eventId)
+		event.Thumb = pack.Thumb
+		event.PackTimeUnix = pack.TimeUnix
+		saveEvent(ssdb, event)
+	}
+
 	//out
 	lwutil.WriteResponse(w, pack)
 }
@@ -220,10 +245,16 @@ func apiDelPack(w http.ResponseWriter, r *http.Request) {
 
 	//in
 	var in struct {
-		Id uint64
+		Id    uint64
+		Force bool
 	}
 	err = lwutil.DecodeRequestBody(r, &in)
 	lwutil.CheckError(err, "err_decode_body")
+
+	//check force
+	if in.Force == false {
+		lwutil.SendError("err_force", "This operation is dangerous. Use <Force> param")
+	}
 
 	//ssdb
 	ssdb, err := ssdbPool.Get()

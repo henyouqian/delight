@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -274,6 +275,11 @@ func newPack() {
 
 	packBytes := postReq("pack/new", packjs)
 
+	//backup pack.js to packOrig.js
+	cpCmd := exec.Command("cp", "-f", "pack.js", "packOrig.js")
+	err = cpCmd.Run()
+	checkErr(err)
+
 	//update pack.js
 	var dwpack Pack
 	err = json.Unmarshal(packBytes, &dwpack)
@@ -298,7 +304,7 @@ func newPack() {
 	json.Indent(buf, packjs, "", "\t")
 	f.Write(buf.Bytes())
 
-	glog.Infof("add pack succeed: packId=%d", packRaw.Id)
+	glog.Infof("add pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
 }
 
 func delPack() {
@@ -497,7 +503,7 @@ func updatePack() {
 	json.Indent(buf, packjs, "", "\t")
 	f.Write(buf.Bytes())
 
-	glog.Infof("update pack succeed: packId=%d", packRaw.Id)
+	glog.Infof("update pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
 }
 
 func loadPack(pack *Pack) (err error) {
