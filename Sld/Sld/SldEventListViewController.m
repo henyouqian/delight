@@ -284,15 +284,15 @@ static const int FETCH_EVENT_COUNT = 20;
                  return;
              }
              
-             EventInfo *oldLatestEvent = nil;
+             EventInfo *oldTopEvent = nil;
              if ([_gameData.eventInfos count]) {
-                 oldLatestEvent = _gameData.eventInfos[0];
+                 oldTopEvent = _gameData.eventInfos[0];
              }
              
-             EventInfo *newLastEvent = [EventInfo eventWithDictionary:array.lastObject];
+             EventInfo *newBottomEvent = [EventInfo eventWithDictionary:array.lastObject];
              BOOL refreshAll = NO;
-             if (newLastEvent && oldLatestEvent) {
-                 if (newLastEvent.id > oldLatestEvent.id) {
+             if (newBottomEvent && oldTopEvent) {
+                 if (newBottomEvent.id > oldTopEvent.id) {
                      [_gameData.eventInfos removeAllObjects];
                  }
              }
@@ -302,16 +302,20 @@ static const int FETCH_EVENT_COUNT = 20;
              }
              
              for (int i = 0; i < [array count]; ++i) {
-                 //EventInfo *event = [[EventInfo alloc] init];
                  NSDictionary *dict = array[i];
                  EventInfo *event = [EventInfo eventWithDictionary:dict];
                  
-                 if (oldLatestEvent && oldLatestEvent.id >= event.id) {
-                     break;
+                 if (oldTopEvent && oldTopEvent.id >= event.id) {
+                     for (__strong EventInfo *oldEvent in _gameData.eventInfos) {
+                         if (event.id == oldEvent.id) {
+                             oldEvent = event;
+                             refreshAll = YES;
+                         }
+                     }
+                 } else {
+                     [_gameData.eventInfos insertObject:event atIndex:i];
+                     [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                  }
-                 
-                 [_gameData.eventInfos insertObject:event atIndex:i];
-                 [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                  
                  NSData *eventData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
                  if (error) {
@@ -387,8 +391,10 @@ static const int FETCH_EVENT_COUNT = 20;
     
     //check finished
     NSDate *now = getServerNow();
-    if (event.hasResult) {
-        [cell.statusLabel setHidden:YES];
+    if (event.hasResult || [now compare:event.endTime] == NSOrderedDescending) {
+        [cell.statusLabel setHidden:NO];
+        cell.statusLabel.text = @"已结束";
+        cell.statusLabel.backgroundColor = makeUIColor(60, 60, 60, 180);
     } else if ([event.beginTime compare:now] == NSOrderedAscending && [now compare:event.endTime] == NSOrderedAscending) {
         [cell.statusLabel setHidden:NO];
         cell.statusLabel.text = @"进行中";
@@ -396,10 +402,8 @@ static const int FETCH_EVENT_COUNT = 20;
         cell.statusLabel.backgroundColor = makeUIColor(71, 186, 43, 180);
     } else if ([now compare:event.beginTime] == NSOrderedAscending) {
         [cell.statusLabel setHidden:NO];
-        cell.statusLabel.text = @"即将开启";
+        cell.statusLabel.text = @"即将开始";
         cell.statusLabel.backgroundColor = makeUIColor(212, 62, 91, 180);
-    } else {
-        [cell.statusLabel setHidden:YES];
     }
     
     //date label

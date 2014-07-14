@@ -31,6 +31,7 @@ enum CupType{
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSDate *beginTime;
 @property (nonatomic) NSDate *endTime;
+@property (nonatomic) NSDate *betEndTime;
 @property (nonatomic) BOOL hasResult;
 @property (nonatomic) int sliderNum;
 @property (nonatomic) NSArray *challengeSecs;

@@ -66,6 +66,7 @@ type Event struct {
 	EndTime          int64
 	BeginTimeString  string
 	EndTimeString    string
+	BetEndTime       int64
 	HasResult        bool
 	SliderNum        int
 	ChallengeSecs    []int
@@ -204,6 +205,9 @@ func eventPublishTask() {
 				event.EndTime = endTime.Unix()
 				event.EndTimeString = endTime.Format(TIME_FORMAT)
 
+				//BetEndTime
+				event.BetEndTime = event.EndTime - BET_CLOSE_BEFORE_END_SEC
+
 				//change event id
 				resp, err = ssdbc.Do("zrscan", Z_EVENT, "", "", "", 1)
 				lwutil.CheckError(err, "")
@@ -339,6 +343,32 @@ func shuffleArray(src []uint32) []uint32 {
 	return dest
 }
 
+func calcEventTimes(event *Event) {
+	now := lwutil.GetRedisTimeUnix()
+
+	t, err := time.ParseInLocation(TIME_FORMAT, event.BeginTimeString, time.Local)
+	lwutil.CheckError(err, "")
+	event.BeginTime = t.Unix()
+	if event.BeginTime < now {
+		//lwutil.SendError("err_time", "BeginTime must larger than now")
+	}
+
+	t, err = time.ParseInLocation(TIME_FORMAT, event.EndTimeString, time.Local)
+	lwutil.CheckError(err, "")
+	event.EndTime = t.Unix()
+	if event.EndTime < now {
+		//lwutil.SendError("err_time", "EndTime must larger than now")
+	}
+
+	//check timePotins
+	if event.BeginTime >= event.EndTime {
+		lwutil.SendError("err_time", "event.BeginTime >= event.EndTime")
+	}
+
+	//BetEndTime
+	event.BetEndTime = event.EndTime - BET_CLOSE_BEFORE_END_SEC
+}
+
 func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckMathod(r, "POST")
 
@@ -365,27 +395,8 @@ func apiNewEvent(w http.ResponseWriter, r *http.Request) {
 	}
 	event.HasResult = false
 
-	//fill TimePoints
-	now := lwutil.GetRedisTimeUnix()
-
-	t, err := time.ParseInLocation(TIME_FORMAT, event.BeginTimeString, time.Local)
-	lwutil.CheckError(err, "")
-	event.BeginTime = t.Unix()
-	if event.BeginTime < now {
-		lwutil.SendError("err_time", "BeginTime must larger than now")
-	}
-
-	t, err = time.ParseInLocation(TIME_FORMAT, event.EndTimeString, time.Local)
-	lwutil.CheckError(err, "")
-	event.EndTime = t.Unix()
-	if event.EndTime < now {
-		lwutil.SendError("err_time", "EndTime must larger than now")
-	}
-
-	//check timePotins
-	if event.BeginTime >= event.EndTime {
-		lwutil.SendError("err_time", "event.BeginTime >= event.EndTime")
-	}
+	//
+	calcEventTimes(&event.Event)
 
 	//sliderNum
 	if event.SliderNum == 0 {
@@ -484,11 +495,14 @@ func apiModEvent(w http.ResponseWriter, r *http.Request) {
 	event.PackTimeUnix = pack.TimeUnix
 
 	//check exist
-	resp, err = ssdb.Do("hget", H_EVENT_BUFF, event.Id)
+	resp, err = ssdb.Do("hget", H_EVENT, event.Id)
 	if resp[0] == "not_found" {
-		lwutil.SendError("err_not_found", "event not found from H_EVENT_BUFF")
+		lwutil.SendError("err_not_found", "event not found from H_EVENT")
 	}
 	lwutil.CheckSsdbError(resp, err)
+
+	//
+	calcEventTimes(&event)
 
 	//save to ssdb
 	js, err := json.Marshal(event)

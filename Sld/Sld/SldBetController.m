@@ -12,6 +12,7 @@
 #import "SldNevigationController.h"
 #import "SldUtil.h"
 #import "SldHttpSession.h"
+#import "MSWeakTimer.h"
 
 static float MAX_BAR_WIDTH = 170;
 
@@ -28,6 +29,8 @@ static float MAX_BAR_WIDTH = 170;
 @implementation TeamBetData
 
 @end
+
+static TeamBetData *_selectedTeamBetData = nil;
 
 //=================================
 @interface SldBetContainerController ()
@@ -70,6 +73,8 @@ static float MAX_BAR_WIDTH = 170;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UIView *winMulBarRaw;
 @property (weak, nonatomic) IBOutlet UILabel *winMulLabel;
+@property (weak, nonatomic) IBOutlet UILabel *myBetLabel;
+@property (weak, nonatomic) IBOutlet UIButton *betButton;
 
 @property (nonatomic) UIView *scoreBar;
 @property (nonatomic) UIView *winMulBar;
@@ -84,13 +89,18 @@ static float MAX_BAR_WIDTH = 170;
 @property (weak, nonatomic) IBOutlet UITextField *betInput;
 @property (weak, nonatomic) IBOutlet UILabel *teamNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *betRemainLabel;
-@property (weak, nonatomic) NSString *teamName;
 @end
 
 @implementation SldBetPopupController
 
 - (void)viewDidLoad {
     [_betInput becomeFirstResponder];
+    
+    _teamNameLabel.text = [NSString stringWithFormat:@"已投%@%d金币", _selectedTeamBetData.teamName, _selectedTeamBetData.myBet];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    _betRemainLabel.text = [NSString stringWithFormat:@"(1-%lld)", gd.money];
+    
 }
 
 - (void)dismiss {
@@ -111,7 +121,7 @@ static float MAX_BAR_WIDTH = 170;
     }
     
     //post
-    NSDictionary *body = @{@"EventId":@(gd.eventInfo.id), @"TeamName":_teamName, @"Money": @(betMoney)};
+    NSDictionary *body = @{@"EventId":@(gd.eventInfo.id), @"TeamName":_selectedTeamBetData.teamName, @"Money": @(betMoney)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     UIAlertView *alt = alertNoButton(@"提交中...");
     [session postToApi:@"event/bet" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -131,7 +141,18 @@ static float MAX_BAR_WIDTH = 170;
             return;
         }
         
-//        [[SldBetController getInstance] onHttpBetWithDict:dict];
+        SldGameData *gd = [SldGameData getInstance];
+        NSString *teamName = [dict objectForKey:@"TeamName"];
+        SInt64 betMoney = [(NSNumber*)[dict objectForKey:@"BetMoney"] longLongValue];
+        SInt64 betMoneySum = [(NSNumber*)[dict objectForKey:@"BetMoneySum"] longLongValue];
+        SInt64 userMoney = [(NSNumber*)[dict objectForKey:@"UserMoney"] longLongValue];
+        
+        gd.eventPlayRecord.BetMoneySum = betMoneySum;
+        gd.money = userMoney;
+        [gd.eventPlayRecord.bet setObject:@(betMoney) forKey:teamName];
+        
+        SldBetController *vc = (SldBetController*)self.presentingViewController;
+        [vc updateUI];
         
         [self dismiss];
     }];
@@ -148,14 +169,21 @@ static float MAX_BAR_WIDTH = 170;
 @property (weak, nonatomic) IBOutlet UILabel *myBetSumLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalBetLabel;
 @property (weak, nonatomic) IBOutlet UILabel *myBetTeamNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSMutableArray *teamBetDatas;
 @property (nonatomic) SInt64 maxBetMoney;
 @property (nonatomic) int maxScore;
 @property (nonatomic) SInt64 totalBetMoney;
+@property (nonatomic) MSWeakTimer *timer;
+@property (nonatomic) BOOL betClosed;
 @end
 
 @implementation SldBetController
+
+-(void)dealloc {
+    [_timer invalidate];
+}
 
 - (void)viewDidLoad
 {
@@ -186,7 +214,26 @@ static float MAX_BAR_WIDTH = 170;
         [_teamBetDatas addObject:data];
     }
     
+    //timer
+    _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    [self onTimer];
+    
     [self updateDatas];
+}
+
+- (void)onTimer {
+    NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
+    if (_gd.eventInfo.hasResult || endIntv <= 0) {
+        if (!_betClosed) {
+            _betClosed = YES;
+            _timeRemainLabel.text = @"投注已结束";
+            [self.tableView reloadData];
+        }
+    } else {
+        NSString *str = formatInterval((int)endIntv);
+        _timeRemainLabel.text = [NSString stringWithFormat:@"剩余时间%@", str];
+    }
 }
 
 - (void)updateDatas {
@@ -231,17 +278,24 @@ static float MAX_BAR_WIDTH = 170;
             }
         }
         
-        //team scores
+        //team scores and my bet
         _maxScore = 0;
         NSDictionary *teamScoreDict = [dict objectForKey:@"TeamScores"];
-        
+        NSDictionary *myBetDict = _gd.eventPlayRecord.bet;
         for (TeamBetData *data in _teamBetDatas) {
+            //score
             NSNumber *nScore = [teamScoreDict objectForKey:data.teamName];
             if (nScore) {
                 data.score = [nScore intValue];
                 if (data.score > _maxScore) {
                     _maxScore = data.score;
                 }
+            }
+            
+            //my bet money
+            NSNumber *myBet = [myBetDict objectForKey:data.teamName];
+            if (myBet) {
+                data.myBet = [myBet intValue];
             }
         }
         
@@ -259,15 +313,16 @@ static float MAX_BAR_WIDTH = 170;
         }];
         
         //update ui
-        _totalBetLabel.text = [NSString stringWithFormat:@"奖池总额：%lld", _totalBetMoney];
-        
-        _myBetSumLabel.text = [NSString stringWithFormat:@"投注金额：%lld", _gd.eventPlayRecord.BetMoneySum];
-        
-        _myBetTeamNumLabel.text = [NSString stringWithFormat:@"已买队伍：%d", _gd.eventPlayRecord.bet.count];
-        
-        //
-        [self.tableView reloadData];
+        [self updateUI];
     }];
+}
+
+- (void)updateUI {
+    _totalBetLabel.text = [NSString stringWithFormat:@"奖池总额：%lld", _totalBetMoney];
+    _myBetSumLabel.text = [NSString stringWithFormat:@"已投金额：%lld", _gd.eventPlayRecord.BetMoneySum];
+    _myBetTeamNumLabel.text = [NSString stringWithFormat:@"已投队伍：%d", _gd.eventPlayRecord.bet.count];
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -331,6 +386,24 @@ static float MAX_BAR_WIDTH = 170;
         cell.scoreBar.frame = frame;
     }
     
+    //
+    if (data.myBet > 0) {
+        cell.myBetLabel.hidden = NO;
+        cell.myBetLabel.text = [NSString stringWithFormat:@"已投%d", data.myBet];
+        [cell.betButton setTitle:@"加注" forState:UIControlStateNormal];
+    } else {
+        cell.myBetLabel.hidden = YES;
+        [cell.betButton setTitle:@"投注" forState:UIControlStateNormal];
+    }
+    
+    //button
+    if (_betClosed) {
+        [cell.betButton setTitle:@"已结束" forState:UIControlStateNormal|UIControlStateDisabled];
+        cell.betButton.enabled = NO;
+    } else if (data.winMul > 0) {
+        cell.betButton.enabled = YES;
+    }
+    
     return cell;
 }
 
@@ -379,15 +452,17 @@ static float MAX_BAR_WIDTH = 170;
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier compare:@"toBetPopupSeg"] == 0) {
+        UIView* view = sender;
+        UITableViewCell *cell = (UITableViewCell*)view.superview.superview;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        
+        _selectedTeamBetData = [_teamBetDatas objectAtIndex:indexPath.row];
+    }
 }
-*/
 
 @end

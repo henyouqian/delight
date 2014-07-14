@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	USEAGE = "Useage: \n\tpackUploader new|del|update|newEvent <uploadDir>\n\tpackUploader image <imagePath>"
+	USEAGE = "Useage: \n\tpackUploader new|del|update|newEvent|newEventBuff <uploadDir>\n\tpackUploader image <imagePath>"
 )
 
 var (
@@ -88,10 +88,10 @@ func main() {
 		updatePack()
 	case "image":
 		uploadImage()
-	case "newEvent":
+	case "newEventBuff":
 		packId := newPack()
 		if packId > 0 {
-			newEvent(packId)
+			newEventBuff(packId)
 		}
 	default:
 		glog.Errorln(USEAGE)
@@ -520,7 +520,7 @@ func updatePack() {
 	glog.Infof("update pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
 }
 
-func newEvent(packId int64) {
+func newEventBuff(packId int64) {
 	event, err := loadEvent()
 	checkErr(err)
 	event.PackId = packId

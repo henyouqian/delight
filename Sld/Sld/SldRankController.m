@@ -96,6 +96,8 @@ static SldRankController *_inst = nil;
     //
     [self loadBackground];
     
+    [self updateRanks];
+    
 //    //header
 //    CGRect frame = self.view.frame;
 //    //frame.origin.x = 100;

@@ -13,13 +13,20 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 @implementation EventInfo
 + (instancetype)eventWithDictionary:(NSDictionary*)dict {
     EventInfo *event = [[EventInfo alloc] init];
-    
     event.id = [(NSNumber*)dict[@"Id"] longLongValue];
     event.thumb = dict[@"Thumb"];
     event.packId = [(NSNumber*)dict[@"PackId"] longLongValue];
     event.packTimeUnix = [(NSNumber*)dict[@"PackTimeUnix"] longLongValue];
     event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
-    event.endTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"EndTime"] longLongValue]];
+    SInt64 endTime = [(NSNumber*)dict[@"EndTime"] longLongValue];
+    event.endTime = [NSDate dateWithTimeIntervalSince1970:endTime];
+    NSNumber *betEndTime = [dict objectForKey:@"BetEndTime"];
+    if (betEndTime) {
+        event.betEndTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)betEndTime longLongValue]];
+    } else {
+        event.betEndTime = [NSDate dateWithTimeIntervalSince1970:endTime - 60*60];
+    }
+    
     event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
     event.challengeSecs = [dict valueForKey:@"ChallengeSecs"];
     if ([event.challengeSecs isKindOfClass:[NSNull class]]) {
