@@ -44,9 +44,9 @@
 }
 - (IBAction)onChangeMode:(id)sender {
     if ([_seg selectedSegmentIndex] == 0) {
-        [_okButton setTitle:@"登录" forState:UIControlStateNormal];
+        [_okButton setTitle:@"登  录" forState:UIControlStateNormal];
     } else {
-        [_okButton setTitle:@"注册" forState:UIControlStateNormal];
+        [_okButton setTitle:@"注  册" forState:UIControlStateNormal];
     }
 }
 

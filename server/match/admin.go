@@ -108,7 +108,58 @@ func apiSetAdsPercent(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, in)
 }
 
+func apiSetChallengeEventId(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	ssdbAuth, err := ssdbAuthPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdbAuth.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	checkAdmin(session)
+
+	//in
+	var in struct {
+		UserName         string
+		ChallengeEventId int64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	if in.ChallengeEventId <= 0 {
+		lwutil.SendError("err_invalid_input", "")
+	}
+
+	//get userId
+	resp, err := ssdbAuth.Do("hget", H_NAME_ACCONT, in.UserName)
+	lwutil.CheckError(err, "")
+	if resp[0] != "ok" {
+		lwutil.SendError("err_not_match", "name and password not match")
+	}
+	userId, err := strconv.ParseInt(resp[1], 10, 64)
+	lwutil.CheckError(err, "")
+
+	//save
+	playerKey := makePlayerInfoKey(userId)
+
+	resp, err = ssdb.Do("hset", playerKey, playerChallengeEventId, in.ChallengeEventId)
+	lwutil.CheckSsdbError(resp, err)
+
+	//out
+	lwutil.WriteResponse(w, in)
+}
+
 func regAdmin() {
 	http.Handle("/admin/addMoney", lwutil.ReqHandler(apiAddMoney))
 	http.Handle("/admin/setAdsPercent", lwutil.ReqHandler(apiSetAdsPercent))
+	http.Handle("/admin/setChallengeEventId", lwutil.ReqHandler(apiSetChallengeEventId))
 }

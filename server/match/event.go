@@ -1639,6 +1639,68 @@ func apiSubmitChallengeScore(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, out)
 }
 
+func apiPassMissingChallenge(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//in
+	var in struct {
+		EventId int64
+	}
+	err = lwutil.DecodeRequestBody(r, &in)
+	lwutil.CheckError(err, "err_decode_body")
+
+	playerKey := makePlayerInfoKey(session.Userid)
+
+	//check eventId
+	var challengeEventId int64
+	err = ssdb.HGet(playerKey, playerChallengeEventId, &challengeEventId)
+	lwutil.CheckError(err, "")
+	if in.EventId != challengeEventId {
+		lwutil.SendError("err_invalid_event", "")
+	}
+
+	//event must not exist
+	resp, err := ssdb.Do("hget", H_EVENT, in.EventId)
+	lwutil.CheckError(err, "")
+	if resp[0] != "not_found" {
+		lwutil.SendError("err_event_exist", "")
+	}
+
+	//add chanllengeEventId
+	resp, err = ssdb.Do("hincr", playerKey, playerChallengeEventId, 1)
+	lwutil.CheckSsdbError(resp, err)
+	challengeEventId++
+
+	//add money
+	addMoney := 100 + rand.Int()%400
+	resp, err = ssdb.Do("hincr", playerKey, playerMoney, addMoney)
+	lwutil.CheckSsdbError(resp, err)
+	money, err := strconv.ParseInt(resp[1], 10, 64)
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		AddMoney         int
+		Money            int64
+		ChallengeEventId int64
+	}{
+		addMoney,
+		money,
+		challengeEventId,
+	}
+	lwutil.WriteResponse(w, out)
+}
+
 func apiGetBettingPool(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -1833,6 +1895,7 @@ func regMatch() {
 	http.Handle("/event/playEnd", lwutil.ReqHandler(apiPlayEnd))
 	http.Handle("/event/getRanks", lwutil.ReqHandler(apiGetRanks))
 	http.Handle("/event/submitChallengeScore", lwutil.ReqHandler(apiSubmitChallengeScore))
+	http.Handle("/event/passMissingChallenge", lwutil.ReqHandler(apiPassMissingChallenge))
 	http.Handle("/event/getBettingPool", lwutil.ReqHandler(apiGetBettingPool))
 	http.Handle("/event/bet", lwutil.ReqHandler(apiBet))
 	http.Handle("/event/listPlayResult", lwutil.ReqHandler(apiListPlayResult))

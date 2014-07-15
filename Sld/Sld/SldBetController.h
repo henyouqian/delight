@@ -13,5 +13,5 @@
 @end
 
 @interface SldBetController : UITableViewController
-- (void)updateUI;
+- (void)updateDatas;
 @end

@@ -263,6 +263,10 @@ function Controller($scope, $http) {
 					"name": "setAdsPercent",
 					"method": "POST",
 					"data": {"AdsPercent": 0.5}
+				},{
+					"name": "setChallengeEventId",
+					"method": "POST",
+					"data": {"UserName": "", "ChallengeEventId": 0}
 				}
 			]
 		},{

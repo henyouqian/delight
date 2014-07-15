@@ -15,7 +15,7 @@
 #import "MSWeakTimer.h"
 
 static float MAX_BAR_WIDTH = 170;
-
+static SldBetController* _betController = nil;
 
 //=================================
 @interface TeamBetData : NSObject
@@ -104,7 +104,7 @@ static TeamBetData *_selectedTeamBetData = nil;
 }
 
 - (void)dismiss {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)onCancelButton:(id)sender {
@@ -150,9 +150,8 @@ static TeamBetData *_selectedTeamBetData = nil;
         gd.eventPlayRecord.BetMoneySum = betMoneySum;
         gd.money = userMoney;
         [gd.eventPlayRecord.bet setObject:@(betMoney) forKey:teamName];
-        
-        SldBetController *vc = (SldBetController*)self.presentingViewController;
-        [vc updateUI];
+
+        [_betController updateDatas];
         
         [self dismiss];
     }];
@@ -172,7 +171,7 @@ static TeamBetData *_selectedTeamBetData = nil;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSMutableArray *teamBetDatas;
-@property (nonatomic) SInt64 maxBetMoney;
+@property (nonatomic) float maxWinMul;
 @property (nonatomic) int maxScore;
 @property (nonatomic) SInt64 totalBetMoney;
 @property (nonatomic) MSWeakTimer *timer;
@@ -188,6 +187,7 @@ static TeamBetData *_selectedTeamBetData = nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _betController = self;
     
     _gd = [SldGameData getInstance];
     
@@ -232,7 +232,7 @@ static TeamBetData *_selectedTeamBetData = nil;
         }
     } else {
         NSString *str = formatInterval((int)endIntv);
-        _timeRemainLabel.text = [NSString stringWithFormat:@"剩余时间%@", str];
+        _timeRemainLabel.text = [NSString stringWithFormat:@"剩余时间：%@", str];
     }
 }
 
@@ -258,23 +258,23 @@ static TeamBetData *_selectedTeamBetData = nil;
         
         //set bet money and calc totalBetMoney
         _totalBetMoney = 0;
-        _maxBetMoney = 0;
         for (TeamBetData *data in _teamBetDatas) {
             NSNumber *betMoney = [bettingPoolDict objectForKey:data.teamName];
             if (betMoney) {
                 data.betMoney = [betMoney longLongValue];
                 _totalBetMoney += data.betMoney;
-                if (data.betMoney > _maxBetMoney) {
-                    _maxBetMoney = data.betMoney;
-                }
             }
         }
         
         //calc winMul
+        _maxWinMul = 0.0;
         for (TeamBetData *data in _teamBetDatas) {
             NSNumber *betMoney = [bettingPoolDict objectForKey:data.teamName];
             if (betMoney) {
                 data.winMul = (float)_totalBetMoney / [betMoney floatValue];
+                if (data.winMul > _maxWinMul) {
+                    _maxWinMul = data.winMul;
+                }
             }
         }
         
@@ -362,8 +362,8 @@ static TeamBetData *_selectedTeamBetData = nil;
         [cell.contentView addSubview:cell.winMulBar];
     }
     
-    if (_maxBetMoney > 0) {
-        float width = (float)(data.betMoney)/(float)_maxBetMoney * MAX_BAR_WIDTH;
+    if (_maxWinMul > 0.0) {
+        float width = (float)(data.winMul)/(float)_maxWinMul * MAX_BAR_WIDTH;
         CGRect frame = cell.winMulBar.frame;
         frame.size.width = width;
         cell.winMulBar.frame = frame;
@@ -457,9 +457,8 @@ static TeamBetData *_selectedTeamBetData = nil;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier compare:@"toBetPopupSeg"] == 0) {
-        UIView* view = sender;
-        UITableViewCell *cell = (UITableViewCell*)view.superview.superview;
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
         
         _selectedTeamBetData = [_teamBetDatas objectAtIndex:indexPath.row];
     }

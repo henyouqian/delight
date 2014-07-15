@@ -21,7 +21,8 @@ const (
 )
 
 var (
-	TEAM_IDS = []uint32{
+	TEAM_NAMES = []string{"安徽", "澳门", "北京", "重庆", "福建", "甘肃", "广东", "广西", "贵州", "海南", "河北", "黑龙江", "河南", "湖北", "湖南", "江苏", "江西", "吉林", "辽宁", "内蒙古", "宁夏", "青海", "陕西", "山东", "上海", "山西", "四川", "台湾", "天津", "香港", "新疆", "西藏", "云南", "浙江"}
+	TEAM_IDS   = []uint32{
 		11, 12, 13, 14, 15,
 		21, 22, 23,
 		31, 32, 33, 34, 35, 36, 37,
@@ -167,12 +168,20 @@ func play(userName string, eventId uint64, minScore int32, maxScore int32) {
 
 func setInfo(userName string) {
 	url := HOST + "/player/setInfo"
-	teamId := TEAM_IDS[rand.Int()%len(TEAM_IDS)]
+	// teamId := TEAM_IDS[rand.Int()%len(TEAM_IDS)]
+	teamName := TEAM_NAMES[rand.Int()%len(TEAM_NAMES)]
+	gender := rand.Int() % 2
 
 	body := struct {
-		TeamId uint32
+		NickName    string
+		TeamName    string
+		Gender      int
+		GravatarKey int
 	}{
-		teamId,
+		userName,
+		teamName,
+		gender,
+		rand.Int() % 10000,
 	}
 	bodyjs, err := json.Marshal(body)
 	checkErr(err)
@@ -194,9 +203,9 @@ func main() {
 
 	for i := 0; i < 1000; i++ {
 		username := fmt.Sprintf("test%d", i)
-		//register(username)
-		//setInfo(username)
-		play(username, 1, -1000*60, -1000*10)
+		register(username)
+		setInfo(username)
+		//play(username, 1, -1000*60, -1000*10)
 	}
 
 	// var w sync.WaitGroup

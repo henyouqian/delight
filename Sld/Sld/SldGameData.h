@@ -39,6 +39,7 @@ enum CupType{
 @property (nonatomic) enum EventState state; //undefined:0, comming:1, running:2, closed:3
 @property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
 @property (nonatomic) BOOL isLoading;
+@property (nonatomic) BOOL missing;
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
 - (enum EventState)updateState;

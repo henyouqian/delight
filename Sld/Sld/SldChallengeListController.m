@@ -42,6 +42,8 @@ static const int NUM_PER_ROW = 3;
 @property (nonatomic) UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *goButton;
 @property (nonatomic) UIImage *loadingImage;
+@property (nonatomic) UIImage *missingImage;
+@property (nonatomic) UIImage *dollarImage;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSMutableArray *downloadTasks;
 @property (nonatomic) int rowNum;
@@ -53,15 +55,6 @@ static NSString *STR_GOTO = @"跳转";
 static NSString *STR_BOTTOM = @"当前";
 
 @implementation SldChallengeListController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -100,6 +93,8 @@ static NSString *STR_BOTTOM = @"当前";
     _goButton.title = STR_BOTTOM;
     _gd = [SldGameData getInstance];
     _loadingImage = [UIImage imageNamed:@"ui/loading.png"];
+    _missingImage = [UIImage imageNamed:@"ui/gift.png"];
+    _dollarImage = [UIImage imageNamed:@"ui/dollar.png"];
     
     //
     SldHttpSession *session = [SldHttpSession defaultSession];
@@ -235,14 +230,26 @@ static NSString *STR_BOTTOM = @"当前";
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     SldChallengeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"challengeCell" forIndexPath:indexPath];
+    [cell.imageView releaseImage];
     cell.imageView.image = _loadingImage;
     cell.starLabel.text = @"";
+    cell.dimmer.hidden = YES;
     
     int eventIdx = [self getEventIndex:indexPath];
+    EventInfo *evt = [_gd.challengeEventInfos objectAtIndex:eventIdx];
+    
+    if (evt.missing) {
+        if (eventIdx+1 == _gd.challengeEventId) {
+            cell.imageView.image = _missingImage;
+        } else {
+            cell.imageView.image = _dollarImage;
+        }
+        
+        
+        return cell;
+    }
     
     if (eventIdx < _gd.challengeEventInfos.count) {
-        EventInfo *evt = [_gd.challengeEventInfos objectAtIndex:eventIdx];
-        
         //is locked?
         if (evt.id > _gd.challengeEventId) {
             cell.locker.hidden = NO;
@@ -252,7 +259,6 @@ static NSString *STR_BOTTOM = @"当前";
         
         //
         if (evt.thumb) { //event info loaded
-            
             [cell.imageView asyncLoadImageWithKey:evt.thumb showIndicator:NO completion:nil];
             if (cell.imageView.task) {
                 [_downloadTasks addObject:cell.imageView.task];
@@ -271,7 +277,9 @@ static NSString *STR_BOTTOM = @"当前";
             } else if (evt.cupType == CUP_GOLD) {
                 cell.starLabel.text = @"⭐️⭐️⭐️";
             }
-            if (evt.cupType != CUP_NONE) {
+            if (evt.cupType == CUP_NONE) {
+                cell.dimmer.hidden = YES;
+            } else {
                 cell.dimmer.hidden = NO;
             }
             
@@ -311,6 +319,18 @@ static NSString *STR_BOTTOM = @"当前";
                     NSIndexPath *indexPath = [self getEventIndexPath:index];
                     [_gd.challengeEventInfos replaceObjectAtIndex:index withObject:evt];
                     [reloads addObject:indexPath];
+                }
+                
+                //check missing event
+                int imax = MIN(_gd.challengeEventInfos.count, eventIdx + EVENT_NUM_PER_BATCH);
+                for (int i = eventIdx; i < imax; i++) {
+                    EventInfo *evt = _gd.challengeEventInfos[i];
+                    if (evt.id == 0) {
+                        evt.missing = YES;
+                        evt.id = i + 1;
+                        NSIndexPath *indexPath = [self getEventIndexPath:i];
+                        [reloads addObject:indexPath];
+                    }
                 }
                 
                 [self.collectionView reloadItemsAtIndexPaths:reloads];
@@ -361,14 +381,49 @@ static NSString *STR_BOTTOM = @"当前";
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     if (identifier && [identifier compare:@"toChallengeSeg"] == 0) {
         UIButton *button = sender;
-        UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
+        SldChallengeCell *cell = (SldChallengeCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
         int eventIdx = [self getEventIndex:indexPath];
         if (eventIdx < [_gd.challengeEventInfos count]) {
             EventInfo *event = [_gd.challengeEventInfos objectAtIndex:eventIdx];
-            if (event.id <= _gd.challengeEventId) {
+            if (event.missing) {
+                if (event.id == _gd.challengeEventId) {
+                    SldHttpSession *session = [SldHttpSession defaultSession];
+                    NSDictionary *body = @{@"EventId":@(event.id)};
+                    UIAlertView *alt =  alertNoButton(@"抽奖中...");
+                    [session postToApi:@"event/passMissingChallenge" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                        [alt dismissWithClickedButtonIndex:0 animated:YES];
+                        if (error) {
+                            alertHTTPError(error, data);
+                            return;
+                        }
+                        
+                        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                        if (error) {
+                            lwError("Json error:%@", [error localizedDescription]);
+                            return;
+                        }
+                        
+                        int addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] intValue];
+                        SInt64 money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+                        int challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
+                        
+                        alert([NSString stringWithFormat:@"恭喜中奖！！！你赢了%d金币！！！", addMoney], nil);
+                        _gd.money = money;
+                        _gd.challengeEventId = challengeEventId;
+                        
+                        NSIndexPath *ip = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+                        [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:ip]];
+                        cell.imageView.image = _dollarImage;
+                    }];
+                } else {
+                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                }
+                return NO;
+            }else if (event.id <= _gd.challengeEventId && event.id > 0) {
                 return YES;
             }
+            
         }
     }
     return NO;
