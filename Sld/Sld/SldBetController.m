@@ -169,6 +169,7 @@ static TeamBetData *_selectedTeamBetData = nil;
 @property (weak, nonatomic) IBOutlet UILabel *totalBetLabel;
 @property (weak, nonatomic) IBOutlet UILabel *myBetTeamNumLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeRemainLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSMutableArray *teamBetDatas;
 @property (nonatomic) float maxWinMul;
@@ -223,7 +224,7 @@ static TeamBetData *_selectedTeamBetData = nil;
 }
 
 - (void)onTimer {
-    NSTimeInterval endIntv = [_gd.eventInfo.endTime timeIntervalSinceNow];
+    NSTimeInterval endIntv = [_gd.eventInfo.betEndTime timeIntervalSinceNow];
     if (_gd.eventInfo.hasResult || endIntv <= 0) {
         if (!_betClosed) {
             _betClosed = YES;
@@ -321,6 +322,15 @@ static TeamBetData *_selectedTeamBetData = nil;
     _totalBetLabel.text = [NSString stringWithFormat:@"奖池总额：%lld", _totalBetMoney];
     _myBetSumLabel.text = [NSString stringWithFormat:@"已投金额：%lld", _gd.eventPlayRecord.BetMoneySum];
     _myBetTeamNumLabel.text = [NSString stringWithFormat:@"已投队伍：%d", _gd.eventPlayRecord.bet.count];
+    
+    SInt64 reward = _gd.eventPlayRecord.betReward;
+    if (reward > 0) {
+        _rewardLabel.text = [NSString stringWithFormat:@"已投队伍：%lld", reward];
+        _rewardLabel.hidden = NO;
+    } else {
+        _rewardLabel.hidden = YES;
+    }
+    
     
     [self.tableView reloadData];
 }

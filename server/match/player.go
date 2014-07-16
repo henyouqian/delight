@@ -14,12 +14,14 @@ import (
 )
 
 const (
-	H_PLAYER_INFO      = "H_PLAYER_INFO" //subkey:(int64)userId value:(PlayerInfo)playerInfo
+	H_PLAYER_INFO      = "H_PLAYER_INFO"     //subkey:(int64)userId value:(PlayerInfo)playerInfo
+	H_APP_PLAYER_RATE  = "H_APP_PLAYER_RATE" //subkey:appName/userId value:1
 	USER_UPLOAD_BUCKET = "pintugame"
 	INIT_MONEY         = 500
 	FLD_PLAYER_MONEY   = "money"
 	FLD_PLAYER_TEAM    = "team"
 	ADS_PERCENT_DEFAUT = 0.5
+	RATE_REWARD        = 500
 )
 
 type PlayerInfo struct {
@@ -52,6 +54,10 @@ func init() {
 
 func makePlayerInfoKey(userId int64) string {
 	return fmt.Sprintf("%s/%d", H_PLAYER_INFO, userId)
+}
+
+func makeAppPlayerRateSubkey(appName string, userId int64) string {
+	return fmt.Sprintf("%s/%d", appName, userId)
 }
 
 func getPlayerInfo(ssdb *ssdb.Client, userId int64) (*PlayerInfo, error) {
@@ -94,6 +100,27 @@ func getPlayerInfo(ssdb *ssdb.Client, userId int64) (*PlayerInfo, error) {
 // 	// lwutil.CheckSsdbError(resp, err)
 // }
 
+func addPlayerMoney(ssc *ssdb.Client, userId int64, addMoney int64) (rMoney int64) {
+	playerKey := makePlayerInfoKey(userId)
+	resp, err := ssc.Do("hincr", playerKey, playerMoney, addMoney)
+	lwutil.CheckSsdbError(resp, err)
+	money, err := strconv.ParseInt(resp[1], 10, 64)
+	lwutil.CheckError(err, "")
+
+	resp, err = ssc.Do("hincr", playerKey, playerTotalReward, addMoney)
+	lwutil.CheckSsdbError(resp, err)
+
+	return money
+}
+
+func addPlayerMoneyToCache(ssc *ssdb.Client, userId int64, addMoney int64) {
+	playerKey := makePlayerInfoKey(userId)
+	resp, err := ssc.Do("hincr", playerKey, playerRewardCache, addMoney)
+	lwutil.CheckSsdbError(resp, err)
+	resp, err = ssc.Do("hincr", playerKey, playerTotalReward, addMoney)
+	lwutil.CheckSsdbError(resp, err)
+}
+
 func apiGetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	var err error
 	lwutil.CheckMathod(r, "POST")
@@ -111,7 +138,7 @@ func apiGetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
 	lwutil.CheckError(err, "")
 
-	//get
+	//get adsPercent
 	ap := _adsPercent
 	if ap < 0 {
 		resp, err := ssdb.Do("get", ADS_PERCENT_KEY)
@@ -125,15 +152,25 @@ func apiGetPlayerInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//get appPlayerRate
+	subkey := makeAppPlayerRateSubkey(_conf.AppName, session.Userid)
+	resp, err := ssdb.Do("hget", H_APP_PLAYER_RATE, subkey)
+	rateReward := 0
+	if resp[0] == "not_found" {
+		rateReward = RATE_REWARD
+	}
+
 	//out
 	out := struct {
 		*PlayerInfo
 		BetCloseBeforeEndSec int
 		AdsPercent           float32
+		RateReward           int
 	}{
 		playerInfo,
 		BET_CLOSE_BEFORE_END_SEC,
 		ap,
+		rateReward,
 	}
 	lwutil.WriteResponse(w, out)
 }
@@ -283,9 +320,42 @@ func apiGetUptoken(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, &out)
 }
 
+func apiRate(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//ssdb
+	ssc, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssc.Close()
+
+	//
+	subkey := makeAppPlayerRateSubkey(_conf.AppName, session.Userid)
+	resp, err := ssc.Do("hget", H_APP_PLAYER_RATE, subkey)
+	addMoney := 0
+	if resp[0] == "not_found" {
+		addPlayerMoney(ssc, session.Userid, RATE_REWARD)
+		ssc.Do("hset", H_APP_PLAYER_RATE, subkey, 1)
+		addMoney = RATE_REWARD
+	}
+
+	//out
+	out := struct {
+		AddMoney int
+	}{
+		addMoney,
+	}
+	lwutil.WriteResponse(w, out)
+}
+
 func regPlayer() {
 	http.Handle("/player/getInfo", lwutil.ReqHandler(apiGetPlayerInfo))
 	http.Handle("/player/setInfo", lwutil.ReqHandler(apiSetPlayerInfo))
 	http.Handle("/player/addRewardFromCache", lwutil.ReqHandler(apiAddRewardFromCache))
 	http.Handle("/player/getUptoken", lwutil.ReqHandler(apiGetUptoken))
+	http.Handle("/player/rate", lwutil.ReqHandler(apiRate))
 }

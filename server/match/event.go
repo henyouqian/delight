@@ -366,7 +366,9 @@ func calcEventTimes(event *Event) {
 	}
 
 	//BetEndTime
-	event.BetEndTime = event.EndTime - BET_CLOSE_BEFORE_END_SEC
+	if event.BetEndTime == 0 {
+		event.BetEndTime = event.EndTime - BET_CLOSE_BEFORE_END_SEC
+	}
 }
 
 func apiNewEvent(w http.ResponseWriter, r *http.Request) {
@@ -578,7 +580,8 @@ func apiListEvent(w http.ResponseWriter, r *http.Request) {
 	lwutil.CheckSsdbError(resp, err)
 	resp = resp[1:]
 	if len(resp) == 0 {
-		lwutil.SendError("err_not_found", "")
+		glog.Errorf("startId=%d", startId)
+		lwutil.SendError("err_not_found", fmt.Sprintf("startId=%d", startId))
 	}
 
 	//multi_hget
@@ -1095,13 +1098,17 @@ func apiPlayBegin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get event player record
-	key := makeEventPlayerRecordSubkey(in.EventId, session.Userid)
-	resp, err = ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
-	lwutil.CheckSsdbError(resp, err)
-	record := EventPlayerRecord{}
+	record := getEventPlayerRecord(ssdb, in.EventId, session.Userid)
 
-	err = json.Unmarshal([]byte(resp[1]), &record)
-	lwutil.CheckError(err, "")
+	// key := makeEventPlayerRecordSubkey(in.EventId, session.Userid)
+	// resp, err = ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
+	// lwutil.CheckSsdbError(resp, err)
+	// record := EventPlayerRecord{}
+
+	// err = json.Unmarshal([]byte(resp[1]), &record)
+	// lwutil.CheckError(err, "")
+
+	//
 	record.Trys++
 
 	if record.GameCoinNum <= 0 {
@@ -1114,9 +1121,10 @@ func apiPlayBegin(w http.ResponseWriter, r *http.Request) {
 	record.SecretExpire = lwutil.GetRedisTimeUnix() + TRY_EXPIRE_SECONDS
 
 	//update record
-	js, err := json.Marshal(record)
-	resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, key, js)
-	lwutil.CheckSsdbError(resp, err)
+	saveEventPlayerRecord(ssdb, in.EventId, session.Userid, record)
+	// js, err := json.Marshal(record)
+	// resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, key, js)
+	// lwutil.CheckSsdbError(resp, err)
 
 	//out
 	lwutil.WriteResponse(w, record)
@@ -1769,7 +1777,11 @@ func apiBet(w http.ResponseWriter, r *http.Request) {
 		lwutil.SendError("err_event_not_running", "")
 	}
 	now := lwutil.GetRedisTimeUnix()
-	if now >= event.EndTime-BET_CLOSE_BEFORE_END_SEC {
+
+	if event.BetEndTime == 0 {
+		event.BetEndTime = event.EndTime - BET_CLOSE_BEFORE_END_SEC
+	}
+	if now >= event.BetEndTime {
 		lwutil.SendError("err_bet_close", "")
 	}
 
@@ -1880,6 +1892,45 @@ func apiListPlayResult(w http.ResponseWriter, r *http.Request) {
 	lwutil.WriteResponse(w, records)
 }
 
+func apiCheckNewEvent(w http.ResponseWriter, r *http.Request) {
+	var err error
+	lwutil.CheckMathod(r, "POST")
+
+	//ssdb
+	ssdb, err := ssdbPool.Get()
+	lwutil.CheckError(err, "")
+	defer ssdb.Close()
+
+	//session
+	session, err := findSession(w, r, nil)
+	lwutil.CheckError(err, "err_auth")
+
+	//get newest event id
+	//zrscan
+	resp, err := ssdb.Do("zrscan", Z_EVENT, "", "", "", 1)
+	lwutil.CheckSsdbError(resp, err)
+	resp = resp[1:]
+	if len(resp) == 0 {
+		lwutil.SendError("err_not_found", "")
+	}
+	eventId, err := strconv.ParseInt(resp[0], 10, 64)
+	lwutil.CheckError(err, "")
+
+	//
+	playerInfo, err := getPlayerInfo(ssdb, session.Userid)
+	lwutil.CheckError(err, "")
+
+	//out
+	out := struct {
+		EventId     int64
+		RewardCache int64
+	}{
+		eventId,
+		playerInfo.RewardCache,
+	}
+	lwutil.WriteResponse(w, out)
+}
+
 func regMatch() {
 	http.Handle("/event/new", lwutil.ReqHandler(apiNewEvent))
 	http.Handle("/event/del", lwutil.ReqHandler(apiDelEvent))
@@ -1899,4 +1950,5 @@ func regMatch() {
 	http.Handle("/event/getBettingPool", lwutil.ReqHandler(apiGetBettingPool))
 	http.Handle("/event/bet", lwutil.ReqHandler(apiBet))
 	http.Handle("/event/listPlayResult", lwutil.ReqHandler(apiListPlayResult))
+	http.Handle("/event/checkNew", lwutil.ReqHandler(apiCheckNewEvent))
 }

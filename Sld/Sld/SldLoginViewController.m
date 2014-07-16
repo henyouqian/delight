@@ -192,6 +192,7 @@
                 gameData.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
                 gameData.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
                 gameData.challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
+                gameData.rateReward = [(NSNumber*)[dict objectForKey:@"RateReward"] intValue];
                 
                 [SldIapManager getInstance];
                 

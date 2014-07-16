@@ -109,6 +109,8 @@ static const int FETCH_EVENT_COUNT = 20;
     _collectionView.dataSource = self;
     
     _footerView.hidden = YES;
+    
+    [_gameData.eventInfos removeAllObjects];
 
     
     //refresh control
@@ -123,7 +125,7 @@ static const int FETCH_EVENT_COUNT = 20;
     //timer
     _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
-    _checkNewTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60*2 target:self selector:@selector(onCheckNewTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    _checkNewTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(onCheckNewTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     //
 }
@@ -179,26 +181,42 @@ static const int FETCH_EVENT_COUNT = 20;
 //    }
 }
 
+- (void)checkRewardButton {
+    if (_gameData.rewardCache > 0) {
+        [_rewardButton setTitle:[NSString stringWithFormat:@"可领取奖金%lld", _gameData.rewardCache] forState:UIControlStateNormal];
+        _rewardButton.hidden = NO;
+        CGRect frame = _rewardButton.frame;
+        frame.origin.y = 0;
+        _rewardButton.frame = frame;
+        [UIView animateWithDuration:.5 delay:0.5 usingSpringWithDamping:.4 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^
+         {
+             CGRect frame = _rewardButton.frame;
+             frame.origin.y = 64;
+             _rewardButton.frame = frame;
+         } completion:nil];
+    } else {
+        _rewardButton.hidden = YES;
+    }
+}
+
 - (void)onCheckNewTimer {
     if (_gameData.eventInfos && _gameData.eventInfos.count > 0) {
         SldHttpSession *session = [SldHttpSession defaultSession];
-        NSDictionary *body = @{@"StartId":@0, @"Limit":@1};
-        [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"event/checkNew" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 alertHTTPError(error, data);
                 return;
             }
             
-            NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (error) {
                 lwError("Json error:%@", [error localizedDescription]);
                 return;
             }
-            if (!array || array.count == 0) {
-                return;
-            }
-            NSDictionary *dict = [array firstObject];
-            int eventId = [(NSNumber*)[dict objectForKey:@"Id"] intValue];
+            
+            int eventId = [(NSNumber*)[dict objectForKey:@"EventId"] intValue];
+            int rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] intValue];
+            
             EventInfo *eventInfo = _gameData.eventInfos.firstObject;
             if (eventId != eventInfo.id) {
                 UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -207,6 +225,9 @@ static const int FETCH_EVENT_COUNT = 20;
                 [label sizeToFit];
                 self.navigationItem.titleView = label;
             }
+            
+            _gameData.rewardCache = rewardCache;
+            [self checkRewardButton];
         }];
     }
 }
@@ -223,21 +244,7 @@ static const int FETCH_EVENT_COUNT = 20;
     }
      _gameData.needReloadEventList = NO;
     
-    if (_gameData.rewardCache > 0) {
-        [_rewardButton setTitle:[NSString stringWithFormat:@"可领取奖金%lld", _gameData.rewardCache] forState:UIControlStateNormal];
-        _rewardButton.hidden = NO;
-        CGRect frame = _rewardButton.frame;
-        frame.origin.y = 0;
-        _rewardButton.frame = frame;
-        [UIView animateWithDuration:.5 delay:0.5 usingSpringWithDamping:.4 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^
-        {
-            CGRect frame = _rewardButton.frame;
-            frame.origin.y = 64;
-            _rewardButton.frame = frame;
-        } completion:nil];
-    } else {
-        _rewardButton.hidden = YES;
-    }
+    [self checkRewardButton];
     
     [self.collectionView reloadData];
 }

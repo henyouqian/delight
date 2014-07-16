@@ -159,17 +159,6 @@ func scoreKeeper() {
 			}
 		}
 
-		//event finished
-		event.HasResult = true
-		jsEvent, err := json.Marshal(event)
-		checkError(err)
-		resp, err = ssdb.Do("hset", H_EVENT, event.Id, jsEvent)
-		checkSsdbError(resp, err)
-
-		//del redis leaderboard
-		_, err = rc.Do("del", eventLbLey)
-		checkError(err)
-
 		//bet
 		//recalc team score
 		scoreMap := recaculateTeamScore(ssdb, rc, event.Id)
@@ -225,13 +214,18 @@ func scoreKeeper() {
 
 			subKey := ""
 			for true {
-				resp, err := ssdb.Do("hscan", subKey, "", 100)
+				resp, err := ssdb.Do("hscan", key, subKey, "", 100)
 				if err != nil || resp[0] != "ok" {
 					glog.Errorln(err, resp[0])
 					break
 				}
 				resp = resp[1:]
 				num := len(resp) / 2
+
+				if num == 0 {
+					break
+				}
+
 				for i := 0; i < num; i++ {
 					playerIdStr := resp[2*i]
 					playerBetStr := resp[2*i+1]
@@ -243,54 +237,38 @@ func scoreKeeper() {
 					//add reward to player
 					playerKey := makePlayerInfoKey(playerId)
 					addMoney := int64(float32(playerBet) * winMult)
-					resp, err = ssdb.Do("hincr", playerKey, playerMoney, addMoney)
+					resp, err = ssdb.Do("hincr", playerKey, playerRewardCache, addMoney)
 
+					key := makeEventPlayerRecordSubkey(event.Id, playerId)
+					resp, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, key)
+					checkSsdbError(resp, err)
+					var record EventPlayerRecord
+					err = json.Unmarshal([]byte(resp[1]), &record)
+					checkError(err)
+					record.BetReward = addMoney
+
+					js, err := json.Marshal(record)
+					checkError(err)
+					resp, err = ssdb.Do("hset", H_EVENT_PLAYER_RECORD, key, js)
+					checkSsdbError(resp, err)
+
+					//
 					subKey = playerIdStr
 				}
+
 			}
 		}
 
-		// ////
-		// key = fmt.Sprintf("%s/%d", Z_EVENT_BET_PLAYER, event.Id)
-		// userId := int64(0)
-		// for true {
-		// 	resp, err = ssdb.Do("zkey", key, userId, userId, "", 100)
-		// 	if resp[0] == not_found {
-		// 		break
-		// 	} else {
-		// 		checkSsdbError(resp, err)
-		// 	}
-		// 	userIds := resp[1:]
+		//event finished
+		event.HasResult = true
+		jsEvent, err := json.Marshal(event)
+		checkError(err)
+		resp, err = ssdb.Do("hset", H_EVENT, event.Id, jsEvent)
+		checkSsdbError(resp, err)
 
-		// 	//batch get user bet data
-		// 	cmds := make([]interface{}, 0, 2+len(userIds))
-		// 	cmds[0] = "multi_hget"
-		// 	cmds[1] = H_PLAYER_INFO
-		// 	for _, userId := range userIds {
-		// 		cmds = append(cmds, userId)
-		// 	}
-		// 	resp, err = ssdb.Do(cmds...)
-		// 	checkSsdbError(resp, err)
-		// 	resp = resp[1:]
-		// 	for i := 0; i < len(resp)/2; i++ {
-		// 		var playerInfo PlayerInfo
-		// 		err = json.Unmarshal([]byte(resp[i+1]), &playerInfo)
-		// 		checkError(err)
-
-		// 		userId, err := strconv.ParseInt(resp[i], 10, 64)
-		// 		checkError(err)
-
-		// 		recordKey := fmt.Sprintf("%d/%d", event.Id, userId)
-		// 		respRecord, err := ssdb.Do("hget", H_EVENT_PLAYER_RECORD, recordKey)
-		// 		checkSsdbError(respRecord, err)
-		// 		record := EventPlayerRecord{}
-		// 		err = json.Unmarshal([]byte(respRecord[1]), &record)
-		// 		checkError(err)
-
-		// 		//add reward
-		// 		//record.Bet
-		// 	}
-		// }
+		//del redis leaderboard
+		_, err = rc.Do("del", eventLbLey)
+		checkError(err)
 
 		glog.Infof("event end")
 	}

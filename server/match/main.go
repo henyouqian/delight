@@ -27,8 +27,12 @@ func html5(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var port int
+	var confFile string
 	flag.IntVar(&port, "port", 9999, "server port")
+	flag.StringVar(&confFile, "conf", "conf.json", "config file")
 	flag.Parse()
+
+	initConf(confFile)
 
 	http.HandleFunc("/www/", staticFile)
 	http.HandleFunc("/html5/", html5)

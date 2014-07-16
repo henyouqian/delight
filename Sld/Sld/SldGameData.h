@@ -111,6 +111,7 @@ enum GameMode{
 @property (nonatomic) SInt64 rewardCache;
 @property (nonatomic) float adsPercent;
 @property (nonatomic) int challengeEventId;
+@property (nonatomic) int rateReward;
 
 @property (nonatomic) int betCloseBeforeEndSec;
 

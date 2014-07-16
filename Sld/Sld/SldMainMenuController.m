@@ -9,10 +9,13 @@
 #import "SldMainMenuController.h"
 #import "SldLoginViewController.h"
 #import "SldStreamPlayer.h"
+#import "SldUtil.h"
+#import "SldGameData.h"
+#import "SldHttpSession.h"
 
 @interface SldMainMenuController ()
 @property (weak, nonatomic) IBOutlet UIImageView *discIcon;
-
+@property (nonatomic) BOOL storeViewLoaded;
 @end
 
 @implementation SldMainMenuController
@@ -62,6 +65,77 @@
     } else {
         [_discIcon.layer removeAllAnimations];
     }
+}
+
+- (IBAction)onRatingButton:(id)sender {
+    int rateReward = [SldGameData getInstance].rateReward;
+    if (rateReward > 0) {
+        NSString *str = [NSString stringWithFormat:@"评分奖励%d金币。二店长赞助💅", rateReward];
+        [[[UIAlertView alloc] initWithTitle:str
+                                    message:@""
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"再说" action:^{
+            // Handle "Cancel"
+        }]
+                           otherButtonItems:[RIButtonItem itemWithLabel:@"去评分" action:^{
+            [self popupRatingView];
+        }], nil] show];
+    } else {
+        [self popupRatingView];
+    }
+}
+
+- (void)popupRatingView {
+    SKStoreProductViewController *storeProductViewContorller =[[SKStoreProductViewController alloc] init];
+    storeProductViewContorller.delegate = self;
+    
+    [storeProductViewContorller loadProductWithParameters:
+     @{SKStoreProductParameterITunesItemIdentifier: @"547257609"}completionBlock:^(BOOL result, NSError *error) {
+         if(error){
+             NSLog(@"error %@ with userInfo %@",error,[error userInfo]);
+         } else {
+             _storeViewLoaded = YES;
+         }
+     }
+     ];
+    
+    [self presentViewController:storeProductViewContorller animated:YES completion:nil];
+}
+
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    if (_storeViewLoaded) {
+        _storeViewLoaded = NO;
+        
+        SldGameData *gd = [SldGameData getInstance];
+        
+        if (gd.rateReward > 0) {
+            gd.rateReward = 0;
+            UIAlertView *alt = alertNoButton(@"奖金领取中...");
+            SldHttpSession *session = [SldHttpSession defaultSession];
+            [session postToApi:@"player/rate" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                [alt dismissWithClickedButtonIndex:0 animated:YES];
+                if (error) {
+                    alertHTTPError(error, data);
+                    return;
+                }
+                
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error) {
+                    lwError("Json error:%@", [error localizedDescription]);
+                    return;
+                }
+                
+                int addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] intValue];
+                
+                gd.money += (SInt64)addMoney;
+                
+                NSString *str = [NSString stringWithFormat:@"获得%d金币", addMoney];
+                alert(str, nil);
+            }];
+        }
+        
+        
+    }
+    [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 /*

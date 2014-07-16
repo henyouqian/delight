@@ -16,12 +16,12 @@ var (
 	_conf Conf
 )
 
-func init() {
+func initConf(confFile string) {
 	var f *os.File
 	var err error
 
-	if f, err = os.Open("conf.json"); err != nil {
-		panic("need conf.json")
+	if f, err = os.Open(confFile); err != nil {
+		panic(fmt.Sprintf("config file not found: %s", confFile))
 	}
 	defer f.Close()
 
