@@ -7,6 +7,7 @@
 //
 
 #import "SldGameData.h"
+#import "SldUtil.h"
 
 const UInt32 DEFUALT_SLIDER_NUM = 6;
 
@@ -142,6 +143,19 @@ static SldGameData *g_inst = nil;
         [self reset];
         
         _TEAM_NAMES = @[@"安徽",@"澳门",@"北京",@"重庆",@"福建",@"甘肃",@"广东",@"广西",@"贵州",@"海南",@"河北",@"河南",@"黑龙江",@"湖北",@"湖南",@"江苏",@"江西",@"吉林",@"辽宁",@"内蒙古",@"宁夏",@"青海",@"陕西",@"山东",@"上海",@"山西",@"四川",@"台湾",@"天津",@"香港",@"新疆",@"西藏",@"云南",@"浙江"];
+        
+        if (_levelArray == nil) {
+            _levelArray = [NSMutableArray arrayWithCapacity:101];
+            
+            SInt64 exp = 0;
+            SInt64 add = 100;
+            [_levelArray addObject:@(0)];
+            for (int i = 0; i < 100; ++i) {
+                [_levelArray addObject:@(exp)];
+                exp += add;
+                add *= 1.1;
+            }
+        }
     }
     return self;
 }
@@ -170,6 +184,31 @@ static SldGameData *g_inst = nil;
     _rewardCache = 0;
     
     _needReloadEventList = NO;
+}
+
+- (void)setTotalRewardRaw:(SInt64)totalReward {
+    _totalReward = totalReward;
+}
+
+- (void)setTotalReward:(SInt64)reward {
+    int lv = self.level;
+    _totalReward = reward;
+    int newLv = self.level;
+    if (lv != newLv) {
+        NSString *str = [NSString stringWithFormat:@"升级啦🎉。%d➔%d", lv, newLv];
+        alert(str, nil);
+    }
+}
+
+- (int)level {    
+    for (int lv = 1; lv < _levelArray.count; lv++) {
+        SInt64 v = [(NSNumber*)_levelArray[lv] longLongValue];
+        if (_totalReward < v) {
+            return lv - 1;
+        }
+    }
+
+    return 100;
 }
 
 @end

@@ -14,8 +14,6 @@
 
 *.DS_Store
 server/obsolete/
-server/tools/packUploader/packUploader
-server/tools/packUploader/packs
 server/redis/
 server/match/match
 server/booker/booker
@@ -24,4 +22,7 @@ server/ssdb/match/var/
 server/ssdb/auth/log.txt
 server/ssdb/match/log.txt
 Sld/Sld.xcodeproj/xcuserdata/liwei.xcuserdatad/xcdebugger/
+archive/
 robot/robot
+tools/packUploader/packUploader
+tools/packUploader/packs

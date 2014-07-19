@@ -9,8 +9,8 @@
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 
-static NSString *defaultHost = @"http://192.168.2.55:9999";
-//static NSString *defaultHost = @"http://192.168.1.43:9999";
+//static NSString *defaultHost = @"http://192.168.2.55:9999";
+static NSString *defaultHost = @"http://192.168.1.43:9998";
 //static NSString *defaultHost = @"http://sld.pintugame.com";
 
 @interface SldHttpSession()
@@ -193,7 +193,12 @@ void alertHTTPError(NSError *error, NSData *data) {
         NSString *errorType = [dict objectForKey:@"Error"];
         NSString *errorString = [dict objectForKey:@"ErrorString"];
         if (errorType && errorString) {
-            alert(errorType, errorString);
+            if ([errorType compare:@"err_auth"] == 0) {
+                alert(@"账号异常，请重新登录", nil);
+            } else {
+                alert(errorType, errorString);
+            }
+            
             return;
         } else {
             alert(@"Error format error", [error localizedDescription]);

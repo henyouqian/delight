@@ -108,6 +108,8 @@ enum GameMode{
 @property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) SInt64 money;
 @property (nonatomic) SInt64 totalReward;
+- (void)setTotalRewardRaw:(SInt64)totalReward;
+@property (nonatomic, readonly) int level;
 @property (nonatomic) SInt64 rewardCache;
 @property (nonatomic) float adsPercent;
 @property (nonatomic) int challengeEventId;
@@ -128,6 +130,9 @@ enum GameMode{
 
 //star mode
 @property (nonatomic) NSMutableArray *challengeEventInfos;
+
+//
+@property (nonatomic) NSMutableArray *levelArray;
 
 
 //

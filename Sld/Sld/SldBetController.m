@@ -325,7 +325,7 @@ static TeamBetData *_selectedTeamBetData = nil;
     
     SInt64 reward = _gd.eventPlayRecord.betReward;
     if (reward > 0) {
-        _rewardLabel.text = [NSString stringWithFormat:@"已投队伍：%lld", reward];
+        _rewardLabel.text = [NSString stringWithFormat:@"获得奖金：%lld", reward];
         _rewardLabel.hidden = NO;
     } else {
         _rewardLabel.hidden = YES;

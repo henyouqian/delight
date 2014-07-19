@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalRewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *userInfoCell;
 
@@ -189,6 +190,7 @@ static __weak SldUserController *g_inst = nil;
     _moneyLabel.text = [NSString stringWithFormat:@"%lld", gd.money];
     _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", gd.rewardCache];
     _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", gd.totalReward];
+    _levelLabel.text = [NSString stringWithFormat:@"%d", gd.level];
 }
 
 @end
@@ -443,6 +445,38 @@ const int RESULT_LIMIT = 20;
             [self.tableView insertRowsAtIndexPaths:insertedIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
         }];
     }
+}
+
+@end
+
+//=====================
+@interface SldLevelTableController : UITableViewController
+
+@end
+
+@implementation SldLevelTableController
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    SldGameData *gd = [SldGameData getInstance];
+    return gd.levelArray.count-1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = (UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"levelTableCell" forIndexPath:indexPath];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    
+    int level = indexPath.row + 1;
+    int reward = [(NSNumber*)[gd.levelArray objectAtIndex:level] intValue];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"奖金总额：%d，等级：%d", reward, level];
+    if (level == gd.level) {
+        cell.textLabel.textColor = makeUIColor(244, 75, 116, 255);
+    } else {
+        cell.textLabel.textColor = [UIColor darkGrayColor];
+    }
+    
+    return cell;
 }
 
 @end

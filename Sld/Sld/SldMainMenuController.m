@@ -70,7 +70,7 @@
 - (IBAction)onRatingButton:(id)sender {
     int rateReward = [SldGameData getInstance].rateReward;
     if (rateReward > 0) {
-        NSString *str = [NSString stringWithFormat:@"评分奖励%d金币。二店长赞助💅", rateReward];
+        NSString *str = [NSString stringWithFormat:@"评分奖励%d金币 💅", rateReward];
         [[[UIAlertView alloc] initWithTitle:str
                                     message:@""
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"再说" action:^{
@@ -89,7 +89,7 @@
     storeProductViewContorller.delegate = self;
     
     [storeProductViewContorller loadProductWithParameters:
-     @{SKStoreProductParameterITunesItemIdentifier: @"547257609"}completionBlock:^(BOOL result, NSError *error) {
+     @{SKStoreProductParameterITunesItemIdentifier: @"873521060"}completionBlock:^(BOOL result, NSError *error) {
          if(error){
              NSLog(@"error %@ with userInfo %@",error,[error userInfo]);
          } else {
