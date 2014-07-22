@@ -94,13 +94,18 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             return;
         }
         
+//        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
+//        if (packInfo.timeUnix != event.packTimeUnix) {
+//            needGetFromServer = YES;
+//        } else {
+//            _gd.packInfo = packInfo;
+//            [self updatePackInfo];
+//        }
+        
         PackInfo *packInfo = [PackInfo packWithDictionary:dict];
-        if (packInfo.timeUnix != event.packTimeUnix) {
-            needGetFromServer = YES;
-        } else {
-            _gd.packInfo = packInfo;
-            [self updatePackInfo];
-        }
+        _gd.packInfo = packInfo;
+        [self updatePackInfo];
+        
     } else {
         needGetFromServer = YES;
     }
@@ -457,7 +462,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 - (void)onBuyGameCoinWithPackId:(NSInteger)packId {
     if (packId < _gameCoinPrices.count) {
         int price = [(NSNumber*)_gameCoinPrices[packId] intValue];
-        if (_gd.money < price) {
+        if (_gd.playerInfo.money < price) {
             alert(@"买不起😱", nil);
             return;
         }
@@ -476,7 +481,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
-        _gd.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+        _gd.playerInfo.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
         int gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
         _gameCoinLabel.text = [NSString stringWithFormat:@"游戏币: %d", gameCoinNum];
         
@@ -517,7 +522,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     _pickerView.delegate = self;
     _pickerView.dataSource = self;
     SldGameData *gd = [SldGameData getInstance];
-    _moneyLabel.text = [NSString stringWithFormat:@"我的铜币：%lld", gd.money];
+    _moneyLabel.text = [NSString stringWithFormat:@"我的铜币：%lld", gd.playerInfo.money];
 }
 
 - (IBAction)onCancel:(id)sender {

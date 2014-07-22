@@ -55,22 +55,27 @@ static __weak SldUserController *g_inst = nil;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    SldGameData *gamedata = [SldGameData getInstance];
+    [self updateUI];
+}
 
+- (void)updateUI {
+    SldGameData *gamedata = [SldGameData getInstance];
+    PlayerInfo *playerInfo = gamedata.playerInfo;
+    
     //avatar
-    [SldUtil loadAvatar:_avatarView gravatarKey:gamedata.gravatarKey customAvatarKey:gamedata.customAvatarKey];
+    [SldUtil loadAvatar:_avatarView gravatarKey:playerInfo.gravatarKey customAvatarKey:playerInfo.customAvatarKey];
     
     //nickname
-    _nickNameLabel.text = gamedata.nickName;
+    _nickNameLabel.text = playerInfo.nickName;
     
     //team
-    _teamLabel.text = gamedata.teamName;
+    _teamLabel.text = playerInfo.teamName;
     
     //gender
-    if (gamedata.gender == 1) {
+    if (playerInfo.gender == 1) {
         _genderLabel.text = @"🚹";
         _genderLabel.textColor = makeUIColor(0, 122, 255, 255);
-    } else if (gamedata.gender == 0) {
+    } else if (playerInfo.gender == 0) {
         _genderLabel.text = @"🚺";
         _genderLabel.textColor = makeUIColor(244, 75, 116, 255);
     } else {
@@ -187,10 +192,11 @@ static __weak SldUserController *g_inst = nil;
 
 - (void)updateMoney {
     SldGameData *gd = [SldGameData getInstance];
-    _moneyLabel.text = [NSString stringWithFormat:@"%lld", gd.money];
-    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", gd.rewardCache];
-    _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", gd.totalReward];
-    _levelLabel.text = [NSString stringWithFormat:@"%d", gd.level];
+    PlayerInfo *playerInfo = gd.playerInfo;
+    _moneyLabel.text = [NSString stringWithFormat:@"%lld", playerInfo.money];
+    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", playerInfo.rewardCache];
+    _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", playerInfo.totalReward];
+    _levelLabel.text = [NSString stringWithFormat:@"%d", playerInfo.level];
 }
 
 @end
@@ -333,9 +339,9 @@ const int RESULT_LIMIT = 20;
     if (indexPath.section == 0) {
         SldGetRewardCacheCell *cell = (SldGetRewardCacheCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardCacheCell" forIndexPath:indexPath];
         
-        NSString *title = [NSString stringWithFormat:@"领取奖金：%lld", gd.rewardCache];
+        NSString *title = [NSString stringWithFormat:@"领取奖金：%lld", gd.playerInfo.rewardCache];
         [cell.getRewardButton setTitle:title forState:(UIControlStateNormal&UIControlStateHighlighted&UIControlStateDisabled)];
-        if (gd.rewardCache == 0) {
+        if (gd.playerInfo.rewardCache == 0) {
             cell.getRewardButton.enabled = NO;
             cell.getRewardButton.backgroundColor = [UIColor lightGrayColor];
         } else {
@@ -389,15 +395,16 @@ const int RESULT_LIMIT = 20;
         }
         
         SldGameData *gd = [SldGameData getInstance];
-        SInt64 prevMoney = gd.money;
-        gd.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-        gd.rewardCache = 0;
+        PlayerInfo *playerInfo = gd.playerInfo;
+        SInt64 prevMoney = playerInfo.money;
+        playerInfo.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+        playerInfo.rewardCache = 0;
         
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
         
         [_userController updateMoney];
         
-        alert(@"金币领取成功", [NSString stringWithFormat:@"%lld + %lld = %lld", prevMoney, gd.money-prevMoney, gd.money]);
+        alert(@"金币领取成功", [NSString stringWithFormat:@"%lld + %lld = %lld", prevMoney, playerInfo.money-prevMoney, playerInfo.money]);
     }];
 }
 
@@ -470,7 +477,7 @@ const int RESULT_LIMIT = 20;
     int reward = [(NSNumber*)[gd.levelArray objectAtIndex:level] intValue];
     
     cell.textLabel.text = [NSString stringWithFormat:@"奖金总额：%d，等级：%d", reward, level];
-    if (level == gd.level) {
+    if (level == gd.playerInfo.level) {
         cell.textLabel.textColor = makeUIColor(244, 75, 116, 255);
     } else {
         cell.textLabel.textColor = [UIColor darkGrayColor];

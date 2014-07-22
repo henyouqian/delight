@@ -2395,10 +2395,10 @@
             </objects>
             <point key="canvasLocation" x="2204" y="-1282"/>
         </scene>
-        <!--View Controller - 竞猜帮助-->
+        <!--Sld Bet Help Controller - 竞猜帮助-->
         <scene sceneID="iTY-N6-CUE">
             <objects>
-                <viewController id="ziO-28-b9p" sceneMemberID="viewController">
+                <viewController id="ziO-28-b9p" customClass="SldBetHelpController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SAz-b2-7rR"/>
                         <viewControllerLayoutGuide type="bottom" id="dHb-a7-BgT"/>
@@ -2407,18 +2407,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lFj-TT-846">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="Loading..." translatesAutoresizingMaskIntoConstraints="NO" id="lFj-TT-846">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="竞猜帮助" id="6fw-7N-wj0"/>
+                    <connections>
+                        <outlet property="textView" destination="lFj-TT-846" id="TcX-Qj-mC9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QqK-Cc-HKC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

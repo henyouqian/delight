@@ -17,7 +17,6 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     event.id = [(NSNumber*)dict[@"Id"] longLongValue];
     event.thumb = dict[@"Thumb"];
     event.packId = [(NSNumber*)dict[@"PackId"] longLongValue];
-    event.packTimeUnix = [(NSNumber*)dict[@"PackTimeUnix"] longLongValue];
     event.beginTime = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)dict[@"BeginTime"] longLongValue]];
     SInt64 endTime = [(NSNumber*)dict[@"EndTime"] longLongValue];
     event.endTime = [NSDate dateWithTimeIntervalSince1970:endTime];
@@ -29,20 +28,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     }
     
     event.hasResult = [(NSNumber*)[dict valueForKey:@"HasResult"] boolValue];
-    event.challengeSecs = [dict valueForKey:@"ChallengeSecs"];
-    if ([event.challengeSecs isKindOfClass:[NSNull class]]) {
-        event.challengeSecs = [NSArray array];
-    }
-    event.challengeRewards = [dict valueForKey:@"ChallengeRewards"];
-    if (event.challengeRewards == nil) {
-        event.challengeRewards = @[@100, @50, @50];
-    }
     event.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] intValue];
     if (event.sliderNum == 0) {
         event.sliderNum = DEFUALT_SLIDER_NUM;
     }
-    event.cupType = [(NSNumber*)[dict valueForKey:@"CupType"] intValue];
-    event.isLoading = NO;
     
     return event;
 }
@@ -64,6 +53,45 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 
 @end
 
+//=========================
+@implementation ChallengeInfo
++ (instancetype)challengeWithDictionary:(NSDictionary*)dict {
+    ChallengeInfo *cha = [[ChallengeInfo alloc] init];
+    cha.id = [(NSNumber*)dict[@"Id"] longLongValue];
+    cha.thumb = dict[@"Thumb"];
+    cha.packId = [(NSNumber*)dict[@"PackId"] longLongValue];
+    cha.challengeSecs = [dict valueForKey:@"ChallengeSecs"];
+    if ([cha.challengeSecs isKindOfClass:[NSNull class]]) {
+        cha.challengeSecs = [NSArray array];
+    }
+    cha.challengeRewards = [dict valueForKey:@"ChallengeRewards"];
+    if (cha.challengeRewards == nil) {
+        cha.challengeRewards = @[@100, @50, @50];
+    }
+    cha.sliderNum = [(NSNumber*)[dict valueForKey:@"SliderNum"] intValue];
+    if (cha.sliderNum == 0) {
+        cha.sliderNum = DEFUALT_SLIDER_NUM;
+    }
+    cha.cupType = [(NSNumber*)[dict valueForKey:@"CupType"] intValue];
+    
+    return cha;
+}
+@end
+
+//=========================
+@implementation ChallengePlay
++ (instancetype)playWithDictionary:(NSDictionary*)dict {
+     ChallengePlay *play = [[ChallengePlay alloc] init];
+    play.challengeId = [(NSNumber*)dict[@"ChallengeId"] longLongValue];
+    play.highScore = [(NSNumber*)dict[@"HighScore"] intValue];
+    play.cupType = [(NSNumber*)dict[@"CupType"] intValue];
+    
+    return play;
+}
+
+@end
+
+//=========================
 @implementation PackInfo
 + (instancetype)packWithDictionary:(NSDictionary*)dict {
     PackInfo *packInfo = [[PackInfo alloc] init];
@@ -93,6 +121,57 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 }
 @end
 
+//=========================
+@implementation PlayerInfo
+
++ (instancetype)playerWithDictionary:(NSDictionary*)dict {
+    PlayerInfo *info = [[PlayerInfo alloc] init];
+    
+    info.userId = [(NSNumber*)[dict objectForKey:@"UserId"] longLongValue];
+    info.nickName = [dict objectForKey:@"NickName"];
+    info.gender = [(NSNumber*)[dict objectForKey:@"Gender"] intValue];
+    info.teamName = [dict objectForKey:@"TeamName"];
+    info.gravatarKey = [dict objectForKey:@"GravatarKey"];
+    info.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
+    info.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+    [info setTotalRewardRaw:[(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue]];
+    info.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
+    info.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
+    info.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
+    info.currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
+    info.rateReward = [(NSNumber*)[dict objectForKey:@"RateReward"] intValue];
+    return info;
+}
+
+- (void)setTotalRewardRaw:(SInt64)totalReward {
+    _totalReward = totalReward;
+}
+
+- (void)setTotalReward:(SInt64)reward {
+    int lv = self.level;
+    _totalReward = reward;
+    int newLv = self.level;
+    if (lv != newLv) {
+        NSString *str = [NSString stringWithFormat:@"升级啦🎉。%d➔%d", lv, newLv];
+        alert(str, nil);
+    }
+}
+
+- (int)level {
+    SldGameData *gd = [SldGameData getInstance];
+    for (int lv = 1; lv < gd.levelArray.count; lv++) {
+        SInt64 v = [(NSNumber*)gd.levelArray[lv] longLongValue];
+        if (_totalReward < v) {
+            return lv - 1;
+        }
+    }
+    
+    return 100;
+}
+
+@end
+
+//=========================
 @implementation EventPlayRecored
 + (instancetype)recordWithDictionary:(NSDictionary*)dict {
     EventPlayRecored *record = [[EventPlayRecored alloc] init];
@@ -102,7 +181,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
     record.teamName = [dict objectForKey:@"TeamName"];
     if (record.teamName.length == 0) {
-        record.teamName = [SldGameData getInstance].teamName;
+        record.teamName = [SldGameData getInstance].playerInfo.teamName;
     }
     record.gameCoinNum = [(NSNumber*)[dict objectForKey:@"GameCoinNum"] intValue];
     record.challengeHighScore = [(NSNumber*)[dict objectForKey:@"ChallengeHighScore"] intValue];
@@ -171,45 +250,17 @@ static SldGameData *g_inst = nil;
     _recentScore = 0;
     _eventInfo = nil;
     _packInfo = nil;
+    _playerInfo = nil;
+    _challengeInfo = nil;
+    _challengePlay = nil;
     
     _userId = 0;
     _userName = nil;
     
-    _nickName = nil;
-    _gender = 0;
-    _teamName = nil;
-    _gravatarKey = @"";
-    _customAvatarKey = @"";
-    _money = 0;
-    _rewardCache = 0;
-    
     _needReloadEventList = NO;
 }
 
-- (void)setTotalRewardRaw:(SInt64)totalReward {
-    _totalReward = totalReward;
-}
 
-- (void)setTotalReward:(SInt64)reward {
-    int lv = self.level;
-    _totalReward = reward;
-    int newLv = self.level;
-    if (lv != newLv) {
-        NSString *str = [NSString stringWithFormat:@"升级啦🎉。%d➔%d", lv, newLv];
-        alert(str, nil);
-    }
-}
-
-- (int)level {    
-    for (int lv = 1; lv < _levelArray.count; lv++) {
-        SInt64 v = [(NSNumber*)_levelArray[lv] longLongValue];
-        if (_totalReward < v) {
-            return lv - 1;
-        }
-    }
-
-    return 100;
-}
 
 @end
 

@@ -99,7 +99,7 @@ static TeamBetData *_selectedTeamBetData = nil;
     _teamNameLabel.text = [NSString stringWithFormat:@"已投%@%d金币", _selectedTeamBetData.teamName, _selectedTeamBetData.myBet];
     
     SldGameData *gd = [SldGameData getInstance];
-    _betRemainLabel.text = [NSString stringWithFormat:@"(1-%lld)", gd.money];
+    _betRemainLabel.text = [NSString stringWithFormat:@"(1-%lld)", gd.playerInfo.money];
     
 }
 
@@ -115,8 +115,8 @@ static TeamBetData *_selectedTeamBetData = nil;
     SldGameData *gd = [SldGameData getInstance];
     
     int betMoney = [_betInput.text intValue];
-    if (betMoney <= 0 || betMoney > gd.money) {
-        alert([NSString stringWithFormat:@"投注额需在（1，%lld）之间", gd.money], nil);
+    if (betMoney <= 0 || betMoney > gd.playerInfo.money) {
+        alert([NSString stringWithFormat:@"投注额需在（1，%lld）之间", gd.playerInfo.money], nil);
         return;
     }
     
@@ -148,7 +148,7 @@ static TeamBetData *_selectedTeamBetData = nil;
         SInt64 userMoney = [(NSNumber*)[dict objectForKey:@"UserMoney"] longLongValue];
         
         gd.eventPlayRecord.BetMoneySum = betMoneySum;
-        gd.money = userMoney;
+        gd.playerInfo.money = userMoney;
         [gd.eventPlayRecord.bet setObject:@(betMoney) forKey:teamName];
 
         [_betController updateDatas];
@@ -199,7 +199,7 @@ static TeamBetData *_selectedTeamBetData = nil;
     
     self.tableView.tableHeaderView = _headerView;
     
-    _myCoinLabel.text = [NSString stringWithFormat:@"我的金币：%lld", _gd.money];
+    _myCoinLabel.text = [NSString stringWithFormat:@"我的金币：%lld", _gd.playerInfo.money];
     
     //refreshControl
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -475,3 +475,37 @@ static TeamBetData *_selectedTeamBetData = nil;
 }
 
 @end
+
+@interface SldBetHelpController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextView *textView;
+
+@end
+
+static NSString *_betHelpString = nil;
+
+@implementation SldBetHelpController
+-(void)viewDidLoad {
+    if (_betHelpString == nil) {
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        [session postToApi:@"etc/betHelp" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            _betHelpString = [dict objectForKey:@"Text"];
+            _textView.text = _betHelpString;
+        }];
+    } else {
+        _textView.text = _betHelpString;
+    }
+}
+
+@end
+
+

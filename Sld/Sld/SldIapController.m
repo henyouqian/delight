@@ -111,7 +111,7 @@ static SldIapManager *_sldIapManager = nil;
             }
             SInt64 addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] longLongValue];
             SInt64 money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-            gd.money = money;
+            gd.playerInfo.money = money;
             alert([NSString stringWithFormat:@"获得%lld个金币，现有%lld个金币", addMoney, money], nil);
             [[SldUserController getInstance] updateMoney];
             

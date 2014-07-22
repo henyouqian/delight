@@ -27,23 +27,43 @@ enum CupType{
 @interface EventInfo : NSObject
 @property (nonatomic) SInt64 id;
 @property (nonatomic) SInt64 packId;
-@property (nonatomic) SInt64 packTimeUnix;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSDate *beginTime;
 @property (nonatomic) NSDate *endTime;
 @property (nonatomic) NSDate *betEndTime;
 @property (nonatomic) BOOL hasResult;
 @property (nonatomic) int sliderNum;
-@property (nonatomic) NSArray *challengeSecs;
-@property (nonatomic) NSArray *challengeRewards;
 @property (nonatomic) enum EventState state; //undefined:0, comming:1, running:2, closed:3
-@property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
-@property (nonatomic) BOOL isLoading;
-@property (nonatomic) BOOL missing;
 
 + (instancetype)eventWithDictionary:(NSDictionary*)dict;
 - (enum EventState)updateState;
 @end
+
+//=================
+@interface ChallengeInfo : NSObject
+@property (nonatomic) SInt64 id;
+@property (nonatomic) SInt64 packId;
+@property (nonatomic) NSString *thumb;
+@property (nonatomic) int sliderNum;
+@property (nonatomic) NSArray *challengeSecs;
+@property (nonatomic) NSArray *challengeRewards;
+@property (nonatomic) int cupType; //none:0, gold:1, silver:2, bronze:3
+@property (nonatomic) BOOL missing;
+@property (nonatomic) BOOL isLoading;
+
++ (instancetype)challengeWithDictionary:(NSDictionary*)dict;
+@end
+
+//=================
+@interface ChallengePlay : NSObject
+@property (nonatomic) SInt64 challengeId;
+@property (nonatomic) int highScore;
+@property (nonatomic) int cupType;
+
++ (instancetype)playWithDictionary:(NSDictionary*)dict;
+
+@end
+
 
 //=================
 @interface PackInfo : NSObject
@@ -57,6 +77,29 @@ enum CupType{
 @property (nonatomic) SInt64 timeUnix;
 
 + (instancetype)packWithDictionary:(NSDictionary*)dict;
+@end
+
+//=================
+@interface PlayerInfo : NSObject
+
+@property (nonatomic) SInt64 userId;
+
+@property (nonatomic) NSString *nickName;
+@property (nonatomic) int gender;
+@property (nonatomic) NSString *teamName;
+@property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) NSString *customAvatarKey;
+@property (nonatomic) SInt64 money;
+@property (nonatomic) SInt64 totalReward;
+@property (nonatomic, readonly) int level;
+@property (nonatomic) SInt64 rewardCache;
+@property (nonatomic) int betCloseBeforeEndSec;
+@property (nonatomic) float adsPercent;
+@property (nonatomic) int currChallengeId;
+@property (nonatomic) int rateReward;
+
++ (instancetype)playerWithDictionary:(NSDictionary*)dict;
+- (void)setTotalRewardRaw:(SInt64)totalReward;
 @end
 
 //=================
@@ -88,12 +131,16 @@ enum GameMode{
 //=================
 @interface SldGameData : NSObject
 
-//event
+//
 @property (nonatomic) NSMutableArray *eventInfos;
 @property (nonatomic) EventInfo *eventInfo;
+@property (nonatomic) NSMutableArray *challengeInfos;
+@property (nonatomic) ChallengeInfo *challengeInfo;
+@property (nonatomic) ChallengePlay *challengePlay;
 @property (nonatomic) PackInfo *packInfo;
 @property (nonatomic) EventPlayRecored *eventPlayRecord;
 @property (nonatomic) int recentScore;
+@property (nonatomic) PlayerInfo *playerInfo;
 - (void)resetEvent;
 
 //player
@@ -101,21 +148,6 @@ enum GameMode{
 @property (nonatomic) NSString *userName;
 @property (nonatomic) BOOL online;
 
-@property (nonatomic) NSString *nickName;
-@property (nonatomic) uint gender;
-@property (nonatomic) NSString *teamName;
-@property (nonatomic) NSString *gravatarKey;
-@property (nonatomic) NSString *customAvatarKey;
-@property (nonatomic) SInt64 money;
-@property (nonatomic) SInt64 totalReward;
-- (void)setTotalRewardRaw:(SInt64)totalReward;
-@property (nonatomic, readonly) int level;
-@property (nonatomic) SInt64 rewardCache;
-@property (nonatomic) float adsPercent;
-@property (nonatomic) int challengeEventId;
-@property (nonatomic) int rateReward;
-
-@property (nonatomic) int betCloseBeforeEndSec;
 
 @property (nonatomic) enum GameMode gameMode;
 
@@ -127,9 +159,6 @@ enum GameMode{
 
 //const
 @property (nonatomic) NSArray *TEAM_NAMES;
-
-//star mode
-@property (nonatomic) NSMutableArray *challengeEventInfos;
 
 //
 @property (nonatomic) NSMutableArray *levelArray;

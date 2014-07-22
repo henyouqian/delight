@@ -219,7 +219,12 @@ NSDate *_gameBeginTime;
         
         _imgIdx = -1;
         _sprites = [NSMutableArray arrayWithCapacity:3];
-        _sliderNum = _gameData.eventInfo.sliderNum;
+        if (_gameData.gameMode == CHALLENGE) {
+            _sliderNum = _gameData.challengeInfo.sliderNum;
+        } else {
+            _sliderNum = _gameData.eventInfo.sliderNum;
+        }
+            
         _needRotate = NO;
         _sliderParent = [SKNode node];
         [self.scene addChild:self.sliderParent];
@@ -238,7 +243,7 @@ NSDate *_gameBeginTime;
         float buttonZ = 10.f;
         
         //time bar
-        _timeBar = [[TimeBar alloc] initWithChallengeSecs:_gameData.eventInfo.challengeSecs size:CGSizeMake(size.width, 3)];
+        _timeBar = [[TimeBar alloc] initWithChallengeSecs:_gameData.challengeInfo.challengeSecs size:CGSizeMake(size.width, 3)];
         [_timeBar setPosition:CGPointMake(0, size.height)];
         _timeBar.zPosition = buttonZ;
         [self addChild:_timeBar];
@@ -1045,7 +1050,7 @@ static float lerpf(float a, float b, float t) {
 
 - (void)onPackFinish {
     float rd = (float)(arc4random() % 100);
-    if (rd/100.f < _gameData.adsPercent) {
+    if (rd/100.f < _gameData.playerInfo.adsPercent) {
         [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
     }
     
@@ -1156,9 +1161,11 @@ static float lerpf(float a, float b, float t) {
     
     // challenge
     else if (_gameData.gameMode == CHALLENGE) {
-        int oldScore = record.challengeHighScore;
+        ChallengeInfo *chaInfo = _gameData.challengeInfo;
+        ChallengePlay *chaPlay = _gameData.challengePlay;
+        int oldScore = chaPlay.highScore;
         if (oldScore == 0 || score > oldScore) {
-            record.challengeHighScore = score;
+            chaPlay.highScore = score;
             
             //submit label
             SKLabelNode *submitLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
@@ -1197,11 +1204,11 @@ static float lerpf(float a, float b, float t) {
 
             //post
             SldHttpSession *session = [SldHttpSession defaultSession];
-            NSDictionary *body = @{@"EventId":@(_gameData.eventInfo.id),
+            NSDictionary *body = @{@"ChallengeId":@(_gameData.challengeInfo.id),
                                    @"Score":@(score),
                                    @"Checksum":checksum};
 
-            [session postToApi:@"event/submitChallengeScore" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [session postToApi:@"challenge/submitScore" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 if (error) {
                     alertHTTPError(error, data);
                 } else {
@@ -1212,15 +1219,14 @@ static float lerpf(float a, float b, float t) {
                     }
                     
                     _gameData.needReloadEventList = YES;
-                    
+                    _gameData.needReloadChallengeTime = YES;
                     int cupType = [(NSNumber*)[dict objectForKey:@"CupType"] intValue];
-                    if (_gameData.eventInfo.cupType != cupType) {
-                        _gameData.needReloadChallengeTime = YES;
-                        _gameData.eventInfo.cupType = cupType;
-                    }
+                    chaInfo.cupType = cupType;
+                    chaPlay.cupType = cupType;
                     
-                    //ChallengeEventId
-                    _gameData.challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
+                    
+                    //currChallengeId
+                    _gameData.playerInfo.currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
 
                     //money label
                     double delayInSeconds = .4f;
@@ -1244,8 +1250,8 @@ static float lerpf(float a, float b, float t) {
                                     starStr = @"⭐️";
                                 }
                                 submitLabel.text = [NSString stringWithFormat:@"%@获得奖金: %d金币", starStr, reward];
-                                _gameData.money = newMoney;
-                                _gameData.totalReward = totalReward;
+                                _gameData.playerInfo.money = newMoney;
+                                _gameData.playerInfo.totalReward = totalReward;
                             } else {
                                 submitLabel.text = @"提交完毕";
                             }
@@ -1262,40 +1268,41 @@ static float lerpf(float a, float b, float t) {
             }];
         }
         
-        //save to local
-        FMDatabase *db = [SldDb defaultDb].fmdb;
-        NSString *key = [NSString stringWithFormat:@"%d/%d", (int)_gameData.eventInfo.id, (int)_gameData.userId];
-        FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", key];
-        NSMutableArray *scores = nil;
-        NSError *error;
-        if ([rs next]) {
-            NSData *js = [rs dataForColumnIndex:0];
-            scores = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:js options:0 error:&error]];
-            if (error) {
-                lwError("%@", error);
-                return;
-            }
-            [scores addObject:@(score)];
-            [scores sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                return [obj1 integerValue] < [obj2 integerValue];
-            }];
-            while (scores.count > LOCAL_SCORE_COUNT_LIMIT) {
-                [scores removeLastObject];
-            }
-        } else {
-            scores = [NSMutableArray arrayWithArray:@[@(score)]];
-        }
-        
-        NSData *js = [NSJSONSerialization dataWithJSONObject:scores options:0 error:&error];
-        if (error) {
-            lwError("%@", error);
-            return;
-        }
-        BOOL ok = [db executeUpdate:@"REPLACE INTO localScore VALUES (?, ?)", key, js];
-        if (!ok) {
-            lwError("%@", db.lastErrorMessage);
-            return;
-        }
+//        //save to local
+//        //fixme
+//        FMDatabase *db = [SldDb defaultDb].fmdb;
+//        NSString *key = [NSString stringWithFormat:@"%d/%d", (int)_gameData.eventInfo.id, (int)_gameData.userId];
+//        FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", key];
+//        NSMutableArray *scores = nil;
+//        NSError *error;
+//        if ([rs next]) {
+//            NSData *js = [rs dataForColumnIndex:0];
+//            scores = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:js options:0 error:&error]];
+//            if (error) {
+//                lwError("%@", error);
+//                return;
+//            }
+//            [scores addObject:@(score)];
+//            [scores sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//                return [obj1 integerValue] < [obj2 integerValue];
+//            }];
+//            while (scores.count > LOCAL_SCORE_COUNT_LIMIT) {
+//                [scores removeLastObject];
+//            }
+//        } else {
+//            scores = [NSMutableArray arrayWithArray:@[@(score)]];
+//        }
+//        
+//        NSData *js = [NSJSONSerialization dataWithJSONObject:scores options:0 error:&error];
+//        if (error) {
+//            lwError("%@", error);
+//            return;
+//        }
+//        BOOL ok = [db executeUpdate:@"REPLACE INTO localScore VALUES (?, ?)", key, js];
+//        if (!ok) {
+//            lwError("%@", db.lastErrorMessage);
+//            return;
+//        }
     }
     
     //show blured image and cover

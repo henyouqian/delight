@@ -10,6 +10,7 @@
 
 @interface SldUserController : UITableViewController
 + (instancetype)getInstance;
+- (void)updateUI;
 - (void)updateMoney;
 @end
 

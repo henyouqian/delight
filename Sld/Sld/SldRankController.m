@@ -317,7 +317,7 @@ static SldRankController *_inst = nil;
         cell.rankLabel.text = [NSString stringWithFormat:@"%d", (int)(indexPath.row)];
         //cell.userNameLabel.text = gamedata.nickName;
         cell.userNameLabel.text = @"“我”";
-        cell.teamLabel.text = gamedata.teamName;
+        cell.teamLabel.text = gamedata.playerInfo.teamName;
         cell.rankLabel.text = [NSString stringWithFormat:@"%d", gamedata.eventPlayRecord.rank];
         NSString *timeStr = formatScore(gamedata.eventPlayRecord.highScore);
         cell.scoreLabel.text = timeStr;
@@ -325,7 +325,7 @@ static SldRankController *_inst = nil;
         setLabelColor(cell, meColor);
         
         //avatar
-        [SldUtil loadAvatar:cell.avatarImageView gravatarKey:gamedata.gravatarKey customAvatarKey:gamedata.customAvatarKey];
+        [SldUtil loadAvatar:cell.avatarImageView gravatarKey:gamedata.playerInfo.gravatarKey customAvatarKey:gamedata.playerInfo.customAvatarKey];
         
         return cell;
     } else if (indexPath.section == 1) {

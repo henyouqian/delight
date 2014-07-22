@@ -53,7 +53,7 @@
     _gd.recentScore = 0;
     
     //cup label
-    NSArray *secs = _gd.eventInfo.challengeSecs;
+    NSArray *secs = _gd.challengeInfo.challengeSecs;
     if (secs != nil && secs.count == 3) {
         _goldLabel.text = formatScore([(NSNumber*)secs[0] intValue]*-1000);
         _silverLabel.text = formatScore([(NSNumber*)secs[1] intValue]*-1000);
@@ -128,7 +128,7 @@
     
     //cup highlight
     int hs = gd.eventPlayRecord.challengeHighScore;
-    NSArray *secs = gd.eventInfo.challengeSecs;
+    NSArray *secs = gd.challengeInfo.challengeSecs;
     if (hs != 0 && secs.count == 3) {
         _goldLabel.textColor = [UIColor whiteColor];
         _silverLabel.textColor = [UIColor whiteColor];

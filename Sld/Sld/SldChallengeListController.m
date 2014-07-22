@@ -98,43 +98,34 @@ static NSString *STR_BOTTOM = @"当前";
     
     //
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"StartId":@0, @"Limit":@1};
-    [session postToApi:@"event/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"challenge/count" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
             return;
         }
         
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
         
-        if (array.count != 1) {
-            lwError("array.count != 1");
-            return;
-        }
+        _rowNum = [(NSNumber*)[dict objectForKey:@"Count"] intValue];
         
-        NSDictionary *dict = [array firstObject];
-        
-        EventInfo* evt = [EventInfo eventWithDictionary:dict];
-        _rowNum = (NSInteger)evt.id;
-        
-        if (_gd.challengeEventInfos == nil) {
-            _gd.challengeEventInfos = [NSMutableArray arrayWithCapacity:_rowNum];
+        if (_gd.challengeInfos == nil) {
+            _gd.challengeInfos = [NSMutableArray arrayWithCapacity:_rowNum];
             for (int i = 0; i < _rowNum; i++) {
-                EventInfo *evt = [[EventInfo alloc] init];
-                [_gd.challengeEventInfos addObject:evt];
+                ChallengeInfo *cha = [[ChallengeInfo alloc] init];
+                [_gd.challengeInfos addObject:cha];
             }
-        } else if (_gd.challengeEventInfos.count < _rowNum) {
-            for (int i = 0; i < _rowNum-_gd.challengeEventInfos.count; i++) {
-                EventInfo *evt = [[EventInfo alloc] init];
-                [_gd.challengeEventInfos addObject:evt];
+        } else if (_gd.challengeInfos.count < _rowNum) {
+            for (int i = 0; i < _rowNum-_gd.challengeInfos.count; i++) {
+                ChallengeInfo *cha = [[ChallengeInfo alloc] init];
+                [_gd.challengeInfos addObject:cha];
             }
-        } else if (_gd.challengeEventInfos.count > _rowNum) {
-            for (int i = 0; i < _gd.challengeEventInfos.count-_rowNum; i++) {
-                [_gd.challengeEventInfos removeLastObject];
+        } else if (_gd.challengeInfos.count > _rowNum) {
+            for (int i = 0; i < _gd.challengeInfos.count-_rowNum; i++) {
+                [_gd.challengeInfos removeLastObject];
             }
         }
         [self.collectionView reloadData];
@@ -167,18 +158,18 @@ static NSString *STR_BOTTOM = @"当前";
             _titleField.text = [NSString stringWithFormat:@"%d", index/NUM_PER_ROW+1];
             [self scrollViewDidScroll:self.collectionView];
         }
-        NSIndexPath *indexPath = [self getEventIndexPath:index];
+        NSIndexPath *indexPath = [self getChallengeIndexPath:index];
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
         [self.navigationItem.titleView resignFirstResponder];
         _goButton.title = STR_BOTTOM;
         
         [self scrollViewDidScroll:self.collectionView];
     } else {
-        NSInteger index = _gd.challengeEventId-1;
+        NSInteger index = _gd.playerInfo.currChallengeId-1;
         if (index > _rowNum-1) {
             index = _rowNum-1;
         }
-        NSIndexPath *indexPath = [self getEventIndexPath:index];
+        NSIndexPath *indexPath = [self getChallengeIndexPath:index];
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section] atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }
 }
@@ -191,12 +182,12 @@ static NSString *STR_BOTTOM = @"当前";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:CGPointMake(0, scrollView.contentOffset.y+scrollView.contentInset.top)];
-    int eventIdx = [self getEventIndex:indexPath];
+    int chaIdx = [self getChallengeIndex:indexPath];
     
-    if (eventIdx == 0 && scrollView.contentOffset.y > 50) {
+    if (chaIdx == 0 && scrollView.contentOffset.y > 50) {
         return;
     }
-    _titleField.text = [NSString stringWithFormat:@"%d", eventIdx/NUM_PER_ROW+1];
+    _titleField.text = [NSString stringWithFormat:@"%d", chaIdx/NUM_PER_ROW+1];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -218,12 +209,12 @@ static NSString *STR_BOTTOM = @"当前";
     //return _rowNum;
 }
 
-- (int)getEventIndex:(NSIndexPath*)indexPath {
+- (int)getChallengeIndex:(NSIndexPath*)indexPath {
     return indexPath.section * NUM_PER_SECTION + indexPath.row;
 }
 
-- (NSIndexPath*)getEventIndexPath:(int)eventIndex {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:eventIndex%NUM_PER_SECTION inSection:eventIndex/NUM_PER_SECTION];
+- (NSIndexPath*)getChallengeIndexPath:(int)index {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index%NUM_PER_SECTION inSection:index/NUM_PER_SECTION];
     return indexPath;
 }
 
@@ -235,11 +226,11 @@ static NSString *STR_BOTTOM = @"当前";
     cell.starLabel.text = @"";
     cell.dimmer.hidden = YES;
     
-    int eventIdx = [self getEventIndex:indexPath];
-    EventInfo *evt = [_gd.challengeEventInfos objectAtIndex:eventIdx];
+    int chaIdx = [self getChallengeIndex:indexPath];
+    ChallengeInfo *cha = [_gd.challengeInfos objectAtIndex:chaIdx];
     
-    if (evt.missing) {
-        if (eventIdx+1 == _gd.challengeEventId) {
+    if (cha.missing) {
+        if (chaIdx+1 == _gd.playerInfo.currChallengeId) {
             cell.imageView.image = _missingImage;
         } else {
             cell.imageView.image = _dollarImage;
@@ -249,17 +240,17 @@ static NSString *STR_BOTTOM = @"当前";
         return cell;
     }
     
-    if (eventIdx < _gd.challengeEventInfos.count) {
+    if (chaIdx < _gd.challengeInfos.count) {
         //is locked?
-        if (evt.id > _gd.challengeEventId) {
+        if (cha.id > _gd.playerInfo.currChallengeId) {
             cell.locker.hidden = NO;
         } else {
             cell.locker.hidden = YES;
         }
         
         //
-        if (evt.thumb) { //event info loaded
-            [cell.imageView asyncLoadImageWithKey:evt.thumb showIndicator:NO completion:nil];
+        if (cha.thumb) { //event info loaded
+            [cell.imageView asyncLoadImageWithKey:cha.thumb showIndicator:NO completion:nil];
             if (cell.imageView.task) {
                 [_downloadTasks addObject:cell.imageView.task];
                 if (_downloadTasks.count > 24) {
@@ -270,34 +261,34 @@ static NSString *STR_BOTTOM = @"当前";
             }
             
             //
-            if (evt.cupType == CUP_BRONZE) {
+            if (cha.cupType == CUP_BRONZE) {
                 cell.starLabel.text = @"⭐️";
-            } else if (evt.cupType == CUP_SILVER) {
+            } else if (cha.cupType == CUP_SILVER) {
                 cell.starLabel.text = @"⭐️⭐️";
-            } else if (evt.cupType == CUP_GOLD) {
+            } else if (cha.cupType == CUP_GOLD) {
                 cell.starLabel.text = @"⭐️⭐️⭐️";
             }
-            if (evt.cupType == CUP_NONE) {
+            if (cha.cupType == CUP_NONE) {
                 cell.dimmer.hidden = YES;
             } else {
                 cell.dimmer.hidden = NO;
             }
             
-        } else if (evt.isLoading == NO){ //no event info
+        } else if (cha.isLoading == NO){ //no event info
             
-            int batchIdx = eventIdx / EVENT_NUM_PER_BATCH;
-            int startId = batchIdx * EVENT_NUM_PER_BATCH;
+            int batchIdx = chaIdx / EVENT_NUM_PER_BATCH;
+            int offset = batchIdx * EVENT_NUM_PER_BATCH;
             
             SldHttpSession *session = [SldHttpSession defaultSession];
-            NSDictionary *body = @{@"StartId":@(startId), @"Limit":@(EVENT_NUM_PER_BATCH)};
-            for (int i = startId; i < startId + EVENT_NUM_PER_BATCH; i++) {
-                if (i >= _gd.challengeEventInfos.count) {
+            NSDictionary *body = @{@"Offset":@(offset), @"Limit":@(EVENT_NUM_PER_BATCH)};
+            for (int i = offset; i < offset + EVENT_NUM_PER_BATCH; i++) {
+                if (i >= _gd.challengeInfos.count) {
                     break;
                 }
-                EventInfo *evt = [_gd.challengeEventInfos objectAtIndex:i];
-                evt.isLoading = YES;
+                ChallengeInfo *cha = [_gd.challengeInfos objectAtIndex:i];
+                cha.isLoading = YES;
             }
-            [session postToApi:@"event/revList" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [session postToApi:@"challenge/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 if (error) {
                     alertHTTPError(error, data);
                     return;
@@ -310,25 +301,26 @@ static NSString *STR_BOTTOM = @"当前";
                 }
                 
                 NSMutableArray *reloads = [NSMutableArray array];
+                int index = offset;
                 for (NSDictionary *dict in array) {
-                    EventInfo *evt = [EventInfo eventWithDictionary:dict];
-                    int index = (int)evt.id - 1;
-                    if (index >= _gd.challengeEventInfos.count) {
-                        continue;
+                    ChallengeInfo *cha = [ChallengeInfo challengeWithDictionary:dict];
+                    if (index >= _gd.challengeInfos.count) {
+                        break;
                     }
-                    NSIndexPath *indexPath = [self getEventIndexPath:index];
-                    [_gd.challengeEventInfos replaceObjectAtIndex:index withObject:evt];
+                    NSIndexPath *indexPath = [self getChallengeIndexPath:index];
+                    [_gd.challengeInfos replaceObjectAtIndex:index withObject:cha];
                     [reloads addObject:indexPath];
+                    index++;
                 }
                 
                 //check missing event
-                int imax = MIN(_gd.challengeEventInfos.count, eventIdx + EVENT_NUM_PER_BATCH);
-                for (int i = eventIdx; i < imax; i++) {
-                    EventInfo *evt = _gd.challengeEventInfos[i];
-                    if (evt.id == 0) {
-                        evt.missing = YES;
-                        evt.id = i + 1;
-                        NSIndexPath *indexPath = [self getEventIndexPath:i];
+                int imax = MIN(_gd.challengeInfos.count, chaIdx + EVENT_NUM_PER_BATCH);
+                for (int i = chaIdx; i < imax; i++) {
+                    ChallengeInfo *cha = _gd.challengeInfos[i];
+                    if (cha.id == 0) {
+                        cha.missing = YES;
+                        cha.id = i + 1;
+                        NSIndexPath *indexPath = [self getChallengeIndexPath:i];
                         [reloads addObject:indexPath];
                     }
                 }
@@ -383,15 +375,15 @@ static NSString *STR_BOTTOM = @"当前";
         UIButton *button = sender;
         SldChallengeCell *cell = (SldChallengeCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-        int eventIdx = [self getEventIndex:indexPath];
-        if (eventIdx < [_gd.challengeEventInfos count]) {
-            EventInfo *event = [_gd.challengeEventInfos objectAtIndex:eventIdx];
-            if (event.missing) {
-                if (event.id == _gd.challengeEventId) {
+        int chaIdx = [self getChallengeIndex:indexPath];
+        if (chaIdx < [_gd.challengeInfos count]) {
+            ChallengeInfo *cha = [_gd.challengeInfos objectAtIndex:chaIdx];
+            if (cha.missing) {
+                if (cha.id == _gd.playerInfo.currChallengeId) {
                     SldHttpSession *session = [SldHttpSession defaultSession];
-                    NSDictionary *body = @{@"EventId":@(event.id)};
+                    NSDictionary *body = @{@"ChallengeId":@(cha.id)};
                     UIAlertView *alt =  alertNoButton(@"抽奖中...");
-                    [session postToApi:@"event/passMissingChallenge" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    [session postToApi:@"challenge/passMissingChallenge" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                         [alt dismissWithClickedButtonIndex:0 animated:YES];
                         if (error) {
                             alertHTTPError(error, data);
@@ -406,11 +398,11 @@ static NSString *STR_BOTTOM = @"当前";
                         
                         int addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] intValue];
                         SInt64 money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-                        int challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
+                        int currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
                         
                         alert([NSString stringWithFormat:@"恭喜中奖！！！你赢了%d金币！！！", addMoney], nil);
-                        _gd.money = money;
-                        _gd.challengeEventId = challengeEventId;
+                        _gd.playerInfo.money = money;
+                        _gd.playerInfo.currChallengeId = currChallengeId;
                         
                         NSIndexPath *ip = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
                         [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:ip]];
@@ -420,7 +412,7 @@ static NSString *STR_BOTTOM = @"当前";
                     [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
                 }
                 return NO;
-            }else if (event.id <= _gd.challengeEventId && event.id > 0) {
+            }else if (cha.id <= _gd.playerInfo.currChallengeId && cha.id > 0) {
                 return YES;
             }
             
@@ -434,9 +426,9 @@ static NSString *STR_BOTTOM = @"当前";
         UIButton *button = sender;
         UICollectionViewCell *cell = (UICollectionViewCell*)button.superview.superview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-        int eventIdx = [self getEventIndex:indexPath];
-        if (eventIdx < [_gd.challengeEventInfos count]) {
-            _gd.eventInfo = [_gd.challengeEventInfos objectAtIndex:eventIdx];
+        int chaIdx = [self getChallengeIndex:indexPath];
+        if (chaIdx < [_gd.challengeInfos count]) {
+            _gd.challengeInfo = [_gd.challengeInfos objectAtIndex:chaIdx];
         }
     }
 }

@@ -9,8 +9,8 @@
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 
-//static NSString *defaultHost = @"http://192.168.2.55:9999";
-static NSString *defaultHost = @"http://192.168.1.43:9998";
+static NSString *defaultHost = @"http://192.168.2.55:9998";
+//static NSString *defaultHost = @"http://192.168.1.43:9998";
 //static NSString *defaultHost = @"http://sld.pintugame.com";
 
 @interface SldHttpSession()
@@ -210,8 +210,15 @@ void alertHTTPError(NSError *error, NSData *data) {
     
     if (!_ishttpErrorShown) {
         _ishttpErrorShown = YES;
-        [[[UIAlertView alloc] initWithTitle:@"HTTP error"
-                                    message:[error localizedDescription]
+        NSString *title = @"HTTP error";
+        NSString *message = [error localizedDescription];
+        if (error.code == -1004) {
+            title = @"无法连接到服务器";
+            message = nil;
+        }
+        
+        [[[UIAlertView alloc] initWithTitle:title
+                                    message:message
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"OK" action:^{
             _ishttpErrorShown = NO;
         }]

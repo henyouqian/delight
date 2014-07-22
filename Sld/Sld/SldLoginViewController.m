@@ -181,23 +181,12 @@
                 
                 //update game data
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                gameData.nickName = [dict objectForKey:@"NickName"];
-                gameData.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
-                gameData.teamName = [dict objectForKey:@"TeamName"];
-                gameData.gravatarKey = [dict objectForKey:@"GravatarKey"];
-                gameData.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
-                gameData.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
-                gameData.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
-                //gameData.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
-                [gameData setTotalRewardRaw:[(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue]];
-                gameData.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
-                gameData.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
-                gameData.challengeEventId = [(NSNumber*)[dict objectForKey:@"ChallengeEventId"] intValue];
-                gameData.rateReward = [(NSNumber*)[dict objectForKey:@"RateReward"] intValue];
+                
+                gameData.playerInfo = [PlayerInfo playerWithDictionary:dict];
                 
                 [SldIapManager getInstance];
                 
-                if (gameData.nickName.length == 0) {
+                if (gameData.playerInfo.nickName.length == 0) {
                     [SldUserInfoController createAndPresentFromController:self cancelable:NO];
                 } else {
                     [self dismissViewControllerAnimated:YES completion:nil];

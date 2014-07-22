@@ -13,6 +13,7 @@
 #import "SldUtil.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
+#import "SldUserController.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "NSData+Base64.h"
 
@@ -58,24 +59,25 @@ static NSArray *_genderStrings;
     [super viewDidLoad];
     
     _gd = [SldGameData getInstance];
+    PlayerInfo *playerInfo = _gd.playerInfo;
     
     _nameInput.delegate = self;
     
     _genderStrings = @[@"女", @"男", @"保密"];
     
-    _nameInput.text = _gd.nickName;
-    _genderInput.text = [_genderStrings objectAtIndex:_gd.gender];
-    _teamInput.text = _gd.teamName;
-    _gravatarKey = _gd.gravatarKey;
+    _nameInput.text = playerInfo.nickName;
+    _genderInput.text = [_genderStrings objectAtIndex:playerInfo.gender];
+    _teamInput.text = playerInfo.teamName;
+    _gravatarKey = playerInfo.gravatarKey;
     if (!_gravatarKey) {
         _gravatarKey = @"";
     }
-    _customAvatarKey = _gd.customAvatarKey;
+    _customAvatarKey = playerInfo.customAvatarKey;
     if (!_customAvatarKey) {
         _customAvatarKey = @"";
     }
     
-    [SldUtil loadAvatar:_avatarImageView gravatarKey:_gd.gravatarKey customAvatarKey:_gd.customAvatarKey];
+    [SldUtil loadAvatar:_avatarImageView gravatarKey:playerInfo.gravatarKey customAvatarKey:_gd.playerInfo.customAvatarKey];
     
     if (_nameInput.text == nil || _nameInput.text.length == 0) {
         [_nameInput becomeFirstResponder];
@@ -291,31 +293,24 @@ static NSArray *_genderStrings;
             alert(@"Json parse error!", nil);
             return;
         }
-        _gd.nickName = [dict objectForKey:@"NickName"];
-        _gd.gender = [(NSNumber*)[dict objectForKey:@"Gender"] unsignedIntValue];
-        _gd.teamName = [dict objectForKey:@"TeamName"];
-        _gd.gravatarKey = [dict objectForKey:@"GravatarKey"];
-        _gd.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
-        _gd.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
-        _gd.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
-        _gd.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
-        _gd.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
-        _gd.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
         
-        [self.presentingViewController viewWillAppear:YES];
+        _gd.playerInfo = [PlayerInfo playerWithDictionary:dict];
+        
+        SldUserController *userVc = [SldUserController getInstance];
+        [userVc updateUI];
     }];
 }
 
 - (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
     [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
     [self save];
-    _gd.customAvatarKey = _customAvatarKey;
+    _gd.playerInfo.customAvatarKey = _customAvatarKey;
 }
 
 - (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
     [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
     alert(@"头像上传失败", nil);
-    _customAvatarKey = _gd.customAvatarKey;
+    _customAvatarKey = _gd.playerInfo.customAvatarKey;
 }
 
 - (IBAction)onCancel:(id)sender {

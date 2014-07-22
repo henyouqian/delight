@@ -68,7 +68,7 @@
 }
 
 - (IBAction)onRatingButton:(id)sender {
-    int rateReward = [SldGameData getInstance].rateReward;
+    int rateReward = [SldGameData getInstance].playerInfo.rateReward;
     if (rateReward > 0) {
         NSString *str = [NSString stringWithFormat:@"评分奖励%d金币 💅", rateReward];
         [[[UIAlertView alloc] initWithTitle:str
@@ -107,8 +107,8 @@
         
         SldGameData *gd = [SldGameData getInstance];
         
-        if (gd.rateReward > 0) {
-            gd.rateReward = 0;
+        if (gd.playerInfo.rateReward > 0) {
+            gd.playerInfo.rateReward = 0;
             UIAlertView *alt = alertNoButton(@"奖金领取中...");
             SldHttpSession *session = [SldHttpSession defaultSession];
             [session postToApi:@"player/rate" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -126,7 +126,7 @@
                 
                 int addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] intValue];
                 
-                gd.money += (SInt64)addMoney;
+                gd.playerInfo.money += (SInt64)addMoney;
                 
                 NSString *str = [NSString stringWithFormat:@"获得%d金币", addMoney];
                 alert(str, nil);

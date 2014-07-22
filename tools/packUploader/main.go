@@ -22,8 +22,13 @@ import (
 )
 
 const (
-	USEAGE = "Useage: \n\tpackUploader new|del|update|newEvent|newEventBuff <uploadDir>\n\tpackUploader image <imagePath>\n\tdownload -startId -limit"
+	USEAGE = "Useage: \n\tpackUploader new|del|update|newEventBuff <uploadDir>\n\tpackUploader image <imagePath>\n\tdownload -startId -limit"
 	HOST   = "http://dn-pintugame.qbox.me"
+
+	PACK_JS       = "pack.js"
+	PACK_RESP_JS  = "packResp.js"
+	EVENT_JS      = "event.js"
+	EVENT_RESP_JS = "eventResp.js"
 )
 
 var (
@@ -138,6 +143,13 @@ type Event struct {
 func newPack() (rPackId int64) {
 	var err error
 
+	//check exist
+	if _, err := os.Stat(PACK_RESP_JS); err == nil {
+		glog.Errorf("%s exist, uploaded already?", PACK_JS)
+		return 0
+	}
+
+	//
 	pack := Pack{}
 	err = loadPack(&pack)
 	checkErr(err)
@@ -145,11 +157,6 @@ func newPack() (rPackId int64) {
 
 	if pack.Title == "" {
 		glog.Errorln("need title")
-		return 0
-	}
-
-	if pack.Id != 0 {
-		glog.Errorln("Pack already uploaded?")
 		return 0
 	}
 
@@ -295,11 +302,6 @@ func newPack() (rPackId int64) {
 
 	packBytes := postReq("pack/new", packjs)
 
-	//backup pack.js to packOrig.js
-	cpCmd := exec.Command("cp", "-f", "pack.js", "packOrig.js")
-	err = cpCmd.Run()
-	checkErr(err)
-
 	//update pack.js
 	var dwpack Pack
 	err = json.Unmarshal(packBytes, &dwpack)
@@ -311,18 +313,11 @@ func newPack() (rPackId int64) {
 	packjs, err = json.Marshal(dwpack)
 	checkErr(err)
 
-	var f *os.File
-	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
-		glog.Errorf("Open pack.js error: err=%s", err.Error())
-		return 0
-	}
-	defer f.Close()
-
-	f.Seek(0, os.SEEK_SET)
-	f.Truncate(0)
+	//
 	buf := bytes.NewBuffer([]byte(""))
 	json.Indent(buf, packjs, "", "\t")
-	f.Write(buf.Bytes())
+
+	rewriteFile(PACK_RESP_JS, buf.Bytes())
 
 	glog.Infof("add pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
 
@@ -352,6 +347,13 @@ func delPack() {
 func updatePack() {
 	var err error
 
+	//check exist
+	if _, err := os.Stat(PACK_RESP_JS); err == nil {
+		glog.Errorf("%s exist, uploaded already?", PACK_JS)
+		return
+	}
+
+	//
 	pack := Pack{}
 	err = loadPack(&pack)
 	checkErr(err)
@@ -359,11 +361,6 @@ func updatePack() {
 
 	if pack.Title == "" {
 		glog.Errorln("need title")
-		return
-	}
-
-	if pack.Id == 0 {
-		glog.Errorln("Pack not uploaded? Use new to create a pack.")
 		return
 	}
 
@@ -512,18 +509,10 @@ func updatePack() {
 	packjs, err = json.Marshal(dwpack)
 	checkErr(err)
 
-	var f *os.File
-	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
-		glog.Errorf("Open pack.js error: err=%s", err.Error())
-		return
-	}
-	defer f.Close()
-
-	f.Seek(0, os.SEEK_SET)
-	f.Truncate(0)
+	//
 	buf := bytes.NewBuffer([]byte(""))
 	json.Indent(buf, packjs, "", "\t")
-	f.Write(buf.Bytes())
+	rewriteFile(PACK_RESP_JS, buf.Bytes())
 
 	glog.Infof("update pack succeed: packId=%d, server=%s", packRaw.Id, _conf.ServerHost)
 }
@@ -537,26 +526,13 @@ func newEventBuff(packId int64) {
 	checkErr(err)
 	resp := postReq("event/addToBuff", js)
 
-	//backup event.js to eventOrig.js
-	cpCmd := exec.Command("cp", "-f", "event.js", "eventOrig.js")
-	err = cpCmd.Run()
-	checkErr(err)
-
-	//save to event.js
-	var f *os.File
-	if f, err = os.OpenFile("event.js", os.O_RDWR, 0666); err != nil {
-		glog.Errorf("Open event.js error: err=%s", err.Error())
-		return
-	}
-	defer f.Close()
-
-	f.Seek(0, os.SEEK_SET)
-	f.Truncate(0)
+	//save to eventResp.js
 	buf := bytes.NewBuffer([]byte(""))
 	json.Indent(buf, resp, "", "\t")
-	f.Write(buf.Bytes())
 
-	glog.Infof("new event buff succeed: eventId=%d, server=%s", event.Id, _conf.ServerHost)
+	rewriteFile(EVENT_RESP_JS, buf.Bytes())
+
+	glog.Infof("new event buff succeed:server=%s", _conf.ServerHost)
 }
 
 func download() {

@@ -40,11 +40,11 @@
     _startButton.enabled = NO;
     _commentButton.enabled = NO;
     
-    [self updateEventInfo];
+    [self updateChallengeInfo];
     
     //load pack data
-    EventInfo *event = _gd.eventInfo;
-    UInt64 packId = event.packId;
+    ChallengeInfo *cha = _gd.challengeInfo;
+    UInt64 packId = cha.packId;
     
     FMDatabase *db = [SldDb defaultDb].fmdb;
     FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
@@ -59,13 +59,18 @@
             return;
         }
         
+//        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
+//        if (packInfo.timeUnix != cha.packTimeUnix) {
+//            needGetFromServer = YES;
+//        } else {
+//            _gd.packInfo = packInfo;
+//            [self updatePackInfo];
+//        }
+        
         PackInfo *packInfo = [PackInfo packWithDictionary:dict];
-        if (packInfo.timeUnix != event.packTimeUnix) {
-            needGetFromServer = YES;
-        } else {
-            _gd.packInfo = packInfo;
-            [self updatePackInfo];
-        }
+        _gd.packInfo = packInfo;
+        [self updatePackInfo];
+        
     } else {
         needGetFromServer = YES;
     }
@@ -99,8 +104,8 @@
     
     //get play result
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"EventId":@(_gd.eventInfo.id), @"UserId":@0};
-    [session postToApi:@"event/getUserPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSDictionary *body = @{@"ChallengeId":@(_gd.challengeInfo.id)};
+    [session postToApi:@"challenge/getPlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         BOOL hasErr = NO;
         if (error) {
             alertHTTPError(error, data);
@@ -124,7 +129,7 @@
             return;
         }
         
-        _gd.eventPlayRecord = [EventPlayRecored recordWithDictionary:dict];
+        _gd.challengePlay = [ChallengePlay playWithDictionary:dict];
         
         [self updateTime];
     }];
@@ -139,8 +144,8 @@
     }
 }
 
-- (void)updateEventInfo {
-    NSArray *secs = _gd.eventInfo.challengeSecs;
+- (void)updateChallengeInfo {
+    NSArray *secs = _gd.challengeInfo.challengeSecs;
     if (secs != nil && secs.count == 3) {
         _starLabel3.text = formatScore([(NSNumber*)secs[0] intValue]*-1000);
         _starLabel2.text = formatScore([(NSNumber*)secs[1] intValue]*-1000);
@@ -152,7 +157,7 @@
         _starLabel1.text = text;
     }
     
-    NSArray *rewards = _gd.eventInfo.challengeRewards;
+    NSArray *rewards = _gd.challengeInfo.challengeRewards;
     if (rewards != nil && rewards.count == 3) {
         int reward0 = [(NSNumber*)rewards[0] intValue];
         int reward1 = [(NSNumber*)rewards[1] intValue];
@@ -173,7 +178,7 @@
 
 - (void)updateTime {
     //update time label
-    NSString *str = formatScore(_gd.eventPlayRecord.challengeHighScore);
+    NSString *str = formatScore(_gd.challengePlay.highScore);
     [UIView animateWithDuration:.3f animations:^{
         _timeLabel.alpha = 0.f;
     } completion:^(BOOL finished) {
@@ -191,9 +196,9 @@
     _rewardLabel2.textColor = [UIColor whiteColor];
     _rewardLabel3.textColor = [UIColor whiteColor];
     
-    NSArray *secs = _gd.eventInfo.challengeSecs;
+    NSArray *secs = _gd.challengeInfo.challengeSecs;
     if (secs != nil && secs.count == 3) {
-        int msec = -_gd.eventPlayRecord.challengeHighScore;
+        int msec = -_gd.challengePlay.highScore;
         UIColor *color = _timeLabel.textColor;
         if (msec > 0) {
             if (msec <= [(NSNumber*)secs[0] intValue]*1000) {
@@ -281,7 +286,7 @@
     _gd.gameMode = CHALLENGE;
     //update db
     FMDatabase *db = [SldDb defaultDb].fmdb;
-    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gd.eventInfo.id)];
+    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gd.challengeInfo.id)];
     if (!ok) {
         lwError("Sql error:%@", [db lastErrorMessage]);
         return;

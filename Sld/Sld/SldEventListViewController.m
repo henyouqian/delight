@@ -182,8 +182,8 @@ static const int FETCH_EVENT_COUNT = 20;
 }
 
 - (void)checkRewardButton {
-    if (_gameData.rewardCache > 0) {
-        [_rewardButton setTitle:[NSString stringWithFormat:@"可领取奖金%lld", _gameData.rewardCache] forState:UIControlStateNormal];
+    if (_gameData.playerInfo.rewardCache > 0) {
+        [_rewardButton setTitle:[NSString stringWithFormat:@"可领取奖金%lld", _gameData.playerInfo.rewardCache] forState:UIControlStateNormal];
         _rewardButton.hidden = NO;
         CGRect frame = _rewardButton.frame;
         frame.origin.y = 0;
@@ -226,7 +226,7 @@ static const int FETCH_EVENT_COUNT = 20;
                 self.navigationItem.titleView = label;
             }
             
-            _gameData.rewardCache = rewardCache;
+            _gameData.playerInfo.rewardCache = rewardCache;
             [self checkRewardButton];
         }];
     }
