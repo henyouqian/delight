@@ -125,6 +125,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 @implementation PlayerInfo
 
 + (instancetype)playerWithDictionary:(NSDictionary*)dict {
+    SldGameData *gd = [SldGameData getInstance];
     PlayerInfo *info = [[PlayerInfo alloc] init];
     
     info.userId = [(NSNumber*)[dict objectForKey:@"UserId"] longLongValue];
@@ -134,7 +135,12 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.gravatarKey = [dict objectForKey:@"GravatarKey"];
     info.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
     info.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
-    [info setTotalRewardRaw:[(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue]];
+    if (gd.playerInfo == nil) {
+        [info setTotalRewardRaw:[(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue]];
+    } else {
+        info.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
+    }
+    
     info.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
     info.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
     info.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
@@ -148,13 +154,19 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 }
 
 - (void)setTotalReward:(SInt64)reward {
-    int lv = self.level;
-    _totalReward = reward;
-    int newLv = self.level;
-    if (lv != newLv) {
-        NSString *str = [NSString stringWithFormat:@"升级啦🎉。%d➔%d", lv, newLv];
-        alert(str, nil);
+    SldGameData *gd = [SldGameData getInstance];
+    if (gd) {
+        int lv = gd.playerInfo.level;
+        _totalReward = reward;
+        int newLv = self.level;
+        if (lv != newLv) {
+            NSString *str = [NSString stringWithFormat:@"升级啦🎉。%d➔%d", lv, newLv];
+            alert(str, nil);
+        }
+    } else {
+        _totalReward = reward;
     }
+    
 }
 
 - (int)level {
@@ -252,6 +264,7 @@ static SldGameData *g_inst = nil;
     _packInfo = nil;
     _playerInfo = nil;
     _challengeInfo = nil;
+    _challengeInfos = nil;
     _challengePlay = nil;
     
     _userId = 0;

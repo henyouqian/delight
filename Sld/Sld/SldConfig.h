@@ -1,5 +1,5 @@
 //
-//  config.h
+//  SldConfig.h
 //  Sld
 //
 //  Created by Wei Li on 14-4-24.
@@ -10,10 +10,11 @@
 
 extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
 
-@interface Config : NSObject
-+ (instancetype)sharedConf;
+@interface SldConfig : NSObject
++ (instancetype)getInstance;
 
 @property (nonatomic) NSString *IMG_CACHE_DIR;
 @property (nonatomic) NSString *DATA_HOST;
 @property (nonatomic) NSString *KEYCHAIN_SERVICE;
+@property (nonatomic) NSString *STORE_ID;
 @end

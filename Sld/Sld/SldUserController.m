@@ -10,7 +10,7 @@
 #import "SldUserInfoController.h"
 #import "SldLoginViewController.h"
 #import "SldHttpSession.h"
-#import "config.h"
+#import "SldConfig.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldGameData.h"
 #import "SldUtil.h"
@@ -50,12 +50,35 @@ static __weak SldUserController *g_inst = nil;
         [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
         return;
     }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [self updateUI];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    
+    //update playerInfo
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/getInfo" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            if (isServerError(error)) {
+                [SldUserInfoController createAndPresentFromController:self cancelable:NO];
+            } else {
+                alertHTTPError(error, data);
+            }
+            
+        } else {
+            //update game data
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            gd.playerInfo = [PlayerInfo playerWithDictionary:dict];
+            
+            [self updateUI];
+        }
+    }];
+
 }
 
 - (void)updateUI {
@@ -100,7 +123,7 @@ static __weak SldUserController *g_inst = nil;
 	RIButtonItem *logoutItem = [RIButtonItem itemWithLabel:@"是" action:^{
 		[[SldHttpSession defaultSession] logoutWithComplete:^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                Config *conf = [Config sharedConf];
+                SldConfig *conf = [SldConfig getInstance];
                 NSArray *accounts = [SSKeychain accountsForService:conf.KEYCHAIN_SERVICE];
                 NSString *username = [accounts lastObject][@"acct"];
                 [SSKeychain setPassword:@"" forService:conf.KEYCHAIN_SERVICE account:username];
@@ -339,7 +362,7 @@ const int RESULT_LIMIT = 20;
     if (indexPath.section == 0) {
         SldGetRewardCacheCell *cell = (SldGetRewardCacheCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardCacheCell" forIndexPath:indexPath];
         
-        NSString *title = [NSString stringWithFormat:@"领取奖金：%lld", gd.playerInfo.rewardCache];
+        NSString *title = [NSString stringWithFormat:@"点击领取奖金：%lld", gd.playerInfo.rewardCache];
         [cell.getRewardButton setTitle:title forState:(UIControlStateNormal&UIControlStateHighlighted&UIControlStateDisabled)];
         if (gd.playerInfo.rewardCache == 0) {
             cell.getRewardButton.enabled = NO;
@@ -398,6 +421,7 @@ const int RESULT_LIMIT = 20;
         PlayerInfo *playerInfo = gd.playerInfo;
         SInt64 prevMoney = playerInfo.money;
         playerInfo.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+        playerInfo.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
         playerInfo.rewardCache = 0;
         
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];

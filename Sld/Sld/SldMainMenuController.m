@@ -12,6 +12,7 @@
 #import "SldUtil.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
+#import "SldConfig.h"
 
 @interface SldMainMenuController ()
 @property (weak, nonatomic) IBOutlet UIImageView *discIcon;
@@ -89,7 +90,7 @@
     storeProductViewContorller.delegate = self;
     
     [storeProductViewContorller loadProductWithParameters:
-     @{SKStoreProductParameterITunesItemIdentifier: @"873521060"}completionBlock:^(BOOL result, NSError *error) {
+     @{SKStoreProductParameterITunesItemIdentifier: [SldConfig getInstance].STORE_ID}completionBlock:^(BOOL result, NSError *error) {
          if(error){
              NSLog(@"error %@ with userInfo %@",error,[error userInfo]);
          } else {

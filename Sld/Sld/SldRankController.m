@@ -11,7 +11,6 @@
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldNevigationController.h"
-#import "config.h"
 #import "SldUtil.h"
 #import "UIImage+animatedGIF.h"
 #import "UIImageView+sldAsyncLoad.h"

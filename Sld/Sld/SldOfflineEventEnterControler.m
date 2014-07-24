@@ -13,7 +13,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
 #import "SldGameController.h"
-#import "config.h"
+#import "SldConfig.h"
 
 @interface SldOfflineEventEnterControler ()
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;

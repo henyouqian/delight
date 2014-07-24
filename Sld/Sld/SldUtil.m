@@ -7,7 +7,7 @@
 //
 
 #import "SldUtil.h"
-#import "config.h"
+#import "SldConfig.h"
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import <CommonCrypto/CommonHMAC.h>
@@ -57,7 +57,7 @@ BOOL imageExist(NSString *imageKey) {
 }
 
 NSString* makeImagePath(NSString *imageKey) {
-    Config *conf = [Config sharedConf];
+    SldConfig *conf = [SldConfig getInstance];
     return makeDocPath([NSString stringWithFormat:@"%@/%@", conf.IMG_CACHE_DIR, imageKey]);
 }
 
@@ -67,7 +67,7 @@ NSString* makeImagePathFromUrl(NSString *imageUrl) {
 }
 
 NSString* makeImageServerUrl(NSString *imageKey) {
-    Config *conf = [Config sharedConf];
+    SldConfig *conf = [SldConfig getInstance];
     return [NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, imageKey];
 }
 

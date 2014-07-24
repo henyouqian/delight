@@ -16,7 +16,7 @@
 #import "SldOfflineEventEnterControler.h"
 //#import "SldMatchPrepareController.h"
 #import "SldUtil.h"
-#import "config.h"
+#import "SldConfig.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "MSWeakTimer.h"
 

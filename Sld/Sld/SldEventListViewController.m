@@ -11,7 +11,6 @@
 //#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldUtil.h"
-#import "config.h"
 #import "SldStreamPlayer.h"
 #import "SldDb.h"
 #import "UIImageView+sldAsyncLoad.h"
@@ -93,6 +92,7 @@ static const int FETCH_EVENT_COUNT = 20;
 -(void)dealloc {
     [_timer invalidate];
     [_checkNewTimer invalidate];
+    self.collectionView.delegate = nil;
 }
 
 - (void)viewDidLoad

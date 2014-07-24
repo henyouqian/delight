@@ -13,7 +13,7 @@
 #import "SldGameData.h"
 #import "MMPickerView.h"
 #import "SldUserInfoController.h"
-#import "config.h"
+#import "SldConfig.h"
 #import "SldIapController.h"
 
 @interface SldLoginViewController ()
@@ -74,7 +74,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    Config *conf = [Config sharedConf];
+    SldConfig *conf = [SldConfig getInstance];
     NSArray *accounts = [SSKeychain accountsForService:conf.KEYCHAIN_SERVICE];
     if ([accounts count]) {
         NSString *username = [accounts lastObject][@"acct"];
@@ -140,7 +140,7 @@
         SldGameData *gameData = [SldGameData getInstance];
         
         //save to keychain
-        [SSKeychain setPassword:password forService:[Config sharedConf].KEYCHAIN_SERVICE account:email];
+        [SSKeychain setPassword:password forService:[SldConfig getInstance].KEYCHAIN_SERVICE account:email];
         
         //update game data
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -166,7 +166,7 @@
                                                          cancelButtonTitle:nil
                                                          otherButtonTitles:nil];
         [getUserInfoAlert show];
-        [session postToApi:@"player/getInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"player/getInfo" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             [getUserInfoAlert dismissWithClickedButtonIndex:0 animated:YES];
             if (error) {
                 if (isServerError(error)) {
@@ -184,6 +184,7 @@
                 
                 gameData.playerInfo = [PlayerInfo playerWithDictionary:dict];
                 
+                //init SldIapManager
                 [SldIapManager getInstance];
                 
                 if (gameData.playerInfo.nickName.length == 0) {

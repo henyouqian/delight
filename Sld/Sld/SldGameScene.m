@@ -17,7 +17,7 @@
 #import "SldHttpSession.h"
 #import "SldGameData.h"
 #import "SldDb.h"
-#import "config.h"
+#import "SldConfig.h"
 #import "nv-ios-digest/SHA1.h"
 
 //=========================================================

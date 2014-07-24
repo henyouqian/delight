@@ -26,9 +26,9 @@ const (
 	HOST   = "http://dn-pintugame.qbox.me"
 
 	PACK_JS       = "pack.js"
-	PACK_RESP_JS  = "packResp.js"
+	PACK_RESP_JS  = "respPack.js"
 	EVENT_JS      = "event.js"
-	EVENT_RESP_JS = "eventResp.js"
+	EVENT_RESP_JS = "respEvent.js"
 )
 
 var (
@@ -524,7 +524,7 @@ func newEventBuff(packId int64) {
 
 	js, err := json.Marshal(event)
 	checkErr(err)
-	resp := postReq("event/addToBuff", js)
+	resp := postReq("event/buffAdd", js)
 
 	//save to eventResp.js
 	buf := bytes.NewBuffer([]byte(""))

@@ -8,7 +8,7 @@
 
 #import "SldMusicViewController.h"
 #import "SldHttpSession.h"
-#import "config.h"
+#import "SldConfig.h"
 #import "SldUtil.h"
 #import "MarqueeLabel.h"
 
@@ -145,7 +145,7 @@ NSArray *_channels = nil;
         }
     }
     
-    Config *conf = [Config sharedConf];
+    SldConfig *conf = [SldConfig getInstance];
     NSString *thumbRemote = [channel objectForKey:@"banner"];
     
     //local file name
