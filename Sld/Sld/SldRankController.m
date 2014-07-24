@@ -7,7 +7,6 @@
 //
 
 #import "SldRankController.h"
-//#import "SldEventDetailViewController.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldNevigationController.h"
@@ -48,6 +47,20 @@
 @end
 
 @implementation RankInfo
++(instancetype)create:(NSDictionary*)dict {
+    RankInfo *rankInfo = [[RankInfo alloc] init];
+    rankInfo.rank = [dict objectForKey:@"Rank"];
+    rankInfo.nickName = [dict objectForKey:@"NickName"];
+    rankInfo.teamName = [dict objectForKey:@"TeamName"];
+    rankInfo.gravatarKey = [dict objectForKey:@"GravatarKey"];
+    rankInfo.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
+    NSNumber *score = [dict objectForKey:@"Score"];
+    rankInfo.score = @"0";
+    if (score) {
+        rankInfo.score = formatScore([score intValue]);
+    }
+    return rankInfo;
+}
 @end
 
 
@@ -192,17 +205,7 @@ static SldRankController *_inst = nil;
         gameData.eventPlayRecord.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
         
         for (NSDictionary *rankDict in rankArray) {
-            RankInfo *rankInfo = [[RankInfo alloc] init];
-            rankInfo.rank = [rankDict objectForKey:@"Rank"];
-            rankInfo.nickName = [rankDict objectForKey:@"NickName"];
-            rankInfo.teamName = [rankDict objectForKey:@"TeamName"];
-            rankInfo.gravatarKey = [rankDict objectForKey:@"GravatarKey"];
-            rankInfo.customAvatarKey = [rankDict objectForKey:@"CustomAvatarKey"];
-            NSNumber *score = [rankDict objectForKey:@"Score"];
-            rankInfo.score = @"0";
-            if (score) {
-                rankInfo.score = formatScore([score intValue]);
-            }
+            RankInfo *rankInfo = [RankInfo create:rankDict];
             [_rankInfos addObject:rankInfo];
         }
         //[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]  withRowAnimation:UITableViewRowAnimationFade];
@@ -251,19 +254,7 @@ static SldRankController *_inst = nil;
         
         NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:num];
         for (NSDictionary *rankDict in rankArray) {
-            RankInfo *rankInfo = [[RankInfo alloc] init];
-            rankInfo.rank = [rankDict objectForKey:@"Rank"];
-            rankInfo.nickName = [rankDict objectForKey:@"NickName"];
-            NSNumber *score = [rankDict objectForKey:@"Score"];
-            rankInfo.score = @"0";
-            if (score) {
-                int msec = -[score intValue];
-                int sec = msec/1000;
-                int min = sec / 60;
-                sec = sec % 60;
-                msec = msec % 1000;
-                rankInfo.score = [NSString stringWithFormat:@"%01d:%02d.%03d", min, sec, msec];
-            }
+            RankInfo *rankInfo = [RankInfo create:rankDict];
             [insertIndexPaths addObject: [NSIndexPath indexPathForRow:[_rankInfos count] inSection:1]];
             [_rankInfos addObject:rankInfo];
         }

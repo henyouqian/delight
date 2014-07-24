@@ -13,10 +13,12 @@
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldConfig.h"
+#import "SldGameData.h"
 
 @interface SldMainMenuController ()
 @property (weak, nonatomic) IBOutlet UIImageView *discIcon;
 @property (nonatomic) BOOL storeViewLoaded;
+@property (weak, nonatomic) IBOutlet UIButton *hiddenButton;
 @end
 
 @implementation SldMainMenuController
@@ -41,6 +43,13 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     [self rotateDisc];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    if ([gd.userName compare:@"lw@pintu.com"] == 0) {
+        _hiddenButton.hidden = NO;
+    } else {
+        _hiddenButton.hidden = YES;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

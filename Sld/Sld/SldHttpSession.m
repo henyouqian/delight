@@ -8,10 +8,7 @@
 
 #import "SldHttpSession.h"
 #import "SldUtil.h"
-
-static NSString *defaultHost = @"http://192.168.2.55:9998";
-//static NSString *defaultHost = @"http://192.168.1.43:9998";
-//static NSString *defaultHost = @"http://sld.pintugame.com";
+#import "SldConfig.h"
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
@@ -24,7 +21,8 @@ static NSString *defaultHost = @"http://192.168.2.55:9998";
     static SldHttpSession *sharedSession = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedSession = [[self alloc] initWithHost:defaultHost];
+        NSString *host = [SldConfig getInstance].HOST;
+        sharedSession = [[self alloc] initWithHost:host];
     });
     return sharedSession;
 }

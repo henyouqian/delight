@@ -23,6 +23,9 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     inst.DATA_HOST = @"http://dn-pintugame.qbox.me";
     inst.KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     inst.STORE_ID = @"873521060";
+//    inst.HOST = @"http://192.168.2.55:9998";
+//    inst.HOST = @"http://192.168.1.43:9998";
+    inst.HOST = @"http://sld1_2.pintugame.com";
     return inst;
 }
 @end

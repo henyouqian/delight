@@ -12,4 +12,7 @@
 
 + (instancetype)defaultDb;
 
+- (NSData*)getValue:(NSString*)key;
+- (BOOL)setKey:(NSString*)key value:(NSData*)value;
+
 @end

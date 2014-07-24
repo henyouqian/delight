@@ -1305,6 +1305,24 @@ static float lerpf(float a, float b, float t) {
 //        }
     }
     
+    else if (_gameData.gameMode == PRACTICE) {
+        SldDb *db = [SldDb defaultDb];
+        NSString *key = @"practiceHistory";
+        NSData *data = [db getValue:key];
+        NSMutableArray *history = [NSMutableArray array];
+        if (data) {
+            NSArray *arr = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+            history = [NSMutableArray arrayWithArray:arr];
+        }
+        NSString *value = [NSString stringWithFormat:@"id: %lld, num: %d, time: %f", _gameData.packInfo.id, _gameData.eventInfo.sliderNum, dt];
+        [history insertObject:value atIndex:0];
+        while (history.count > 100) {
+            [history removeLastObject];
+        }
+        data = [NSJSONSerialization dataWithJSONObject:history options:0 error:nil];
+        [db setKey:key value:data];
+    }
+    
     //show blured image and cover
     [self addChild:_lastImageBlurSprite];
     _lastImageBlurSprite.hidden = NO;

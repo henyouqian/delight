@@ -55,6 +55,11 @@
             }]
                                otherButtonItems:nil] show];
         }
+        
+        NSString *notification = [dict objectForKey:@"Notification"];
+        if (notification && notification.length > 0) {
+            alert(notification, nil);
+        }
     }];
     
     return YES;
