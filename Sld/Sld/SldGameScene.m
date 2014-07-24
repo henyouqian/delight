@@ -165,6 +165,7 @@
 @property (nonatomic) SKSpriteNode *lastImageBlurSprite;
 @property (nonatomic) SKSpriteNode *lastImageCover;
 @property (nonatomic) BOOL gameRunning;
+@property (nonatomic) BOOL beltRotate;
 
 @property (nonatomic) SldGameData *gameData;
 
@@ -373,11 +374,22 @@ NSDate *_gameBeginTime;
         //[self.curtainLabel setAlpha:0.f];
         self.curtainLabel.yScale = 0.f;
         
-        self.curtainBelt = [SKSpriteNode spriteNodeWithColor:colorCtBelt size:CGSizeMake(self.size.width, 30.f)];
+        
+        //belt and rotate
+        UIImage *image = [UIImage imageWithContentsOfFile:[_files firstObject]];
+        _beltRotate = image.size.width > image.size.height;
+        if (_beltRotate) {
+            self.curtainBelt = [SKSpriteNode spriteNodeWithColor:colorCtBelt size:CGSizeMake(self.size.height, 30.f)];
+            [self.curtainBelt setZRotation:-M_PI_2];
+        } else {
+            self.curtainBelt = [SKSpriteNode spriteNodeWithColor:colorCtBelt size:CGSizeMake(self.size.width, 30.f)];
+        }
+        
         [self.curtainBelt setAnchorPoint:CGPointMake(.5f, .5f)];
         [self.curtainBelt setPosition:CGPointMake(self.size.width*.5f, self.size.height*.5f)];
         [self addChild:self.curtainBelt];
         [self.curtainBelt addChild:self.curtainLabel];
+        
         
         //load image
         [self nextImage];
@@ -887,6 +899,9 @@ static float lerpf(float a, float b, float t) {
     if (self.inCurtain /*&& (node == self.curtainTop || node == self.curtainBottom || node == self.curtainBelt || node == self.curtainLabel)*/) {
         self.inCurtain = NO;
         SKAction *left = [SKAction moveToX:-self.size.width*2.5f duration:.8f];
+        if (_beltRotate) {
+            left = [SKAction moveToY:self.size.height*2.5f duration:.8f];
+        }
         left.timingMode = SKActionTimingEaseOut;
         [self.curtainBelt runAction:left completion:^{
             SKAction *up = [SKAction moveToY:self.size.height duration:dur];
