@@ -26,3 +26,6 @@ archive/
 robot/robot
 tools/packUploader/packUploader
 tools/packUploader/packs
+bak/
+tools/ImageMagick-6.8.8/cover.gif
+tools/ImageMagick-6.8.8/thumb.gif
