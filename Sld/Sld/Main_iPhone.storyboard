@@ -2118,6 +2118,7 @@
                     <connections>
                         <outlet property="discIcon" destination="JMQ-X2-8oK" id="DU3-DF-ICB"/>
                         <outlet property="hiddenButton" destination="dk6-Kq-Fde" id="SZ0-ni-yHG"/>
+                        <outlet property="versionLabel" destination="9ag-3V-nbb" id="9vN-Zd-oAf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bgu-Sr-VvD" userLabel="First Responder" sceneMemberID="firstResponder"/>

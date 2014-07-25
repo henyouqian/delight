@@ -18,6 +18,7 @@
 @interface SldMainMenuController ()
 @property (weak, nonatomic) IBOutlet UIImageView *discIcon;
 @property (nonatomic) BOOL storeViewLoaded;
+@property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 @property (weak, nonatomic) IBOutlet UIButton *hiddenButton;
 @end
 
@@ -36,6 +37,10 @@
                                             selector:@selector(didBecomeActiveNotification)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    
+    //
+    NSString *appVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    _versionLabel.text = [NSString stringWithFormat:@"v %@", appVer];
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
                BuildableName = "Sld.app"
-               BlueprintName = "Sld"
-               ReferencedContainer = "container:Sld.xcodeproj">
+               BlueprintName = "pintu"
+               ReferencedContainer = "container:pintu.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,8 +34,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B31EE7F218F05BE60047E9FD"
                BuildableName = "SldTests.xctest"
-               BlueprintName = "SldTests"
-               ReferencedContainer = "container:Sld.xcodeproj">
+               BlueprintName = "pintuTests"
+               ReferencedContainer = "container:pintu.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,8 +44,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
             BuildableName = "Sld.app"
-            BlueprintName = "Sld"
-            ReferencedContainer = "container:Sld.xcodeproj">
+            BlueprintName = "pintu"
+            ReferencedContainer = "container:pintu.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
             BuildableName = "Sld.app"
-            BlueprintName = "Sld"
-            ReferencedContainer = "container:Sld.xcodeproj">
+            BlueprintName = "pintu"
+            ReferencedContainer = "container:pintu.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -86,8 +86,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
             BuildableName = "Sld.app"
-            BlueprintName = "Sld"
-            ReferencedContainer = "container:Sld.xcodeproj">
+            BlueprintName = "pintu"
+            ReferencedContainer = "container:pintu.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
