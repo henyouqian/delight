@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
-               BuildableName = "Sld.app"
+               BuildableName = "pintu.app"
                BlueprintName = "pintu"
                ReferencedContainer = "container:pintu.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B31EE7F218F05BE60047E9FD"
-               BuildableName = "SldTests.xctest"
+               BuildableName = "pintuTests.xctest"
                BlueprintName = "pintuTests"
                ReferencedContainer = "container:pintu.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
-            BuildableName = "Sld.app"
+            BuildableName = "pintu.app"
             BlueprintName = "pintu"
             ReferencedContainer = "container:pintu.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
-            BuildableName = "Sld.app"
+            BuildableName = "pintu.app"
             BlueprintName = "pintu"
             ReferencedContainer = "container:pintu.xcodeproj">
          </BuildableReference>
@@ -85,7 +85,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
-            BuildableName = "Sld.app"
+            BuildableName = "pintu.app"
             BlueprintName = "pintu"
             ReferencedContainer = "container:pintu.xcodeproj">
          </BuildableReference>

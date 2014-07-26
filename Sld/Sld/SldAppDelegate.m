@@ -62,6 +62,9 @@
         }
     }];
     
+    //
+    [UMSocialData setAppKey:@"53aeb00356240bdcb8050c26"];
+    
     return YES;
 }
 

@@ -35,4 +35,5 @@
     #import "AdsMoGoLib/AdsMoGoSDK/AdMoGoInterstitialManager.h"
     #import "QiniuSDK/QiniuSimpleUploader.h"
     #import "Flurry/Flurry.h"
+    #import "umeng_ios_social/UMSocial_Sdk_4.0/Header/UMSocial.h"
 #endif
