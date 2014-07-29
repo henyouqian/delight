@@ -492,6 +492,29 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     }];
 }
 
+- (IBAction)onSocial:(id)sender {
+    NSString *path = makeImagePath(_gd.packInfo.thumb);
+    UIImage *image = [UIImage imageWithContentsOfFile:path];
+    NSString *url = [NSString stringWithFormat:@"%@?eventId=%lld", [SldConfig getInstance].HTML5_URL, _gd.eventInfo.id];
+    
+    [[[UIAlertView alloc] initWithTitle:@"发给朋友一起玩。朋友将会收到可以直接玩的链接，也可以下载客户端。"
+	                            message:nil
+		               cancelButtonItem:[RIButtonItem itemWithLabel:@"不了" action:^{
+        // Handle "Cancel"
+    }]
+				       otherButtonItems:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = url;
+        [UMSocialSnsService presentSnsIconSheetView:self
+                                             appKey:nil
+                                          shareText:@"拼图游戏"
+                                         shareImage:image
+                                    shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline]
+                                           delegate:nil];
+    }], nil] show];
+    
+    
+}
+
 #pragma mark - Navigation
 //- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 //{

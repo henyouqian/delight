@@ -26,6 +26,7 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
 //    inst.HOST = @"http://192.168.2.55:9998";
 //    inst.HOST = @"http://192.168.1.43:9998";
     inst.HOST = @"http://sld1_2.pintugame.com";
+    inst.HTML5_URL = @"http://pintuhtml5.qiniudn.com/index.html";
     return inst;
 }
 @end

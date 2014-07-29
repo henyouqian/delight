@@ -348,8 +348,8 @@ func updatePack() {
 	var err error
 
 	//check exist
-	if _, err := os.Stat(PACK_RESP_JS); err == nil {
-		glog.Errorf("%s exist, uploaded already?", PACK_JS)
+	if _, err := os.Stat(PACK_RESP_JS); os.IsNotExist(err) {
+		glog.Errorf("%s not exist", PACK_JS)
 		return
 	}
 
@@ -358,6 +358,11 @@ func updatePack() {
 	err = loadPack(&pack)
 	checkErr(err)
 	packRaw := pack
+
+	packResp := Pack{}
+	err = loadPackResp(&packResp)
+	checkErr(err)
+	pack.Id = packResp.Id
 
 	if pack.Title == "" {
 		glog.Errorln("need title")
@@ -634,8 +639,23 @@ func rewriteFile(path string, content []byte) {
 
 func loadPack(pack *Pack) (err error) {
 	var f *os.File
-	if f, err = os.OpenFile("pack.js", os.O_RDWR, 0666); err != nil {
-		glog.Errorf("Open pack.js error: err=%s", err.Error())
+	if f, err = os.OpenFile(PACK_JS, os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open %s error: err=%s", PACK_JS, err.Error())
+		return err
+	}
+	defer f.Close()
+
+	//json decode
+	decoder := json.NewDecoder(f)
+	err = decoder.Decode(&pack)
+	checkErr(err)
+	return nil
+}
+
+func loadPackResp(pack *Pack) (err error) {
+	var f *os.File
+	if f, err = os.OpenFile(PACK_RESP_JS, os.O_RDWR, 0666); err != nil {
+		glog.Errorf("Open %s error: err=%s", PACK_RESP_JS, err.Error())
 		return err
 	}
 	defer f.Close()

@@ -35,15 +35,20 @@ var SliderLayer = cc.Layer.extend({
     _sliderX0:0,
     _sliderY0:0,
     _texUrl:"",
+    _sliderGroup:null,
     _sliders:[],
     _isCompleted:false,
     _touch:null,
     _imgShuffleIdxs:[],
+    _btn:null,
+    _label:null,
     MOVE_DURATION:0.1,
     init:function () {
         //////////////////////////////
         // 1. super init first
         this._super()
+        this._sliderNum = g_socialPack.SliderNum
+        this._sliderNum = 3
         
         //shuffle image idx
         for (var i = 0; i < g_imageUrls.length; i++) {
@@ -51,9 +56,31 @@ var SliderLayer = cc.Layer.extend({
         }
         this._imgShuffleIdxs = shuffle(this._imgShuffleIdxs)
 
-        this.reset(0)
         //
         this.setTouchEnabled(true)
+
+        var winSize = cc.Director.getInstance().getWinSize();
+
+        this._btn = cc.Sprite.create("res/nextBtn.png")
+        this.addChild(this._btn, 100);
+        this._btn.setPosition(winSize.width-100, 100)
+        this._btn.setScale(0.7, 0.7)
+        this._btn.setColor(new cc.Color3B(255,0,0))
+        this._btn.setOpacity(200)
+
+        this._sliderGroup = cc.Layer.create()
+        this.addChild(this._sliderGroup, 0)
+
+        cc.AudioEngine.getInstance().preloadEffect("res/success.mp3");
+        cc.AudioEngine.getInstance().preloadEffect("res/tink.mp3");
+        cc.AudioEngine.getInstance().preloadEffect("res/finish.mp3");
+
+        // this._label = cc.LabelTTF.create("Next", "Arial", 40, new cc.Size(100, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
+        // this._label.setColor(new cc.Color3B(0, 0, 0))
+        // this._btn.addChild(this._label, 1111)
+
+        this.reset(0)
+
         return true;
     },
     reset:function(imgIdx) {
@@ -63,7 +90,8 @@ var SliderLayer = cc.Layer.extend({
         this._isCompleted = false
         this._sliders = []
         this._touch = null
-        this.removeAllChildren()
+        this._sliderGroup.removeAllChildren()
+        this._btn.setVisible(false)
 
         //setup
         this._texUrl = g_imageUrls[this._imgShuffleIdxs[imgIdx]]
@@ -138,7 +166,7 @@ var SliderLayer = cc.Layer.extend({
                 spt.setPosition(this._sliderX0, y);
                 
                 spt.setScale(scale*1.01);
-                this.addChild(spt, 0);
+                this._sliderGroup.addChild(spt, 0);
 
                 this._sliders.push({
                     sprite:spt,
@@ -171,7 +199,7 @@ var SliderLayer = cc.Layer.extend({
                 spt.setRotation(90);
                 
                 spt.setScale(scale);
-                this.addChild(spt, 0);
+                this._sliderGroup.addChild(spt, 0);
 
                 this._sliders.push({
                     sprite:spt,
@@ -192,6 +220,8 @@ var SliderLayer = cc.Layer.extend({
         if (this._isCompleted) {
             if (this._imgIdx < g_imageUrls.length-1) {
                 this.reset(this._imgIdx + 1)
+            } else {
+                window.location.href = "http://baidu.com"
             }
             return
         }
@@ -225,7 +255,7 @@ var SliderLayer = cc.Layer.extend({
             }
         }
         if (resort) {
-            //cc.AudioEngine.getInstance().playEffect("res/audio/tik.mp3");
+            cc.AudioEngine.getInstance().playEffect("res/tink.mp3");
             for (var i = 0; i < this._sliders.length; i++) {
                 var slider = this._sliders[i]
                 var y = this._sliderY0 - i * this._sliderH;
@@ -265,11 +295,14 @@ var SliderLayer = cc.Layer.extend({
             }
         }
         if (this._isCompleted == false && complete == true) {
-            //SimpleAudioEngine::getInstance()->playEffect("audio/success.mp3");
-            // if (this._imgIdx < g_imageUrls.length-1) {
-            //     this.reset(this._imgIdx + 1)
-            //     return
-            // }
+            
+            if (this._imgIdx < g_imageUrls.length-1) {
+                // this.reset(this._imgIdx + 1)
+                this._btn.setVisible(true)
+                cc.AudioEngine.getInstance().playEffect("res/success.mp3");
+            } else {
+                cc.AudioEngine.getInstance().playEffect("res/finish.mp3");
+            }
         }
         this._isCompleted = complete;
     },

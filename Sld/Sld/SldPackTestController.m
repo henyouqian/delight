@@ -65,11 +65,15 @@
 }
 
 - (void)downloadPack {
+    if (_gd.packInfo == nil) {
+        lwError(@"_gd.packInfo == nil");
+        return;
+    }
     NSArray *imageKeys = _gd.packInfo.images;
     __block int localNum = 0;
     NSUInteger totalNum = [imageKeys count];
     if (totalNum == 0) {
-        alert(@"Not downloaded", nil);
+        lwError(@"no images");
         return;
     }
     for (NSString *imageKey in imageKeys) {
@@ -132,7 +136,9 @@
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
     controller.matchSecret = nil;
     
-    [self.navigationController pushViewController:controller animated:YES];
+    if (self.navigationController.topViewController == self ) {
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 /*

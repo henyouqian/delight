@@ -127,6 +127,11 @@
 		D05E9965195CB1B5002A6B83 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9964195CB1B5002A6B83 /* Security.framework */; };
 		D05E9966195CB1BF002A6B83 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667F221953172C00AD9282 /* CoreTelephony.framework */; };
 		D05E9968195CB1D5002A6B83 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9967195CB1D5002A6B83 /* AdSupport.framework */; };
+		D062EFEF19857F22004AD4A9 /* otlPublish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFEE19857F22004AD4A9 /* otlPublish@2x.png */; };
+		D062EFF119860B63004AD4A9 /* otlFire48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF019860B63004AD4A9 /* otlFire48@2x.png */; };
+		D062EFF319860BF2004AD4A9 /* otlTimer48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */; };
+		D062EFF5198634FD004AD4A9 /* otlStar48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */; };
+		D062EFF719864A8E004AD4A9 /* otlSmile48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */; };
 		D0667D6419514DD700AD9282 /* SldIapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0667D6319514DD700AD9282 /* SldIapController.m */; };
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
@@ -425,6 +430,11 @@
 		D05E995B195C7189002A6B83 /* coin5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin5.png; sourceTree = "<group>"; };
 		D05E9964195CB1B5002A6B83 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D05E9967195CB1D5002A6B83 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		D062EFEE19857F22004AD4A9 /* otlPublish@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlPublish@2x.png"; sourceTree = "<group>"; };
+		D062EFF019860B63004AD4A9 /* otlFire48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlFire48@2x.png"; sourceTree = "<group>"; };
+		D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlTimer48@2x.png"; sourceTree = "<group>"; };
+		D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlStar48@2x.png"; sourceTree = "<group>"; };
+		D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlSmile48@2x.png"; sourceTree = "<group>"; };
 		D0667D6219514DD700AD9282 /* SldIapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldIapController.h; sourceTree = "<group>"; };
 		D0667D6319514DD700AD9282 /* SldIapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldIapController.m; sourceTree = "<group>"; };
 		D0667D721952BE9000AD9282 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -822,6 +832,10 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */,
+				D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */,
+				D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */,
+				D062EFF019860B63004AD4A9 /* otlFire48@2x.png */,
 				D0A55608196C8A4700369401 /* locker.png */,
 				D05E9956195C7189002A6B83 /* coin0.png */,
 				D05E9957195C7189002A6B83 /* coin1.png */,
@@ -833,6 +847,7 @@
 				D01044901945DCE9008DFF8D /* cupBronze@2x.png */,
 				D00F63F819407FD200C8EA3F /* cupGold@2x.png */,
 				D00F63F919407FD200C8EA3F /* cupSilver@2x.png */,
+				D062EFEE19857F22004AD4A9 /* otlPublish@2x.png */,
 				D0A55610196EADD800369401 /* otlBattle@2x.png */,
 				D0A55611196EADD800369401 /* otlCup@2x.png */,
 				D00521191976A3AC00F7F915 /* otlStar@2x.png */,
@@ -1282,6 +1297,7 @@
 				B39E447C191E794800CBB247 /* glyphicons_003_user.png in Resources */,
 				D0D14B16195B3807009193E6 /* adsmogo_close@2x.png in Resources */,
 				D0D14B55195B3807009193E6 /* safari.png in Resources */,
+				D062EFF719864A8E004AD4A9 /* otlSmile48@2x.png in Resources */,
 				B34D52AF1921886000277EBC /* blackDisk90.png in Resources */,
 				B3C1BB7A1910D8BE0062D50C /* btnBgWhite50.png in Resources */,
 				D0D14B57195B3807009193E6 /* shareviewhead_bg.png in Resources */,
@@ -1293,6 +1309,7 @@
 				D0D14B3E195B3807009193E6 /* bg_ipad@2x.png in Resources */,
 				D02F76DA1982615300E742F8 /* UMSLoginViewController.xib in Resources */,
 				D0D14B35195B3807009193E6 /* webview_bar_close_hover@2x.png in Resources */,
+				D062EFF119860B63004AD4A9 /* otlFire48@2x.png in Resources */,
 				B33DD38A192124BE006B8ACD /* weiboBlack36.png in Resources */,
 				D05E9961195C7189002A6B83 /* coin5.png in Resources */,
 				D0D14B44195B3807009193E6 /* webview_bar_next_ipad@2x.png in Resources */,
@@ -1368,6 +1385,7 @@
 				D0D14B1F195B3807009193E6 /* download-468x60.gif in Resources */,
 				D0D14B19195B3807009193E6 /* adsmogo_rm_closeBtn.png in Resources */,
 				D0D14B30195B3807009193E6 /* sms@2x.png in Resources */,
+				D062EFF319860BF2004AD4A9 /* otlTimer48@2x.png in Resources */,
 				D0D14B0F195B3807009193E6 /* loading.gif in Resources */,
 				D0D14B3A195B3807009193E6 /* webview_bar_pause_hover@2x.png in Resources */,
 				D0D14B1E195B3807009193E6 /* download-320x50.gif in Resources */,
@@ -1379,7 +1397,9 @@
 				D0D14B20195B3807009193E6 /* download-640x100.gif in Resources */,
 				D0D14B32195B3807009193E6 /* webview_bar_back_grey@2x.png in Resources */,
 				D05E995F195C7189002A6B83 /* coin3.png in Resources */,
+				D062EFEF19857F22004AD4A9 /* otlPublish@2x.png in Resources */,
 				D0D14B4A195B3807009193E6 /* webview_bar_back_ipad.png in Resources */,
+				D062EFF5198634FD004AD4A9 /* otlStar48@2x.png in Resources */,
 				D0D14B2C195B3807009193E6 /* safari@2x.png in Resources */,
 				D0D14B54195B3807009193E6 /* mail.png in Resources */,
 				D0D14B40195B3807009193E6 /* webview_bar_back_ipad@2x.png in Resources */,

@@ -221,7 +221,13 @@
                             <constraint firstAttribute="trailing" secondItem="gUl-XV-meF" secondAttribute="trailing" constant="28" id="xFS-ZC-IUz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="比赛" id="Duc-Dx-NIe"/>
+                    <navigationItem key="navigationItem" title="比赛" id="Duc-Dx-NIe">
+                        <barButtonItem key="rightBarButtonItem" image="otlSmile48.png" id="pra-ZT-yC6">
+                            <connections>
+                                <action selector="onSocial:" destination="qXq-vD-jiE" id="YFR-O3-wXi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="bestRecordLabel" destination="GeY-dM-Rmz" id="BzQ-hw-MTv"/>
                         <outlet property="betButton" destination="ta1-oA-hFx" id="pib-fI-OJR"/>
@@ -1994,7 +2000,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X2O-kn-PZt">
-                                <rect key="frame" x="100" y="204" width="160" height="30"/>
+                                <rect key="frame" x="100" y="174" width="160" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="赛 事">
@@ -2006,7 +2012,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15b-mu-hG5">
-                                <rect key="frame" x="100" y="252" width="160" height="34"/>
+                                <rect key="frame" x="100" y="222" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="挑 战">
@@ -2018,7 +2024,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cHk-V6-N12">
-                                <rect key="frame" x="100" y="452" width="160" height="34"/>
+                                <rect key="frame" x="100" y="467" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="对 战">
@@ -2027,7 +2033,7 @@
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXB-M3-T2M">
-                                <rect key="frame" x="100" y="302" width="160" height="34"/>
+                                <rect key="frame" x="100" y="322" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="账 号">
@@ -2039,7 +2045,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mK2-6d-DgQ">
-                                <rect key="frame" x="100" y="352" width="160" height="34"/>
+                                <rect key="frame" x="100" y="372" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="音 乐">
@@ -2051,19 +2057,19 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlUser.png" translatesAutoresizingMaskIntoConstraints="NO" id="7aW-RV-I4f">
-                                <rect key="frame" x="110" y="307" width="24" height="24"/>
+                                <rect key="frame" x="110" y="327" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlMusic.png" translatesAutoresizingMaskIntoConstraints="NO" id="JMQ-X2-8oK">
-                                <rect key="frame" x="110" y="357" width="24" height="24"/>
+                                <rect key="frame" x="110" y="377" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlBattle.png" translatesAutoresizingMaskIntoConstraints="NO" id="b9Q-Bj-53w">
-                                <rect key="frame" x="110" y="457" width="24" height="24"/>
+                                <rect key="frame" x="110" y="472" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c54-T1-hKu">
-                                <rect key="frame" x="100" y="402" width="160" height="34"/>
+                                <rect key="frame" x="100" y="422" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="评 分">
@@ -2075,19 +2081,35 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlStar.png" translatesAutoresizingMaskIntoConstraints="NO" id="H3y-ai-M0h">
-                                <rect key="frame" x="110" y="407" width="24" height="24"/>
+                                <rect key="frame" x="110" y="427" width="24" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yh8-Oc-bsx">
+                                <rect key="frame" x="100" y="272" width="160" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="出 版">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="ZaF-Nn-xfe" kind="push" id="PNH-zv-z0R"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlPublish.png" translatesAutoresizingMaskIntoConstraints="NO" id="jXP-KN-Q4K">
+                                <rect key="frame" x="110" y="277" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlTimer.png" translatesAutoresizingMaskIntoConstraints="NO" id="IB3-ps-Bsb">
-                                <rect key="frame" x="110" y="257" width="24" height="24"/>
+                                <rect key="frame" x="110" y="227" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlCup.png" translatesAutoresizingMaskIntoConstraints="NO" id="f6J-RE-rku">
-                                <rect key="frame" x="110" y="207" width="24" height="24"/>
+                                <rect key="frame" x="110" y="177" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="全・国・拼・图・大・奖・赛" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Rh-ql-Iuh">
-                                <rect key="frame" x="46" y="109" width="228" height="21"/>
+                                <rect key="frame" x="46" y="89" width="228" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2123,7 +2145,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bgu-Sr-VvD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1140" y="-861"/>
+            <point key="canvasLocation" x="-1360" y="-869"/>
         </scene>
         <!--Sld Pack Test Controller-->
         <scene sceneID="KJG-WC-RL4">
@@ -2225,6 +2247,136 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kfA-jM-51z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-369" y="-41"/>
+        </scene>
+        <!--View Controller - 最新-->
+        <scene sceneID="Tkg-kt-Cw5">
+            <objects>
+                <viewController id="Rnm-Jz-wYe" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="b9T-c8-Jud"/>
+                        <viewControllerLayoutGuide type="bottom" id="rgW-ay-mg2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="34z-CD-ZvI">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="最新" image="otlTimer48.png" id="cLJ-Fl-OjC"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kIH-4i-4Ti" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1150" y="-2916"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="3Cy-BK-rxr">
+            <objects>
+                <tabBarController definesPresentationContext="YES" id="ZaF-Nn-xfe" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="PMT-0X-O2o"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="sr9-lm-B4D">
+                        <rect key="frame" x="129" y="330" width="163" height="49"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Rnm-Jz-wYe" kind="relationship" relationship="viewControllers" id="1yq-Qc-b4F"/>
+                        <segue destination="6eG-Dn-y6g" kind="relationship" relationship="viewControllers" id="tsc-Me-LCb"/>
+                        <segue destination="28y-F9-EFV" kind="relationship" relationship="viewControllers" id="gVt-DA-8cx"/>
+                        <segue destination="skX-wS-jYW" kind="relationship" relationship="viewControllers" id="c6d-yD-feU"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kin-IP-XaP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1700" y="-1725"/>
+        </scene>
+        <!--Collection View Controller - 原创-->
+        <scene sceneID="Xly-HA-asn">
+            <objects>
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="skX-wS-jYW" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="w8F-AC-tDW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="RlS-7Q-p6H">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Pka-fe-Vkf">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="skX-wS-jYW" id="UTb-wt-N8b"/>
+                            <outlet property="delegate" destination="skX-wS-jYW" id="Ck1-gJ-Gx6"/>
+                        </connections>
+                    </collectionView>
+                    <tabBarItem key="tabBarItem" title="原创" image="otlSmile48.png" id="lJL-FW-OQn"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="74e-hj-LlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1196" y="-1623"/>
+        </scene>
+        <!--View Controller - 最火-->
+        <scene sceneID="d7C-Jp-u5P">
+            <objects>
+                <viewController id="6eG-Dn-y6g" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="elB-cl-S8O"/>
+                        <viewControllerLayoutGuide type="bottom" id="VuF-bC-eLg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uHq-f0-Riz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="最火" image="otlFire48.png" id="W1I-KU-rHu"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FcI-hI-GCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1150" y="-2263"/>
+        </scene>
+        <!--Collection View Controller - 收藏-->
+        <scene sceneID="Nwn-57-vvz">
+            <objects>
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="28y-F9-EFV" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="tmp-Wh-CfP">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="skK-6M-bMd">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Zv3-Nh-Bsw">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="28y-F9-EFV" id="k4S-T5-hzv"/>
+                            <outlet property="delegate" destination="28y-F9-EFV" id="Vzl-6C-b98"/>
+                        </connections>
+                    </collectionView>
+                    <tabBarItem key="tabBarItem" title="收藏" image="otlStar48.png" id="v0a-dN-LiG"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pOn-eD-Edc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1700" y="-2463"/>
         </scene>
         <!--Sld Challenge List Controller-->
         <scene sceneID="SS0-13-aV6">
@@ -3161,7 +3313,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BXe-xB-EAr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1666" y="-861"/>
+            <point key="canvasLocation" x="-1886" y="-869"/>
         </scene>
     </scenes>
     <resources>
@@ -3181,9 +3333,14 @@
         <image name="otlBattle.png" width="32" height="32"/>
         <image name="otlCup.png" width="32" height="32"/>
         <image name="otlFastForward.png" width="22" height="22"/>
+        <image name="otlFire48.png" width="24" height="24"/>
         <image name="otlMusic.png" width="32" height="32"/>
+        <image name="otlPublish.png" width="32" height="32"/>
+        <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlStar.png" width="32" height="32"/>
+        <image name="otlStar48.png" width="24" height="24"/>
         <image name="otlTimer.png" width="32" height="32"/>
+        <image name="otlTimer48.png" width="24" height="24"/>
         <image name="otlUser.png" width="32" height="32"/>
         <image name="qqBlack36.png" width="36" height="36"/>
         <image name="thumbDarker.png" width="256" height="256"/>

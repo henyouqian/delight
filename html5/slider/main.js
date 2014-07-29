@@ -24,6 +24,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+// var HOST = "http://sld1_2.pintugame.com/"
+var HOST = "http://localhost:9998/"
+var QINIU_HOST = "http://dn-pintugame.qbox.me/"
+
 var cocos2dApp = cc.Application.extend({
     config:document['ccConfig'],
     ctor:function (scene) {
@@ -60,17 +64,21 @@ var cocos2dApp = cc.Application.extend({
             var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
             if (reg.test(location.href)) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
         };
-        var id = parseInt(getUrlParam("id")) 
+        //var key = parseInt(getUrlParam("key")) 
+        var key = getUrlParam("key")
         var data = {
-            "Id": id
+            "Key": key
         }
         var app = this
-        $.post('http://sld1_2.pintugame.com/pack/get', JSON.stringify(data), function(resp){
+        var url = HOST + "social/getPack"
+        $.post(url, JSON.stringify(data), function(resp){
             var reses = []
             g_imageUrls = []
-            for (var i in resp.Images) {
-                var image = resp.Images[i]
-                var url = "http://dn-pintugame.qbox.me/"+image.Key
+            g_socialPack = resp
+            var images = resp.Pack.Images
+            for (var i in images) {
+                var image = images[i]
+                var url = QINIU_HOST+image.Key
                 reses.push({src:url})
                 g_imageUrls.push(url)
             }

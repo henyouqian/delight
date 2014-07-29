@@ -62,8 +62,10 @@
         }
     }];
     
-    //
+    //umeng
     [UMSocialData setAppKey:@"53aeb00356240bdcb8050c26"];
+    [UMSocialWechatHandler setWXAppId:@"wxe2fdd22f81b2eb28" url:@"http://www.umeng.com/social"];
+    
     
     return YES;
 }
@@ -99,4 +101,16 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return  [UMSocialSnsService handleOpenURL:url];
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+    return  [UMSocialSnsService handleOpenURL:url];
+}
 @end

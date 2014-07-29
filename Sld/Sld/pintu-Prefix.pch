@@ -36,4 +36,5 @@
     #import "QiniuSDK/QiniuSimpleUploader.h"
     #import "Flurry/Flurry.h"
     #import "umeng_ios_social/UMSocial_Sdk_4.0/Header/UMSocial.h"
+    #import "umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat/UMSocialWechatHandler.h"
 #endif
