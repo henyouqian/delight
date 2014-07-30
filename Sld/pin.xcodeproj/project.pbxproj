@@ -71,7 +71,6 @@
 		B3A522111928F56000D5A38C /* otlUser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3A5220F1928F56000D5A38C /* otlUser@2x.png */; };
 		B3A522131928FDDC00D5A38C /* otlMusic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3A522121928FDDC00D5A38C /* otlMusic@2x.png */; };
 		B3A522151928FF0B00D5A38C /* otlNextTrack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3A522141928FF0B00D5A38C /* otlNextTrack@2x.png */; };
-		B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AF5C19066DC000CB4DFD /* libsqlite3.0.dylib */; };
 		B3C0AF5F1906703200CB4DFD /* db in Resources */ = {isa = PBXBuildFile; fileRef = B3C0AF5E1906703200CB4DFD /* db */; };
 		B3C1BB7A1910D8BE0062D50C /* btnBgWhite50.png in Resources */ = {isa = PBXBuildFile; fileRef = B3C1BB6C1910D8BE0062D50C /* btnBgWhite50.png */; };
@@ -132,10 +131,11 @@
 		D062EFF319860BF2004AD4A9 /* otlTimer48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */; };
 		D062EFF5198634FD004AD4A9 /* otlStar48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */; };
 		D062EFF719864A8E004AD4A9 /* otlSmile48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */; };
+		D062EFF91988D61D004AD4A9 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D066849F1953548D00AD9282 /* libz.dylib */; };
+		D062EFFA1988D62B004AD4A9 /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
 		D0667D6419514DD700AD9282 /* SldIapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0667D6319514DD700AD9282 /* SldIapController.m */; };
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
-		D06684A01953548D00AD9282 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D066849F1953548D00AD9282 /* libz.dylib */; };
 		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
 		D0A555FE1969A8A600369401 /* SldMainMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A555FD1969A8A600369401 /* SldMainMenuController.m */; };
 		D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A556001969B38B00369401 /* SldChallengeListController.m */; };
@@ -280,12 +280,12 @@
 		B31CBEA319089EA700621165 /* SldDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldDb.m; sourceTree = "<group>"; };
 		B31CBEB1190AA47500621165 /* SldButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldButton.h; sourceTree = "<group>"; };
 		B31CBEB2190AA47500621165 /* SldButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldButton.m; sourceTree = "<group>"; };
-		B31EE7C818F05BE60047E9FD /* pintu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pintu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B31EE7C818F05BE60047E9FD /* pin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31EE7CB18F05BE60047E9FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B31EE7CD18F05BE60047E9FD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B31EE7CF18F05BE60047E9FD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B31EE7D118F05BE60047E9FD /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
-		B31EE7D518F05BE60047E9FD /* pintu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pintu-Info.plist"; sourceTree = "<group>"; };
+		B31EE7D518F05BE60047E9FD /* pin-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pin-Info.plist"; sourceTree = "<group>"; };
 		B31EE7D718F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B31EE7D918F05BE60047E9FD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B31EE7DB18F05BE60047E9FD /* pintu-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pintu-Prefix.pch"; sourceTree = "<group>"; };
@@ -294,9 +294,9 @@
 		B31EE7E518F05BE60047E9FD /* SldGameController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SldGameController.h; sourceTree = "<group>"; };
 		B31EE7E618F05BE60047E9FD /* SldGameController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldGameController.m; sourceTree = "<group>"; };
 		B31EE7ED18F05BE60047E9FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		B31EE7F318F05BE60047E9FD /* pintuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pintuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B31EE7F318F05BE60047E9FD /* pinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B31EE7F418F05BE60047E9FD /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		B31EE7FC18F05BE60047E9FD /* pintuTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pintuTests-Info.plist"; sourceTree = "<group>"; };
+		B31EE7FC18F05BE60047E9FD /* pinTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pinTests-Info.plist"; sourceTree = "<group>"; };
 		B31EE7FE18F05BE60047E9FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B31EE80018F05BE60047E9FD /* SldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SldTests.m; sourceTree = "<group>"; };
 		B33121F619165A10003E05DB /* SldRankController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldRankController.h; sourceTree = "<group>"; };
@@ -557,6 +557,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D062EFFA1988D62B004AD4A9 /* liblibExt.a in Frameworks */,
 				D02F76E5198261D400E742F8 /* libSocialWechat.a in Frameworks */,
 				D02F76E6198261D400E742F8 /* libWeChatSDK.a in Frameworks */,
 				D02F76E2198261C300E742F8 /* libSocialSina.a in Frameworks */,
@@ -582,9 +583,8 @@
 				B36DAD27190FA6DA00435EF4 /* Accelerate.framework in Frameworks */,
 				B36DAD25190FA68900435EF4 /* MobileCoreServices.framework in Frameworks */,
 				D03252B0195D761B00D9620C /* PassKit.framework in Frameworks */,
+				D062EFF91988D61D004AD4A9 /* libz.dylib in Frameworks */,
 				B3C0AF5D19066DC000CB4DFD /* libsqlite3.0.dylib in Frameworks */,
-				D06684A01953548D00AD9282 /* libz.dylib in Frameworks */,
-				B3C0AF101906672B00CB4DFD /* liblibExt.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,8 +615,8 @@
 		B31EE7C918F05BE60047E9FD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B31EE7C818F05BE60047E9FD /* pintu.app */,
-				B31EE7F318F05BE60047E9FD /* pintuTests.xctest */,
+				B31EE7C818F05BE60047E9FD /* pin.app */,
+				B31EE7F318F05BE60047E9FD /* pinTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -684,7 +684,7 @@
 				D09676961961A08A0052C178 /* Main_iPad.storyboard */,
 				B31EE7DC18F05BE60047E9FD /* SldAppDelegate.h */,
 				B31EE7DD18F05BE60047E9FD /* SldAppDelegate.m */,
-				B31EE7D518F05BE60047E9FD /* pintu-Info.plist */,
+				B31EE7D518F05BE60047E9FD /* pin-Info.plist */,
 				B31EE7D618F05BE60047E9FD /* InfoPlist.strings */,
 				B31EE7D918F05BE60047E9FD /* main.m */,
 				B31EE7DB18F05BE60047E9FD /* pintu-Prefix.pch */,
@@ -704,7 +704,7 @@
 		B31EE7FB18F05BE60047E9FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B31EE7FC18F05BE60047E9FD /* pintuTests-Info.plist */,
+				B31EE7FC18F05BE60047E9FD /* pinTests-Info.plist */,
 				B31EE7FD18F05BE60047E9FD /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -1137,9 +1137,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B31EE7C718F05BE60047E9FD /* pintu */ = {
+		B31EE7C718F05BE60047E9FD /* pin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B31EE80418F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pintu" */;
+			buildConfigurationList = B31EE80418F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pin" */;
 			buildPhases = (
 				B31EE7C418F05BE60047E9FD /* Sources */,
 				B31EE7C518F05BE60047E9FD /* Frameworks */,
@@ -1150,14 +1150,14 @@
 			dependencies = (
 				B3C0AF0F190666E600CB4DFD /* PBXTargetDependency */,
 			);
-			name = pintu;
+			name = pin;
 			productName = Sld;
-			productReference = B31EE7C818F05BE60047E9FD /* pintu.app */;
+			productReference = B31EE7C818F05BE60047E9FD /* pin.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B31EE7F218F05BE60047E9FD /* pintuTests */ = {
+		B31EE7F218F05BE60047E9FD /* pinTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pintuTests" */;
+			buildConfigurationList = B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pinTests" */;
 			buildPhases = (
 				B31EE7EF18F05BE60047E9FD /* Sources */,
 				B31EE7F018F05BE60047E9FD /* Frameworks */,
@@ -1168,9 +1168,9 @@
 			dependencies = (
 				B31EE7F918F05BE60047E9FD /* PBXTargetDependency */,
 			);
-			name = pintuTests;
+			name = pinTests;
 			productName = SldTests;
-			productReference = B31EE7F318F05BE60047E9FD /* pintuTests.xctest */;
+			productReference = B31EE7F318F05BE60047E9FD /* pinTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -1205,7 +1205,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B31EE7C318F05BE50047E9FD /* Build configuration list for PBXProject "pintu" */;
+			buildConfigurationList = B31EE7C318F05BE50047E9FD /* Build configuration list for PBXProject "pin" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1225,8 +1225,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				B31EE7C718F05BE60047E9FD /* pintu */,
-				B31EE7F218F05BE60047E9FD /* pintuTests */,
+				B31EE7C718F05BE60047E9FD /* pin */,
+				B31EE7F218F05BE60047E9FD /* pinTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1481,7 +1481,7 @@
 /* Begin PBXTargetDependency section */
 		B31EE7F918F05BE60047E9FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B31EE7C718F05BE60047E9FD /* pintu */;
+			target = B31EE7C718F05BE60047E9FD /* pin */;
 			targetProxy = B31EE7F818F05BE60047E9FD /* PBXContainerItemProxy */;
 		};
 		B3C0AF0F190666E600CB4DFD /* PBXTargetDependency */ = {
@@ -1607,13 +1607,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Sld/pintu-Prefix.pch";
+				GCC_PREFIX_HEADER = "Sld/pin-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./External,
 				);
-				INFOPLIST_FILE = "Sld/pintu-Info.plist";
+				INFOPLIST_FILE = "Sld/pin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1630,8 +1630,8 @@
 					"-ObjC",
 					"-lstdc++",
 				);
-				PRODUCT_NAME = pintu;
-				PROVISIONING_PROFILE = "BE8ABCE4-0721-4A1D-A828-FCEFB8B2B4B4";
+				PRODUCT_NAME = pin;
+				PROVISIONING_PROFILE = "";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s";
@@ -1644,16 +1644,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: LI WEI (H3SSTE2WW4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI WEI (H3SSTE2WW4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Sld/pintu-Prefix.pch";
+				GCC_PREFIX_HEADER = "Sld/pin-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./External,
 				);
-				INFOPLIST_FILE = "Sld/pintu-Info.plist";
+				INFOPLIST_FILE = "Sld/pin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1671,8 +1671,8 @@
 					"-ObjC",
 					"-lstdc++",
 				);
-				PRODUCT_NAME = pintu;
-				PROVISIONING_PROFILE = "BE8ABCE4-0721-4A1D-A828-FCEFB8B2B4B4";
+				PRODUCT_NAME = pin;
+				PROVISIONING_PROFILE = "";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s";
@@ -1695,8 +1695,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "SldTests/pintuTests-Info.plist";
-				PRODUCT_NAME = pintuTests;
+				INFOPLIST_FILE = "SldTests/pinTests-Info.plist";
+				PRODUCT_NAME = pinTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1713,8 +1713,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sld/Sld-Prefix.pch";
-				INFOPLIST_FILE = "SldTests/pintuTests-Info.plist";
-				PRODUCT_NAME = pintuTests;
+				INFOPLIST_FILE = "SldTests/pinTests-Info.plist";
+				PRODUCT_NAME = pinTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1723,7 +1723,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B31EE7C318F05BE50047E9FD /* Build configuration list for PBXProject "pintu" */ = {
+		B31EE7C318F05BE50047E9FD /* Build configuration list for PBXProject "pin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B31EE80218F05BE70047E9FD /* Debug */,
@@ -1732,7 +1732,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B31EE80418F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pintu" */ = {
+		B31EE80418F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B31EE80518F05BE70047E9FD /* Debug */,
@@ -1741,7 +1741,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pintuTests" */ = {
+		B31EE80718F05BE70047E9FD /* Build configuration list for PBXNativeTarget "pinTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B31EE80818F05BE70047E9FD /* Debug */,

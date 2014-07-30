@@ -1956,7 +1956,7 @@
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdsMoGoSDK",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",

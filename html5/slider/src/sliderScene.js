@@ -23,10 +23,49 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+var APP_STORE_URL = "https://itunes.apple.com/cn/app/pin-pin-pin-pin-pin/id904649492?l=zh&ls=1&mt=8"
+
+//cookie
+function getCookie(c_name) {
+    if (document.cookie.length>0) {
+        c_start=document.cookie.indexOf(c_name + "=");
+        if (c_start!=-1) {
+            c_start=c_start + c_name.length+1;
+            c_end=document.cookie.indexOf(";",c_start);
+            if (c_end==-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end))
+        }
+    }
+    return "";
+}
+
+function setCookie(c_name,value,expiredays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate()+expiredays);
+    document.cookie=c_name+ "=" +escape(value)+
+        ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+}
+
 function shuffle(o){ //v1.0
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
+
+function padLeft(str,lenght){ 
+    if(str.length >= lenght) 
+        return str; 
+    else 
+        return padLeft("0" +str,lenght); 
+} 
+
+function msecToStr(msec) {
+    var s = Math.floor(msec/1000)
+    var min = Math.floor(s / 60)
+    var sec = padLeft(s%60+"", 2)
+    var ms = padLeft(msec%1000+"", 3)
+
+    return min + ":" + sec + "." + ms
+}
 
 var SliderLayer = cc.Layer.extend({
     _imgIdx:0,
@@ -41,14 +80,21 @@ var SliderLayer = cc.Layer.extend({
     _touch:null,
     _imgShuffleIdxs:[],
     _btn:null,
-    _label:null,
+    _resultView:null,
+    _beginTime:0,
+    _timeLabel:null,
+    _nameLabel:null,
+    _scoreLabel:null,
+    _startView:null,
+    _startNameLabel:null,
+    _startScoreLabel:null,
+    _titleLabel:null,
     MOVE_DURATION:0.1,
     init:function () {
         //////////////////////////////
         // 1. super init first
         this._super()
         this._sliderNum = g_socialPack.SliderNum
-        this._sliderNum = 3
         
         //shuffle image idx
         for (var i = 0; i < g_imageUrls.length; i++) {
@@ -62,23 +108,175 @@ var SliderLayer = cc.Layer.extend({
         var winSize = cc.Director.getInstance().getWinSize();
 
         this._btn = cc.Sprite.create("res/nextBtn.png")
-        this.addChild(this._btn, 100);
+        this.addChild(this._btn, 10);
         this._btn.setPosition(winSize.width-100, 100)
-        this._btn.setScale(0.7, 0.7)
+        this._btn.setScale(0.6, 0.6)
         this._btn.setColor(new cc.Color3B(255,0,0))
         this._btn.setOpacity(200)
 
         this._sliderGroup = cc.Layer.create()
         this.addChild(this._sliderGroup, 0)
 
-        cc.AudioEngine.getInstance().preloadEffect("res/success.mp3");
-        cc.AudioEngine.getInstance().preloadEffect("res/tink.mp3");
-        cc.AudioEngine.getInstance().preloadEffect("res/finish.mp3");
+        // cc.AudioEngine.getInstance().preloadEffect("res/success.mp3");
+        // cc.AudioEngine.getInstance().preloadEffect("res/tink.mp3");
+        // cc.AudioEngine.getInstance().preloadEffect("res/finish.mp3");
 
-        // this._label = cc.LabelTTF.create("Next", "Arial", 40, new cc.Size(100, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
-        // this._label.setColor(new cc.Color3B(0, 0, 0))
-        // this._btn.addChild(this._label, 1111)
+        this._resultView = cc.LayerColor.create(new cc.Color3B(40,40,40), winSize.width+20, winSize.height+20)
+        this.addChild(this._resultView, 20)
+        this._resultView.setOpacity(220)
+        this._resultView.setVisible(false)
 
+        var sptRetry1 = cc.Sprite.create("res/retry1.png")
+        var sptRetry2 = cc.Sprite.create("res/retry2.png")
+        var retry = cc.MenuItemSprite.create(sptRetry1, sptRetry2, null, function () {
+            this._imgShuffleIdxs = shuffle(this._imgShuffleIdxs)
+            this._resultView.setVisible(false)
+            var d = new Date();
+            this._beginTime = d.getTime()
+            this.reset(0)
+        },this);
+
+        retry.setScale(0.75, 0.75)
+
+        var spt1 = cc.Sprite.create("res/appStore1.png")
+        var spt2 = cc.Sprite.create("res/appStore2.png")
+
+        var appStore = cc.MenuItemSprite.create(spt1, spt2, null, function () {
+             window.location.href = APP_STORE_URL
+        },this);
+
+        var menu1 = cc.Menu.create(retry);
+        // menu.alignItemsVerticallyWithPadding(10);
+        this._resultView.addChild(menu1, 0);
+        menu1.setPosition(cc.p(130, 100));
+
+        var menu2 = cc.Menu.create(appStore);
+        // menu.alignItemsVerticallyWithPadding(10);
+        this._resultView.addChild(menu2, 0);
+        menu2.setPosition(cc.p(winSize.width-200, 100));
+
+        //time label
+        this._timeLabel = cc.LabelTTF.create("", "Arial", 70, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
+        this._timeLabel.setColor(new cc.Color3B(255, 197, 131))
+        this._timeLabel.setPosition(winSize.width / 2, 880)
+        this._resultView.addChild(this._timeLabel, 1)
+
+        //name lebel
+        var y = 470
+        this._nameLabel = cc.LabelTTF.create("", "Arial", 40, new cc.Size(300, 600), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_TOP)
+        this._nameLabel.setPosition(230, y)
+        this._nameLabel.setString("AA\nbb\ncc\nddd\neee\nff\nAA\nbb\ncc\nddd")
+        this._resultView.addChild(this._nameLabel, 1)
+
+        //score lebel
+        this._scoreLabel = cc.LabelTTF.create("", "Arial", 40, new cc.Size(300, 600), cc.TEXT_ALIGNMENT_RIGHT, cc.TEXT_ALIGNMENT_TOP)
+        this._scoreLabel.setPosition(420, y)
+        this._scoreLabel.setString("2:45.432\n2:45.432\n2:45.432\n2:45.432\n2:45.432\n2:45.432\n2:45.432\n2:45.432\n2:45.432\n2:45.432\n")
+        this._resultView.addChild(this._scoreLabel, 1)
+
+        //
+        var nameString = ""
+        var scoreString = ""
+        for (var i in g_socialPack.Ranks) {
+            var rank = parseInt(i) + 1
+            if (i == 9) {
+                nameString += rank + ". " + g_socialPack.Ranks[i].Name + "\n"
+            } else {
+                nameString += rank + ".   " + g_socialPack.Ranks[i].Name + "\n"
+            }
+            
+            var msec = g_socialPack.Ranks[i].Msec
+            var s = Math.floor(msec/1000)
+            var min = Math.floor(s / 60)
+            var sec = padLeft(s%60+"", 2)
+            var ms = padLeft(msec%1000+"", 3)
+
+            scoreString += min + ":" + sec + "." + ms + "\n"
+        }
+        this._nameLabel.setString(nameString)
+        this._scoreLabel.setString(scoreString)
+
+        //start view
+        this._startView = cc.LayerColor.create(new cc.Color3B(0,0,0), winSize.width, winSize.height);
+        this.addChild(this._startView, 20)
+
+        var bg = cc.Sprite.create(g_bgUrl)
+        this._startView.addChild(bg, 0)
+        bg.setPosition(320, 480)
+
+        var sz = bg.getContentSize();
+        var scaleW = winSize.width/sz.width
+        var scaleH = winSize.height/sz.height
+        if (scaleW >= scaleH) {
+            bg.setScale(scaleW)
+        } else {
+            bg.setScale(scaleH)
+        }
+
+        //cover
+        var cover = cc.LayerColor.create(new cc.Color3B(40,40,40), winSize.width+20, winSize.height+20)
+        this._startView.addChild(cover, 0)
+        cover.setOpacity(200)
+        
+        //start button
+        var sptStart1 = cc.Sprite.create("res/start1.png")
+        var sptStart2 = cc.Sprite.create("res/start2.png")
+        var start = cc.MenuItemSprite.create(sptStart1, sptStart2, null, function () {
+            var d = new Date();
+            this._beginTime = d.getTime()
+            this._startView.setVisible(false)
+        },this);
+        start.setScale(0.75, 0.75)
+        start.setOpacity(160)
+
+        var startMenu = cc.Menu.create(start);
+        this._startView.addChild(startMenu, 1);
+        startMenu.setPosition(cc.p(winSize.width/2, 140));
+
+        //name label
+        var y = 420
+        this._startNameLabel = cc.LabelTTF.create("", "Arial", 36, new cc.Size(300, 600), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_TOP)
+        this._startNameLabel.setPosition(230, y)
+        this._startView.addChild(this._startNameLabel, 1)
+
+        //score label
+        this._startScoreLabel = cc.LabelTTF.create("", "Arial", 36, new cc.Size(300, 600), cc.TEXT_ALIGNMENT_RIGHT, cc.TEXT_ALIGNMENT_TOP)
+        this._startScoreLabel.setPosition(420, y)
+        this._startView.addChild(this._startScoreLabel, 1)
+
+        //title label
+        this._titleLabel = cc.LabelTTF.create("", "Arial", 40, new cc.Size(600, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_TOP)
+        this._titleLabel.setPosition(winSize.width/2, 820)
+        this._titleLabel.setString(g_socialPack.Pack.Title)
+        this._startView.addChild(this._titleLabel, 1)
+        //rank
+        var nameString = ""
+        var scoreString = ""
+        for (var i in g_socialPack.Ranks) {
+            var rank = parseInt(i) + 1
+            if (i == 9) {
+                nameString += rank + ". " + g_socialPack.Ranks[i].Name + "\n"
+            } else {
+                nameString += rank + ".   " + g_socialPack.Ranks[i].Name + "\n"
+            }
+
+            var timeStr = msecToStr(g_socialPack.Ranks[i].Msec)
+            scoreString += timeStr + "\n"
+        }
+        this._startNameLabel.setString(nameString)
+        this._startScoreLabel.setString(scoreString)
+
+        //fixme
+        var g_userName = getCookie("userName")
+        if (g_userName == "") {
+            g_userName = prompt("请输入您的名字以便于提交成绩");
+            if (g_userName != null) {
+                setCookie("userName", g_userName, 30)
+            }
+        }
+        console.log(g_userName)
+        
+        //
         this.reset(0)
 
         return true;
@@ -210,7 +408,7 @@ var SliderLayer = cc.Layer.extend({
         }
     },
     onTouchesBegan:function (touches, event) {
-        if (this._touch) {
+        if (this._touch || this._startView.isVisible()) {
             return
         }
 
@@ -220,8 +418,6 @@ var SliderLayer = cc.Layer.extend({
         if (this._isCompleted) {
             if (this._imgIdx < g_imageUrls.length-1) {
                 this.reset(this._imgIdx + 1)
-            } else {
-                window.location.href = "http://baidu.com"
             }
             return
         }
@@ -237,6 +433,9 @@ var SliderLayer = cc.Layer.extend({
         }
     },
     onTouchesMoved:function (touches, event) {
+        if (this._startView.isVisible()) {
+            return
+        }
         var touch = touches[0];
         var resort = false;
         for (var i = 0; i < this._sliders.length; i++) {
@@ -255,7 +454,7 @@ var SliderLayer = cc.Layer.extend({
             }
         }
         if (resort) {
-            cc.AudioEngine.getInstance().playEffect("res/tink.mp3");
+            // cc.AudioEngine.getInstance().playEffect("res/tink.mp3");
             for (var i = 0; i < this._sliders.length; i++) {
                 var slider = this._sliders[i]
                 var y = this._sliderY0 - i * this._sliderH;
@@ -299,15 +498,62 @@ var SliderLayer = cc.Layer.extend({
             if (this._imgIdx < g_imageUrls.length-1) {
                 // this.reset(this._imgIdx + 1)
                 this._btn.setVisible(true)
-                cc.AudioEngine.getInstance().playEffect("res/success.mp3");
+                // cc.AudioEngine.getInstance().playEffect("res/success.mp3");
             } else {
-                cc.AudioEngine.getInstance().playEffect("res/finish.mp3");
+                this.onFinish()
             }
         }
         this._isCompleted = complete;
     },
     onTouchesCancelled:function (touches, event) {
         console.log("onTouchesCancelled");
+    },
+    onFinish: function () {
+        //
+        this._resultView.setVisible(true)
+        this._resultView.setOpacity(0)
+        var fadeto = cc.FadeTo.create(0.4, 200)
+        var ease = cc.EaseSineOut.create(fadeto)
+        this._resultView.runAction(ease)
+        // cc.AudioEngine.getInstance().playEffect("res/finish.mp3");
+
+        var d = new Date()
+        var t = d.getTime()
+        var mSec = t - this._beginTime
+        this._timeLabel.setString(msecToStr(mSec))
+
+        //submit
+        var url = HOST + "social/play"
+        var data = {
+            "Key": g_key,
+            "CheckSum": "xxxx",
+            "UserName": "狗狗",
+            "Msec": mSec
+        }
+        var self = this
+        $.post(url, JSON.stringify(data), function(resp){
+            console.log(resp)
+            var nameString = ""
+            var scoreString = ""
+            for (var i in resp.Ranks) {
+                var rank = parseInt(i) + 1
+                var name = resp.Ranks[i].Name
+                if (i == 9) {
+                    nameString += rank + ". " + name + "\n"
+                } else {
+                    nameString += rank + ".   " + name + "\n"
+                }
+
+                var timeStr = msecToStr(resp.Ranks[i].Msec)
+                if (name == data.UserName) {
+                    scoreString += "* "
+                }
+                scoreString += timeStr + "\n"
+            }
+            self._nameLabel.setString(nameString)
+            self._scoreLabel.setString(scoreString)
+
+        }, "json")
     }
 });
 

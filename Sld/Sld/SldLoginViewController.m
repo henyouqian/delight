@@ -82,6 +82,8 @@
         self.emailInput.text = username;
         self.passwordInput.text = password;
     }
+    //self.emailInput.text = @"test@baidu.com";
+    //self.passwordInput.text = @"123456";
     
     //button round corner
     CALayer *btnLayer = [_okButton layer];

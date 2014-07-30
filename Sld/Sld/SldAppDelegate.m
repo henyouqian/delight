@@ -9,6 +9,7 @@
 #import "SldAppDelegate.h"
 #import "SldUtil.h"
 #import "SldHttpSession.h"
+#import "SldConfig.h"
 
 @implementation SldAppDelegate
 
@@ -18,14 +19,14 @@
     NSString *imgCacheDir = makeDocPath(@"imgCache");
     [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
     
-    //
-//    [TalkingData setExceptionReportEnabled:YES];
-//    [TalkingData sessionStarted:@"A3E09989D8D0FD60D090570D5F60E1F5" withChannelId:@"appstore"];
-    //[MobClick startWithAppkey:@"53aeb00356240bdcb8050c26"];
-    [Flurry setCrashReportingEnabled:YES];
-    [Flurry startSession:@"2P9DTVNTFZS8YBZ36QBZ"];
+    //conf
+    SldConfig *conf = [SldConfig getInstance];
     
-    [AdMoGoInterstitialManager setAppKey:@"8c0728f759464dcda07c81afb00d3bf5"];
+    //
+    [Flurry setCrashReportingEnabled:YES];
+    [Flurry startSession:conf.FLURRY_KEY];
+    
+    [AdMoGoInterstitialManager setAppKey:conf.MOGO_KEY];
     [[AdMoGoInterstitialManager shareInstance] initDefaultInterstitial];
     
     //check version
@@ -63,8 +64,8 @@
     }];
     
     //umeng
-    [UMSocialData setAppKey:@"53aeb00356240bdcb8050c26"];
-    [UMSocialWechatHandler setWXAppId:@"wxe2fdd22f81b2eb28" url:@"http://www.umeng.com/social"];
+    [UMSocialData setAppKey:conf.UMENG_SOCIAL_KEY];
+    [UMSocialWechatHandler setWXAppId:conf.WEIXIN_KEY url:@"http://www.umeng.com/social"];
     
     
     return YES;

@@ -66,6 +66,7 @@ var cocos2dApp = cc.Application.extend({
         };
         //var key = parseInt(getUrlParam("key")) 
         var key = getUrlParam("key")
+        g_key = key
         var data = {
             "Key": key
         }
@@ -82,10 +83,14 @@ var cocos2dApp = cc.Application.extend({
                 reses.push({src:url})
                 g_imageUrls.push(url)
             }
+            g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
+            reses.push({src:g_bgUrl})
 
             cc.LoaderScene.preload(reses, function () {
                 director.replaceScene(new app.startScene());
             }, app);
+
+            
 
         }, "json")
 

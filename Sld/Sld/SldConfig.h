@@ -19,4 +19,8 @@ extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
 @property (nonatomic) NSString *STORE_ID;
 @property (nonatomic) NSString *HOST;
 @property (nonatomic) NSString *HTML5_URL;
+@property (nonatomic) NSString *FLURRY_KEY;
+@property (nonatomic) NSString *MOGO_KEY;
+@property (nonatomic) NSString *UMENG_SOCIAL_KEY;
+@property (nonatomic) NSString *WEIXIN_KEY;
 @end

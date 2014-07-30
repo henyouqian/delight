@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
                BuildableName = "pintu.app"
-               BlueprintName = "pintu"
-               ReferencedContainer = "container:pintu.xcodeproj">
+               BlueprintName = "pin"
+               ReferencedContainer = "container:pin.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,8 +34,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B31EE7F218F05BE60047E9FD"
                BuildableName = "pintuTests.xctest"
-               BlueprintName = "pintuTests"
-               ReferencedContainer = "container:pintu.xcodeproj">
+               BlueprintName = "pinTests"
+               ReferencedContainer = "container:pin.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,8 +44,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
             BuildableName = "pintu.app"
-            BlueprintName = "pintu"
-            ReferencedContainer = "container:pintu.xcodeproj">
+            BlueprintName = "pin"
+            ReferencedContainer = "container:pin.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
             BuildableName = "pintu.app"
-            BlueprintName = "pintu"
-            ReferencedContainer = "container:pintu.xcodeproj">
+            BlueprintName = "pin"
+            ReferencedContainer = "container:pin.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -86,8 +86,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B31EE7C718F05BE60047E9FD"
             BuildableName = "pintu.app"
-            BlueprintName = "pintu"
-            ReferencedContainer = "container:pintu.xcodeproj">
+            BlueprintName = "pin"
+            ReferencedContainer = "container:pin.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
