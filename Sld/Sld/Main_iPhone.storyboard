@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zZm-Ci-tiO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zZm-Ci-tiO">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -2033,7 +2033,7 @@
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXB-M3-T2M">
-                                <rect key="frame" x="100" y="322" width="160" height="34"/>
+                                <rect key="frame" x="100" y="272" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="账 号">
@@ -2045,7 +2045,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mK2-6d-DgQ">
-                                <rect key="frame" x="100" y="372" width="160" height="34"/>
+                                <rect key="frame" x="100" y="322" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="音 乐">
@@ -2057,11 +2057,11 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlUser.png" translatesAutoresizingMaskIntoConstraints="NO" id="7aW-RV-I4f">
-                                <rect key="frame" x="110" y="327" width="24" height="24"/>
+                                <rect key="frame" x="110" y="277" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlMusic.png" translatesAutoresizingMaskIntoConstraints="NO" id="JMQ-X2-8oK">
-                                <rect key="frame" x="110" y="377" width="24" height="24"/>
+                                <rect key="frame" x="110" y="327" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlBattle.png" translatesAutoresizingMaskIntoConstraints="NO" id="b9Q-Bj-53w">
@@ -2085,19 +2085,19 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yh8-Oc-bsx">
-                                <rect key="frame" x="100" y="272" width="160" height="34"/>
+                                <rect key="frame" x="100" y="373" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="出 版">
+                                <state key="normal" title="吐 槽">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="ZaF-Nn-xfe" kind="push" id="PNH-zv-z0R"/>
+                                    <segue destination="iBk-KQ-H5e" kind="push" id="vEk-7A-23N"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlPublish.png" translatesAutoresizingMaskIntoConstraints="NO" id="jXP-KN-Q4K">
-                                <rect key="frame" x="110" y="277" width="24" height="24"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlChat.png" translatesAutoresizingMaskIntoConstraints="NO" id="jXP-KN-Q4K">
+                                <rect key="frame" x="110" y="378" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlTimer.png" translatesAutoresizingMaskIntoConstraints="NO" id="IB3-ps-Bsb">
@@ -2146,6 +2146,102 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bgu-Sr-VvD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1360" y="-869"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="2yb-cK-pN1">
+            <objects>
+                <tableViewController id="iBk-KQ-H5e" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="22R-fh-Ak7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <textView key="tableHeaderView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="游戏的Bug以及对游戏的建议和意见都发这里，后面的版本会进行改进。二店长会看但不会回复，因为回复功能没做。不准卖萌！不准秀恩爱！" selectable="NO" id="n9X-PM-IWr">
+                            <rect key="frame" x="0.0" y="64" width="320" height="66"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.83414143323898315" green="0.83411645889282227" blue="0.83413064479827881" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" rowHeight="97" id="wct-Mj-0L1" customClass="CommentCell">
+                                <rect key="frame" x="0.0" y="152" width="320" height="97"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wct-Mj-0L1" id="Ya1-fX-i8r">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="96"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <textView clipsSubviews="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut " translatesAutoresizingMaskIntoConstraints="NO" id="vdi-n5-kZy">
+                                            <rect key="frame" x="60" y="22" width="250" height="74"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PNp-W9-h1c">
+                                            <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.55590439189999996" green="0.70449810719999995" blue="0.79562043800000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gYP-Hl-HF7">
+                                            <rect key="frame" x="64" y="8" width="234" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="vdi-n5-kZy" firstAttribute="top" secondItem="Ya1-fX-i8r" secondAttribute="top" constant="22" id="L3I-e4-a6D"/>
+                                        <constraint firstAttribute="trailing" secondItem="vdi-n5-kZy" secondAttribute="trailing" constant="10" id="PT5-Od-Mpm"/>
+                                        <constraint firstAttribute="bottom" secondItem="vdi-n5-kZy" secondAttribute="bottom" id="r1V-rA-3DZ"/>
+                                        <constraint firstItem="vdi-n5-kZy" firstAttribute="leading" secondItem="Ya1-fX-i8r" secondAttribute="leading" constant="60" id="zSS-mq-Pb1"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="iconView" destination="PNp-W9-h1c" id="cSp-00-0F2"/>
+                                    <outlet property="textView" destination="vdi-n5-kZy" id="31P-B3-wm6"/>
+                                    <outlet property="userNameLabel" destination="gYP-Hl-HF7" id="2p7-Lf-F6q"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="iBk-KQ-H5e" id="4hs-1d-hPU"/>
+                            <outlet property="delegate" destination="iBk-KQ-H5e" id="h72-5E-mt1"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="cJa-5Z-ol5">
+                        <barButtonItem key="rightBarButtonItem" image="glyphicons_150_edit.png" id="k5e-Iq-dXc">
+                            <connections>
+                                <segue destination="hxY-d3-oE5" kind="push" id="722-4u-Ehj"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y2m-Va-fXD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-710" y="-1573"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ShH-vE-ouN">
+            <objects>
+                <viewController id="hxY-d3-oE5" sceneMemberID="viewController">
+                    <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="xtd-Y9-veu">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <navigationItem key="navigationItem" id="b2t-kR-UNR">
+                        <barButtonItem key="rightBarButtonItem" title="发送" id="vPP-cB-zHK"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q52-rG-vNG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-324" y="-1576"/>
         </scene>
         <!--Sld Pack Test Controller-->
         <scene sceneID="KJG-WC-RL4">
@@ -2651,6 +2747,8 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="bgImageView" destination="4nc-mZ-je4" id="agy-xa-5PG"/>
                         <outlet property="tableView" destination="9LF-PB-Bpx" id="OBO-pJ-isQ"/>
@@ -3331,11 +3429,11 @@
         <image name="glyphicons_150_edit.png" width="24" height="21"/>
         <image name="locker.png" width="256" height="256"/>
         <image name="otlBattle.png" width="32" height="32"/>
+        <image name="otlChat.png" width="32" height="32"/>
         <image name="otlCup.png" width="32" height="32"/>
         <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlFire48.png" width="24" height="24"/>
         <image name="otlMusic.png" width="32" height="32"/>
-        <image name="otlPublish.png" width="32" height="32"/>
         <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlStar.png" width="32" height="32"/>
         <image name="otlStar48.png" width="24" height="24"/>

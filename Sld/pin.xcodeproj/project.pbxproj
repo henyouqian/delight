@@ -85,6 +85,7 @@
 		D005210E19715BA100F7F915 /* SldBetController.m in Sources */ = {isa = PBXBuildFile; fileRef = D005210D19715BA100F7F915 /* SldBetController.m */; };
 		D00521161972FE5300F7F915 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D00521151972FE5300F7F915 /* Main_iPhone.storyboard */; };
 		D005211A1976A3AC00F7F915 /* otlStar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00521191976A3AC00F7F915 /* otlStar@2x.png */; };
+		D007892F198ABFCA00945D50 /* otlChat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D007892E198ABFCA00945D50 /* otlChat@2x.png */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -388,6 +389,7 @@
 		D005210D19715BA100F7F915 /* SldBetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBetController.m; sourceTree = "<group>"; };
 		D00521151972FE5300F7F915 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D00521191976A3AC00F7F915 /* otlStar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlStar@2x.png"; sourceTree = "<group>"; };
+		D007892E198ABFCA00945D50 /* otlChat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlChat@2x.png"; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
@@ -847,6 +849,7 @@
 				D01044901945DCE9008DFF8D /* cupBronze@2x.png */,
 				D00F63F819407FD200C8EA3F /* cupGold@2x.png */,
 				D00F63F919407FD200C8EA3F /* cupSilver@2x.png */,
+				D007892E198ABFCA00945D50 /* otlChat@2x.png */,
 				D062EFEE19857F22004AD4A9 /* otlPublish@2x.png */,
 				D0A55610196EADD800369401 /* otlBattle@2x.png */,
 				D0A55611196EADD800369401 /* otlCup@2x.png */,
@@ -1292,6 +1295,7 @@
 				B3C1BB89191133910062D50C /* btnBgBlack90.png in Resources */,
 				D0D14B27195B3807009193E6 /* adsmogo_corner.png in Resources */,
 				D0D14B2A195B3807009193E6 /* hengtiao@2x.png in Resources */,
+				D007892F198ABFCA00945D50 /* otlChat@2x.png in Resources */,
 				D0A55615196EADD800369401 /* otlTimer@2x.png in Resources */,
 				D0A55613196EADD800369401 /* otlBattle@2x.png in Resources */,
 				B39E447C191E794800CBB247 /* glyphicons_003_user.png in Resources */,

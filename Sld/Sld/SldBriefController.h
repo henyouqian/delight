@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SldEventListViewController.h"
 
-@interface SldBriefController : UIViewController<UIAlertViewDelegate>
+@interface SldBriefController : UIViewController<UIAlertViewDelegate, UMSocialUIDelegate>
 @property (nonatomic) int highScore;
 @property (nonatomic) int rank;
 @property (nonatomic) NSString *highScoreStr;

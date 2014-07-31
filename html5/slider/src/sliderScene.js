@@ -24,6 +24,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 var APP_STORE_URL = "https://itunes.apple.com/cn/app/pin-pin-pin-pin-pin/id904649492?l=zh&ls=1&mt=8"
+// var APP_STORE_URL = "http://itunes.apple.com/app/id904649492"
+var USER_NAME = "userName"
 
 //cookie
 function getCookie(c_name) {
@@ -89,6 +91,7 @@ var SliderLayer = cc.Layer.extend({
     _startNameLabel:null,
     _startScoreLabel:null,
     _titleLabel:null,
+    _adviceLabel:null,
     MOVE_DURATION:0.1,
     init:function () {
         //////////////////////////////
@@ -111,7 +114,6 @@ var SliderLayer = cc.Layer.extend({
         this.addChild(this._btn, 10);
         this._btn.setPosition(winSize.width-100, 100)
         this._btn.setScale(0.6, 0.6)
-        this._btn.setColor(new cc.Color3B(255,0,0))
         this._btn.setOpacity(200)
 
         this._sliderGroup = cc.Layer.create()
@@ -124,8 +126,11 @@ var SliderLayer = cc.Layer.extend({
         this._resultView = cc.LayerColor.create(new cc.Color3B(40,40,40), winSize.width+20, winSize.height+20)
         this.addChild(this._resultView, 20)
         this._resultView.setOpacity(220)
+
+        //xxx
         this._resultView.setVisible(false)
 
+        //retry
         var sptRetry1 = cc.Sprite.create("res/retry1.png")
         var sptRetry2 = cc.Sprite.create("res/retry2.png")
         var retry = cc.MenuItemSprite.create(sptRetry1, sptRetry2, null, function () {
@@ -138,17 +143,40 @@ var SliderLayer = cc.Layer.extend({
 
         retry.setScale(0.75, 0.75)
 
+        var menuRetry = cc.Menu.create(retry)
+        this._resultView.addChild(menuRetry, 0)
+        menuRetry.setPosition(cc.p(130, 100))
+        menuRetry.setOpacity(120)
+
+        //rename
+        var sptRename1 = cc.Sprite.create("res/rename1.png")
+        var sptRename2 = cc.Sprite.create("res/rename2.png")
+        var renameItem = cc.MenuItemSprite.create(sptRename1, sptRename2, null, function () {
+            showRename = function() {
+                var userName = getCookie(USER_NAME)
+                userName = prompt("请输入您的名字以便于提交成绩", userName);
+                if (userName != null && userName != "") {
+                    setCookie(USER_NAME, userName, 30)
+                    console.log(userName)
+                }
+            }
+            setTimeout("showRename()",100)
+        },this);
+
+        renameItem.setScale(0.4, 0.4)
+
+        var menuRename = cc.Menu.create(renameItem)
+        this._resultView.addChild(menuRename, 0)
+        menuRename.setPosition(cc.p(winSize.width-100, 880))
+        menuRename.setOpacity(120)
+
+        //app store
         var spt1 = cc.Sprite.create("res/appStore1.png")
         var spt2 = cc.Sprite.create("res/appStore2.png")
 
         var appStore = cc.MenuItemSprite.create(spt1, spt2, null, function () {
              window.location.href = APP_STORE_URL
         },this);
-
-        var menu1 = cc.Menu.create(retry);
-        // menu.alignItemsVerticallyWithPadding(10);
-        this._resultView.addChild(menu1, 0);
-        menu1.setPosition(cc.p(130, 100));
 
         var menu2 = cc.Menu.create(appStore);
         // menu.alignItemsVerticallyWithPadding(10);
@@ -200,6 +228,9 @@ var SliderLayer = cc.Layer.extend({
         this._startView = cc.LayerColor.create(new cc.Color3B(0,0,0), winSize.width, winSize.height);
         this.addChild(this._startView, 20)
 
+        //xxx
+        // this._startView.setVisible(false)
+
         var bg = cc.Sprite.create(g_bgUrl)
         this._startView.addChild(bg, 0)
         bg.setPosition(320, 480)
@@ -231,7 +262,7 @@ var SliderLayer = cc.Layer.extend({
 
         var startMenu = cc.Menu.create(start);
         this._startView.addChild(startMenu, 1);
-        startMenu.setPosition(cc.p(winSize.width/2, 140));
+        startMenu.setPosition(cc.p(140, 140));
 
         //name label
         var y = 420
@@ -248,7 +279,30 @@ var SliderLayer = cc.Layer.extend({
         this._titleLabel = cc.LabelTTF.create("", "Arial", 40, new cc.Size(600, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_TOP)
         this._titleLabel.setPosition(winSize.width/2, 820)
         this._titleLabel.setString(g_socialPack.Pack.Title)
+        this._titleLabel.setColor(new cc.Color3B(255, 197, 131))
         this._startView.addChild(this._titleLabel, 1)
+
+        //title label
+        this._adviceLabel = cc.LabelTTF.create("", "Arial", 24, new cc.Size(600, 100), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_TOP)
+        this._adviceLabel.setPosition(winSize.width/2, 890)
+        this._adviceLabel.setString("建议锁定屏幕旋转再进行游戏")
+        this._adviceLabel.setColor(new cc.Color3B(244, 75, 116))
+        this._startView.addChild(this._adviceLabel, 1)
+
+        //app store
+        var spt1 = cc.Sprite.create("res/appStore1.png")
+        var spt2 = cc.Sprite.create("res/appStore2.png")
+
+        var appStore = cc.MenuItemSprite.create(spt1, spt2, null, function () {
+             window.location.href = APP_STORE_URL
+        },this);
+
+        var menuAppStore = cc.Menu.create(appStore);
+        // menu.alignItemsVerticallyWithPadding(10);
+        this._startView.addChild(menuAppStore, 0);
+        menuAppStore.setPosition(cc.p(winSize.width-200, 140));
+
+
         //rank
         var nameString = ""
         var scoreString = ""
@@ -265,16 +319,6 @@ var SliderLayer = cc.Layer.extend({
         }
         this._startNameLabel.setString(nameString)
         this._startScoreLabel.setString(scoreString)
-
-        //fixme
-        var g_userName = getCookie("userName")
-        if (g_userName == "") {
-            g_userName = prompt("请输入您的名字以便于提交成绩");
-            if (g_userName != null) {
-                setCookie("userName", g_userName, 30)
-            }
-        }
-        console.log(g_userName)
         
         //
         this.reset(0)
@@ -522,12 +566,21 @@ var SliderLayer = cc.Layer.extend({
         var mSec = t - this._beginTime
         this._timeLabel.setString(msecToStr(mSec))
 
+        //getUserName
+        var userName = getCookie(USER_NAME)
+        while (userName == "") {
+            userName = prompt("请输入您的名字以便于提交成绩");
+            if (userName != null) {
+                setCookie(USER_NAME, userName, 30)
+            }
+        }
+
         //submit
         var url = HOST + "social/play"
         var data = {
             "Key": g_key,
             "CheckSum": "xxxx",
-            "UserName": "狗狗",
+            "UserName": userName,
             "Msec": mSec
         }
         var self = this

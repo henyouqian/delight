@@ -493,26 +493,65 @@ static NSMutableSet *g_updatedPackIdSet = nil;
 }
 
 - (IBAction)onSocial:(id)sender {
-    NSString *path = makeImagePath(_gd.packInfo.thumb);
-    UIImage *image = [UIImage imageWithContentsOfFile:path];
-    NSString *url = [NSString stringWithFormat:@"%@?eventId=%lld", [SldConfig getInstance].HTML5_URL, _gd.eventInfo.id];
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    int msec = 0;
+    if (_gd.eventPlayRecord) {
+        msec = -_gd.eventPlayRecord.highScore;
+    }
     
-    [[[UIAlertView alloc] initWithTitle:@"发给朋友一起玩。朋友将会收到可以直接玩的链接，也可以下载客户端。"
-	                            message:nil
-		               cancelButtonItem:[RIButtonItem itemWithLabel:@"不了" action:^{
-        // Handle "Cancel"
-    }]
-				       otherButtonItems:[RIButtonItem itemWithLabel:@"好的" action:^{
-        [UMSocialData defaultData].extConfig.wechatSessionData.url = url;
-        [UMSocialSnsService presentSnsIconSheetView:self
-                                             appKey:nil
-                                          shareText:@"拼图游戏"
-                                         shareImage:image
-                                    shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline]
-                                           delegate:nil];
-    }], nil] show];
+    UIAlertView* alt = alertNoButton(@"正在生成我的比赛...");
+    NSDictionary *body = @{@"PackId":@(_gd.eventInfo.packId), @"SliderNum":@(_gd.eventInfo.sliderNum), @"Msec":@(msec)};
+    [session postToApi:@"social/newPack" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSString *key = [dict objectForKey:@"Key"];
+        
+        //
+        NSString *path = makeImagePath(_gd.packInfo.thumb);
+        UIImage *image = [UIImage imageWithContentsOfFile:path];
+        NSString *url = [NSString stringWithFormat:@"%@?key=%@", [SldConfig getInstance].HTML5_URL, key];
+        
+        [[[UIAlertView alloc] initWithTitle:@"邀请朋友一起玩。朋友可以直接点开链接挑战，也可以下载客户端一起玩。"
+                                    message:nil
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"不了" action:^{
+            // Handle "Cancel"
+        }]
+                           otherButtonItems:[RIButtonItem itemWithLabel:@"好的" action:^{
+            NSString *text = [NSString stringWithFormat:@"我创建了一场比赛，敢来挑战么？"];
+            if (_gd.eventPlayRecord && _gd.eventPlayRecord.highScore != 0) {
+                text = [NSString stringWithFormat:@"我只用了%@就完成了比赛，敢来挑战么？", formatScore(_gd.eventPlayRecord.highScore)];
+            }
+            [UMSocialData defaultData].extConfig.title = @"";
+            [UMSocialData defaultData].extConfig.wechatSessionData.url = url;
+            [UMSocialSnsService presentSnsIconSheetView:self
+                                                 appKey:nil
+                                              shareText:text
+                                             shareImage:image
+                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline]
+                                               delegate:self];
+        }], nil] show];
+    }];
     
-    
+}
+
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+//    //根据`responseCode`得到发送结果,如果分享成功
+//    if(response.responseCode == UMSResponseCodeSuccess)
+//    {
+//        //得到分享到的微博平台名
+//        NSLog(@"share to sns name is %@",[[response.data allKeys] objectAtIndex:0]);
+//    }
 }
 
 #pragma mark - Navigation

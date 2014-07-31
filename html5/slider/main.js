@@ -24,7 +24,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-// var HOST = "http://sld1_2.pintugame.com/"
+// var HOST = "http://sld.pintugame.com/"
 var HOST = "http://localhost:9998/"
 var QINIU_HOST = "http://dn-pintugame.qbox.me/"
 
