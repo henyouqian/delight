@@ -86,6 +86,7 @@
 		D00521161972FE5300F7F915 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D00521151972FE5300F7F915 /* Main_iPhone.storyboard */; };
 		D005211A1976A3AC00F7F915 /* otlStar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00521191976A3AC00F7F915 /* otlStar@2x.png */; };
 		D007892F198ABFCA00945D50 /* otlChat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D007892E198ABFCA00945D50 /* otlChat@2x.png */; };
+		D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0078931198B8E9800945D50 /* SldAdviceController.m */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -390,6 +391,8 @@
 		D00521151972FE5300F7F915 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D00521191976A3AC00F7F915 /* otlStar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlStar@2x.png"; sourceTree = "<group>"; };
 		D007892E198ABFCA00945D50 /* otlChat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlChat@2x.png"; sourceTree = "<group>"; };
+		D0078930198B8E9800945D50 /* SldAdviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldAdviceController.h; sourceTree = "<group>"; };
+		D0078931198B8E9800945D50 /* SldAdviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldAdviceController.m; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
@@ -778,6 +781,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				D0078930198B8E9800945D50 /* SldAdviceController.h */,
+				D0078931198B8E9800945D50 /* SldAdviceController.m */,
 				D0A555FC1969A8A600369401 /* SldMainMenuController.h */,
 				D0A555FD1969A8A600369401 /* SldMainMenuController.m */,
 				D0A555FF1969B38B00369401 /* SldChallengeListController.h */,
@@ -1433,6 +1438,7 @@
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
 				B374C57B19177B2F00E5C6A2 /* SldGameData.m in Sources */,
 				B31CBEB3190AA47500621165 /* SldButton.m in Sources */,
+				D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* SldUtil.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,

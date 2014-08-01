@@ -2093,7 +2093,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="iBk-KQ-H5e" kind="push" id="vEk-7A-23N"/>
+                                    <segue destination="iBk-KQ-H5e" kind="push" identifier="" id="vEk-7A-23N"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlChat.png" translatesAutoresizingMaskIntoConstraints="NO" id="jXP-KN-Q4K">
@@ -2108,8 +2108,8 @@
                                 <rect key="frame" x="110" y="177" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="全・国・拼・图・大・奖・赛" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Rh-ql-Iuh">
-                                <rect key="frame" x="46" y="89" width="228" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="拼・拼・拼・拼・拼" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Rh-ql-Iuh">
+                                <rect key="frame" x="46" y="99" width="228" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2147,24 +2147,34 @@
             </objects>
             <point key="canvasLocation" x="-1360" y="-869"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Sld Advice Controller-->
         <scene sceneID="2yb-cK-pN1">
             <objects>
-                <tableViewController id="iBk-KQ-H5e" sceneMemberID="viewController">
+                <tableViewController id="iBk-KQ-H5e" customClass="SldAdviceController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="22R-fh-Ak7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <textView key="tableHeaderView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="游戏的Bug以及对游戏的建议和意见都发这里，后面的版本会进行改进。二店长会看但不会回复，因为回复功能没做。不准卖萌！不准秀恩爱！" selectable="NO" id="n9X-PM-IWr">
-                            <rect key="frame" x="0.0" y="64" width="320" height="66"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" red="0.83414143323898315" green="0.83411645889282227" blue="0.83413064479827881" alpha="1" colorSpace="calibratedRGB"/>
-                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                        </textView>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" rowHeight="97" id="wct-Mj-0L1" customClass="CommentCell">
-                                <rect key="frame" x="0.0" y="152" width="320" height="97"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceHeaderCell" rowHeight="70" id="QX4-zi-uzR">
+                                <rect key="frame" x="0.0" y="86" width="320" height="70"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QX4-zi-uzR" id="o1p-5M-8Nx">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="游戏的Bug以及对游戏的建议和意见都发这里，后面的版本会进行改进。二店长会看但不会回复，因为回复功能没做。" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
+                                            <rect key="frame" x="0.0" y="1" width="320" height="66"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.83414143323898315" green="0.83411645889282227" blue="0.83413064479827881" alpha="1" colorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceCell" rowHeight="97" id="wct-Mj-0L1" customClass="AdviceCell">
+                                <rect key="frame" x="0.0" y="156" width="320" height="97"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wct-Mj-0L1" id="Ya1-fX-i8r">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="96"/>
@@ -2212,7 +2222,7 @@
                     <navigationItem key="navigationItem" id="cJa-5Z-ol5">
                         <barButtonItem key="rightBarButtonItem" image="glyphicons_150_edit.png" id="k5e-Iq-dXc">
                             <connections>
-                                <segue destination="hxY-d3-oE5" kind="push" id="722-4u-Ehj"/>
+                                <segue destination="gJu-2X-o4a" kind="push" identifier="addAdviceSeg" id="tGd-Wz-Yca"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2223,25 +2233,43 @@
             </objects>
             <point key="canvasLocation" x="-710" y="-1573"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="ShH-vE-ouN">
+        <!--Sld Add Advice Controller-->
+        <scene sceneID="SBK-gh-Re8">
             <objects>
-                <viewController id="hxY-d3-oE5" sceneMemberID="viewController">
-                    <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="xtd-Y9-veu">
+                <viewController id="gJu-2X-o4a" customClass="SldAddAdviceController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qyq-2c-VzQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="EiS-0z-NtS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="LKP-hO-0Uu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                    </textView>
-                    <navigationItem key="navigationItem" id="b2t-kR-UNR">
-                        <barButtonItem key="rightBarButtonItem" title="发送" id="vPP-cB-zHK"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rVF-0n-WOq">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="5pv-9o-ToZ">
+                        <barButtonItem key="rightBarButtonItem" title="发送" id="Rkc-9r-kKw">
+                            <connections>
+                                <action selector="onSendButton:" destination="gJu-2X-o4a" id="1oE-hB-f5u"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="textView" destination="rVF-0n-WOq" id="NyZ-kk-TDw"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="q52-rG-vNG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="034-KQ-jTm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-324" y="-1576"/>
+            <point key="canvasLocation" x="-207" y="-1573"/>
         </scene>
         <!--Sld Pack Test Controller-->
         <scene sceneID="KJG-WC-RL4">
@@ -3450,7 +3478,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="DQE-9R-GEV"/>
         <segue reference="P1s-93-KzK"/>
-        <segue reference="j48-kd-luC"/>
     </inferredMetricsTieBreakers>
 </document>
