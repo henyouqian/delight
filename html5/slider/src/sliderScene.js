@@ -69,6 +69,10 @@ function msecToStr(msec) {
     return min + ":" + sec + "." + ms
 }
 
+function showDownLoadDesc() {
+    alert("如无法跳转到App Store(苹果应用商店)。请在App Store中搜索《拼拼拼拼拼》下载，谢谢。")
+}
+
 var SliderLayer = cc.Layer.extend({
     _imgIdx:0,
     _sliderNum:6,
@@ -176,6 +180,7 @@ var SliderLayer = cc.Layer.extend({
 
         var appStore = cc.MenuItemSprite.create(spt1, spt2, null, function () {
              window.location.href = APP_STORE_URL
+             setTimeout("showDownLoadDesc()",1000)
         },this);
 
         var menu2 = cc.Menu.create(appStore);
@@ -295,6 +300,7 @@ var SliderLayer = cc.Layer.extend({
 
         var appStore = cc.MenuItemSprite.create(spt1, spt2, null, function () {
              window.location.href = APP_STORE_URL
+             setTimeout("showDownLoadDesc()",1000)
         },this);
 
         var menuAppStore = cc.Menu.create(appStore);

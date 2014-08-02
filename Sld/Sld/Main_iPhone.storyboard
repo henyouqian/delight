@@ -2151,20 +2151,20 @@
         <scene sceneID="2yb-cK-pN1">
             <objects>
                 <tableViewController id="iBk-KQ-H5e" customClass="SldAdviceController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="22R-fh-Ak7">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="22R-fh-Ak7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceHeaderCell" rowHeight="70" id="QX4-zi-uzR">
-                                <rect key="frame" x="0.0" y="86" width="320" height="70"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceHeaderCell" rowHeight="50" id="QX4-zi-uzR">
+                                <rect key="frame" x="0.0" y="86" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QX4-zi-uzR" id="o1p-5M-8Nx">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="游戏的Bug以及对游戏的建议和意见都发这里，后面的版本会进行改进。二店长会看但不会回复，因为回复功能没做。" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
-                                            <rect key="frame" x="0.0" y="1" width="320" height="66"/>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="游戏的Bug以及对游戏的建议、吐槽什么的都发这里，后面的版本二店长会进行改进 。" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
+                                            <rect key="frame" x="0.0" y="1" width="320" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="0.83414143323898315" green="0.83411645889282227" blue="0.83413064479827881" alpha="1" colorSpace="calibratedRGB"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
@@ -2174,7 +2174,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceCell" rowHeight="97" id="wct-Mj-0L1" customClass="AdviceCell">
-                                <rect key="frame" x="0.0" y="156" width="320" height="97"/>
+                                <rect key="frame" x="0.0" y="136" width="320" height="97"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wct-Mj-0L1" id="Ya1-fX-i8r">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="96"/>
@@ -2198,6 +2198,13 @@
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="黑龙江" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0on-QU-pdo">
+                                            <rect key="frame" x="8" y="57" width="48" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="vdi-n5-kZy" firstAttribute="top" secondItem="Ya1-fX-i8r" secondAttribute="top" constant="22" id="L3I-e4-a6D"/>
@@ -2206,9 +2213,9 @@
                                         <constraint firstItem="vdi-n5-kZy" firstAttribute="leading" secondItem="Ya1-fX-i8r" secondAttribute="leading" constant="60" id="zSS-mq-Pb1"/>
                                     </constraints>
                                 </tableViewCellContentView>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="iconView" destination="PNp-W9-h1c" id="cSp-00-0F2"/>
+                                    <outlet property="teamLabel" destination="0on-QU-pdo" id="F8I-kb-fYV"/>
                                     <outlet property="textView" destination="vdi-n5-kZy" id="31P-B3-wm6"/>
                                     <outlet property="userNameLabel" destination="gYP-Hl-HF7" id="2p7-Lf-F6q"/>
                                 </connections>
@@ -2249,7 +2256,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -2257,6 +2263,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="5pv-9o-ToZ">
+                        <barButtonItem key="leftBarButtonItem" title="取消" id="3Rv-GA-dXJ">
+                            <connections>
+                                <action selector="onCancelButton:" destination="gJu-2X-o4a" id="KNs-92-NAY"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="发送" id="Rkc-9r-kKw">
                             <connections>
                                 <action selector="onSendButton:" destination="gJu-2X-o4a" id="1oE-hB-f5u"/>
@@ -3084,7 +3095,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UpJ-8q-QY2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="881" y="-1463"/>
+            <point key="canvasLocation" x="859" y="-1475"/>
         </scene>
         <!--Sld Bet Popup Controller-->
         <scene sceneID="aNX-cC-0DY">

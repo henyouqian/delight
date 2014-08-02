@@ -13,11 +13,15 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
 
+static const int ADVICE_LIMIT = 20;
+static SldAdviceController *_adviceController = nil;
+
 //AdviceCell
 @interface AdviceCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIImageView *iconView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @end
 
 @implementation AdviceCell
@@ -27,13 +31,14 @@
 
 //AdviceData
 @interface AdviceData : NSObject
-@property (nonatomic) UInt64 id;
-@property (nonatomic) UInt64 userId;
+@property (nonatomic) SInt64 id;
+@property (nonatomic) SInt64 userId;
 @property (nonatomic) NSString *userName;
 @property (nonatomic) NSString *gravatarKey;
 @property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) NSString *team;
 @property (nonatomic) NSString *text;
+@property (nonatomic) SInt64 time;
 @end
 
 @implementation AdviceData
@@ -41,17 +46,18 @@
     AdviceData *data = [[AdviceData alloc] init];
     NSNumber *nId = [dict objectForKey:@"Id"];
     if (nId) {
-        data.id = [nId unsignedLongLongValue];
+        data.id = [nId longLongValue];
     }
     NSNumber *nUserId = [dict objectForKey:@"UserId"];
     if (nUserId) {
-        data.userId = [nUserId unsignedLongLongValue];
+        data.userId = [nUserId longLongValue];
     }
-    data.userName = [dict objectForKey:@"UserName"];
+    data.userName = [dict objectForKey:@"UserNickName"];
     data.gravatarKey = [dict objectForKey:@"GravatarKey"];
     data.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
     data.team = [dict objectForKey:@"Team"];
     data.text = [dict objectForKey:@"Text"];
+    data.time = [(NSNumber*)[dict objectForKey:@"TimeUnix"] longLongValue];
 
     return data;
 }
@@ -66,6 +72,7 @@
 @property (nonatomic) NSString *adviceText;
 @property (nonatomic) SldBottomRefreshControl *bottomRefresh;
 @property (nonatomic) BOOL underBottom;
+@property (nonatomic) BOOL reachEnd;
 @end
 
 @implementation SldAdviceController
@@ -77,6 +84,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _adviceController = self;
     
     _gameData = [SldGameData getInstance];
     
@@ -103,10 +112,9 @@
 }
 
 - (void)update {
-    SldGameData *gameData = [SldGameData getInstance];
-    NSDictionary *body = @{@"PackId":@(gameData.packInfo.id), @"Key": @0, @"Limit": @20};
+    NSDictionary *body = @{@"StartId": @0, @"Limit": @(ADVICE_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"pack/getComments" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"etc/listAdvice" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [self.refreshControl endRefreshing];
         if (error) {
             alertHTTPError(error, data);
@@ -119,6 +127,7 @@
         }
         
         _adviceDatas = [NSMutableArray arrayWithCapacity:[array count]];
+        _reachEnd = NO;
         for (NSDictionary *dict in array) {
             AdviceData *adviceData = [AdviceData adviceDataWithDictionary:dict];
             [_adviceDatas addObject:adviceData];
@@ -135,8 +144,8 @@
     if (section == 0) {
         return 1;
     } else if (section == 1) {
-//        return [_adviceDatas count];
-        return 10;
+        return [_adviceDatas count];
+//        return 10;
     }
     return 0;
 }
@@ -149,12 +158,12 @@
         AdviceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"adviceCell" forIndexPath:indexPath];
 //        cell.textView.scrollsToTop = NO;
         
-        //        AdviceData* AdviceData = [_adviceDatas objectAtIndex:indexPath.row];
-        //        cell.textView.text = AdviceData.text;
-        //        cell.userNameLabel.text = AdviceData.userName;
-        //
-        //
-        //        [SldUtil loadAvatar:cell.iconView gravatarKey:AdviceData.gravatarKey customAvatarKey:AdviceData.customAvatarKey];
+        AdviceData* adviceData = [_adviceDatas objectAtIndex:indexPath.row];
+        cell.textView.text = adviceData.text;
+        cell.userNameLabel.text = adviceData.userName;
+        cell.teamLabel.text = adviceData.team;
+
+        [SldUtil loadAvatar:cell.iconView gravatarKey:adviceData.gravatarKey customAvatarKey:adviceData.customAvatarKey];
         //
         //        cell.backgroundColor = [UIColor clearColor];
         return cell;
@@ -164,12 +173,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return 70;
+        return 50;
     } else if (indexPath.section == 1) {
-//        AdviceData* AdviceData = [_adviceDatas objectAtIndex:indexPath.row];
-//        float h = [self textHeightForText:AdviceData.text width:250 fontName:@"HelveticaNeue" fontSize:14];
-//        return MAX(h+22+10, 68);
-        return 60;
+        AdviceData* AdviceData = [_adviceDatas objectAtIndex:indexPath.row];
+        float h = [self textHeightForText:AdviceData.text width:250 fontName:@"HelveticaNeue" fontSize:14];
+        return MAX(h+22+30, 68);
+//        return 60;
     }
     return 0;
 }
@@ -195,38 +204,54 @@
 
 
 - (void)onSendAdvice {
-    _adviceText = nil;
     [self update];
 }
 
-- (IBAction)cancelAdvice:(UIStoryboardSegue *)segue {
-    SldAddAdviceController* vc = (SldAddAdviceController*)segue.sourceViewController;
-    _adviceText = vc.textView.text;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier compare:@"addAdviceSeg"] == 0) {
-        SldAddAdviceController* vc = (SldAddAdviceController*)segue.destinationViewController;
-        vc.restoreText = _adviceText;
-        vc.adviceController = self;
-    }
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    if (_adviceDatas.count == 0) {
-//        return;
-//    }
+    if (_adviceDatas.count == 0 || _reachEnd) {
+        return;
+    }
     
-    if ((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height) {
+    if (scrollView.contentSize.height > scrollView.frame.size.height
+        &&(scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height) {
         if (!_underBottom) {
             _underBottom = YES;
             if (!_bottomRefresh.refreshing) {
                 [_bottomRefresh beginRefreshing];
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                SInt64 startId = 0;
+                if (_adviceDatas.count > 0) {
+                    AdviceData *data = [_adviceDatas lastObject];
+                    startId = data.id;
+                }
+                
+                NSDictionary *body = @{@"StartId": @(startId), @"Limit": @(ADVICE_LIMIT)};
+                SldHttpSession *session = [SldHttpSession defaultSession];
+                [session postToApi:@"etc/listAdvice" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                     [_bottomRefresh endRefreshing];
-                });
+                    if (error) {
+                        alertHTTPError(error, data);
+                        return;
+                    }
+                    NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                    if (error) {
+                        lwError("Json error:%@", [error localizedDescription]);
+                        return;
+                    }
+                    
+                    if (array.count < ADVICE_LIMIT) {
+                        _reachEnd = YES;
+                    }
+                    
+                    NSMutableArray *insertIndexPathes = [NSMutableArray array];
+                    for (NSDictionary *dict in array) {
+                        AdviceData *adviceData = [AdviceData adviceDataWithDictionary:dict];
+                        [_adviceDatas addObject:adviceData];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_adviceDatas.count-1 inSection:1];
+                        [insertIndexPathes addObject:indexPath];
+                    }
+                    [self.tableView insertRowsAtIndexPaths:insertIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
+                }];
             }
         }
         
@@ -238,6 +263,7 @@
 @end
 
 //==================================
+static NSString *_savedString = nil;
 @interface SldAddAdviceController ()
 
 @end
@@ -252,8 +278,8 @@
     [self registerForKeyboardNotifications];
     [_textView becomeFirstResponder];
     
-    if (_restoreText) {
-        _textView.text = _restoreText;
+    if (_savedString) {
+        _textView.text = _savedString;
     }
 }
 
@@ -275,7 +301,8 @@
             }
             
             [_adviceController onSendAdvice];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
+            _savedString = nil;
         }];
 	}];
     
@@ -285,6 +312,12 @@
 											   otherButtonItems:sendItem, nil];
 	[alertView show];
 }
+
+- (IBAction)onCancelButton:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+    _savedString = _textView.text;
+}
+
 
 - (void)registerForKeyboardNotifications
 {

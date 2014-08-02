@@ -13,9 +13,7 @@
 @end
 
 @interface SldAddAdviceController : UIViewController
-@property (weak, nonatomic) SldAdviceController *adviceController;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (nonatomic) NSString *restoreText;
 @end
 
 @interface SldBottomRefreshControl : UIView
