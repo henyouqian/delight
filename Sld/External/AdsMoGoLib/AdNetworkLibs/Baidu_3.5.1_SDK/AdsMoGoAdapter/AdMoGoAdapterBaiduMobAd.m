@@ -11,10 +11,10 @@
 #import "AdMoGoAdNetworkAdapter+Helpers.h"
 #import "AdMoGoAdNetworkConfig.h"
 #import "AdMoGoAdSDKBannerNetworkRegistry.h"
+
 #define kAdMoGoBaiduAppIDKey @"AppID"
 #define kAdMoGoBaiduAppSecretKey @"AppSEC"
 
-//static BaiduMobAdView* sBaiduAdview = nil;
 
 @implementation AdMoGoAdapterBaiduMobAd
 
@@ -26,13 +26,6 @@
     [[AdMoGoAdSDKBannerNetworkRegistry sharedRegistry] registerClass:self];
 }
 
-//+ (NSDictionary *)networkType{
-//    return [self makeNetWorkType:AdMoGoAdNetworkTypeBaiduMobAd IsSDK:YES isApi:NO isBanner:YES isFullScreen:NO];
-//}
-//
-//+ (void)load{
-//    [[AdMoGoAdNetworkRegistry sharedRegistry] registerClass:self];
-//}
 
 - (void)getAd{
     isStop = NO;
@@ -72,9 +65,10 @@
     
     sBaiduAdview = [[BaiduMobAdView alloc] init] ;
     sBaiduAdview.hidden = YES;
-    sBaiduAdview.autoplayEnabled = NO;
+//    sBaiduAdview.autoplayEnabled = NO;
     sBaiduAdview.frame = CGRectMake(0.0,0.0,size.width,size.height);
-    
+    MGLog(AdMoGoLogTemp, @"baidu version %@",sBaiduAdview.Version);
+
     sBaiduAdview.delegate = self;
     [sBaiduAdview start];
     
@@ -172,6 +166,9 @@
     [adMoGoCore baiduAddAdViewAdapter:self didReceiveAdView:adview];
 }
 
+
+
+
 /*
     
  */
@@ -226,4 +223,7 @@
     [self stopBeingDelegate];
     [adMoGoCore adapter:self didFailAd:nil];
 }
+
+
+
 @end

@@ -94,6 +94,26 @@
 		B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF561906699400CB4DFD /* FMResultSet.m */; };
 		B3C0AF671906D69B00CB4DFD /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF641906D69A00CB4DFD /* SSKeychain.m */; };
 		B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */; };
+		D00C7531198F962500F32046 /* AdMoGoAdapterBaiduFullAds.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C74F7198F962500F32046 /* AdMoGoAdapterBaiduFullAds.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7532198F962500F32046 /* AdMoGoAdapterBaiduMobAd.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C74F9198F962500F32046 /* AdMoGoAdapterBaiduMobAd.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7533198F962500F32046 /* AdMoGoAdapterBaiduSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C74FB198F962500F32046 /* AdMoGoAdapterBaiduSplash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7536198F962500F32046 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = D00C7506198F962500F32046 /* mongoose.c */; };
+		D00C7537198F962500F32046 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C750A198F962500F32046 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7538198F962500F32046 /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C750D198F962500F32046 /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7539198F962500F32046 /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7510198F962500F32046 /* CFilteringJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C753A198F962500F32046 /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7512198F962500F32046 /* CJSONDeserializer_BlocksExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C753B198F962500F32046 /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7514198F962500F32046 /* CJSONSerialization.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C753C198F962500F32046 /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7516198F962500F32046 /* CJSONSerializedData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C753D198F962500F32046 /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7519198F962500F32046 /* CDataScanner_Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C753E198F962500F32046 /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C751B198F962500F32046 /* NSDictionary_JSONExtensions.m */; };
+		D00C753F198F962500F32046 /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C751E198F962500F32046 /* CJSONDeserializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7540198F962500F32046 /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7520198F962500F32046 /* CJSONScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7541198F962500F32046 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D00C7522198F962500F32046 /* CJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D00C7542198F962500F32046 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = D00C7527198F962500F32046 /* ioapi.c */; };
+		D00C7543198F962500F32046 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = D00C7529198F962500F32046 /* mztools.c */; };
+		D00C7544198F962500F32046 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = D00C752B198F962500F32046 /* unzip.c */; };
+		D00C7545198F962500F32046 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = D00C752D198F962500F32046 /* zip.c */; };
+		D00C7546198F962500F32046 /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = D00C7530198F962500F32046 /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D0606A76193EFEDF00DC967C /* MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A66193EFEDF00DC967C /* MD5.m */; };
 		D0606A77193EFEDF00DC967C /* MessageDigest.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A68193EFEDF00DC967C /* MessageDigest.m */; };
 		D0606A78193EFEDF00DC967C /* nv_ios_digest.m in Sources */ = {isa = PBXBuildFile; fileRef = D0606A6B193EFEDF00DC967C /* nv_ios_digest.m */; };
@@ -117,26 +137,6 @@
 		D0A2C949195B30440060BD49 /* QiniuResumableUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2C936195B30440060BD49 /* QiniuResumableUploader.m */; };
 		D0A2C94A195B30440060BD49 /* QiniuSimpleUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2C939195B30440060BD49 /* QiniuSimpleUploader.m */; };
 		D0A2C94B195B30440060BD49 /* QiniuUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2C93C195B30440060BD49 /* QiniuUtils.m */; };
-		D0A2CB97195B32000060BD49 /* AdMoGoAdapterBaiduFullAds.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA86195B31FF0060BD49 /* AdMoGoAdapterBaiduFullAds.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CB98195B32000060BD49 /* AdMoGoAdapterBaiduMobAd.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA88195B31FF0060BD49 /* AdMoGoAdapterBaiduMobAd.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CB99195B32000060BD49 /* AdMoGoAdapterBaiduSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA8A195B31FF0060BD49 /* AdMoGoAdapterBaiduSplash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CB9B195B32000060BD49 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA94195B31FF0060BD49 /* mongoose.c */; };
-		D0A2CB9C195B32000060BD49 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA98195B31FF0060BD49 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CB9D195B32000060BD49 /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA9B195B31FF0060BD49 /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CB9E195B32000060BD49 /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CA9E195B31FF0060BD49 /* CFilteringJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CB9F195B32000060BD49 /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAA0195B31FF0060BD49 /* CJSONDeserializer_BlocksExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA0195B32000060BD49 /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAA2195B31FF0060BD49 /* CJSONSerialization.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA1195B32000060BD49 /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAA4195B31FF0060BD49 /* CJSONSerializedData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA2195B32000060BD49 /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAA7195B31FF0060BD49 /* CDataScanner_Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA3195B32000060BD49 /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAA9195B31FF0060BD49 /* NSDictionary_JSONExtensions.m */; };
-		D0A2CBA4195B32000060BD49 /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAAC195B31FF0060BD49 /* CJSONDeserializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA5195B32000060BD49 /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAAE195B31FF0060BD49 /* CJSONScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA6195B32000060BD49 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAB0195B31FF0060BD49 /* CJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D0A2CBA7195B32000060BD49 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAB5195B31FF0060BD49 /* ioapi.c */; };
-		D0A2CBA8195B32000060BD49 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAB7195B31FF0060BD49 /* mztools.c */; };
-		D0A2CBA9195B32000060BD49 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAB9195B31FF0060BD49 /* unzip.c */; };
-		D0A2CBAA195B32000060BD49 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CABB195B31FF0060BD49 /* zip.c */; };
-		D0A2CBAB195B32000060BD49 /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CABE195B31FF0060BD49 /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D0A2CBAC195B32000060BD49 /* AdMoGoAdapterDoMob.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAC2195B31FF0060BD49 /* AdMoGoAdapterDoMob.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D0A2CBAD195B32000060BD49 /* AdMoGoAdapterDoMobFullAd.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAC4195B31FF0060BD49 /* AdMoGoAdapterDoMobFullAd.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D0A2CBAE195B32000060BD49 /* AdMoGoAdapterDoMobSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAC6195B31FF0060BD49 /* AdMoGoAdapterDoMobSplash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -350,6 +350,55 @@
 		B3C0AF641906D69A00CB4DFD /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		B3C0AF651906D69A00CB4DFD /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
 		B3C0AF661906D69A00CB4DFD /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
+		D00C74F6198F962500F32046 /* AdMoGoAdapterBaiduFullAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterBaiduFullAds.h; sourceTree = "<group>"; };
+		D00C74F7198F962500F32046 /* AdMoGoAdapterBaiduFullAds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterBaiduFullAds.m; sourceTree = "<group>"; };
+		D00C74F8198F962500F32046 /* AdMoGoAdapterBaiduMobAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterBaiduMobAd.h; sourceTree = "<group>"; };
+		D00C74F9198F962500F32046 /* AdMoGoAdapterBaiduMobAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterBaiduMobAd.m; sourceTree = "<group>"; };
+		D00C74FA198F962500F32046 /* AdMoGoAdapterBaiduSplash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterBaiduSplash.h; sourceTree = "<group>"; };
+		D00C74FB198F962500F32046 /* AdMoGoAdapterBaiduSplash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterBaiduSplash.m; sourceTree = "<group>"; };
+		D00C74FD198F962500F32046 /* BaiduMobAdCommonConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdCommonConfig.h; sourceTree = "<group>"; };
+		D00C74FE198F962500F32046 /* BaiduMobAdDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdDelegateProtocol.h; sourceTree = "<group>"; };
+		D00C74FF198F962500F32046 /* BaiduMobAdInterstitial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdInterstitial.h; sourceTree = "<group>"; };
+		D00C7500198F962500F32046 /* BaiduMobAdInterstitialDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdInterstitialDelegate.h; sourceTree = "<group>"; };
+		D00C7501198F962500F32046 /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = baidumobadsdk.bundle; sourceTree = "<group>"; };
+		D00C7502198F962500F32046 /* BaiduMobAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdView.h; sourceTree = "<group>"; };
+		D00C7503198F962500F32046 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduMobAdSdk.a; sourceTree = "<group>"; };
+		D00C7506198F962500F32046 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
+		D00C7507198F962500F32046 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
+		D00C7509198F962500F32046 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
+		D00C750A198F962500F32046 /* OpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenUDID.m; sourceTree = "<group>"; };
+		D00C750C198F962500F32046 /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
+		D00C750D198F962500F32046 /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
+		D00C750F198F962500F32046 /* CFilteringJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFilteringJSONSerializer.h; sourceTree = "<group>"; };
+		D00C7510198F962500F32046 /* CFilteringJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFilteringJSONSerializer.m; sourceTree = "<group>"; };
+		D00C7511198F962500F32046 /* CJSONDeserializer_BlocksExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer_BlocksExtensions.h; sourceTree = "<group>"; };
+		D00C7512198F962500F32046 /* CJSONDeserializer_BlocksExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer_BlocksExtensions.m; sourceTree = "<group>"; };
+		D00C7513198F962500F32046 /* CJSONSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerialization.h; sourceTree = "<group>"; };
+		D00C7514198F962500F32046 /* CJSONSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerialization.m; sourceTree = "<group>"; };
+		D00C7515198F962500F32046 /* CJSONSerializedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializedData.h; sourceTree = "<group>"; };
+		D00C7516198F962500F32046 /* CJSONSerializedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializedData.m; sourceTree = "<group>"; };
+		D00C7518198F962500F32046 /* CDataScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner_Extensions.h; sourceTree = "<group>"; };
+		D00C7519198F962500F32046 /* CDataScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner_Extensions.m; sourceTree = "<group>"; };
+		D00C751A198F962500F32046 /* NSDictionary_JSONExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_JSONExtensions.h; sourceTree = "<group>"; };
+		D00C751B198F962500F32046 /* NSDictionary_JSONExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_JSONExtensions.m; sourceTree = "<group>"; };
+		D00C751D198F962500F32046 /* CJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer.h; sourceTree = "<group>"; };
+		D00C751E198F962500F32046 /* CJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer.m; sourceTree = "<group>"; };
+		D00C751F198F962500F32046 /* CJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONScanner.h; sourceTree = "<group>"; };
+		D00C7520198F962500F32046 /* CJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONScanner.m; sourceTree = "<group>"; };
+		D00C7521198F962500F32046 /* CJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializer.h; sourceTree = "<group>"; };
+		D00C7522198F962500F32046 /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
+		D00C7523198F962500F32046 /* JSONRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRepresentation.h; sourceTree = "<group>"; };
+		D00C7526198F962500F32046 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
+		D00C7527198F962500F32046 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
+		D00C7528198F962500F32046 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		D00C7529198F962500F32046 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
+		D00C752A198F962500F32046 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
+		D00C752B198F962500F32046 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		D00C752C198F962500F32046 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		D00C752D198F962500F32046 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		D00C752E198F962500F32046 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		D00C752F198F962500F32046 /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
+		D00C7530198F962500F32046 /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
 		D0606A65193EFEDF00DC967C /* MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MD5.h; sourceTree = "<group>"; };
 		D0606A66193EFEDF00DC967C /* MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MD5.m; sourceTree = "<group>"; };
 		D0606A67193EFEDF00DC967C /* MessageDigest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDigest.h; sourceTree = "<group>"; };
@@ -401,55 +450,6 @@
 		D0A2C93A195B30440060BD49 /* QiniuUploadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuUploadDelegate.h; sourceTree = "<group>"; };
 		D0A2C93B195B30440060BD49 /* QiniuUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuUtils.h; sourceTree = "<group>"; };
 		D0A2C93C195B30440060BD49 /* QiniuUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QiniuUtils.m; sourceTree = "<group>"; };
-		D0A2CA85195B31FF0060BD49 /* AdMoGoAdapterBaiduFullAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterBaiduFullAds.h; sourceTree = "<group>"; };
-		D0A2CA86195B31FF0060BD49 /* AdMoGoAdapterBaiduFullAds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterBaiduFullAds.m; sourceTree = "<group>"; };
-		D0A2CA87195B31FF0060BD49 /* AdMoGoAdapterBaiduMobAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterBaiduMobAd.h; sourceTree = "<group>"; };
-		D0A2CA88195B31FF0060BD49 /* AdMoGoAdapterBaiduMobAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterBaiduMobAd.m; sourceTree = "<group>"; };
-		D0A2CA89195B31FF0060BD49 /* AdMoGoAdapterBaiduSplash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterBaiduSplash.h; sourceTree = "<group>"; };
-		D0A2CA8A195B31FF0060BD49 /* AdMoGoAdapterBaiduSplash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterBaiduSplash.m; sourceTree = "<group>"; };
-		D0A2CA8C195B31FF0060BD49 /* BaiduMobAdCommonConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdCommonConfig.h; sourceTree = "<group>"; };
-		D0A2CA8D195B31FF0060BD49 /* BaiduMobAdDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdDelegateProtocol.h; sourceTree = "<group>"; };
-		D0A2CA8E195B31FF0060BD49 /* BaiduMobAdInterstitial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdInterstitial.h; sourceTree = "<group>"; };
-		D0A2CA8F195B31FF0060BD49 /* BaiduMobAdInterstitialDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdInterstitialDelegate.h; sourceTree = "<group>"; };
-		D0A2CA90195B31FF0060BD49 /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = baidumobadsdk.bundle; sourceTree = "<group>"; };
-		D0A2CA91195B31FF0060BD49 /* BaiduMobAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobAdView.h; sourceTree = "<group>"; };
-		D0A2CA92195B31FF0060BD49 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduMobAdSdk.a; sourceTree = "<group>"; };
-		D0A2CA94195B31FF0060BD49 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
-		D0A2CA95195B31FF0060BD49 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
-		D0A2CA97195B31FF0060BD49 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
-		D0A2CA98195B31FF0060BD49 /* OpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenUDID.m; sourceTree = "<group>"; };
-		D0A2CA9A195B31FF0060BD49 /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
-		D0A2CA9B195B31FF0060BD49 /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
-		D0A2CA9D195B31FF0060BD49 /* CFilteringJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFilteringJSONSerializer.h; sourceTree = "<group>"; };
-		D0A2CA9E195B31FF0060BD49 /* CFilteringJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFilteringJSONSerializer.m; sourceTree = "<group>"; };
-		D0A2CA9F195B31FF0060BD49 /* CJSONDeserializer_BlocksExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer_BlocksExtensions.h; sourceTree = "<group>"; };
-		D0A2CAA0195B31FF0060BD49 /* CJSONDeserializer_BlocksExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer_BlocksExtensions.m; sourceTree = "<group>"; };
-		D0A2CAA1195B31FF0060BD49 /* CJSONSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerialization.h; sourceTree = "<group>"; };
-		D0A2CAA2195B31FF0060BD49 /* CJSONSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerialization.m; sourceTree = "<group>"; };
-		D0A2CAA3195B31FF0060BD49 /* CJSONSerializedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializedData.h; sourceTree = "<group>"; };
-		D0A2CAA4195B31FF0060BD49 /* CJSONSerializedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializedData.m; sourceTree = "<group>"; };
-		D0A2CAA6195B31FF0060BD49 /* CDataScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner_Extensions.h; sourceTree = "<group>"; };
-		D0A2CAA7195B31FF0060BD49 /* CDataScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner_Extensions.m; sourceTree = "<group>"; };
-		D0A2CAA8195B31FF0060BD49 /* NSDictionary_JSONExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_JSONExtensions.h; sourceTree = "<group>"; };
-		D0A2CAA9195B31FF0060BD49 /* NSDictionary_JSONExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_JSONExtensions.m; sourceTree = "<group>"; };
-		D0A2CAAB195B31FF0060BD49 /* CJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer.h; sourceTree = "<group>"; };
-		D0A2CAAC195B31FF0060BD49 /* CJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer.m; sourceTree = "<group>"; };
-		D0A2CAAD195B31FF0060BD49 /* CJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONScanner.h; sourceTree = "<group>"; };
-		D0A2CAAE195B31FF0060BD49 /* CJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONScanner.m; sourceTree = "<group>"; };
-		D0A2CAAF195B31FF0060BD49 /* CJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializer.h; sourceTree = "<group>"; };
-		D0A2CAB0195B31FF0060BD49 /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
-		D0A2CAB1195B31FF0060BD49 /* JSONRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRepresentation.h; sourceTree = "<group>"; };
-		D0A2CAB4195B31FF0060BD49 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
-		D0A2CAB5195B31FF0060BD49 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
-		D0A2CAB6195B31FF0060BD49 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
-		D0A2CAB7195B31FF0060BD49 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
-		D0A2CAB8195B31FF0060BD49 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
-		D0A2CAB9195B31FF0060BD49 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
-		D0A2CABA195B31FF0060BD49 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
-		D0A2CABB195B31FF0060BD49 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
-		D0A2CABC195B31FF0060BD49 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
-		D0A2CABD195B31FF0060BD49 /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
-		D0A2CABE195B31FF0060BD49 /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
 		D0A2CAC1195B31FF0060BD49 /* AdMoGoAdapterDoMob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterDoMob.h; sourceTree = "<group>"; };
 		D0A2CAC2195B31FF0060BD49 /* AdMoGoAdapterDoMob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterDoMob.m; sourceTree = "<group>"; };
 		D0A2CAC3195B31FF0060BD49 /* AdMoGoAdapterDoMobFullAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterDoMobFullAd.h; sourceTree = "<group>"; };
@@ -1008,6 +1008,142 @@
 			path = SSKeychain;
 			sourceTree = SOURCE_ROOT;
 		};
+		D00C74F4198F962500F32046 /* Baidu_3.5.1_SDK */ = {
+			isa = PBXGroup;
+			children = (
+				D00C74F5198F962500F32046 /* AdsMoGoAdapter */,
+				D00C74FC198F962500F32046 /* lib */,
+			);
+			path = Baidu_3.5.1_SDK;
+			sourceTree = "<group>";
+		};
+		D00C74F5198F962500F32046 /* AdsMoGoAdapter */ = {
+			isa = PBXGroup;
+			children = (
+				D00C74F6198F962500F32046 /* AdMoGoAdapterBaiduFullAds.h */,
+				D00C74F7198F962500F32046 /* AdMoGoAdapterBaiduFullAds.m */,
+				D00C74F8198F962500F32046 /* AdMoGoAdapterBaiduMobAd.h */,
+				D00C74F9198F962500F32046 /* AdMoGoAdapterBaiduMobAd.m */,
+				D00C74FA198F962500F32046 /* AdMoGoAdapterBaiduSplash.h */,
+				D00C74FB198F962500F32046 /* AdMoGoAdapterBaiduSplash.m */,
+			);
+			path = AdsMoGoAdapter;
+			sourceTree = "<group>";
+		};
+		D00C74FC198F962500F32046 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				D00C74FD198F962500F32046 /* BaiduMobAdCommonConfig.h */,
+				D00C74FE198F962500F32046 /* BaiduMobAdDelegateProtocol.h */,
+				D00C74FF198F962500F32046 /* BaiduMobAdInterstitial.h */,
+				D00C7500198F962500F32046 /* BaiduMobAdInterstitialDelegate.h */,
+				D00C7501198F962500F32046 /* baidumobadsdk.bundle */,
+				D00C7502198F962500F32046 /* BaiduMobAdView.h */,
+				D00C7503198F962500F32046 /* libBaiduMobAdSdk.a */,
+				D00C7505198F962500F32046 /* Mongoose */,
+				D00C7508198F962500F32046 /* OpenUDID */,
+				D00C750B198F962500F32046 /* TouchJSON */,
+				D00C7524198F962500F32046 /* ZipArchive */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		D00C7505198F962500F32046 /* Mongoose */ = {
+			isa = PBXGroup;
+			children = (
+				D00C7506198F962500F32046 /* mongoose.c */,
+				D00C7507198F962500F32046 /* mongoose.h */,
+			);
+			path = Mongoose;
+			sourceTree = "<group>";
+		};
+		D00C7508198F962500F32046 /* OpenUDID */ = {
+			isa = PBXGroup;
+			children = (
+				D00C7509198F962500F32046 /* OpenUDID.h */,
+				D00C750A198F962500F32046 /* OpenUDID.m */,
+			);
+			path = OpenUDID;
+			sourceTree = "<group>";
+		};
+		D00C750B198F962500F32046 /* TouchJSON */ = {
+			isa = PBXGroup;
+			children = (
+				D00C750C198F962500F32046 /* CDataScanner.h */,
+				D00C750D198F962500F32046 /* CDataScanner.m */,
+				D00C750E198F962500F32046 /* Experimental */,
+				D00C7517198F962500F32046 /* Extensions */,
+				D00C751C198F962500F32046 /* JSON */,
+			);
+			path = TouchJSON;
+			sourceTree = "<group>";
+		};
+		D00C750E198F962500F32046 /* Experimental */ = {
+			isa = PBXGroup;
+			children = (
+				D00C750F198F962500F32046 /* CFilteringJSONSerializer.h */,
+				D00C7510198F962500F32046 /* CFilteringJSONSerializer.m */,
+				D00C7511198F962500F32046 /* CJSONDeserializer_BlocksExtensions.h */,
+				D00C7512198F962500F32046 /* CJSONDeserializer_BlocksExtensions.m */,
+				D00C7513198F962500F32046 /* CJSONSerialization.h */,
+				D00C7514198F962500F32046 /* CJSONSerialization.m */,
+				D00C7515198F962500F32046 /* CJSONSerializedData.h */,
+				D00C7516198F962500F32046 /* CJSONSerializedData.m */,
+			);
+			path = Experimental;
+			sourceTree = "<group>";
+		};
+		D00C7517198F962500F32046 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D00C7518198F962500F32046 /* CDataScanner_Extensions.h */,
+				D00C7519198F962500F32046 /* CDataScanner_Extensions.m */,
+				D00C751A198F962500F32046 /* NSDictionary_JSONExtensions.h */,
+				D00C751B198F962500F32046 /* NSDictionary_JSONExtensions.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D00C751C198F962500F32046 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				D00C751D198F962500F32046 /* CJSONDeserializer.h */,
+				D00C751E198F962500F32046 /* CJSONDeserializer.m */,
+				D00C751F198F962500F32046 /* CJSONScanner.h */,
+				D00C7520198F962500F32046 /* CJSONScanner.m */,
+				D00C7521198F962500F32046 /* CJSONSerializer.h */,
+				D00C7522198F962500F32046 /* CJSONSerializer.m */,
+				D00C7523198F962500F32046 /* JSONRepresentation.h */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		D00C7524198F962500F32046 /* ZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				D00C7525198F962500F32046 /* minizip */,
+				D00C752F198F962500F32046 /* ZipArchive.h */,
+				D00C7530198F962500F32046 /* ZipArchive.mm */,
+			);
+			path = ZipArchive;
+			sourceTree = "<group>";
+		};
+		D00C7525198F962500F32046 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				D00C7526198F962500F32046 /* crypt.h */,
+				D00C7527198F962500F32046 /* ioapi.c */,
+				D00C7528198F962500F32046 /* ioapi.h */,
+				D00C7529198F962500F32046 /* mztools.c */,
+				D00C752A198F962500F32046 /* mztools.h */,
+				D00C752B198F962500F32046 /* unzip.c */,
+				D00C752C198F962500F32046 /* unzip.h */,
+				D00C752D198F962500F32046 /* zip.c */,
+				D00C752E198F962500F32046 /* zip.h */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
 		D0606A64193EFEDF00DC967C /* nv-ios-digest */ = {
 			isa = PBXGroup;
 			children = (
@@ -1094,147 +1230,11 @@
 		D0A2CA82195B31FF0060BD49 /* AdNetworkLibs */ = {
 			isa = PBXGroup;
 			children = (
-				D0A2CA83195B31FF0060BD49 /* Baidu_3.4.7_SDK */,
+				D00C74F4198F962500F32046 /* Baidu_3.5.1_SDK */,
 				D0A2CABF195B31FF0060BD49 /* DoMob_SDK_429 */,
 				D0A2CAD5195B31FF0060BD49 /* o2omobi_SDK_202 */,
 			);
 			path = AdNetworkLibs;
-			sourceTree = "<group>";
-		};
-		D0A2CA83195B31FF0060BD49 /* Baidu_3.4.7_SDK */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA84195B31FF0060BD49 /* AdsMoGoAdapter */,
-				D0A2CA8B195B31FF0060BD49 /* lib */,
-			);
-			path = Baidu_3.4.7_SDK;
-			sourceTree = "<group>";
-		};
-		D0A2CA84195B31FF0060BD49 /* AdsMoGoAdapter */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA85195B31FF0060BD49 /* AdMoGoAdapterBaiduFullAds.h */,
-				D0A2CA86195B31FF0060BD49 /* AdMoGoAdapterBaiduFullAds.m */,
-				D0A2CA87195B31FF0060BD49 /* AdMoGoAdapterBaiduMobAd.h */,
-				D0A2CA88195B31FF0060BD49 /* AdMoGoAdapterBaiduMobAd.m */,
-				D0A2CA89195B31FF0060BD49 /* AdMoGoAdapterBaiduSplash.h */,
-				D0A2CA8A195B31FF0060BD49 /* AdMoGoAdapterBaiduSplash.m */,
-			);
-			path = AdsMoGoAdapter;
-			sourceTree = "<group>";
-		};
-		D0A2CA8B195B31FF0060BD49 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA8C195B31FF0060BD49 /* BaiduMobAdCommonConfig.h */,
-				D0A2CA8D195B31FF0060BD49 /* BaiduMobAdDelegateProtocol.h */,
-				D0A2CA8E195B31FF0060BD49 /* BaiduMobAdInterstitial.h */,
-				D0A2CA8F195B31FF0060BD49 /* BaiduMobAdInterstitialDelegate.h */,
-				D0A2CA90195B31FF0060BD49 /* baidumobadsdk.bundle */,
-				D0A2CA91195B31FF0060BD49 /* BaiduMobAdView.h */,
-				D0A2CA92195B31FF0060BD49 /* libBaiduMobAdSdk.a */,
-				D0A2CA93195B31FF0060BD49 /* Mongoose */,
-				D0A2CA96195B31FF0060BD49 /* OpenUDID */,
-				D0A2CA99195B31FF0060BD49 /* TouchJSON */,
-				D0A2CAB2195B31FF0060BD49 /* ZipArchive */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		D0A2CA93195B31FF0060BD49 /* Mongoose */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA94195B31FF0060BD49 /* mongoose.c */,
-				D0A2CA95195B31FF0060BD49 /* mongoose.h */,
-			);
-			path = Mongoose;
-			sourceTree = "<group>";
-		};
-		D0A2CA96195B31FF0060BD49 /* OpenUDID */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA97195B31FF0060BD49 /* OpenUDID.h */,
-				D0A2CA98195B31FF0060BD49 /* OpenUDID.m */,
-			);
-			path = OpenUDID;
-			sourceTree = "<group>";
-		};
-		D0A2CA99195B31FF0060BD49 /* TouchJSON */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA9A195B31FF0060BD49 /* CDataScanner.h */,
-				D0A2CA9B195B31FF0060BD49 /* CDataScanner.m */,
-				D0A2CA9C195B31FF0060BD49 /* Experimental */,
-				D0A2CAA5195B31FF0060BD49 /* Extensions */,
-				D0A2CAAA195B31FF0060BD49 /* JSON */,
-			);
-			path = TouchJSON;
-			sourceTree = "<group>";
-		};
-		D0A2CA9C195B31FF0060BD49 /* Experimental */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CA9D195B31FF0060BD49 /* CFilteringJSONSerializer.h */,
-				D0A2CA9E195B31FF0060BD49 /* CFilteringJSONSerializer.m */,
-				D0A2CA9F195B31FF0060BD49 /* CJSONDeserializer_BlocksExtensions.h */,
-				D0A2CAA0195B31FF0060BD49 /* CJSONDeserializer_BlocksExtensions.m */,
-				D0A2CAA1195B31FF0060BD49 /* CJSONSerialization.h */,
-				D0A2CAA2195B31FF0060BD49 /* CJSONSerialization.m */,
-				D0A2CAA3195B31FF0060BD49 /* CJSONSerializedData.h */,
-				D0A2CAA4195B31FF0060BD49 /* CJSONSerializedData.m */,
-			);
-			path = Experimental;
-			sourceTree = "<group>";
-		};
-		D0A2CAA5195B31FF0060BD49 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CAA6195B31FF0060BD49 /* CDataScanner_Extensions.h */,
-				D0A2CAA7195B31FF0060BD49 /* CDataScanner_Extensions.m */,
-				D0A2CAA8195B31FF0060BD49 /* NSDictionary_JSONExtensions.h */,
-				D0A2CAA9195B31FF0060BD49 /* NSDictionary_JSONExtensions.m */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		D0A2CAAA195B31FF0060BD49 /* JSON */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CAAB195B31FF0060BD49 /* CJSONDeserializer.h */,
-				D0A2CAAC195B31FF0060BD49 /* CJSONDeserializer.m */,
-				D0A2CAAD195B31FF0060BD49 /* CJSONScanner.h */,
-				D0A2CAAE195B31FF0060BD49 /* CJSONScanner.m */,
-				D0A2CAAF195B31FF0060BD49 /* CJSONSerializer.h */,
-				D0A2CAB0195B31FF0060BD49 /* CJSONSerializer.m */,
-				D0A2CAB1195B31FF0060BD49 /* JSONRepresentation.h */,
-			);
-			path = JSON;
-			sourceTree = "<group>";
-		};
-		D0A2CAB2195B31FF0060BD49 /* ZipArchive */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CAB3195B31FF0060BD49 /* minizip */,
-				D0A2CABD195B31FF0060BD49 /* ZipArchive.h */,
-				D0A2CABE195B31FF0060BD49 /* ZipArchive.mm */,
-			);
-			path = ZipArchive;
-			sourceTree = "<group>";
-		};
-		D0A2CAB3195B31FF0060BD49 /* minizip */ = {
-			isa = PBXGroup;
-			children = (
-				D0A2CAB4195B31FF0060BD49 /* crypt.h */,
-				D0A2CAB5195B31FF0060BD49 /* ioapi.c */,
-				D0A2CAB6195B31FF0060BD49 /* ioapi.h */,
-				D0A2CAB7195B31FF0060BD49 /* mztools.c */,
-				D0A2CAB8195B31FF0060BD49 /* mztools.h */,
-				D0A2CAB9195B31FF0060BD49 /* unzip.c */,
-				D0A2CABA195B31FF0060BD49 /* unzip.h */,
-				D0A2CABB195B31FF0060BD49 /* zip.c */,
-				D0A2CABC195B31FF0060BD49 /* zip.h */,
-			);
-			path = minizip;
 			sourceTree = "<group>";
 		};
 		D0A2CABF195B31FF0060BD49 /* DoMob_SDK_429 */ = {
@@ -1683,7 +1683,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B308B04C190FC4810021BE9C /* DOUSimpleHTTPRequest.m in Sources */,
-				D0A2CBA1195B32000060BD49 /* CJSONSerializedData.m in Sources */,
+				D00C7531198F962500F32046 /* AdMoGoAdapterBaiduFullAds.m in Sources */,
 				B39E4509191EB91000CBB247 /* UIImage+WebP.m in Sources */,
 				B3C0AF43190667C300CB4DFD /* egif_lib.c in Sources */,
 				B39E4501191EB91000CBB247 /* SDWebImageDecoder.m in Sources */,
@@ -1693,63 +1693,64 @@
 				D0A2CBAD195B32000060BD49 /* AdMoGoAdapterDoMobFullAd.m in Sources */,
 				B39E44EF191EB91000CBB247 /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 				B39E44EB191EB91000CBB247 /* MWPhotoBrowser.m in Sources */,
-				D0A2CBAB195B32000060BD49 /* ZipArchive.mm in Sources */,
 				B39E4505191EB91000CBB247 /* SDWebImagePrefetcher.m in Sources */,
 				B308B043190FC4810021BE9C /* DOUAudioPlaybackItem.m in Sources */,
 				B3C0AF571906699400CB4DFD /* FMDatabase.m in Sources */,
+				D00C7542198F962500F32046 /* ioapi.c in Sources */,
 				B3C0AF41190667C300CB4DFD /* FISoundSource.m in Sources */,
+				D00C7541198F962500F32046 /* CJSONSerializer.m in Sources */,
+				D00C7539198F962500F32046 /* CFilteringJSONSerializer.m in Sources */,
 				B308B047190FC4810021BE9C /* DOUAudioStreamer.m in Sources */,
 				B39E4502191EB91000CBB247 /* SDWebImageDownloader.m in Sources */,
 				B3C0AF48190667C300CB4DFD /* quantize.c in Sources */,
 				B3C0AF591906699400CB4DFD /* FMDatabasePool.m in Sources */,
-				D0A2CBA4195B32000060BD49 /* CJSONDeserializer.m in Sources */,
 				D0A2C93E195B30440060BD49 /* AFHTTPRequestOperationManager.m in Sources */,
-				D0A2CBA2195B32000060BD49 /* CDataScanner_Extensions.m in Sources */,
 				B363AD741925270C001CD6D6 /* UIAlertView+Blocks.m in Sources */,
 				B39E44F7191EB91000CBB247 /* PSTCollectionViewUpdateItem.m in Sources */,
+				D00C7545198F962500F32046 /* zip.c in Sources */,
 				B39E44F1191EB91000CBB247 /* PSTCollectionViewCell.m in Sources */,
-				D0A2CBA6195B32000060BD49 /* CJSONSerializer.m in Sources */,
 				B39E44FB191EB91000CBB247 /* PSTGridLayoutSection.m in Sources */,
+				D00C7532198F962500F32046 /* AdMoGoAdapterBaiduMobAd.m in Sources */,
 				D0A2C942195B30440060BD49 /* AFURLConnectionOperation.m in Sources */,
 				B308B03E190FC4810021BE9C /* DOUAudioEventLoop.m in Sources */,
 				B308B04B190FC4810021BE9C /* DOUMPMediaLibraryAssetLoader.m in Sources */,
-				D0A2CB9C195B32000060BD49 /* OpenUDID.m in Sources */,
 				B39E44FA191EB91000CBB247 /* PSTGridLayoutRow.m in Sources */,
 				B39E4503191EB91000CBB247 /* SDWebImageDownloaderOperation.m in Sources */,
 				B308B03B190FC4810021BE9C /* DOUAudioAnalyzer+Default.m in Sources */,
 				B3C0AF3E190667C300CB4DFD /* FISoundContext.m in Sources */,
-				D0A2CBAA195B32000060BD49 /* zip.c in Sources */,
 				D0606A7A193EFEDF00DC967C /* SHA224.m in Sources */,
 				B308B046190FC4810021BE9C /* DOUAudioStreamer+Options.m in Sources */,
-				D0A2CBA9195B32000060BD49 /* unzip.c in Sources */,
 				B308B041190FC4810021BE9C /* DOUAudioFrequencyAnalyzer.m in Sources */,
 				B39E44E9191EB91000CBB247 /* MWGridViewController.m in Sources */,
 				B3C0AF38190667C300CB4DFD /* easing.c in Sources */,
 				B3C0AF46190667C300CB4DFD /* gif_hash.c in Sources */,
+				D00C7537198F962500F32046 /* OpenUDID.m in Sources */,
 				B308B03F190FC4810021BE9C /* DOUAudioFilePreprocessor.m in Sources */,
 				B39E44EE191EB91000CBB247 /* MWZoomingScrollView.m in Sources */,
-				D0A2CBA3195B32000060BD49 /* NSDictionary_JSONExtensions.m in Sources */,
 				B39E4508191EB91000CBB247 /* UIImage+MultiFormat.m in Sources */,
 				B3C0AF42190667C300CB4DFD /* dgif_lib.c in Sources */,
 				B3C0AF40190667C300CB4DFD /* FISoundEngine.m in Sources */,
 				B308B03C190FC4810021BE9C /* DOUAudioAnalyzer.m in Sources */,
 				B3C0AF3F190667C300CB4DFD /* FISoundDevice.m in Sources */,
+				D00C753C198F962500F32046 /* CJSONSerializedData.m in Sources */,
 				D0A2C94A195B30440060BD49 /* QiniuSimpleUploader.m in Sources */,
 				D0606A7D193EFEDF00DC967C /* SHA512.m in Sources */,
-				D0A2CBA0195B32000060BD49 /* CJSONSerialization.m in Sources */,
 				B3C0AF3C190667C300CB4DFD /* FISampleFormat.m in Sources */,
-				D0A2CB9E195B32000060BD49 /* CFilteringJSONSerializer.m in Sources */,
 				B308B045190FC4810021BE9C /* DOUAudioSpatialAnalyzer.m in Sources */,
 				B3C0AF44190667C300CB4DFD /* gif_err.c in Sources */,
 				B39E44E6191EB91000CBB247 /* MBProgressHUD.m in Sources */,
 				B39E44FF191EB91000CBB247 /* SDImageCache.m in Sources */,
 				B363AD731925270C001CD6D6 /* UIActionSheet+Blocks.m in Sources */,
 				B308B049190FC4810021BE9C /* DOUEAGL1View.m in Sources */,
+				D00C753F198F962500F32046 /* CJSONDeserializer.m in Sources */,
+				D00C7536198F962500F32046 /* mongoose.c in Sources */,
+				D00C753B198F962500F32046 /* CJSONSerialization.m in Sources */,
 				B39E44F9191EB91000CBB247 /* PSTGridLayoutItem.m in Sources */,
 				D0A2CBAE195B32000060BD49 /* AdMoGoAdapterDoMobSplash.m in Sources */,
 				D0A2C945195B30440060BD49 /* AFURLSessionManager.m in Sources */,
 				B3C0AF37190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m in Sources */,
 				D0606A77193EFEDF00DC967C /* MessageDigest.m in Sources */,
+				D00C753D198F962500F32046 /* CDataScanner_Extensions.m in Sources */,
 				B308B03D190FC4810021BE9C /* DOUAudioDecoder.m in Sources */,
 				B39E44F3191EB91000CBB247 /* PSTCollectionViewData.m in Sources */,
 				B3C0AF3A190667C300CB4DFD /* FISampleBuffer.m in Sources */,
@@ -1759,21 +1760,21 @@
 				B39E44E7191EB91000CBB247 /* MWCaptionView.m in Sources */,
 				B39E44F2191EB91000CBB247 /* PSTCollectionViewController.m in Sources */,
 				B3C0AF681906D69B00CB4DFD /* SSKeychainQuery.m in Sources */,
-				D0A2CB98195B32000060BD49 /* AdMoGoAdapterBaiduMobAd.m in Sources */,
 				D0A2C93D195B30440060BD49 /* AFHTTPRequestOperation.m in Sources */,
+				D00C7544198F962500F32046 /* unzip.c in Sources */,
 				B39E44E8191EB91000CBB247 /* MWGridCell.m in Sources */,
 				D0606A7B193EFEDF00DC967C /* SHA256.m in Sources */,
 				B39E4500191EB91000CBB247 /* SDWebImageCompat.m in Sources */,
+				D00C7533198F962500F32046 /* AdMoGoAdapterBaiduSplash.m in Sources */,
 				B39E4504191EB91000CBB247 /* SDWebImageManager.m in Sources */,
 				D0A2C943195B30440060BD49 /* AFURLRequestSerialization.m in Sources */,
 				D0A2CBB1195B32000060BD49 /* AdMoGoAdapterAdvertFullAd.m in Sources */,
 				B3C0AF47190667C300CB4DFD /* gifalloc.c in Sources */,
+				D00C753A198F962500F32046 /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				B3C0AF671906D69B00CB4DFD /* SSKeychain.m in Sources */,
 				D0A2CBB0195B32000060BD49 /* AdMoGoAdapterAdvert.m in Sources */,
 				D0606A79193EFEDF00DC967C /* SHA1.m in Sources */,
-				D0A2CB9F195B32000060BD49 /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				D0A2C944195B30440060BD49 /* AFURLResponseSerialization.m in Sources */,
-				D0A2CBA8195B32000060BD49 /* mztools.c in Sources */,
 				B3C0AF5B1906699400CB4DFD /* FMResultSet.m in Sources */,
 				D0A2C941195B30440060BD49 /* AFSecurityPolicy.m in Sources */,
 				B308B042190FC4810021BE9C /* DOUAudioLPCM.m in Sources */,
@@ -1782,13 +1783,11 @@
 				B3C0AF45190667C300CB4DFD /* gif_font.c in Sources */,
 				D0606A7C193EFEDF00DC967C /* SHA384.m in Sources */,
 				B39E44F0191EB91000CBB247 /* PSTCollectionView.m in Sources */,
-				D0A2CB9B195B32000060BD49 /* mongoose.c in Sources */,
 				B39E4506191EB91000CBB247 /* UIButton+WebCache.m in Sources */,
 				D0A2C947195B30440060BD49 /* QiniuHttpClient.m in Sources */,
 				B3C0AF3B190667C300CB4DFD /* FISampleDecoder.m in Sources */,
 				B308B044190FC4810021BE9C /* DOUAudioRenderer.m in Sources */,
 				B308B040190FC4810021BE9C /* DOUAudioFileProvider.m in Sources */,
-				D0A2CBA5195B32000060BD49 /* CJSONScanner.m in Sources */,
 				B39E44F8191EB91000CBB247 /* PSTGridLayoutInfo.m in Sources */,
 				B39E44F5191EB91000CBB247 /* PSTCollectionViewItemKey.m in Sources */,
 				D0A2CBB2195B32000060BD49 /* AdMoGoAdapterAdvertSplash.m in Sources */,
@@ -1796,19 +1795,20 @@
 				B39E450A191EB91000CBB247 /* UIImageView+WebCache.m in Sources */,
 				D0A2C94B195B30440060BD49 /* QiniuUtils.m in Sources */,
 				D0A2C940195B30440060BD49 /* AFNetworkReachabilityManager.m in Sources */,
-				D0A2CB97195B32000060BD49 /* AdMoGoAdapterBaiduFullAds.m in Sources */,
 				B39E44FE191EB91000CBB247 /* NSData+ImageContentType.m in Sources */,
+				D00C7538198F962500F32046 /* CDataScanner.m in Sources */,
+				D00C7543198F962500F32046 /* mztools.c in Sources */,
+				D00C7546198F962500F32046 /* ZipArchive.mm in Sources */,
 				B39E44ED191EB91000CBB247 /* MWTapDetectingView.m in Sources */,
+				D00C7540198F962500F32046 /* CJSONScanner.m in Sources */,
 				B39E44E5191EB91000CBB247 /* DACircularProgressView.m in Sources */,
 				D0606A78193EFEDF00DC967C /* nv_ios_digest.m in Sources */,
 				D0A2C93F195B30440060BD49 /* AFHTTPSessionManager.m in Sources */,
-				D0A2CBA7195B32000060BD49 /* ioapi.c in Sources */,
-				D0A2CB99195B32000060BD49 /* AdMoGoAdapterBaiduSplash.m in Sources */,
 				D0A2C949195B30440060BD49 /* QiniuResumableUploader.m in Sources */,
 				B3C0AF5A1906699400CB4DFD /* FMDatabaseQueue.m in Sources */,
-				D0A2CB9D195B32000060BD49 /* CDataScanner.m in Sources */,
 				B39E44EA191EB91000CBB247 /* MWPhoto.m in Sources */,
 				B39E44F4191EB91000CBB247 /* PSTCollectionViewFlowLayout.m in Sources */,
+				D00C753E198F962500F32046 /* NSDictionary_JSONExtensions.m in Sources */,
 				D0A2C948195B30440060BD49 /* QiniuResumableClient.m in Sources */,
 				B39E4507191EB91000CBB247 /* UIImage+GIF.m in Sources */,
 				B3C0AF3D190667C300CB4DFD /* FISound.m in Sources */,
@@ -1922,6 +1922,7 @@
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdsMoGoSDK",
+					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1955,6 +1956,7 @@
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdsMoGoSDK",
+					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

@@ -18,10 +18,24 @@
 #define kAdMoGoBaiduAppInterstitialIDKey @"AppID"
 #define kAdMoGoBaiduAppInterstitialSecretKey @"AppSEC"
 
+typedef enum AdsMogoBaiduMobInterstitialState
+{
+    AdsMogoBMobIState_INIT = 0,
+    
+    AdsMogoBMobIState_LOADSUC,
+    
+    AdsMogoBMobIState_LOADFAI,
+    
+    AdsMogoBMobIState_PRESENT,
+    
+    AdsMogoBMobIState_CLOSED
+    
+} AdsMogoBMobIState;
+
 @interface AdMoGoAdapterBaiduFullAds()<UIGestureRecognizerDelegate>{
     
     int clickCount;
-    
+    AdsMogoBMobIState curState;
 }
 
 @end
@@ -36,18 +50,15 @@
     [[AdMoGoAdSDKInterstitialNetworkRegistry sharedRegistry] registerClass:self];
 }
 
-//+ (NSDictionary *)networkType{
-//    return [self makeNetWorkType:AdMoGoAdNetworkTypeBaiduMobAd IsSDK:YES isApi:NO isBanner:NO isFullScreen:YES];
-//}
-//
-//+ (void)load{
-//    [[AdMoGoAdNetworkRegistry sharedRegistry] registerClass:self];
-//}
 
 - (void)getAd{
     
     clickCount = 0;
-    
+
+    isStop = NO;
+
+    curState = AdsMogoBMobIState_INIT;
+
     AdMoGoConfigDataCenter *configDataCenter = [AdMoGoConfigDataCenter singleton];
     
     AdMoGoConfigData *configData = [configDataCenter.config_dict objectForKey:[self getConfigKey]];
@@ -55,6 +66,7 @@
     baiduInterstitial = [[BaiduMobAdInterstitial alloc] init];
     baiduInterstitial.delegate = self;
     baiduInterstitial.interstitialType = BaiduMobAdViewTypeInterstitialRefresh;
+    
     [baiduInterstitial load];
     [self adapterDidStartRequestAd:self];
     
@@ -77,6 +89,7 @@
     
 }
 -(void)stopBeingDelegate{
+    isStop = YES;
     if(baiduInterstitial){
         baiduInterstitial.delegate = nil;
         [baiduInterstitial release],baiduInterstitial = nil;
@@ -88,6 +101,7 @@
 }
 
 - (void)presentInterstitial{
+    curState = AdsMogoBMobIState_PRESENT;
     UIViewController *viewController = [self rootViewControllerForPresent];
     [baiduInterstitial presentFromRootViewController:viewController];
 }
@@ -98,11 +112,25 @@
     
     [self stopTimer];
     [self stopBeingDelegate];
-    [self adapter:self didFailAd:nil];
+    [self failAd];
 }
 -(void)dealloc{
+    isStop = YES;
     [super dealloc];
 }
+
+- (void)failAd{
+    
+    if (curState != AdsMogoBMobIState_INIT) {
+        return;
+    }
+    baiduInterstitial.delegate = nil;
+    curState = AdsMogoBMobIState_LOADFAI;
+    
+    [self adapter:self didFailAd:nil];
+    
+}
+
 #pragma mark BaiduMobAdInterstitialDelegate 
 /**
  *  应用在mounion.baidu.com上的id
@@ -141,6 +169,13 @@
  *  广告预加载成功
  */
 - (void)interstitialSuccessToLoadAd:(BaiduMobAdInterstitial *)_interstitial{
+
+    if (isStop) {
+        return;
+    }
+
+    curState = AdsMogoBMobIState_LOADSUC;
+
     [self stopTimer];
     [self adapter:self didReceiveInterstitialScreenAd:baiduInterstitial];
 }
@@ -149,14 +184,20 @@
  *  广告预加载失败
  */
 - (void)interstitialFailToLoadAd:(BaiduMobAdInterstitial *)_interstitial{
+    if (isStop) {
+        return;
+    }
     [self stopTimer];
-    [self adapter:self didFailAd:nil];
+    [self failAd];
 }
 
 /**
  *  广告即将展示
  */
 - (void)interstitialWillPresentScreen:(BaiduMobAdInterstitial *)_interstitial{
+    if (isStop) {
+        return;
+    }
     [self adapter:self willPresent:baiduInterstitial];
 }
 
@@ -164,64 +205,48 @@
  *  广告展示成功
  */
 - (void)interstitialSuccessPresentScreen:(BaiduMobAdInterstitial *)_interstitial{
-    
+    if (isStop) {
+        return;
+    }
 //    [[UIApplication sharedApplication].delegate performSelector:@selector(logViewTreeForMainWindow) withObject:nil];
     [self adapter:self didShowAd:_interstitial];
-    [self addAdsMogoAdClickDelegate:[UIApplication sharedApplication].keyWindow];
 }
 
 /**
  *  广告展示失败
  */
 - (void)interstitialFailPresentScreen:(BaiduMobAdInterstitial *)_interstitial withError:(BaiduMobFailReason) reason{
+   
     [self stopTimer];
-    [self adapter:self didFailAd:nil];
+
+    if (isStop) {
+        return;
+    }
+//    [self adapter:self didFailAd:nil];
+
+    if (curState != AdsMogoBMobIState_INIT) {
+        return;
+    }
+    [self failAd];
+
 }
 
 /**
  *  广告展示结束
  */
 - (void)interstitialDidDismissScreen:(BaiduMobAdInterstitial *)_interstitial{
-    
-    if (clickCount >= 2) {
-        [self specialSendRecordNum];
+    if (isStop) {
+        return;
     }
-    
+    curState = AdsMogoBMobIState_CLOSED;
     [self adapter:self didDismissScreen:_interstitial];
 }
 
-#pragma mark -
-#pragma mark add click delegate
-- (void)addAdsMogoAdClickDelegate:(UIView *)parentView{
-    
-    for (UIView *adView in [parentView subviews]) {
-        
-        NSString *className = [NSString stringWithUTF8String:object_getClassName(adView)];
-
-        if ([className isEqualToString:@"BaiduMobInterstitialAdView"]) {
-            
-            UITapGestureRecognizer *tapAction = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(adDidClikAction:)];
-            tapAction.delegate = self;
-            [adView addGestureRecognizer:tapAction];
-            [tapAction release];
-            
-        }
-        
-    }
-    
+- (void)interstitialDidAdClicked:(BaiduMobAdInterstitial *)interstitial{
+    [self specialSendRecordNum];
 }
 
-- (void)adDidClikAction:(id)sender{
-    clickCount ++;
-}
 
-#pragma mark -
-#pragma mark UIGestureRecognizerDelegate method
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    
-    return YES;
-    
-}
 
 
 

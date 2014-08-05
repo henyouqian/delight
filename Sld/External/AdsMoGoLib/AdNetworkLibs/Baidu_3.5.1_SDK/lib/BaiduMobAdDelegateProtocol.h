@@ -22,12 +22,12 @@
 
 @required
 /**
- *  应用在mounion.baidu.com上的id
+ *  应用在union.baidu.com上的APPID
  */
 - (NSString *)publisherId;
 
 /**
- *  应用在mounion.baidu.com上的计费名
+ *  应用在union.baidu.com上的APPID
  */
 - (NSString*) appSpec;
 

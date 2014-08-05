@@ -22,13 +22,6 @@
     [[AdMoGoAdSDKSplashNetworkRegistry sharedRegistry] registerClass:self];
 }
 
-//+ (NSDictionary *)networkType{
-//    return [self makeNetWorkType:AdMoGoAdNetworkTypeBaiduMobAd IsSDK:YES isApi:NO isAutoOptimize:NO isS2S:NO isSplash:YES];
-//}
-//
-//+ (void)load{
-//    [[AdMoGoAdNetworkRegistry sharedRegistry] registerClass:self];
-//}
 
 - (void)getAd{
     isFail = NO;

@@ -50,7 +50,7 @@ static const int NUM_PER_ROW = 3;
 @property (nonatomic) NSArray *cityNames;
 @end
 
-static int EVENT_NUM_PER_BATCH = 20;
+static int EVENT_NUM_PER_BATCH = 30;
 static NSString *STR_GOTO = @"跳转";
 static NSString *STR_BOTTOM = @"当前";
 
@@ -279,6 +279,8 @@ static NSString *STR_BOTTOM = @"当前";
             int batchIdx = chaIdx / EVENT_NUM_PER_BATCH;
             int offset = batchIdx * EVENT_NUM_PER_BATCH;
             
+            NSMutableArray *loadingChallenges = [NSMutableArray array];
+            
             SldHttpSession *session = [SldHttpSession defaultSession];
             NSDictionary *body = @{@"Offset":@(offset), @"Limit":@(EVENT_NUM_PER_BATCH)};
             for (int i = offset; i < offset + EVENT_NUM_PER_BATCH; i++) {
@@ -287,11 +289,17 @@ static NSString *STR_BOTTOM = @"当前";
                 }
                 ChallengeInfo *cha = [_gd.challengeInfos objectAtIndex:i];
                 cha.isLoading = YES;
+                [loadingChallenges addObject:cha];
             }
+            
             [session postToApi:@"challenge/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 if (error) {
                     alertHTTPError(error, data);
                     return;
+                }
+                
+                for (ChallengeInfo* cha in loadingChallenges) {
+                    cha.isLoading = NO;
                 }
                 
                 NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];

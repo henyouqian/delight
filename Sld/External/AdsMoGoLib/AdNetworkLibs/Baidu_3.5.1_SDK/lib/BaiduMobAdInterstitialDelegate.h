@@ -14,12 +14,12 @@
 
 @required
 /**
- *  应用在mounion.baidu.com上的id
+ *  应用在union.baidu.com上的APPID
  */
 - (NSString *)publisherId;
 
 /**
- *  应用在mounion.baidu.com上的计费名
+ *  应用在union.baidu.com上的APPID
  */
 - (NSString*) appSpec;
 
@@ -59,6 +59,11 @@
  *  广告展示失败
  */
 - (void)interstitialFailPresentScreen:(BaiduMobAdInterstitial *)interstitial withError:(BaiduMobFailReason) reason;
+
+/**
+ *  广告展示被用户点击时的回调
+ */
+- (void)interstitialDidAdClicked:(BaiduMobAdInterstitial *)interstitial;
 
 /**
  *  广告展示结束

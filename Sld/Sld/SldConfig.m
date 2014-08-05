@@ -37,4 +37,32 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     
     return inst;
 }
+
+- (void)updateWithDict:(NSDictionary*)dict {
+    NSString *dataHost = [dict objectForKey:@"DataHost"];
+    if (dataHost) {
+        self.DATA_HOST = dataHost;
+    }
+    NSString *storeId = [dict objectForKey:@"StoreId"];
+    if (storeId) {
+        self.STORE_ID = storeId;
+    }
+    NSString *html5Url = [dict objectForKey:@"Html5Url"];
+    if (html5Url) {
+        self.HTML5_URL = html5Url;
+    }
+    NSString *flurryKey = [dict objectForKey:@"FlurryKey"];
+    if (flurryKey) {
+        self.FLURRY_KEY = flurryKey;
+    }
+    NSString *mogoKey = [dict objectForKey:@"MogoKey"];
+    if (mogoKey) {
+        self.MOGO_KEY = mogoKey;
+    }
+    NSString *umengSocialKey = [dict objectForKey:@"UmengSocialKey"];
+    if (umengSocialKey) {
+        self.UMENG_SOCIAL_KEY = umengSocialKey;
+    }
+}
+
 @end

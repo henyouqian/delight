@@ -16,7 +16,6 @@
     BaiduMobAdView* sBaiduAdview;
     BOOL isLocationOn;
 }
-//+ (NSDictionary *)networkType;
 - (void)loadAdTimeOut:(NSTimer*)theTimer;
 + (AdMoGoAdNetworkType)networkType;
 @end

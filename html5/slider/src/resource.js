@@ -10,7 +10,8 @@ var g_resources = [
     {src:"res/start1.png"},
     {src:"res/start2.png"},
     {src:"res/appStore1.png"},
-    {src:"res/appStore2.png"}
+    {src:"res/appStore2.png"},
+    {src:"res/dot24.png"}
 	// {src:"res/success.mp3"},
 	// {src:"res/tink.mp3"},
  //    {src:"res/finish.mp3"}

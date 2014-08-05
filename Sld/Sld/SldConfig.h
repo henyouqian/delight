@@ -12,6 +12,7 @@ extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
 
 @interface SldConfig : NSObject
 + (instancetype)getInstance;
+- (void)updateWithDict:(NSDictionary*)dict;
 
 @property (nonatomic) NSString *IMG_CACHE_DIR;
 @property (nonatomic) NSString *DATA_HOST;

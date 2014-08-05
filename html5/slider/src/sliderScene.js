@@ -24,8 +24,11 @@
  THE SOFTWARE.
  ****************************************************************************/
 var APP_STORE_URL = "https://itunes.apple.com/cn/app/pin-pin-pin-pin-pin/id904649492?l=zh&ls=1&mt=8"
-// var APP_STORE_URL = "http://itunes.apple.com/app/id904649492"
 var USER_NAME = "userName"
+
+var DOT_Y = 940
+
+var gMyScore = ""
 
 //cookie
 function getCookie(c_name) {
@@ -73,6 +76,78 @@ function showDownLoadDesc() {
     alert("如无法跳转到App Store(苹果应用商店)。请在App Store中搜索《拼拼拼拼拼》下载，谢谢。")
 }
 
+function updateWeixin() {
+    if (typeof(WeixinJSBridge) == "undefined") {
+        return
+    }
+
+    try {
+
+
+    var imgUrl = g_thumbUrl;
+    var lineLink = window.location.href;
+    var descContent = "好玩爽快的拼图游戏，小伙伴们拼起来！";
+    var shareTitle = '《拼拼拼拼拼》';
+    var appid = 'wx9cb1a9d645c24d0a';
+
+    if (gMyScore != "") {
+        descContent = "我只用了"+gMyScore+"就完成了比赛，谁敢来挑战？"
+    }
+
+    function shareFriend() {
+        WeixinJSBridge.invoke('sendAppMessage',{
+            "appid": appid,
+            "img_url": imgUrl,
+            "img_width": "200",
+            "img_height": "200",
+            "link": lineLink,
+            "desc": descContent,
+            "title": shareTitle
+        }, function(res) {
+            //_report('send_msg', res.err_msg);
+        })
+    }
+    function shareTimeline() {
+        WeixinJSBridge.invoke('shareTimeline',{
+            "img_url": imgUrl,
+            "img_width": "200",
+            "img_height": "200",
+            "link": lineLink,
+            "desc": descContent,
+            "title": shareTitle
+        }, function(res) {
+               //_report('timeline', res.err_msg);
+        });
+    }
+    function shareWeibo() {
+        WeixinJSBridge.invoke('shareWeibo',{
+            "content": descContent,
+            "url": lineLink
+        }, function(res) {
+            //_report('weibo', res.err_msg);
+        });
+    }
+    
+    WeixinJSBridge.on('menu:share:appmessage', function(argv){
+        shareFriend();
+    });
+    // 分享到朋友圈
+    WeixinJSBridge.on('menu:share:timeline', function(argv){
+        shareTimeline();
+    });
+    // 分享到微博
+    WeixinJSBridge.on('menu:share:weibo', function(argv){
+        shareWeibo();
+    });
+
+    } catch(err) {
+        txt="There was an error on this page.\n\n";
+        txt+="Error description: " + err.message + "\n\n";
+        txt+="Click OK to continue.\n\n";
+        alert(txt);
+    }
+}
+
 var SliderLayer = cc.Layer.extend({
     _imgIdx:0,
     _sliderNum:6,
@@ -96,12 +171,15 @@ var SliderLayer = cc.Layer.extend({
     _startScoreLabel:null,
     _titleLabel:null,
     _adviceLabel:null,
+    _dot:null,
     MOVE_DURATION:0.1,
     init:function () {
         //////////////////////////////
         // 1. super init first
         this._super()
         this._sliderNum = g_socialPack.SliderNum
+
+        updateWeixin()
         
         //shuffle image idx
         for (var i = 0; i < g_imageUrls.length; i++) {
@@ -128,7 +206,7 @@ var SliderLayer = cc.Layer.extend({
         // cc.AudioEngine.getInstance().preloadEffect("res/finish.mp3");
 
         this._resultView = cc.LayerColor.create(new cc.Color3B(40,40,40), winSize.width+20, winSize.height+20)
-        this.addChild(this._resultView, 20)
+        this.addChild(this._resultView, 200)
         this._resultView.setOpacity(220)
 
         //xxx
@@ -171,8 +249,28 @@ var SliderLayer = cc.Layer.extend({
 
         var menuRename = cc.Menu.create(renameItem)
         this._resultView.addChild(menuRename, 0)
-        menuRename.setPosition(cc.p(winSize.width-100, 880))
+        menuRename.setPosition(cc.p(70, 880))
         menuRename.setOpacity(120)
+
+        //invite
+        var inviteLabel = cc.LabelTTF.create("邀请朋友", "Arial", 24, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_CENTER)
+        inviteLabel.setPosition(winSize.width-20, 880)
+        this._resultView.addChild(inviteLabel, 1)
+
+        var x = winSize.width+75
+        var fingerLabel = cc.LabelTTF.create("☝︎", "Arial", 52, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_CENTER)
+        fingerLabel.setPosition(x, 880)
+        this._resultView.addChild(fingerLabel, 1)
+
+        var moveTo = cc.MoveTo.create(0.3, cc.p(x, 960));
+        var ease = cc.EaseSineIn.create(moveTo);
+        var moveBack = cc.MoveTo.create(0.4, cc.p(x, 880));
+        var easeBack = cc.EaseSineOut.create(moveBack);
+        var seq = cc.Sequence.create([ease, easeBack])
+        var repeat = cc.RepeatForever.create(seq)
+        fingerLabel.stopAllActions();
+        fingerLabel.runAction(repeat);
+
 
         //app store
         var spt1 = cc.Sprite.create("res/appStore1.png")
@@ -189,13 +287,13 @@ var SliderLayer = cc.Layer.extend({
         menu2.setPosition(cc.p(winSize.width-200, 100));
 
         //time label
-        this._timeLabel = cc.LabelTTF.create("", "Arial", 70, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
+        this._timeLabel = cc.LabelTTF.create("0:00.000", "Arial", 70, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
         this._timeLabel.setColor(new cc.Color3B(255, 197, 131))
-        this._timeLabel.setPosition(winSize.width / 2, 880)
+        this._timeLabel.setPosition(winSize.width / 2, 780)
         this._resultView.addChild(this._timeLabel, 1)
 
         //name lebel
-        var y = 470
+        var y = 420
         this._nameLabel = cc.LabelTTF.create("", "Arial", 40, new cc.Size(300, 600), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_TOP)
         this._nameLabel.setPosition(230, y)
         this._nameLabel.setString("AA\nbb\ncc\nddd\neee\nff\nAA\nbb\ncc\nddd")
@@ -289,7 +387,7 @@ var SliderLayer = cc.Layer.extend({
 
         //title label
         this._adviceLabel = cc.LabelTTF.create("", "Arial", 24, new cc.Size(600, 100), cc.TEXT_ALIGNMENT_LEFT, cc.TEXT_ALIGNMENT_TOP)
-        this._adviceLabel.setPosition(winSize.width/2, 890)
+        this._adviceLabel.setPosition(winSize.width/2, 870)
         this._adviceLabel.setString("建议锁定屏幕旋转再进行游戏")
         this._adviceLabel.setColor(new cc.Color3B(244, 75, 116))
         this._startView.addChild(this._adviceLabel, 1)
@@ -312,19 +410,42 @@ var SliderLayer = cc.Layer.extend({
         //rank
         var nameString = ""
         var scoreString = ""
+        var userName = getCookie(USER_NAME)
         for (var i in g_socialPack.Ranks) {
             var rank = parseInt(i) + 1
+            var name = g_socialPack.Ranks[i].Name
             if (i == 9) {
-                nameString += rank + ". " + g_socialPack.Ranks[i].Name + "\n"
+                nameString += rank + ". " + name + "\n"
             } else {
-                nameString += rank + ".   " + g_socialPack.Ranks[i].Name + "\n"
+                nameString += rank + ".   " + name + "\n"
             }
 
             var timeStr = msecToStr(g_socialPack.Ranks[i].Msec)
+            if (name == userName) {
+                gMyScore = timeStr
+                scoreString += "* "
+                updateWeixin()
+            }
             scoreString += timeStr + "\n"
         }
         this._startNameLabel.setString(nameString)
         this._startScoreLabel.setString(scoreString)
+
+        //dots
+        var num = g_imageUrls.length
+        var dx = winSize.width/num
+        var x = dx/2
+        for (var i = 0; i < num; i++) {
+            var dot = cc.Sprite.create("res/dot24.png")
+            this.addChild(dot, 100)
+            dot.setPosition(x, DOT_Y)
+            dot.setOpacity(100)
+            x += dx
+        }
+
+        this._dot = cc.Sprite.create("res/dot24.png")
+        this.addChild(this._dot, 101)
+        this._dot.setPosition(dx/2, DOT_Y)
         
         //
         this.reset(0)
@@ -352,6 +473,19 @@ var SliderLayer = cc.Layer.extend({
                 target.resetNow(spt)
             }, 0)
         }
+
+        //dot
+        var winSize = cc.Director.getInstance().getWinSize();
+        var num = g_imageUrls.length
+        var dx = winSize.width/num
+
+        var x = dx/2+imgIdx*dx
+        var moveTo = cc.MoveTo.create(0.2, cc.p(x, DOT_Y));
+        var ease = cc.EaseSineInOut.create(moveTo);
+        this._dot.stopAllActions();
+        this._dot.runAction(ease);
+
+        // this._dot.setPosition(dx/2+imgIdx*dx, 940)
     },
     resetNow:function(sprite) {
         var winSize = cc.Director.getInstance().getWinSize();
@@ -605,7 +739,9 @@ var SliderLayer = cc.Layer.extend({
 
                 var timeStr = msecToStr(resp.Ranks[i].Msec)
                 if (name == data.UserName) {
+                    gMyScore = timeStr
                     scoreString += "* "
+                    updateWeixin()
                 }
                 scoreString += timeStr + "\n"
             }

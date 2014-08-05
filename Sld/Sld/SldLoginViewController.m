@@ -186,6 +186,10 @@
                 
                 gameData.playerInfo = [PlayerInfo playerWithDictionary:dict];
                 
+                //update client conf
+                NSDictionary *conf = [dict objectForKey:@"ClientConf"];
+                [[SldConfig getInstance] updateWithDict:conf];
+                
                 //init SldIapManager
                 [SldIapManager getInstance];
                 

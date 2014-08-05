@@ -24,8 +24,8 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-// var HOST = "http://sld.pintugame.com/"
-var HOST = "http://localhost:9998/"
+var HOST = "http://sld.pintugame.com/"
+// var HOST = "http://localhost:9998/"
 var QINIU_HOST = "http://dn-pintugame.qbox.me/"
 
 var cocos2dApp = cc.Application.extend({
@@ -85,6 +85,9 @@ var cocos2dApp = cc.Application.extend({
             }
             g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
             reses.push({src:g_bgUrl})
+
+            g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
+
 
             cc.LoaderScene.preload(reses, function () {
                 director.replaceScene(new app.startScene());

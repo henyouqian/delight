@@ -87,6 +87,8 @@
 		D005211A1976A3AC00F7F915 /* otlStar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00521191976A3AC00F7F915 /* otlStar@2x.png */; };
 		D007892F198ABFCA00945D50 /* otlChat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D007892E198ABFCA00945D50 /* otlChat@2x.png */; };
 		D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0078931198B8E9800945D50 /* SldAdviceController.m */; };
+		D00C7548198F964200F32046 /* baidumobadsdk.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D00C7547198F964200F32046 /* baidumobadsdk.bundle */; };
+		D00C754A198F966F00F32046 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -150,7 +152,6 @@
 		D0A55615196EADD800369401 /* otlTimer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55612196EADD800369401 /* otlTimer@2x.png */; };
 		D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA3195B3744009193E6 /* libAdsMogo.a */; };
 		D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */; };
-		D0D14AA6195B375A009193E6 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */; };
 		D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */; };
 		D0D14B0C195B3807009193E6 /* adsmogo_fsclosebtn.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14AAB195B3806009193E6 /* adsmogo_fsclosebtn.png */; };
 		D0D14B0D195B3807009193E6 /* adsmogo_fsclosebtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14AAC195B3806009193E6 /* adsmogo_fsclosebtn@2x.png */; };
@@ -239,7 +240,6 @@
 		D0D14B60195B3807009193E6 /* webview_bar_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B09195B3807009193E6 /* webview_bar_pause.png */; };
 		D0D14B61195B3807009193E6 /* webview_bar_refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B0A195B3807009193E6 /* webview_bar_refresh.png */; };
 		D0D14B62195B3807009193E6 /* webview_bar_share.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B0B195B3807009193E6 /* webview_bar_share.png */; };
-		D0D14B64195B3897009193E6 /* baidumobadsdk.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B63195B3897009193E6 /* baidumobadsdk.bundle */; };
 		D0D14B66195B38AB009193E6 /* DomobAdSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B65195B38AB009193E6 /* DomobAdSDKBundle.bundle */; };
 		D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */; };
 		D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D14B6F195B6A83009193E6 /* NSData+Base64.m */; };
@@ -393,6 +393,8 @@
 		D007892E198ABFCA00945D50 /* otlChat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlChat@2x.png"; sourceTree = "<group>"; };
 		D0078930198B8E9800945D50 /* SldAdviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldAdviceController.h; sourceTree = "<group>"; };
 		D0078931198B8E9800945D50 /* SldAdviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldAdviceController.m; sourceTree = "<group>"; };
+		D00C7547198F964200F32046 /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = baidumobadsdk.bundle; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/baidumobadsdk.bundle; sourceTree = SOURCE_ROOT; };
+		D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
@@ -549,7 +551,6 @@
 		D0D14B09195B3807009193E6 /* webview_bar_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = webview_bar_pause.png; sourceTree = "<group>"; };
 		D0D14B0A195B3807009193E6 /* webview_bar_refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = webview_bar_refresh.png; sourceTree = "<group>"; };
 		D0D14B0B195B3807009193E6 /* webview_bar_share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = webview_bar_share.png; sourceTree = "<group>"; };
-		D0D14B63195B3897009193E6 /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = baidumobadsdk.bundle; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib/baidumobadsdk.bundle; sourceTree = SOURCE_ROOT; };
 		D0D14B65195B38AB009193E6 /* DomobAdSDKBundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = DomobAdSDKBundle.bundle; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK/DomobAdSDKBundle/DomobAdSDKBundle.bundle; sourceTree = SOURCE_ROOT; };
 		D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAdsMogo_i386.a; path = External/AdsMoGoLib/AdsMoGoSDK/libAdsMogo_i386.a; sourceTree = "<group>"; };
 		D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBalintimesO2OmobiAd.a; path = External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd/libBalintimesO2OmobiAd.a; sourceTree = "<group>"; };
@@ -562,6 +563,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D00C754A198F966F00F32046 /* libBaiduMobAdSdk.a in Frameworks */,
 				D062EFFA1988D62B004AD4A9 /* liblibExt.a in Frameworks */,
 				D02F76E5198261D400E742F8 /* libSocialWechat.a in Frameworks */,
 				D02F76E6198261D400E742F8 /* libWeChatSDK.a in Frameworks */,
@@ -572,7 +574,6 @@
 				D03252B8195F064F00D9620C /* libFlurry_5.1.0.a in Frameworks */,
 				D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */,
 				D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */,
-				D0D14AA6195B375A009193E6 /* libBaiduMobAdSdk.a in Frameworks */,
 				D05E9965195CB1B5002A6B83 /* Security.framework in Frameworks */,
 				D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */,
 				D05E9968195CB1D5002A6B83 /* AdSupport.framework in Frameworks */,
@@ -629,6 +630,7 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */,
 				D02F76E3198261D400E742F8 /* libSocialWechat.a */,
 				D02F76E4198261D400E742F8 /* libWeChatSDK.a */,
 				D02F76E1198261C300E742F8 /* libSocialSina.a */,
@@ -744,9 +746,9 @@
 		B31EE82918F06F160047E9FD /* res */ = {
 			isa = PBXGroup;
 			children = (
+				D00C7547198F964200F32046 /* baidumobadsdk.bundle */,
 				D02F76C31982612F00E742F8 /* UMSocial */,
 				D0D14B65195B38AB009193E6 /* DomobAdSDKBundle.bundle */,
-				D0D14B63195B3897009193E6 /* baidumobadsdk.bundle */,
 				D0D14AA9195B3806009193E6 /* AdsMoGoRes */,
 				B39E450D191ED0BB00CBB247 /* MWPhotoBrowser.bundle */,
 				B3789F0E190D7A39002E4127 /* uikit */,
@@ -1261,7 +1263,6 @@
 				D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */,
 				D05E9960195C7189002A6B83 /* coin4.png in Resources */,
 				D0D14B2B195B3807009193E6 /* mail@2x.png in Resources */,
-				D0D14B64195B3897009193E6 /* baidumobadsdk.bundle in Resources */,
 				D0D14B10195B3807009193E6 /* mogoVideo.html in Resources */,
 				D0D14B4E195B3807009193E6 /* webview_bar_next_ipad.png in Resources */,
 				D02F76DC1982615300E742F8 /* UMSShareListController.xib in Resources */,
@@ -1377,6 +1378,7 @@
 				B3C1BB8B191137400062D50C /* btnBgGray90.png in Resources */,
 				D0D14B2D195B3807009193E6 /* shareviewfoot_bg@2x.png in Resources */,
 				D0D14B1A195B3807009193E6 /* adsmogo_adclose.png in Resources */,
+				D00C7548198F964200F32046 /* baidumobadsdk.bundle in Resources */,
 				D0D14B34195B3807009193E6 /* webview_bar_close@2x.png in Resources */,
 				D0D14B2E195B3807009193E6 /* shareviewhead_bg@2x.png in Resources */,
 				D02F76D81982615300E742F8 /* UMShareEditViewController.xib in Resources */,
@@ -1635,6 +1637,7 @@
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_4.0",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat",
+					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1675,6 +1678,7 @@
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_4.0",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat",
+					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

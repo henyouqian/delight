@@ -2156,25 +2156,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceHeaderCell" rowHeight="50" id="QX4-zi-uzR">
-                                <rect key="frame" x="0.0" y="86" width="320" height="50"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceHeaderCell" rowHeight="67" id="QX4-zi-uzR">
+                                <rect key="frame" x="0.0" y="86" width="320" height="67"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QX4-zi-uzR" id="o1p-5M-8Nx">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="游戏的Bug以及对游戏的建议、吐槽什么的都发这里，后面的版本二店长会进行改进 。" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
-                                            <rect key="frame" x="0.0" y="1" width="320" height="48"/>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="67"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="0.83414143323898315" green="0.83411645889282227" blue="0.83413064479827881" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                            <string key="text">游戏的Bug以及对游戏的建议、吐槽什么的都发这里，后面的版本二店长会进行改进。
+商务qq：103638667。</string>
+                                            <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="14"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         </textView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="n9X-PM-IWr" secondAttribute="bottom" id="1fD-LZ-wDx"/>
+                                        <constraint firstItem="n9X-PM-IWr" firstAttribute="leading" secondItem="o1p-5M-8Nx" secondAttribute="leading" id="8c9-pE-tFn"/>
+                                        <constraint firstItem="n9X-PM-IWr" firstAttribute="top" secondItem="o1p-5M-8Nx" secondAttribute="top" id="hfx-Kl-8CM"/>
+                                        <constraint firstAttribute="trailing" secondItem="n9X-PM-IWr" secondAttribute="trailing" id="wK1-15-xX6"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceCell" rowHeight="97" id="wct-Mj-0L1" customClass="AdviceCell">
-                                <rect key="frame" x="0.0" y="136" width="320" height="97"/>
+                                <rect key="frame" x="0.0" y="153" width="320" height="97"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wct-Mj-0L1" id="Ya1-fX-i8r">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="96"/>

@@ -173,7 +173,7 @@ static SldAdviceController *_adviceController = nil;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return 50;
+        return 60;
     } else if (indexPath.section == 1) {
         AdviceData* AdviceData = [_adviceDatas objectAtIndex:indexPath.row];
         float h = [self textHeightForText:AdviceData.text width:250 fontName:@"HelveticaNeue" fontSize:14];
