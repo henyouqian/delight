@@ -223,6 +223,13 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     int rank = record.rank;
     int rankNum = record.rankNum;
     
+    //team
+    if (record.teamName.length == 0) {
+        _teamLabel.text = @"未知";
+    } else {
+        _teamLabel.text = record.teamName;
+    }
+    
     //rank
     if (rank == 0) {
         _rankLabel.text = @"无名次";

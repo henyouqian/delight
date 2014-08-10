@@ -32,8 +32,8 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     
 
 //    inst.HOST = @"http://192.168.2.55:9998";
-//    inst.HOST = @"http://192.168.1.43:9998";
-    inst.HOST = @"http://sld.pintugame.com";
+    inst.HOST = @"http://192.168.1.43:9998";
+//    inst.HOST = @"http://sld.pintugame.com";
     
     return inst;
 }
