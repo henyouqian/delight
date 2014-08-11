@@ -259,7 +259,7 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	// adminCookie := login(ADMIN_NAME, ADMIN_PASSWORD)
 	for i := 0; i < 1000; i++ {
-		eventId := int64(26)
+		eventId := int64(33)
 		username := fmt.Sprintf("test%d@pt.com", i)
 
 		// register(username)

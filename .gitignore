@@ -28,6 +28,8 @@ tools/packUploader/packUploader
 tools/packUploader/packs
 tools/ImageMagick-6.8.8/cover.jpg
 tools/ImageMagick-6.8.8/coverBlur.jpg
+tools/packUploader/localPack/
+tools/robot/robot
 tools/ImageMagick-6.8.8/thumb.jpg
 bak/
 tools/ImageMagick-6.8.8/cover.gif

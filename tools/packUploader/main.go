@@ -145,7 +145,7 @@ func newPack() (rPackId int64) {
 
 	//check exist
 	if _, err := os.Stat(PACK_RESP_JS); err == nil {
-		glog.Errorf("%s exist, uploaded already?", PACK_JS)
+		glog.Errorf("%s exist, uploaded already?", PACK_RESP_JS)
 		return 0
 	}
 
@@ -523,6 +523,12 @@ func updatePack() {
 }
 
 func newEventBuff(packId int64) {
+	//check exist
+	if _, err := os.Stat(EVENT_RESP_JS); err == nil {
+		glog.Errorf("%s exist, uploaded already?", EVENT_RESP_JS)
+		return
+	}
+
 	event, err := loadEvent()
 	checkErr(err)
 	event.PackId = packId
