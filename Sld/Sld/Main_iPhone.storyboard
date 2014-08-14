@@ -679,7 +679,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Io-Nz-CiU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="190" y="71"/>
+            <point key="canvasLocation" x="-194" y="281"/>
         </scene>
         <!--Sld Rank Controller-->
         <scene sceneID="ZFl-ME-UWO">
@@ -1863,23 +1863,23 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nej-pS-t5y">
-                                <rect key="frame" x="0.0" y="74" width="320" height="117"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="117"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="邮箱" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="5UP-Xg-ycZ" userLabel="email">
-                                <rect key="frame" x="60" y="100" width="200" height="30"/>
+                                <rect key="frame" x="60" y="90" width="200" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                             </textField>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0V-sf-YvX" userLabel="vline1">
-                                <rect key="frame" x="50" y="133" width="220" height="1"/>
+                                <rect key="frame" x="50" y="123" width="220" height="1"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.80000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密码" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZmK-Ht-fAI" userLabel="password">
-                                <rect key="frame" x="60" y="148" width="200" height="30"/>
+                                <rect key="frame" x="60" y="138" width="200" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="go" secureTextEntry="YES"/>
@@ -1888,12 +1888,12 @@
                                 </connections>
                             </textField>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dFn-9P-rmY" userLabel="vline2">
-                                <rect key="frame" x="50" y="181" width="220" height="1"/>
+                                <rect key="frame" x="50" y="171" width="220" height="1"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.80000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b7w-XO-6lq">
-                                <rect key="frame" x="92" y="205" width="137" height="40"/>
+                                <rect key="frame" x="92" y="190" width="137" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="24"/>
                                 <state key="normal" title="登  录">
@@ -1904,7 +1904,7 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="0QU-4p-7Xy">
-                                <rect key="frame" x="60" y="33" width="200" height="29"/>
+                                <rect key="frame" x="60" y="23" width="200" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="登录"/>
@@ -1916,7 +1916,7 @@
                                 </connections>
                             </segmentedControl>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xnK-nS-xPM">
-                                <rect key="frame" x="60" y="319" width="63" height="40"/>
+                                <rect key="frame" x="60" y="379" width="63" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.29411764709999999" green="0.6680767463425783" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -1929,33 +1929,57 @@
                                     <segue destination="B93-o9-4XQ" kind="modal" id="yyE-zo-xf3"/>
                                 </connections>
                             </button>
-                            <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="weiboBlack36.png" translatesAutoresizingMaskIntoConstraints="NO" id="16a-87-Nc7">
-                                <rect key="frame" x="52" y="267" width="32" height="32"/>
+                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="weibo64.png" translatesAutoresizingMaskIntoConstraints="NO" id="16a-87-Nc7">
+                                <rect key="frame" x="55" y="275" width="36" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ort-7C-FP3">
-                                <rect key="frame" x="50" y="272" width="101" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ort-7C-FP3">
+                                <rect key="frame" x="41" y="268" width="64" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="微博登陆">
                                     <color key="titleColor" white="0.29999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onWeiboLoginButton:" destination="hGO-Bw-qgY" eventType="touchUpInside" id="3tZ-cb-Y7w"/>
+                                </connections>
                             </button>
-                            <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="qqBlack36.png" translatesAutoresizingMaskIntoConstraints="NO" id="DfQ-O1-mvq">
-                                <rect key="frame" x="181" y="268" width="32" height="32"/>
+                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tcWeibo64.png" translatesAutoresizingMaskIntoConstraints="NO" id="DfQ-O1-mvq">
+                                <rect key="frame" x="142" y="275" width="36" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-Gj-2Ir">
-                                <rect key="frame" x="179" y="272" width="91" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-Gj-2Ir">
+                                <rect key="frame" x="128" y="268" width="64" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="QQ登陆">
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="腾讯微博">
                                     <color key="titleColor" white="0.29999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="onQQLoginButton:" destination="hGO-Bw-qgY" eventType="touchUpInside" id="Adj-vW-ljD"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="douban64.png" translatesAutoresizingMaskIntoConstraints="NO" id="GNa-LS-357">
+                                <rect key="frame" x="229" y="275" width="36" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZAy-Pt-ZIh">
+                                <rect key="frame" x="215" y="268" width="64" height="72"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="豆瓣登陆">
+                                    <color key="titleColor" white="0.29999999999999999" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDoubanLoginButton:" destination="hGO-Bw-qgY" eventType="touchUpInside" id="wFA-K1-9j2"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1gk-g3-1Wp">
-                                <rect key="frame" x="207" y="246" width="76" height="32"/>
+                                <rect key="frame" x="207" y="171" width="76" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="找回密码">
@@ -1969,7 +1993,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <connections>
-                            <action selector="onTouchView:" destination="hGO-Bw-qgY" eventType="valueChanged" id="YqA-Xh-k2l"/>
+                            <action selector="onTouchView:" destination="hGO-Bw-qgY" eventType="touchDown" id="JOV-ae-VXV"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="h6y-BQ-vZJ">
@@ -2000,7 +2024,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X2O-kn-PZt">
-                                <rect key="frame" x="100" y="174" width="160" height="30"/>
+                                <rect key="frame" x="100" y="184" width="160" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="赛 事">
@@ -2012,7 +2036,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15b-mu-hG5">
-                                <rect key="frame" x="100" y="222" width="160" height="34"/>
+                                <rect key="frame" x="100" y="232" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="挑 战">
@@ -2024,7 +2048,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cHk-V6-N12">
-                                <rect key="frame" x="100" y="467" width="160" height="34"/>
+                                <rect key="frame" x="100" y="487" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="对 战">
@@ -2033,7 +2057,7 @@
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXB-M3-T2M">
-                                <rect key="frame" x="100" y="272" width="160" height="34"/>
+                                <rect key="frame" x="100" y="292" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="账 号">
@@ -2045,7 +2069,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mK2-6d-DgQ">
-                                <rect key="frame" x="100" y="322" width="160" height="34"/>
+                                <rect key="frame" x="100" y="342" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="音 乐">
@@ -2057,19 +2081,19 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlUser.png" translatesAutoresizingMaskIntoConstraints="NO" id="7aW-RV-I4f">
-                                <rect key="frame" x="110" y="277" width="24" height="24"/>
+                                <rect key="frame" x="110" y="297" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlMusic.png" translatesAutoresizingMaskIntoConstraints="NO" id="JMQ-X2-8oK">
-                                <rect key="frame" x="110" y="327" width="24" height="24"/>
+                                <rect key="frame" x="110" y="347" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlBattle.png" translatesAutoresizingMaskIntoConstraints="NO" id="b9Q-Bj-53w">
-                                <rect key="frame" x="110" y="472" width="24" height="24"/>
+                                <rect key="frame" x="110" y="492" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c54-T1-hKu">
-                                <rect key="frame" x="100" y="422" width="160" height="34"/>
+                                <rect key="frame" x="100" y="442" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="评 分">
@@ -2081,11 +2105,11 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlStar.png" translatesAutoresizingMaskIntoConstraints="NO" id="H3y-ai-M0h">
-                                <rect key="frame" x="110" y="427" width="24" height="24"/>
+                                <rect key="frame" x="110" y="447" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yh8-Oc-bsx">
-                                <rect key="frame" x="100" y="373" width="160" height="34"/>
+                                <rect key="frame" x="100" y="393" width="160" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="吐 槽">
@@ -2097,19 +2121,35 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlChat.png" translatesAutoresizingMaskIntoConstraints="NO" id="jXP-KN-Q4K">
-                                <rect key="frame" x="110" y="378" width="24" height="24"/>
+                                <rect key="frame" x="110" y="398" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlTimer.png" translatesAutoresizingMaskIntoConstraints="NO" id="IB3-ps-Bsb">
-                                <rect key="frame" x="110" y="227" width="24" height="24"/>
+                                <rect key="frame" x="110" y="237" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlCup.png" translatesAutoresizingMaskIntoConstraints="NO" id="f6J-RE-rku">
-                                <rect key="frame" x="110" y="177" width="24" height="24"/>
+                                <rect key="frame" x="110" y="187" width="24" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mDW-7i-GIt">
+                                <rect key="frame" x="100" y="134" width="160" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="站 队">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="f18-Wo-Obg" kind="push" id="fvD-T1-kBG"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlPickSide.png" translatesAutoresizingMaskIntoConstraints="NO" id="v0f-yH-iAf">
+                                <rect key="frame" x="110" y="137" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="拼・拼・拼・拼・拼" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Rh-ql-Iuh">
-                                <rect key="frame" x="46" y="99" width="228" height="21"/>
+                                <rect key="frame" x="46" y="69" width="228" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2132,6 +2172,11 @@
                                     <segue destination="cDY-dZ-DgT" kind="push" id="cfO-2w-7wL"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TIQ-CU-1db">
+                                <rect key="frame" x="145" y="281" width="30" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -2146,6 +2191,59 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bgu-Sr-VvD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1360" y="-869"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="oGn-sv-IUj">
+            <objects>
+                <tableViewController id="f18-Wo-Obg" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="72" sectionHeaderHeight="22" sectionFooterHeight="22" id="5Il-dl-FhJ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="72" id="q8J-89-yrs">
+                                <rect key="frame" x="0.0" y="86" width="320" height="72"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="q8J-89-yrs" id="48o-WS-8HS">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="71"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="罗永浩罗永浩罗永浩罗永浩罗永浩" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="9" preferredMaxLayoutWidth="123" translatesAutoresizingMaskIntoConstraints="NO" id="hQl-3W-Xhm">
+                                            <rect key="frame" x="20" y="6" width="123" height="50"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <color key="textColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="刘翔" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="9" preferredMaxLayoutWidth="121" translatesAutoresizingMaskIntoConstraints="NO" id="5z9-KA-ZDb">
+                                            <rect key="frame" x="179" y="22" width="121" height="29"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <color key="textColor" red="0.048617567867040634" green="0.42666998505592346" blue="0.99839454889297485" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="VS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3w-Ld-0OU">
+                                            <rect key="frame" x="139" y="25" width="42" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" name="Superclarendon-Light" family="Superclarendon" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="f18-Wo-Obg" id="4sF-Bd-eKd"/>
+                            <outlet property="delegate" destination="f18-Wo-Obg" id="5PB-be-B1J"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="VR3-nM-ajx"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ohb-n6-AkY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1504" y="-1605"/>
         </scene>
         <!--Sld Advice Controller-->
         <scene sceneID="2yb-cK-pN1">
@@ -2163,8 +2261,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="67"/>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9X-PM-IWr">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="0.83414143323898315" green="0.83411645889282227" blue="0.83413064479827881" alpha="1" colorSpace="calibratedRGB"/>
                                             <string key="text">游戏的Bug以及对游戏的建议、吐槽什么的都发这里，后面的版本二店长会进行改进。
@@ -2348,7 +2446,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="05E-Bj-ch6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-767" y="-123"/>
+            <point key="canvasLocation" x="-1049" y="71"/>
         </scene>
         <!--Sld Pack Test History Controller-->
         <scene sceneID="CNN-hE-oMg">
@@ -2389,7 +2487,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kfA-jM-51z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-369" y="-41"/>
+            <point key="canvasLocation" x="-621" y="71"/>
         </scene>
         <!--View Controller - 最新-->
         <scene sceneID="Tkg-kt-Cw5">
@@ -2408,7 +2506,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIH-4i-4Ti" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1150" y="-2916"/>
+            <point key="canvasLocation" x="-2718" y="-3144"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="3Cy-BK-rxr">
@@ -2430,7 +2528,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kin-IP-XaP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1700" y="-1725"/>
+            <point key="canvasLocation" x="-3268" y="-1953"/>
         </scene>
         <!--Collection View Controller - 原创-->
         <scene sceneID="Xly-HA-asn">
@@ -2465,7 +2563,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74e-hj-LlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1196" y="-1623"/>
+            <point key="canvasLocation" x="-2764" y="-1851"/>
         </scene>
         <!--View Controller - 最火-->
         <scene sceneID="d7C-Jp-u5P">
@@ -2484,7 +2582,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FcI-hI-GCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1150" y="-2263"/>
+            <point key="canvasLocation" x="-2718" y="-2491"/>
         </scene>
         <!--Collection View Controller - 收藏-->
         <scene sceneID="Nwn-57-vvz">
@@ -2519,7 +2617,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pOn-eD-Edc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1700" y="-2463"/>
+            <point key="canvasLocation" x="-3268" y="-2691"/>
         </scene>
         <!--Sld Challenge List Controller-->
         <scene sceneID="SS0-13-aV6">
@@ -3473,6 +3571,7 @@
         <image name="cupBronze.png" width="31" height="32"/>
         <image name="cupGold.png" width="31" height="32"/>
         <image name="cupSilver.png" width="31" height="32"/>
+        <image name="douban64.png" width="128" height="128"/>
         <image name="glyphicons_150_edit.png" width="24" height="21"/>
         <image name="locker.png" width="256" height="256"/>
         <image name="otlBattle.png" width="32" height="32"/>
@@ -3481,15 +3580,16 @@
         <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlFire48.png" width="24" height="24"/>
         <image name="otlMusic.png" width="32" height="32"/>
+        <image name="otlPickSide.png" width="32" height="32"/>
         <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlStar.png" width="32" height="32"/>
         <image name="otlStar48.png" width="24" height="24"/>
         <image name="otlTimer.png" width="32" height="32"/>
         <image name="otlTimer48.png" width="24" height="24"/>
         <image name="otlUser.png" width="32" height="32"/>
-        <image name="qqBlack36.png" width="36" height="36"/>
+        <image name="tcWeibo64.png" width="128" height="128"/>
         <image name="thumbDarker.png" width="256" height="256"/>
-        <image name="weiboBlack36.png" width="36" height="36"/>
+        <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>

@@ -43,6 +43,34 @@ type Conf struct {
 	QiniuBucket string
 }
 
+type Image struct {
+	File  string
+	Key   string
+	Title string
+	Text  string
+}
+
+type Pack struct {
+	Id        int64
+	Title     string
+	Text      string
+	Cover     string
+	CoverBlur string
+	Thumb     string
+	Images    []Image
+	Tags      []string
+}
+
+type Event struct {
+	Id            int64
+	PackId        int64
+	SliderNum     int
+	ChallengeSecs [3]int
+	QuestionTitle string
+	Question      string
+	Sides         []string
+}
+
 func init() {
 	qiniuconf.ACCESS_KEY = "XLlx3EjYfZJ-kYDAmNZhnH109oadlGjrGsb4plVy"
 	qiniuconf.SECRET_KEY = "FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ"
@@ -94,33 +122,6 @@ func main() {
 	if packId > 0 {
 		newEventBuff(packId)
 	}
-}
-
-type Image struct {
-	File  string
-	Key   string
-	Title string
-	Text  string
-}
-
-type Pack struct {
-	Id        int64
-	Title     string
-	Text      string
-	Cover     string
-	CoverBlur string
-	Thumb     string
-	Images    []Image
-	Tags      []string
-}
-
-type Event struct {
-	Id            int64
-	PackId        int64
-	SliderNum     int
-	ChallengeSecs [3]int
-	Question      string
-	Sides         []string
 }
 
 func newPack() (rPackId int64) {

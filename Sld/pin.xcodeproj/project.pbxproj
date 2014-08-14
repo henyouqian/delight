@@ -140,7 +140,11 @@
 		D0667D6419514DD700AD9282 /* SldIapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0667D6319514DD700AD9282 /* SldIapController.m */; };
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
+		D07B0901199BDC470056D102 /* otlPickSide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D07B0900199BDC460056D102 /* otlPickSide@2x.png */; };
 		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
+		D09CF94B199CABFB00786FB1 /* douban64.png in Resources */ = {isa = PBXBuildFile; fileRef = D09CF948199CABFB00786FB1 /* douban64.png */; };
+		D09CF94D199CABFB00786FB1 /* weibo64.png in Resources */ = {isa = PBXBuildFile; fileRef = D09CF94A199CABFB00786FB1 /* weibo64.png */; };
+		D09CF94F199CBE3900786FB1 /* tcWeibo64.png in Resources */ = {isa = PBXBuildFile; fileRef = D09CF94E199CBE3900786FB1 /* tcWeibo64.png */; };
 		D0A555FE1969A8A600369401 /* SldMainMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A555FD1969A8A600369401 /* SldMainMenuController.m */; };
 		D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A556001969B38B00369401 /* SldChallengeListController.m */; };
 		D0A55606196C277E00369401 /* SldChallengeBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A55605196C277E00369401 /* SldChallengeBriefController.m */; };
@@ -448,7 +452,11 @@
 		D0667D761952BEC700AD9282 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		D0667F221953172C00AD9282 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D066849F1953548D00AD9282 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		D07B0900199BDC460056D102 /* otlPickSide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlPickSide@2x.png"; sourceTree = "<group>"; };
 		D09676961961A08A0052C178 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
+		D09CF948199CABFB00786FB1 /* douban64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = douban64.png; sourceTree = "<group>"; };
+		D09CF94A199CABFB00786FB1 /* weibo64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo64.png; sourceTree = "<group>"; };
+		D09CF94E199CBE3900786FB1 /* tcWeibo64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tcWeibo64.png; sourceTree = "<group>"; };
 		D0A555FC1969A8A600369401 /* SldMainMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMainMenuController.h; sourceTree = "<group>"; };
 		D0A555FD1969A8A600369401 /* SldMainMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMainMenuController.m; sourceTree = "<group>"; };
 		D0A555FF1969B38B00369401 /* SldChallengeListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldChallengeListController.h; sourceTree = "<group>"; };
@@ -841,6 +849,9 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D09CF94E199CBE3900786FB1 /* tcWeibo64.png */,
+				D09CF948199CABFB00786FB1 /* douban64.png */,
+				D09CF94A199CABFB00786FB1 /* weibo64.png */,
 				D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */,
 				D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */,
 				D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */,
@@ -857,6 +868,7 @@
 				D00F63F819407FD200C8EA3F /* cupGold@2x.png */,
 				D00F63F919407FD200C8EA3F /* cupSilver@2x.png */,
 				D007892E198ABFCA00945D50 /* otlChat@2x.png */,
+				D07B0900199BDC460056D102 /* otlPickSide@2x.png */,
 				D062EFEE19857F22004AD4A9 /* otlPublish@2x.png */,
 				D0A55610196EADD800369401 /* otlBattle@2x.png */,
 				D0A55611196EADD800369401 /* otlCup@2x.png */,
@@ -1307,6 +1319,7 @@
 				B39E447C191E794800CBB247 /* glyphicons_003_user.png in Resources */,
 				D0D14B16195B3807009193E6 /* adsmogo_close@2x.png in Resources */,
 				D0D14B55195B3807009193E6 /* safari.png in Resources */,
+				D09CF94B199CABFB00786FB1 /* douban64.png in Resources */,
 				D062EFF719864A8E004AD4A9 /* otlSmile48@2x.png in Resources */,
 				B34D52AF1921886000277EBC /* blackDisk90.png in Resources */,
 				B3C1BB7A1910D8BE0062D50C /* btnBgWhite50.png in Resources */,
@@ -1346,6 +1359,7 @@
 				D0D14B2F195B3807009193E6 /* shareviewhead_icon@2x.png in Resources */,
 				D02F76D51982615300E742F8 /* UMSCommentDetailController.xib in Resources */,
 				D0D14B28195B3807009193E6 /* adsmogo_picrollbg.png in Resources */,
+				D09CF94D199CABFB00786FB1 /* weibo64.png in Resources */,
 				D0D14B38195B3807009193E6 /* webview_bar_next_hover@2x.png in Resources */,
 				D0D14B5D195B3807009193E6 /* webview_bar_close_hover.png in Resources */,
 				D02F76DD1982615300E742F8 /* UMSocialSDKResourcesNew.bundle in Resources */,
@@ -1398,6 +1412,7 @@
 				D0D14B30195B3807009193E6 /* sms@2x.png in Resources */,
 				D062EFF319860BF2004AD4A9 /* otlTimer48@2x.png in Resources */,
 				D0D14B0F195B3807009193E6 /* loading.gif in Resources */,
+				D07B0901199BDC470056D102 /* otlPickSide@2x.png in Resources */,
 				D0D14B3A195B3807009193E6 /* webview_bar_pause_hover@2x.png in Resources */,
 				D0D14B1E195B3807009193E6 /* download-320x50.gif in Resources */,
 				D02F76BC197FFBE200E742F8 /* btnBgGreen90h@2x.png in Resources */,
@@ -1414,6 +1429,7 @@
 				D0D14B2C195B3807009193E6 /* safari@2x.png in Resources */,
 				D0D14B54195B3807009193E6 /* mail.png in Resources */,
 				D0D14B40195B3807009193E6 /* webview_bar_back_ipad@2x.png in Resources */,
+				D09CF94F199CBE3900786FB1 /* tcWeibo64.png in Resources */,
 				D0D14B5A195B3807009193E6 /* webview_bar_back.png in Resources */,
 				D0D14B66195B38AB009193E6 /* DomobAdSDKBundle.bundle in Resources */,
 				D0D14B1C195B3807009193E6 /* adsmogo_bannerface50.png in Resources */,

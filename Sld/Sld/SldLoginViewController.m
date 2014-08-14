@@ -16,6 +16,11 @@
 #import "SldConfig.h"
 #import "SldIapController.h"
 
+static NSString *SNS_WEIBO = @"weibo";
+static NSString *SNS_TENCENT = @"tencent";
+static NSString *SNS_DOUBAN = @"douban";
+
+
 @interface SldLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *emailInput;
 @property (weak, nonatomic) IBOutlet UITextField *passwordInput;
@@ -42,6 +47,7 @@
 - (IBAction)onTouchView:(id)sender {
     [self.view endEditing:YES];
 }
+
 - (IBAction)onChangeMode:(id)sender {
     if ([_seg selectedSegmentIndex] == 0) {
         [_okButton setTitle:@"登  录" forState:UIControlStateNormal];
@@ -65,6 +71,139 @@
     gd.gameMode = OFFLINE;
 }
 
+- (IBAction)onWeiboLoginButton:(id)sender {
+    [self snsLogin:UMShareToSina];
+}
+
+- (IBAction)onQQLoginButton:(id)sender {
+    [self snsLogin:UMShareToTencent];
+}
+
+- (IBAction)onDoubanLoginButton:(id)sender {
+    [self snsLogin:UMShareToDouban];
+}
+
+- (void)snsLogin:(NSString*)snsName {
+    UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:snsName];
+    snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response)
+      {
+//          NSLog(@"response is %@",response);
+//          NSLog(@"SinaWeibo's user name is %@",[[response.data objectForKey:snsName] objectForKey:@"username"]);
+          
+          //
+          NSString *type = @"";
+          NSString *key = @"";
+          NSDictionary *snsDict = [response.data objectForKey:snsName];
+          if ([snsName compare:UMShareToSina] == 0) {
+              type = SNS_WEIBO;
+              key = [snsDict objectForKey:@"usid"];
+          } else if ([snsName compare:UMShareToTencent] == 0) {
+              type = SNS_TENCENT;
+              key = [snsDict objectForKey:@"openid"];
+          } else if ([snsName compare:UMShareToDouban] == 0) {
+              type = SNS_DOUBAN;
+              key = [snsDict objectForKey:@"usid"];
+          }
+          
+          [self snsLoginWithType:type Key:key];
+      });
+}
+
+- (void)snsLoginWithType:(NSString*)type Key:(NSString*)key {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    UIAlertView *alt = alertNoButton(@"登录准备中...");
+    [session postToApi:@"auth/getSnsSecret" body:nil completionHandler:^(NSData *data, NSURLResponse *resp, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            [alt dismissWithClickedButtonIndex:0 animated:YES];
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            [alt dismissWithClickedButtonIndex:0 animated:YES];
+            return;
+        }
+        
+        NSString *secret = [dict objectForKey:@"Secret"];
+        
+        //checksum
+        NSString *checksum = [NSString stringWithFormat:@"%@+%@ll46i", key, secret];
+        checksum = [SldUtil sha1WithString:checksum];
+        
+        //post auth/loginSns
+        alt.title = @"登录中...";
+        NSDictionary *body = @{@"Type":type, @"SnsKey":key, @"Secret":secret, @"Checksum":checksum};
+        [session postToApi:@"auth/loginSns" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                [alt dismissWithClickedButtonIndex:0 animated:YES];
+                return;
+            }
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                [alt dismissWithClickedButtonIndex:0 animated:YES];
+                return;
+            }
+            
+            //save to keychain
+            [SSKeychain setPassword:key forService:[SldConfig getInstance].KEYCHAIN_SERVICE account:type];
+            
+            //
+            SldGameData *gameData = [SldGameData getInstance];
+            gameData.userName = [dict objectForKey:@"UserName"];
+            NSNumber *nUserId = [dict objectForKey:@"UserId"];
+            if (nUserId) {
+                gameData.userId = [nUserId unsignedLongLongValue];
+            }
+            NSNumber *nNow = [dict objectForKey:@"Now"];
+            if (nNow) {
+                setServerNow([nNow longLongValue]);
+            }
+            
+            //get player info
+            alt.title = @"获取用户信息...";
+            [session postToApi:@"player/getInfo" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                [alt dismissWithClickedButtonIndex:0 animated:YES];
+                if (error) {
+                    if (isServerError(error)) {
+                        //show player setting page
+                        [SldUserInfoController createAndPresentFromController:self cancelable:NO];
+                    } else {
+                        alertHTTPError(error, data);
+                    }
+                    
+                } else {
+                    gameData.online = YES;
+                    
+                    //update game data
+                    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                    
+                    gameData.playerInfo = [PlayerInfo playerWithDictionary:dict];
+                    
+                    //update client conf
+                    NSDictionary *conf = [dict objectForKey:@"ClientConf"];
+                    [[SldConfig getInstance] updateWithDict:conf];
+                    
+                    //init SldIapManager
+                    [SldIapManager getInstance];
+                    
+                    if (gameData.playerInfo.nickName.length == 0) {
+                        [SldUserInfoController createAndPresentFromController:self cancelable:NO];
+                    } else {
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }
+                }
+            }];
+            
+        }];
+    }];
+}
+
+
 //for back segue
 - (IBAction)backToLogin:(UIStoryboardSegue *)segue {
     
@@ -73,17 +212,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    SldConfig *conf = [SldConfig getInstance];
-    NSArray *accounts = [SSKeychain accountsForService:conf.KEYCHAIN_SERVICE];
-    if ([accounts count]) {
-        NSString *username = [accounts lastObject][@"acct"];
-        NSString *password = [SSKeychain passwordForService:conf.KEYCHAIN_SERVICE account:username];
-        self.emailInput.text = username;
-        self.passwordInput.text = password;
-    }
-    //self.emailInput.text = @"test@baidu.com";
-    //self.passwordInput.text = @"123456";
     
     //button round corner
     CALayer *btnLayer = [_okButton layer];
@@ -99,8 +227,35 @@
     [self onChangeMode:_seg];
     
     //
-    if (self.emailInput.text.length && self.passwordInput.text.length) {
-        [self login];
+    SldConfig *conf = [SldConfig getInstance];
+    NSArray *accounts = [SSKeychain accountsForService:conf.KEYCHAIN_SERVICE];
+    if ([accounts count]) {
+        NSString *username = [accounts lastObject][@"acct"];
+        NSString *password = [SSKeychain passwordForService:conf.KEYCHAIN_SERVICE account:username];
+        
+        //
+        if ([username compare:SNS_WEIBO] == 0
+            || [username compare:SNS_TENCENT] == 0
+            || [username compare:SNS_DOUBAN] == 0)
+        {
+            NSString *type = username;
+            NSString *key = password;
+            
+            if (key) {
+                [self snsLoginWithType:type Key:key];
+            }
+            
+            return;
+        } else {
+            self.emailInput.text = username;
+            self.passwordInput.text = password;
+            //self.emailInput.text = @"test@baidu.com";
+            //self.passwordInput.text = @"123456";
+            
+            if (self.emailInput.text.length && self.passwordInput.text.length) {
+                [self login];
+            }
+        }
     }
 }
 
@@ -240,7 +395,7 @@
     if (self.shouldDismiss) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        [_emailInput becomeFirstResponder];
+        //[_emailInput becomeFirstResponder];
     }
 }
 
