@@ -246,3 +246,35 @@ NSString* formatInterval(int sec) {
 //
 //@end
 
+//============================
+@interface SldBottomRefreshControl()
+@end
+
+@implementation SldBottomRefreshControl
+- (instancetype)init {
+    if (self = [super initWithFrame:CGRectMake(0, 0, 320, 44)]) {
+        _spin = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        CGRect frame = _spin.frame;
+        frame.origin.x = 150;
+        frame.origin.y = 12;
+        _spin.frame = frame;
+        [self addSubview:_spin];
+        _spin.hidden = YES;
+        [_spin stopAnimating];
+        _refreshing = NO;
+    }
+    return self;
+}
+
+- (void)beginRefreshing {
+    _spin.hidden = NO;
+    [_spin startAnimating];
+    _refreshing = YES;
+}
+
+- (void)endRefreshing {
+    _spin.hidden = YES;
+    [_spin stopAnimating];
+    _refreshing = NO;
+}
+@end

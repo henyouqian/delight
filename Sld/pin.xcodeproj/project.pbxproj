@@ -97,6 +97,8 @@
 		D01044A219464790008DFF8D /* btnBgBlue90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D010449F19464790008DFF8D /* btnBgBlue90@2x.png */; };
 		D01044A319464790008DFF8D /* btnBgRed90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044A019464790008DFF8D /* btnBgRed90@2x.png */; };
 		D01044A419464790008DFF8D /* btnBgYellow90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044A119464790008DFF8D /* btnBgYellow90@2x.png */; };
+		D014462C199F27CB00D47DCA /* SldMyUserPackController.m in Sources */ = {isa = PBXBuildFile; fileRef = D014462B199F27CB00D47DCA /* SldMyUserPackController.m */; };
+		D0144650199FE79400D47DCA /* otlBag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D014464F199FE79400D47DCA /* otlBag@2x.png */; };
 		D02F76BB197FFBE200E742F8 /* btnBgBlue90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */; };
 		D02F76BC197FFBE200E742F8 /* btnBgGreen90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */; };
 		D02F76BD197FFBE200E742F8 /* btnBgRed90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */; };
@@ -409,6 +411,9 @@
 		D010449F19464790008DFF8D /* btnBgBlue90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgBlue90@2x.png"; sourceTree = "<group>"; };
 		D01044A019464790008DFF8D /* btnBgRed90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgRed90@2x.png"; sourceTree = "<group>"; };
 		D01044A119464790008DFF8D /* btnBgYellow90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgYellow90@2x.png"; sourceTree = "<group>"; };
+		D014462A199F27CB00D47DCA /* SldMyUserPackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMyUserPackController.h; sourceTree = "<group>"; };
+		D014462B199F27CB00D47DCA /* SldMyUserPackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMyUserPackController.m; sourceTree = "<group>"; };
+		D014464F199FE79400D47DCA /* otlBag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBag@2x.png"; sourceTree = "<group>"; };
 		D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgBlue90h@2x.png"; sourceTree = "<group>"; };
 		D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgGreen90h@2x.png"; sourceTree = "<group>"; };
 		D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgRed90h@2x.png"; sourceTree = "<group>"; };
@@ -793,6 +798,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				D014462A199F27CB00D47DCA /* SldMyUserPackController.h */,
+				D014462B199F27CB00D47DCA /* SldMyUserPackController.m */,
 				D0078930198B8E9800945D50 /* SldAdviceController.h */,
 				D0078931198B8E9800945D50 /* SldAdviceController.m */,
 				D0A555FC1969A8A600369401 /* SldMainMenuController.h */,
@@ -869,6 +876,7 @@
 				D01044901945DCE9008DFF8D /* cupBronze@2x.png */,
 				D00F63F819407FD200C8EA3F /* cupGold@2x.png */,
 				D00F63F919407FD200C8EA3F /* cupSilver@2x.png */,
+				D014464F199FE79400D47DCA /* otlBag@2x.png */,
 				D09CF951199E9D2E00786FB1 /* otlChemistry@2x.png */,
 				D007892E198ABFCA00945D50 /* otlChat@2x.png */,
 				D07B0900199BDC460056D102 /* otlPickSide@2x.png */,
@@ -1278,6 +1286,7 @@
 				D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */,
 				D05E9960195C7189002A6B83 /* coin4.png in Resources */,
 				D0D14B2B195B3807009193E6 /* mail@2x.png in Resources */,
+				D0144650199FE79400D47DCA /* otlBag@2x.png in Resources */,
 				D0D14B10195B3807009193E6 /* mogoVideo.html in Resources */,
 				D0D14B4E195B3807009193E6 /* webview_bar_next_ipad.png in Resources */,
 				D02F76DC1982615300E742F8 /* UMSShareListController.xib in Resources */,
@@ -1479,6 +1488,7 @@
 				D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */,
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
+				D014462C199F27CB00D47DCA /* SldMyUserPackController.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldBriefController.m in Sources */,
 				B38110401913FC750093F321 /* SldConfig.m in Sources */,
 				B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */,

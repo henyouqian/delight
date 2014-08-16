@@ -47,3 +47,12 @@ NSString* formatInterval(int sec);
 //- (instancetype)initWithRootViewController:(UIViewController*)vc;
 //- (void)present;
 //@end
+
+@interface SldBottomRefreshControl : UIView
+@property (nonatomic) UIActivityIndicatorView *spin;
+@property (nonatomic, readonly) BOOL refreshing;
+
+- (instancetype)init;
+- (void)beginRefreshing;
+- (void)endRefreshing;
+@end

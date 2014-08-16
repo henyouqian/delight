@@ -38,4 +38,5 @@
     #import "umeng_ios_social/UMSocial_Sdk_4.0/Header/UMSocial.h"
     #import "umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat/UMSocialWechatHandler.h"
     #import "umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina/UMSocialSinaHandler.h"
+    #import "QBImagePickerController/QBImagePickerController.h"
 #endif

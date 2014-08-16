@@ -15,12 +15,3 @@
 @interface SldAddAdviceController : UIViewController
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @end
-
-@interface SldBottomRefreshControl : UIView
-@property (nonatomic) UIActivityIndicatorView *spin;
-@property (nonatomic, readonly) BOOL refreshing;
-
-- (instancetype)init;
-- (void)beginRefreshing;
-- (void)endRefreshing;
-@end

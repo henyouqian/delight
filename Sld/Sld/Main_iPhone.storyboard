@@ -2152,7 +2152,7 @@
                                 <rect key="frame" x="100" y="134" width="160" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="原 创">
+                                <state key="normal" title="市 集">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2160,7 +2160,7 @@
                                     <segue destination="ZaF-Nn-xfe" kind="push" id="CgI-Br-OHF"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlChemistry.png" translatesAutoresizingMaskIntoConstraints="NO" id="3Nc-E6-nPm">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="otlBag.png" translatesAutoresizingMaskIntoConstraints="NO" id="3Nc-E6-nPm">
                                 <rect key="frame" x="110" y="137" width="24" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -2529,6 +2529,8 @@
             <objects>
                 <tabBarController definesPresentationContext="YES" id="ZaF-Nn-xfe" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="PMT-0X-O2o"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="sr9-lm-B4D">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
@@ -2546,43 +2548,139 @@
             </objects>
             <point key="canvasLocation" x="-3268" y="-1953"/>
         </scene>
-        <!--Collection View Controller - 我的-->
+        <!--Sld My User Pack Controller - 我的-->
         <scene sceneID="Xly-HA-asn">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="skX-wS-jYW" sceneMemberID="viewController">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="skX-wS-jYW" customClass="SldMyUserPackController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="w8F-AC-tDW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="RlS-7Q-p6H">
-                            <size key="itemSize" width="50" height="50"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="RlS-7Q-p6H">
+                            <size key="itemSize" width="106" height="106"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="50" height="50"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Pka-fe-Vkf">
-                                <rect key="frame" x="0.0" y="64" width="50" height="50"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="myUserPackCell" id="Pka-fe-Vkf" customClass="SldMyUserPackCell">
+                                <rect key="frame" x="0.0" y="64" width="106" height="106"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x9O-qA-nyV" customClass="SldAsyncImageView">
+                                            <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </imageView>
+                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <outlet property="imageView" destination="x9O-qA-nyV" id="dUE-Gt-kTl"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
+                        <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="myUserPackFooter" id="ADr-NQ-ZLM" customClass="SldMyUserPackFooter">
+                            <rect key="frame" x="0.0" y="170" width="320" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="KKo-xz-RNN">
+                                    <rect key="frame" x="150" y="15" width="20" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </activityIndicatorView>
+                            </subviews>
+                            <connections>
+                                <outlet property="spin" destination="KKo-xz-RNN" id="9ED-iw-ENB"/>
+                            </connections>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="skX-wS-jYW" id="UTb-wt-N8b"/>
                             <outlet property="delegate" destination="skX-wS-jYW" id="Ck1-gJ-Gx6"/>
                         </connections>
                     </collectionView>
                     <tabBarItem key="tabBarItem" title="我的" image="otlSmile48.png" id="lJL-FW-OQn"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74e-hj-LlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2764" y="-1851"/>
+        </scene>
+        <!--Sld My User Pack Edit Controller - 选图-->
+        <scene sceneID="Gqq-cx-hxs">
+            <objects>
+                <collectionViewController storyboardIdentifier="myUserPackEditVC" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hSb-JZ-qUe" customClass="SldMyUserPackEditController" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="rRQ-gl-9fy">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="SYs-Kc-5fd">
+                            <size key="itemSize" width="159" height="159"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="myUserPackEditCell" id="vfb-dK-4e1" customClass="SldMyUserPackEditCell">
+                                <rect key="frame" x="0.0" y="64" width="159" height="159"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exC-UF-EOR">
+                                            <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" red="0.048617567870000003" green="0.42666998509999998" blue="0.99839454890000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <outlet property="imageView" destination="exC-UF-EOR" id="DwO-f9-Jib"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="hSb-JZ-qUe" id="s6t-Ec-Qgu"/>
+                            <outlet property="delegate" destination="hSb-JZ-qUe" id="5TK-Zk-Euc"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="选图" id="yqi-WR-15f">
+                        <barButtonItem key="rightBarButtonItem" title="下一步" id="71Y-gk-itR">
+                            <connections>
+                                <segue destination="ewK-rt-HVl" kind="push" id="4sZ-4h-cqD"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XEa-Zb-QPG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2335" y="-1851"/>
+        </scene>
+        <!--View Controller - 设定-->
+        <scene sceneID="dOk-CO-cdH">
+            <objects>
+                <viewController id="ewK-rt-HVl" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qmd-tc-sPO"/>
+                        <viewControllerLayoutGuide type="bottom" id="Zvw-J3-fob"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="irs-Fs-JQI">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="设定" id="q4F-Dt-9BN">
+                        <barButtonItem key="rightBarButtonItem" title="发布" id="xnp-2B-Fwv"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dfa-Zf-2vx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1960" y="-1851"/>
         </scene>
         <!--View Controller - 最火-->
         <scene sceneID="d7C-Jp-u5P">
@@ -2603,7 +2701,7 @@
             </objects>
             <point key="canvasLocation" x="-2718" y="-2491"/>
         </scene>
-        <!--Collection View Controller - 收藏-->
+        <!--Collection View Controller - 已购-->
         <scene sceneID="Nwn-57-vvz">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="28y-F9-EFV" sceneMemberID="viewController">
@@ -2618,7 +2716,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Zv3-Nh-Bsw">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <rect key="frame" x="0.0" y="64" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -2632,7 +2730,7 @@
                             <outlet property="delegate" destination="28y-F9-EFV" id="Vzl-6C-b98"/>
                         </connections>
                     </collectionView>
-                    <tabBarItem key="tabBarItem" title="收藏" image="otlStar48.png" id="v0a-dN-LiG"/>
+                    <tabBarItem key="tabBarItem" title="已购" image="otlStar48.png" id="v0a-dN-LiG"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pOn-eD-Edc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3593,9 +3691,9 @@
         <image name="douban64.png" width="128" height="128"/>
         <image name="glyphicons_150_edit.png" width="24" height="21"/>
         <image name="locker.png" width="256" height="256"/>
+        <image name="otlBag.png" width="32" height="32"/>
         <image name="otlBattle.png" width="32" height="32"/>
         <image name="otlChat.png" width="32" height="32"/>
-        <image name="otlChemistry.png" width="32" height="32"/>
         <image name="otlCup.png" width="32" height="32"/>
         <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlFire48.png" width="24" height="24"/>
