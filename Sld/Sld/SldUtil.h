@@ -10,6 +10,7 @@
 
 NSString* getResFullPath(NSString* fileName);
 NSString* makeDocPath(NSString* path);
+NSString* makeTempPath(NSString* fileName);
 UIAlertView* alert(NSString *title, NSString *message);
 UIAlertView* alertNoButton(NSString *title);
 UIAlertView* alertWithButton(NSString *title, NSString *message, NSString *buttonTitle);
@@ -33,6 +34,7 @@ NSString* formatInterval(int sec);
 
 @interface SldUtil : NSObject
 + (NSString*)sha1WithString:(NSString*)string;
++ (NSString*)sha1WithData:(NSData*)data;
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width;
 + (BOOL)validateEmail:(NSString *) candidate;
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;

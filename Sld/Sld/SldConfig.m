@@ -19,7 +19,6 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     });
     
     inst.IMG_CACHE_DIR = @"imgCache";
-    //inst.DATA_HOST = @"http://sliderpack.qiniudn.com";
     inst.DATA_HOST = @"http://dn-pintugame.qbox.me";
     inst.KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     inst.STORE_ID = @"904649492";

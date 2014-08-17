@@ -10,6 +10,7 @@
 #import "SldConfig.h"
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "NSData+Base64.h"
 #import <CommonCrypto/CommonHMAC.h>
 
 NSString* getResFullPath(NSString* fileName) {
@@ -19,6 +20,11 @@ NSString* getResFullPath(NSString* fileName) {
 NSString* makeDocPath(NSString* path) {
     NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     return [docsPath stringByAppendingPathComponent:path];
+}
+
+NSString* makeTempPath(NSString* fileName) {
+    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
+    return filePath;
 }
 
 UIAlertView* alert(NSString *title, NSString *message) {
@@ -140,6 +146,16 @@ NSString* formatInterval(int sec) {
     NSData *nsd = [NSData dataWithBytes:sha1.buffer length:sha1.bufferSize];
     NSString *output = [nsd hexadecimalString];
     return output;
+}
+
++ (NSString*)sha1WithData:(NSData*)data {
+    SHA1 *md = [[SHA1 alloc] init];
+    
+    [md updateWith:data.bytes length:data.length];
+    [md final];
+    
+    NSData *nsd = [NSData dataWithBytes:md.buffer length:md.bufferSize];
+    return [nsd urlBase64EncodedString];
 }
 
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width {

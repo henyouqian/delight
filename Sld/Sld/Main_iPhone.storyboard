@@ -2607,7 +2607,7 @@
             </objects>
             <point key="canvasLocation" x="-2764" y="-1851"/>
         </scene>
-        <!--Sld My User Pack Edit Controller - 选图-->
+        <!--Sld My User Pack Edit Controller - 已选图片-->
         <scene sceneID="Gqq-cx-hxs">
             <objects>
                 <collectionViewController storyboardIdentifier="myUserPackEditVC" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hSb-JZ-qUe" customClass="SldMyUserPackEditController" sceneMemberID="viewController">
@@ -2647,7 +2647,7 @@
                             <outlet property="delegate" destination="hSb-JZ-qUe" id="5TK-Zk-Euc"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="选图" id="yqi-WR-15f">
+                    <navigationItem key="navigationItem" title="已选图片" id="yqi-WR-15f">
                         <barButtonItem key="rightBarButtonItem" title="下一步" id="71Y-gk-itR">
                             <connections>
                                 <segue destination="ewK-rt-HVl" kind="push" id="4sZ-4h-cqD"/>
@@ -2661,10 +2661,10 @@
             </objects>
             <point key="canvasLocation" x="-2335" y="-1851"/>
         </scene>
-        <!--View Controller - 设定-->
+        <!--Sld My User Pack Settings Controller - 设定-->
         <scene sceneID="dOk-CO-cdH">
             <objects>
-                <viewController id="ewK-rt-HVl" sceneMemberID="viewController">
+                <viewController id="ewK-rt-HVl" customClass="SldMyUserPackSettingsController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qmd-tc-sPO"/>
                         <viewControllerLayoutGuide type="bottom" id="Zvw-J3-fob"/>
@@ -2672,11 +2672,67 @@
                     <view key="view" contentMode="scaleToFill" id="irs-Fs-JQI">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e7H-4G-f8s">
+                                <rect key="frame" x="20" y="191" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="10" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EG9-8k-oM9">
+                                <rect key="frame" x="18" y="115" width="284" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </slider>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="标题（可选）" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u0i-9A-0sL">
+                                <rect key="frame" x="20" y="162" width="100" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="正文（可选）" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WTZ-OR-xmH">
+                                <rect key="frame" x="20" y="242" width="100" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="定价：1金币" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xth-Fn-3c3">
+                                <rect key="frame" x="20" y="89" width="100" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4eE-cT-NTS">
+                                <rect key="frame" x="20" y="271" width="280" height="257"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.95955141129032262" green="0.95184295217439907" blue="0.92409419715714625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="4eE-cT-NTS" firstAttribute="top" secondItem="qmd-tc-sPO" secondAttribute="bottom" constant="207" id="51w-Uz-lCA"/>
+                            <constraint firstAttribute="trailing" secondItem="4eE-cT-NTS" secondAttribute="trailing" constant="20" id="Ela-Ii-hg7"/>
+                            <constraint firstItem="Zvw-J3-fob" firstAttribute="top" secondItem="4eE-cT-NTS" secondAttribute="bottom" constant="40" id="HQJ-hc-TxH"/>
+                            <constraint firstItem="4eE-cT-NTS" firstAttribute="leading" secondItem="irs-Fs-JQI" secondAttribute="leading" constant="20" id="WA2-Jx-M4S"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="设定" id="q4F-Dt-9BN">
-                        <barButtonItem key="rightBarButtonItem" title="发布" id="xnp-2B-Fwv"/>
+                        <barButtonItem key="rightBarButtonItem" title="发布" id="xnp-2B-Fwv">
+                            <connections>
+                                <action selector="onPublish:" destination="ewK-rt-HVl" id="ehH-Wj-9fi"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="priceLable" destination="Xth-Fn-3c3" id="aVC-LB-eUf"/>
+                        <outlet property="slider" destination="EG9-8k-oM9" id="ud8-Go-89p"/>
+                        <outlet property="textInput" destination="4eE-cT-NTS" id="qjf-F1-LCU"/>
+                        <outlet property="titleInput" destination="e7H-4G-f8s" id="9Bm-WX-HRs"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dfa-Zf-2vx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2701,7 +2757,7 @@
             </objects>
             <point key="canvasLocation" x="-2718" y="-2491"/>
         </scene>
-        <!--Collection View Controller - 已购-->
+        <!--Collection View Controller - 已玩-->
         <scene sceneID="Nwn-57-vvz">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="28y-F9-EFV" sceneMemberID="viewController">
@@ -2730,7 +2786,7 @@
                             <outlet property="delegate" destination="28y-F9-EFV" id="Vzl-6C-b98"/>
                         </connections>
                     </collectionView>
-                    <tabBarItem key="tabBarItem" title="已购" image="otlStar48.png" id="v0a-dN-LiG"/>
+                    <tabBarItem key="tabBarItem" title="已玩" image="otlController48.png" id="v0a-dN-LiG"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pOn-eD-Edc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3694,6 +3750,7 @@
         <image name="otlBag.png" width="32" height="32"/>
         <image name="otlBattle.png" width="32" height="32"/>
         <image name="otlChat.png" width="32" height="32"/>
+        <image name="otlController48.png" width="24" height="24"/>
         <image name="otlCup.png" width="32" height="32"/>
         <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlFire48.png" width="24" height="24"/>
@@ -3701,7 +3758,6 @@
         <image name="otlPickSide.png" width="32" height="32"/>
         <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlStar.png" width="32" height="32"/>
-        <image name="otlStar48.png" width="24" height="24"/>
         <image name="otlTimer.png" width="32" height="32"/>
         <image name="otlTimer48.png" width="24" height="24"/>
         <image name="otlUser.png" width="32" height="32"/>

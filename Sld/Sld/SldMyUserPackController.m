@@ -12,6 +12,7 @@
 #import "SldHttpSession.h"
 
 static const int USER_PACK_LIST_LIMIT = 30;
+static NSArray* _assets;
 
 //=============================
 @interface SldMyUserPackCell : UICollectionViewCell
@@ -62,9 +63,7 @@ static const int USER_PACK_LIST_LIMIT = 30;
 
 //=============================
 @interface SldMyUserPackEditController : UICollectionViewController
-- (void)setAssets:(NSArray *)assets;
 
-@property (nonatomic) NSArray* assets;
 @end
 
 @implementation SldMyUserPackEditController
@@ -90,6 +89,182 @@ static const int USER_PACK_LIST_LIMIT = 30;
     cell.imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
     
     return cell;
+}
+
+@end
+
+//=============================
+@interface SldMyUserPackSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate, QiniuUploadDelegate>
+@property (weak, nonatomic) IBOutlet UISlider *slider;
+@property (weak, nonatomic) IBOutlet UILabel *priceLable;
+@property (weak, nonatomic) IBOutlet UITextField *titleInput;
+@property (weak, nonatomic) IBOutlet UITextView *textInput;
+@property (nonatomic) int price;
+@property (nonatomic) NSArray *numbers;
+@property (nonatomic) QiniuSimpleUploader* uploader;
+@property (nonatomic) UIAlertView *alt;
+@property (nonatomic) int uploadNum;
+@property (nonatomic) int finishNum;
+@end
+
+@implementation SldMyUserPackSettingsController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    _numbers = @[@(1), @(2), @(3), @(4), @(5)];
+    _price = 1;
+    NSInteger numberOfSteps = ((float)[_numbers count] - 1);
+    _slider.maximumValue = numberOfSteps;
+    _slider.minimumValue = 0;
+    _slider.continuous = YES;
+    _slider.value = 0;
+    [_slider addTarget:self
+               action:@selector(valueChanged:)
+     forControlEvents:UIControlEventValueChanged];
+    
+    _titleInput.delegate = self;
+    _textInput.delegate = self;
+    
+
+}
+
+- (void)valueChanged:(UISlider *)sender {
+    NSUInteger index = (NSUInteger)(_slider.value + 0.5);
+    [_slider setValue:index animated:NO];
+    NSNumber *number = _numbers[index]; // <-- This numeric value you want
+    _price = [number intValue];
+    _priceLable.text = [NSString stringWithFormat:@"定价：%d金币", _price];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    const int kMaxLength = 30;
+    NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if (toBeString.length > kMaxLength){
+        textField.text = [toBeString substringToIndex:kMaxLength];
+        return NO;
+        
+    }
+    return YES;
+}
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)string
+{
+    const int kMaxLength = 2000;
+    NSString * toBeString = [textView.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if (toBeString.length > kMaxLength){
+        textView.text = [toBeString substringToIndex:kMaxLength];
+        return NO;
+        
+    }
+    return YES;
+}
+
+- (IBAction)onPublish:(id)sender {
+    [[[UIAlertView alloc] initWithTitle:@"确定发布吗?"
+	                            message:@""
+		               cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+        // Handle "Cancel"
+    }]
+				       otherButtonItems:[RIButtonItem itemWithLabel:@"发布" action:^{
+        [self doPublish];
+    }], nil] show];
+}
+
+- (void)doPublish {
+    //save to temp dir
+    
+    _alt = alertNoButton(@"上传中...");
+    int i = 0;
+    NSMutableArray *filePathes = [NSMutableArray array];
+    NSMutableArray *fileKeys = [NSMutableArray array];
+    for (ALAsset *asset in _assets) {
+        UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+        
+        //resize
+        float l = MAX(image.size.width, image.size.height);
+        float s = MIN(image.size.width, image.size.height);
+        float scale = 1.0;
+        if (s > 400.0) {
+            scale = 400.0 / s;
+        }
+        float l2 = l * scale;
+        if (l2 > 800.0) {
+            scale *= 800.0 / l2;
+        }
+        float w = floorf(image.size.width * scale);
+        float h = floorf(image.size.height * scale);
+        image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+        
+        //save
+        NSData *data = UIImageJPEGRepresentation(image, 0.85);
+        NSString *fileName = [NSString stringWithFormat:@"aa%d", i];
+        NSString *filePath = makeTempPath(fileName);
+        [filePathes addObject:filePath];
+        [data writeToFile:filePath atomically:YES];
+        i++;
+        
+        //key
+        NSString *key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+        [fileKeys addObject:key];
+    }
+    
+    _alt.title = @"上传中... 0%";
+    
+    //uploader
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/getUptoken" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            [_alt dismissWithClickedButtonIndex:0 animated:YES];
+            _alt = nil;
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            [_alt dismissWithClickedButtonIndex:0 animated:YES];
+            _alt = nil;
+            return;
+        }
+        
+        NSString *token = [dict objectForKey:@"Token"];
+        
+        _uploader = [QiniuSimpleUploader uploaderWithToken:token];
+        _uploader.delegate = self;
+        
+        _uploadNum = 0;
+        _finishNum = 0;
+        int i = 0;
+        for (NSString *filePath in filePathes) {
+            NSString *key = [fileKeys objectAtIndex:i];
+            [_uploader uploadFile:filePath key:key extra:nil];
+            _uploadNum++;
+            i++;
+        }
+    }];
+}
+
+- (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
+    _finishNum++;
+    if (_finishNum >= _uploadNum) {
+        [_alt dismissWithClickedButtonIndex:0 animated:YES];
+        alert(@"上传成功", nil);
+    } else {
+        float f = (float)_finishNum/_uploadNum;
+        int n = f*100;
+        _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+    }
+}
+
+- (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
+    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+    _alt = nil;
+    alert(@"上传失败", nil);
 }
 
 @end
