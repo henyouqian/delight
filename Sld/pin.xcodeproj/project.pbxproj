@@ -164,6 +164,9 @@
 		D0A55613196EADD800369401 /* otlBattle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55610196EADD800369401 /* otlBattle@2x.png */; };
 		D0A55614196EADD800369401 /* otlCup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55611196EADD800369401 /* otlCup@2x.png */; };
 		D0A55615196EADD800369401 /* otlTimer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A55612196EADD800369401 /* otlTimer@2x.png */; };
+		D0C4EF8A19A3290800D2F1D0 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EF8919A3290800D2F1D0 /* UIImage+ImageEffects.m */; };
+		D0C4EFA819A5104600D2F1D0 /* thumbDarker2.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C4EFA719A5104600D2F1D0 /* thumbDarker2.png */; };
+		D0C4EFAB19A51D8500D2F1D0 /* SldMyUserPackMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EFAA19A51D8500D2F1D0 /* SldMyUserPackMenuController.m */; };
 		D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA3195B3744009193E6 /* libAdsMogo.a */; };
 		D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */; };
 		D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */; };
@@ -490,6 +493,12 @@
 		D0A55610196EADD800369401 /* otlBattle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBattle@2x.png"; sourceTree = "<group>"; };
 		D0A55611196EADD800369401 /* otlCup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlCup@2x.png"; sourceTree = "<group>"; };
 		D0A55612196EADD800369401 /* otlTimer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlTimer@2x.png"; sourceTree = "<group>"; };
+		D0C4EF8819A3290800D2F1D0 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		D0C4EF8919A3290800D2F1D0 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		D0C4EFA519A4396C00D2F1D0 /* libGoogleAdMobAds.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGoogleAdMobAds.a; path = External/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692/libGoogleAdMobAds.a; sourceTree = "<group>"; };
+		D0C4EFA719A5104600D2F1D0 /* thumbDarker2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumbDarker2.png; sourceTree = "<group>"; };
+		D0C4EFA919A51D8500D2F1D0 /* SldMyUserPackMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMyUserPackMenuController.h; sourceTree = "<group>"; };
+		D0C4EFAA19A51D8500D2F1D0 /* SldMyUserPackMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMyUserPackMenuController.m; sourceTree = "<group>"; };
 		D0D14AA3195B3744009193E6 /* libAdsMogo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAdsMogo.a; path = External/AdsMoGoLib/AdsMoGoSDK/libAdsMogo.a; sourceTree = "<group>"; };
 		D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDomobAdSDK.a; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK/libDomobAdSDK.a; sourceTree = "<group>"; };
@@ -659,6 +668,7 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D0C4EFA519A4396C00D2F1D0 /* libGoogleAdMobAds.a */,
 				D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */,
 				D02F76E3198261D400E742F8 /* libSocialWechat.a */,
 				D02F76E4198261D400E742F8 /* libWeChatSDK.a */,
@@ -794,6 +804,8 @@
 		B363AD671923D21C001CD6D6 /* thirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				D0C4EF8819A3290800D2F1D0 /* UIImage+ImageEffects.h */,
+				D0C4EF8919A3290800D2F1D0 /* UIImage+ImageEffects.m */,
 				D0D14B6E195B6A83009193E6 /* NSData+Base64.h */,
 				D0D14B6F195B6A83009193E6 /* NSData+Base64.m */,
 				B36DACD3190EC36500435EF4 /* TouchPriority.h */,
@@ -815,6 +827,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				D0C4EFA919A51D8500D2F1D0 /* SldMyUserPackMenuController.h */,
+				D0C4EFAA19A51D8500D2F1D0 /* SldMyUserPackMenuController.m */,
 				D014462A199F27CB00D47DCA /* SldMyUserPackController.h */,
 				D014462B199F27CB00D47DCA /* SldMyUserPackController.m */,
 				D0078930198B8E9800945D50 /* SldAdviceController.h */,
@@ -925,6 +939,7 @@
 				B383536F191AD68400D259F5 /* glyphicons_245_chat.png */,
 				B3835370191AD68400D259F5 /* glyphicons_245_chat@2x.png */,
 				B33121FA1916D02C003E05DB /* thumbDarker.png */,
+				D0C4EFA719A5104600D2F1D0 /* thumbDarker2.png */,
 				D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */,
 				D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */,
 				D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */,
@@ -1356,6 +1371,7 @@
 				B39E447E191E794800CBB247 /* glyphicons_017_music.png in Resources */,
 				D0D14B3F195B3807009193E6 /* webview_bar_back_grey_ipad@2x.png in Resources */,
 				D0D14B50195B3807009193E6 /* webview_bar_refresh_ipad.png in Resources */,
+				D0C4EFA819A5104600D2F1D0 /* thumbDarker2.png in Resources */,
 				D0D14B51195B3807009193E6 /* webview_bar_share_ipad.png in Resources */,
 				D0D14B3C195B3807009193E6 /* webview_bar_refresh_hover@2x.png in Resources */,
 				B3DB83211929494B00544759 /* otlFastForward@2x.png in Resources */,
@@ -1522,6 +1538,8 @@
 			files = (
 				B36C27DD18F8087B00E5A38A /* SldSprite.m in Sources */,
 				B374C57B19177B2F00E5C6A2 /* SldGameData.m in Sources */,
+				D0C4EFAB19A51D8500D2F1D0 /* SldMyUserPackMenuController.m in Sources */,
+				D0C4EF8A19A3290800D2F1D0 /* UIImage+ImageEffects.m in Sources */,
 				B31CBEB3190AA47500621165 /* SldButton.m in Sources */,
 				D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* SldUtil.m in Sources */,
@@ -1762,6 +1780,7 @@
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
+					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1803,6 +1822,7 @@
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
+					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

@@ -20,6 +20,7 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     
     inst.IMG_CACHE_DIR = @"imgCache";
     inst.DATA_HOST = @"http://dn-pintugame.qbox.me";
+    inst.UPLOAD_HOST = @"http://dn-pintuuserupload.qbox.me";
     inst.KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
     inst.STORE_ID = @"904649492";
 
@@ -41,6 +42,10 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     NSString *dataHost = [dict objectForKey:@"DataHost"];
     if (dataHost) {
         self.DATA_HOST = dataHost;
+    }
+    NSString *uploadHost = [dict objectForKey:@"UploadHost"];
+    if (uploadHost) {
+        self.UPLOAD_HOST = uploadHost;
     }
     NSString *storeId = [dict objectForKey:@"StoreId"];
     if (storeId) {

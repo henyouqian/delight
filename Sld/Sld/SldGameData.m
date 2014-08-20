@@ -8,6 +8,7 @@
 
 #import "SldGameData.h"
 #import "SldUtil.h"
+#import "SldHttpSession.h"
 
 const UInt32 DEFUALT_SLIDER_NUM = 6;
 
@@ -247,6 +248,8 @@ static SldGameData *g_inst = nil;
                 add *= 1.1;
             }
         }
+        
+        _packDict = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -273,6 +276,34 @@ static SldGameData *g_inst = nil;
     _needReloadEventList = NO;
 }
 
+- (void)loadPack:(SInt64)packId completion:(void (^)(PackInfo*))completion {
+    //local
+    PackInfo *packInfo = [_packDict objectForKey:@(packId)];
+    if (packInfo && completion) {
+        _packInfo = packInfo;
+        completion(packInfo);
+        return;
+    }
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"Id":@(packId)};
+    [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        _packInfo = [PackInfo packWithDictionary:dict];
+        
+        if (completion) {
+            completion(_packInfo);
+        }
+    }];
+}
 
 
 @end

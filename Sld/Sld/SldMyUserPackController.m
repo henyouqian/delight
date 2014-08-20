@@ -10,6 +10,9 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
 #import "SldHttpSession.h"
+#import "UIImage+ImageEffects.h"
+#import "UIImageView+sldAsyncLoad.h"
+#import "SldMyUserPackMenuController.h"
 
 static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
@@ -17,6 +20,8 @@ static NSArray* _assets;
 //=============================
 @interface SldMyUserPackCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
+@property (weak, nonatomic) IBOutlet UILabel *playTimesLabel;
+@property (nonatomic) SInt64 packId;
 @end
 
 @implementation SldMyUserPackCell
@@ -35,6 +40,11 @@ static NSArray* _assets;
 //=============================
 @interface UserPack : NSObject
 @property (nonatomic) SInt64 id;
+@property (nonatomic) SInt64 packId;
+@property (nonatomic) int sliderNum;
+@property (nonatomic) int price;
+@property (nonatomic) NSString *thumb;
+@property (nonatomic) int playTimes;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 
@@ -44,7 +54,12 @@ static NSArray* _assets;
 
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
-        
+        _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
+        _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
+        _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
+        _price = [(NSNumber*)[dict objectForKey:@"Price"] intValue];
+        _thumb = [dict objectForKey:@"Thumb"];
+        _playTimes = [(NSNumber*)[dict objectForKey:@"PlayTimes"] intValue];
         return self;
     }
     return nil;
@@ -105,6 +120,10 @@ static NSArray* _assets;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) int uploadNum;
 @property (nonatomic) int finishNum;
+@property (nonatomic) NSString *thumbKey;
+@property (nonatomic) NSString *coverKey;
+@property (nonatomic) NSString *coverBlurKey;
+@property (nonatomic) NSMutableArray *images;
 @end
 
 @implementation SldMyUserPackSettingsController
@@ -125,8 +144,6 @@ static NSArray* _assets;
     
     _titleInput.delegate = self;
     _textInput.delegate = self;
-    
-
 }
 
 - (void)valueChanged:(UISlider *)sender {
@@ -139,7 +156,7 @@ static NSArray* _assets;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     
-    const int kMaxLength = 30;
+    const int kMaxLength = 60;
     NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     if (toBeString.length > kMaxLength){
@@ -176,11 +193,14 @@ static NSArray* _assets;
 
 - (void)doPublish {
     //save to temp dir
-    
     _alt = alertNoButton(@"上传中...");
+    
+    _images = [NSMutableArray array];
+    
     int i = 0;
     NSMutableArray *filePathes = [NSMutableArray array];
     NSMutableArray *fileKeys = [NSMutableArray array];
+    
     for (ALAsset *asset in _assets) {
         UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
         
@@ -201,17 +221,67 @@ static NSArray* _assets;
         
         //save
         NSData *data = UIImageJPEGRepresentation(image, 0.85);
-        NSString *fileName = [NSString stringWithFormat:@"aa%d", i];
+        NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
         NSString *filePath = makeTempPath(fileName);
         [filePathes addObject:filePath];
         [data writeToFile:filePath atomically:YES];
-        i++;
         
         //key
         NSString *key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
         [fileKeys addObject:key];
+        [_images addObject:@{@"File":fileName, @"Key":key}];
+        
+        //blur first image
+        if (i == 0) {
+            //image = [image applyLightEffect];
+            UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:0.3];
+            image = [image applyBlurWithRadius:25 tintColor:tintColor saturationDeltaFactor:1.4 maskImage:nil];
+            
+            //save
+            NSData *data = UIImageJPEGRepresentation(image, 0.85);
+            NSString *fileName = @"coverBlur.jpg";
+            NSString *filePath = makeTempPath(fileName);
+            [filePathes addObject:filePath];
+            [data writeToFile:filePath atomically:YES];
+            
+            _coverKey = key;
+            _coverBlurKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            [fileKeys addObject:_coverBlurKey];
+        }
+        
+        i++;
     }
     
+    //thumb
+    ALAsset *asset = [_assets firstObject];
+    UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+    float s = MIN(image.size.width, image.size.height);
+    float scale = 256.0/s;
+    float w = image.size.width * scale;
+    float h = image.size.height * scale;
+    image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+    CGRect cropRect = CGRectMake(0, 0, 256, 256);
+    if (image.size.width >= image.size.height) {
+        cropRect.origin.x = w*0.5-128;
+    } else {
+        cropRect.origin.y = h*0.5-128;
+    }
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
+    image = [UIImage imageWithCGImage:imageRef];
+    
+    //thumb save
+    NSData *data = UIImageJPEGRepresentation(image, 0.85);
+    NSString *fileName = @"thumb.jpg";
+    NSString *filePath = makeTempPath(fileName);
+    [filePathes addObject:filePath];
+    [data writeToFile:filePath atomically:YES];
+    
+    //thumb key
+    _thumbKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+    [fileKeys addObject:_thumbKey];
+    
+    //
     _alt.title = @"上传中... 0%";
     
     //uploader
@@ -252,8 +322,7 @@ static NSArray* _assets;
 - (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
     _finishNum++;
     if (_finishNum >= _uploadNum) {
-        [_alt dismissWithClickedButtonIndex:0 animated:YES];
-        alert(@"上传成功", nil);
+        [self addUserPack];
     } else {
         float f = (float)_finishNum/_uploadNum;
         int n = f*100;
@@ -265,6 +334,44 @@ static NSArray* _assets;
     [_alt dismissWithClickedButtonIndex:0 animated:YES];
     _alt = nil;
     alert(@"上传失败", nil);
+}
+
+- (void)addUserPack {
+    _alt.title = @"生成中...";
+    
+//    [_alt dismissWithClickedButtonIndex:0 animated:NO];
+//    alert(@"上传成功", nil);
+//    
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{
+        @"Title":_titleInput.text,
+        @"Text":_textInput.text,
+        @"Thumb":_thumbKey,
+        @"Cover":_coverKey,
+        @"CoverBlur":_coverBlurKey,
+        @"Images":_images,
+        @"Price":@(_price),
+    };
+    [session postToApi:@"userPack/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            [_alt dismissWithClickedButtonIndex:0 animated:NO];
+            _alt = nil;
+            alertHTTPError(error, data);
+            return;
+        }
+        
+//        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+//        if (error) {
+//            lwError("Json error:%@", [error localizedDescription]);
+//            [_alt dismissWithClickedButtonIndex:0 animated:YES];
+//            _alt = nil;
+//            return;
+//        }
+
+        [_alt dismissWithClickedButtonIndex:0 animated:YES];
+        alert(@"发布成功", nil);
+    }];
 }
 
 @end
@@ -299,7 +406,7 @@ static NSArray* _assets;
     if (_userPacks.count == 0) {
         NSDictionary *body = @{@"StartId": @(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session postToApi:@"userPack/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"userPack/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 alertHTTPError(error, data);
                 return;
@@ -318,7 +425,7 @@ static NSArray* _assets;
             for (NSDictionary *dict in array) {
                 UserPack *userPack = [[UserPack alloc] initWithDict:dict];
                 [_userPacks addObject:userPack];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_userPacks.count-1 inSection:1];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_userPacks.count-1 inSection:0];
                 [insertIndexPathes addObject:indexPath];
             }
             [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
@@ -363,17 +470,20 @@ static NSArray* _assets;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 30;
+    return _userPacks.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     SldMyUserPackCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myUserPackCell" forIndexPath:indexPath];
+    UserPack *userPack = [_userPacks objectAtIndex:indexPath.row];
+    [cell.imageView asyncLoadUploadImageWithKey:userPack.thumb showIndicator:NO completion:nil];
+    cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", userPack.playTimes];
+    cell.packId = userPack.packId;
     return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionFooter) {
-        lwInfo("%d/%d", indexPath.section, indexPath.row);
         _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"myUserPackFooter" forIndexPath:indexPath];
         return _footer;
     }
@@ -431,6 +541,12 @@ static NSArray* _assets;
     } else {
         _scrollUnderBottom = NO;
     }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    SldMyUserPackMenuController *vc = segue.destinationViewController;
+    SldMyUserPackCell *cell = sender;
+    vc.packId = cell.packId;
 }
 
 @end

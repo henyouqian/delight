@@ -73,11 +73,30 @@
     return nil;
 }
 
+- (NSString*)getString:(NSString*)key {
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    FMResultSet *rs = [db executeQuery:@"SELECT value FROM kv WHERE key = ?", key];
+    if ([rs next]) {
+        NSString *str = [rs stringForColumnIndex:0];
+        return str;
+    }
+    return nil;
+}
+
 - (BOOL)setKey:(NSString*)key value:(NSData*)value {
     FMDatabase *db = [SldDb defaultDb].fmdb;
     BOOL ok = [db executeUpdate:@"REPLACE INTO kv (key, value) VALUES(?, ?)", key, value];
     if (!ok) {
         lwError("set kv error: key=%@, value=%@", key, value);
+    }
+    return ok;
+}
+
+- (BOOL)setKey:(NSString*)key string:(NSString*)string {
+    FMDatabase *db = [SldDb defaultDb].fmdb;
+    BOOL ok = [db executeUpdate:@"REPLACE INTO kv (key, value) VALUES(?, ?)", key, string];
+    if (!ok) {
+        lwError("set kv error: key=%@, value=%@", key, string);
     }
     return ok;
 }

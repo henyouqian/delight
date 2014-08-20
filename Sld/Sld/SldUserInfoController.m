@@ -27,6 +27,7 @@
 @property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) UIAlertView *avatarUploadAlt;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) BOOL needUploadCustomAvatar;
 @end
 
 static NSArray *_genderStrings;
@@ -184,6 +185,8 @@ static NSArray *_genderStrings;
     _avatarImageView.image = scaledImage;
     
     _gravatarKey = @"";
+    
+    _needUploadCustomAvatar = YES;
 }
 
 - (IBAction)onSave:(id)sender {
@@ -204,7 +207,7 @@ static NSArray *_genderStrings;
     }
     
     //custum avatar
-    else if (_avatarImageView.image) {
+    else if (_avatarImageView.image && _needUploadCustomAvatar) {
         //gen file name
         NSData *imageData = UIImageJPEGRepresentation(_avatarImageView.image, 0.85);
         
@@ -231,7 +234,7 @@ static NSArray *_genderStrings;
         //get upload token
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSArray *body = @[key];
-        [session postToApi:@"player/getUptoken" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"player/getUptokens" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 alertHTTPError(error, data);
                 [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
@@ -258,6 +261,8 @@ static NSArray *_genderStrings;
             uploader.delegate = self;
             [uploader uploadFile:filePath key:key extra:nil];
         }];
+    } else {
+        [self save];
     }
 }
 
@@ -305,6 +310,7 @@ static NSArray *_genderStrings;
     [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
     [self save];
     _gd.playerInfo.customAvatarKey = _customAvatarKey;
+    _needUploadCustomAvatar = NO;
 }
 
 - (void)uploadFailed:(NSString *)filePath error:(NSError *)error {

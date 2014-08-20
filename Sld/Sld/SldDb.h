@@ -13,6 +13,8 @@
 + (instancetype)defaultDb;
 
 - (NSData*)getValue:(NSString*)key;
+- (NSString*)getString:(NSString*)key;
 - (BOOL)setKey:(NSString*)key value:(NSData*)value;
+- (BOOL)setKey:(NSString*)key string:(NSString*)string;
 
 @end

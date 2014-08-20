@@ -168,6 +168,10 @@ enum GameMode{
 + (instancetype)getInstance;
 - (void)reset;
 
+//load pack
+- (void)loadPack:(SInt64)packId completion:(void (^)(PackInfo*))completion;
+@property (nonatomic) NSMutableDictionary* packDict;
+
 @end
 
 

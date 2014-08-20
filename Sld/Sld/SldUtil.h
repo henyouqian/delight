@@ -19,6 +19,7 @@ BOOL imageExist(NSString *imageKey);
 NSString* makeImagePath(NSString *imageKey);
 NSString* makeImagePathFromUrl(NSString *imageUrl);
 NSString* makeImageServerUrl(NSString *imageKey);
+NSString* makeImageServerUrl2(NSString *imageKey, NSString *host);
 
 UIColor* makeUIColor(int r, int g, int b, int a);
 

@@ -153,6 +153,10 @@
 		D0A2CBB0195B32000060BD49 /* AdMoGoAdapterAdvert.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CAD8195B31FF0060BD49 /* AdMoGoAdapterAdvert.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D0A2CBB1195B32000060BD49 /* AdMoGoAdapterAdvertFullAd.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CADA195B31FF0060BD49 /* AdMoGoAdapterAdvertFullAd.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D0A2CBB2195B32000060BD49 /* AdMoGoAdapterAdvertSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A2CADC195B31FF0060BD49 /* AdMoGoAdapterAdvertSplash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D0C4EFA119A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EF8F19A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D0C4EFA219A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EF9119A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D0C4EFA319A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EF9319A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D0C4EFA419A438CF00D2F1D0 /* libGoogleAdMobAds.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0C4EFA019A438CF00D2F1D0 /* libGoogleAdMobAds.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -672,6 +676,25 @@
 		D0A2CB94195B32000060BD49 /* libAdsMogo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdsMogo.a; sourceTree = "<group>"; };
 		D0A2CB95195B32000060BD49 /* libAdsMogo_i386.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdsMogo_i386.a; sourceTree = "<group>"; };
 		D0A2CB96195B32000060BD49 /* NSMutableDictionary+AdsMogoDic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+AdsMogoDic.h"; sourceTree = "<group>"; };
+		D0C4EF8E19A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterGoogleAdMobAds.h; sourceTree = "<group>"; };
+		D0C4EF8F19A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterGoogleAdMobAds.m; sourceTree = "<group>"; };
+		D0C4EF9019A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterGoogleAdMobFullAds.h; sourceTree = "<group>"; };
+		D0C4EF9119A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterGoogleAdMobFullAds.m; sourceTree = "<group>"; };
+		D0C4EF9219A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMoGoAdapterGoogleAdMobSplash.h; sourceTree = "<group>"; };
+		D0C4EF9319A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterGoogleAdMobSplash.m; sourceTree = "<group>"; };
+		D0C4EF9419A438CF00D2F1D0 /* GADAdMobExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADAdMobExtras.h; sourceTree = "<group>"; };
+		D0C4EF9519A438CF00D2F1D0 /* GADAdNetworkExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADAdNetworkExtras.h; sourceTree = "<group>"; };
+		D0C4EF9619A438CF00D2F1D0 /* GADAdSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADAdSize.h; sourceTree = "<group>"; };
+		D0C4EF9719A438CF00D2F1D0 /* GADBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADBannerView.h; sourceTree = "<group>"; };
+		D0C4EF9819A438CF00D2F1D0 /* GADBannerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADBannerViewDelegate.h; sourceTree = "<group>"; };
+		D0C4EF9919A438CF00D2F1D0 /* GADInAppPurchase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInAppPurchase.h; sourceTree = "<group>"; };
+		D0C4EF9A19A438CF00D2F1D0 /* GADInAppPurchaseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInAppPurchaseDelegate.h; sourceTree = "<group>"; };
+		D0C4EF9B19A438CF00D2F1D0 /* GADInterstitial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInterstitial.h; sourceTree = "<group>"; };
+		D0C4EF9C19A438CF00D2F1D0 /* GADInterstitialDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInterstitialDelegate.h; sourceTree = "<group>"; };
+		D0C4EF9D19A438CF00D2F1D0 /* GADModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADModules.h; sourceTree = "<group>"; };
+		D0C4EF9E19A438CF00D2F1D0 /* GADRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADRequest.h; sourceTree = "<group>"; };
+		D0C4EF9F19A438CF00D2F1D0 /* GADRequestError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADRequestError.h; sourceTree = "<group>"; };
+		D0C4EFA019A438CF00D2F1D0 /* libGoogleAdMobAds.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAdMobAds.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -681,6 +704,7 @@
 			files = (
 				B3C0AF4A1906680800CB4DFD /* OpenAL.framework in Frameworks */,
 				B3C0AE9D1906662100CB4DFD /* Foundation.framework in Frameworks */,
+				D0C4EFA419A438CF00D2F1D0 /* libGoogleAdMobAds.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1291,6 +1315,7 @@
 		D0A2CA82195B31FF0060BD49 /* AdNetworkLibs */ = {
 			isa = PBXGroup;
 			children = (
+				D0C4EF8C19A438CF00D2F1D0 /* AdMob_SDK_692 */,
 				D00C74F4198F962500F32046 /* Baidu_3.5.1_SDK */,
 				D0A2CABF195B31FF0060BD49 /* DoMob_SDK_429 */,
 				D0A2CAD5195B31FF0060BD49 /* o2omobi_SDK_202 */,
@@ -1692,6 +1717,40 @@
 			path = AdsMoGoSDK;
 			sourceTree = "<group>";
 		};
+		D0C4EF8C19A438CF00D2F1D0 /* AdMob_SDK_692 */ = {
+			isa = PBXGroup;
+			children = (
+				D0C4EF8D19A438CF00D2F1D0 /* AdsMoGoAdapter */,
+				D0C4EF9419A438CF00D2F1D0 /* GADAdMobExtras.h */,
+				D0C4EF9519A438CF00D2F1D0 /* GADAdNetworkExtras.h */,
+				D0C4EF9619A438CF00D2F1D0 /* GADAdSize.h */,
+				D0C4EF9719A438CF00D2F1D0 /* GADBannerView.h */,
+				D0C4EF9819A438CF00D2F1D0 /* GADBannerViewDelegate.h */,
+				D0C4EF9919A438CF00D2F1D0 /* GADInAppPurchase.h */,
+				D0C4EF9A19A438CF00D2F1D0 /* GADInAppPurchaseDelegate.h */,
+				D0C4EF9B19A438CF00D2F1D0 /* GADInterstitial.h */,
+				D0C4EF9C19A438CF00D2F1D0 /* GADInterstitialDelegate.h */,
+				D0C4EF9D19A438CF00D2F1D0 /* GADModules.h */,
+				D0C4EF9E19A438CF00D2F1D0 /* GADRequest.h */,
+				D0C4EF9F19A438CF00D2F1D0 /* GADRequestError.h */,
+				D0C4EFA019A438CF00D2F1D0 /* libGoogleAdMobAds.a */,
+			);
+			path = AdMob_SDK_692;
+			sourceTree = "<group>";
+		};
+		D0C4EF8D19A438CF00D2F1D0 /* AdsMoGoAdapter */ = {
+			isa = PBXGroup;
+			children = (
+				D0C4EF8E19A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.h */,
+				D0C4EF8F19A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.m */,
+				D0C4EF9019A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.h */,
+				D0C4EF9119A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.m */,
+				D0C4EF9219A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.h */,
+				D0C4EF9319A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.m */,
+			);
+			path = AdsMoGoAdapter;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1761,6 +1820,7 @@
 				B308B043190FC4810021BE9C /* DOUAudioPlaybackItem.m in Sources */,
 				B3C0AF571906699400CB4DFD /* FMDatabase.m in Sources */,
 				D00C7542198F962500F32046 /* ioapi.c in Sources */,
+				D0C4EFA219A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobFullAds.m in Sources */,
 				B3C0AF41190667C300CB4DFD /* FISoundSource.m in Sources */,
 				D00C7541198F962500F32046 /* CJSONSerializer.m in Sources */,
 				D00C7539198F962500F32046 /* CFilteringJSONSerializer.m in Sources */,
@@ -1773,6 +1833,7 @@
 				B39E44F7191EB91000CBB247 /* PSTCollectionViewUpdateItem.m in Sources */,
 				D00C7545198F962500F32046 /* zip.c in Sources */,
 				B39E44F1191EB91000CBB247 /* PSTCollectionViewCell.m in Sources */,
+				D0C4EFA119A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobAds.m in Sources */,
 				B39E44FB191EB91000CBB247 /* PSTGridLayoutSection.m in Sources */,
 				D00C7532198F962500F32046 /* AdMoGoAdapterBaiduMobAd.m in Sources */,
 				D0A2C942195B30440060BD49 /* AFURLConnectionOperation.m in Sources */,
@@ -1788,6 +1849,7 @@
 				B308B041190FC4810021BE9C /* DOUAudioFrequencyAnalyzer.m in Sources */,
 				D014464E199F912E00D47DCA /* QBImagePickerThumbnailView.m in Sources */,
 				B39E44E9191EB91000CBB247 /* MWGridViewController.m in Sources */,
+				D0C4EFA319A438CF00D2F1D0 /* AdMoGoAdapterGoogleAdMobSplash.m in Sources */,
 				B3C0AF38190667C300CB4DFD /* easing.c in Sources */,
 				B3C0AF46190667C300CB4DFD /* gif_hash.c in Sources */,
 				D00C7537198F962500F32046 /* OpenUDID.m in Sources */,
@@ -2004,6 +2066,7 @@
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdsMoGoSDK",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
+					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2038,6 +2101,7 @@
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdsMoGoSDK",
 					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
+					"$(PROJECT_DIR)/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

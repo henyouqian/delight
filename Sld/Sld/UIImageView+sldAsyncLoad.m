@@ -10,6 +10,7 @@
 #import "UIImage+animatedGIF.h"
 #import "SldUtil.h"
 #import "SldHttpSession.h"
+#import "SldConfig.h"
 
 
 @implementation UIImageView (sldAsyncLoad)
@@ -234,7 +235,7 @@
     });
 }
 
-- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString *)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     if (imageKey == nil || _loading) {
         return;
     }
@@ -270,7 +271,7 @@
             [_task cancel];
         }
         
-        _serverUrl = makeImageServerUrl(imageKey);
+        _serverUrl = makeImageServerUrl2(imageKey, host);
         SldHttpSession *session = [SldHttpSession defaultSession];
         _task = [session downloadFromUrl:_serverUrl
                           toPath:localPath
@@ -298,6 +299,13 @@
              }];
          }];
     }
+}
+
+- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].DATA_HOST showIndicator:showIndicator completion:completion];
+}
+- (void)asyncLoadUploadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];
 }
 
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
