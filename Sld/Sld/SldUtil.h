@@ -59,3 +59,11 @@ NSString* formatInterval(int sec);
 - (void)beginRefreshing;
 - (void)endRefreshing;
 @end
+
+//=============================
+@interface SldSpinFooter : UICollectionReusableView
+@property (nonatomic) UIActivityIndicatorView *spin;
+
+- (instancetype)init;
+@end
+

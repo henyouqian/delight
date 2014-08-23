@@ -234,6 +234,9 @@
         //frame.size.height = frame.size.height - 40;
         UITextView *textView = [[UITextView alloc] initWithFrame:frame];
         textView.text = gameData.packInfo.text;
+        if (textView.text == nil || textView.text.length == 0) {
+            textView.text = @"对不起，没有介绍。";
+        }
         textView.textColor = [UIColor whiteColor];
         textView.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
         textView.backgroundColor = [UIColor clearColor];

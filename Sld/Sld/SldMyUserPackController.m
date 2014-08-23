@@ -9,6 +9,7 @@
 #import "SldMyUserPackController.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
+#import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "UIImage+ImageEffects.h"
 #import "UIImageView+sldAsyncLoad.h"
@@ -21,7 +22,7 @@ static NSArray* _assets;
 @interface SldMyUserPackCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *playTimesLabel;
-@property (nonatomic) SInt64 packId;
+@property (nonatomic) UserPack* userPack;
 @end
 
 @implementation SldMyUserPackCell
@@ -34,36 +35,6 @@ static NSArray* _assets;
 @end
 
 @implementation SldMyUserPackFooter
-
-@end
-
-//=============================
-@interface UserPack : NSObject
-@property (nonatomic) SInt64 id;
-@property (nonatomic) SInt64 packId;
-@property (nonatomic) int sliderNum;
-@property (nonatomic) int price;
-@property (nonatomic) NSString *thumb;
-@property (nonatomic) int playTimes;
-
-- (instancetype)initWithDict:(NSDictionary*)dict;
-
-@end
-
-@implementation UserPack
-
-- (instancetype)initWithDict:(NSDictionary*)dict {
-    if (self = [super init]) {
-        _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
-        _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
-        _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
-        _price = [(NSNumber*)[dict objectForKey:@"Price"] intValue];
-        _thumb = [dict objectForKey:@"Thumb"];
-        _playTimes = [(NSNumber*)[dict objectForKey:@"PlayTimes"] intValue];
-        return self;
-    }
-    return nil;
-}
 
 @end
 
@@ -114,8 +85,12 @@ static NSArray* _assets;
 @property (weak, nonatomic) IBOutlet UILabel *priceLable;
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
 @property (weak, nonatomic) IBOutlet UITextView *textInput;
+@property (weak, nonatomic) IBOutlet UILabel *sliderNumLabel;
+@property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
 @property (nonatomic) int price;
 @property (nonatomic) NSArray *numbers;
+@property (nonatomic) NSArray *sliderNumbers;
+@property (nonatomic) int sliderNum;
 @property (nonatomic) QiniuSimpleUploader* uploader;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) int uploadNum;
@@ -144,6 +119,18 @@ static NSArray* _assets;
     
     _titleInput.delegate = self;
     _textInput.delegate = self;
+    
+    //
+    _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7), @(8), @(9)];
+    _sliderNum = 5;
+    numberOfSteps = ((float)[_sliderNumbers count] - 1);
+    _sliderNumSlider.maximumValue = numberOfSteps;
+    _sliderNumSlider.minimumValue = 0;
+    _sliderNumSlider.continuous = YES;
+    _sliderNumSlider.value = 2;
+    [_sliderNumSlider addTarget:self
+                action:@selector(sliderNumValueChanged:)
+      forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)valueChanged:(UISlider *)sender {
@@ -152,6 +139,14 @@ static NSArray* _assets;
     NSNumber *number = _numbers[index]; // <-- This numeric value you want
     _price = [number intValue];
     _priceLable.text = [NSString stringWithFormat:@"定价：%d金币", _price];
+}
+
+- (void)sliderNumValueChanged:(UISlider *)sender {
+    NSUInteger index = (NSUInteger)(_sliderNumSlider.value + 0.5);
+    [_sliderNumSlider setValue:index animated:NO];
+    NSNumber *number = _sliderNumbers[index]; // <-- This numeric value you want
+    _sliderNum = [number intValue];
+    _sliderNumLabel.text = [NSString stringWithFormat:@"滑块数量：%d", _sliderNum];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -352,6 +347,7 @@ static NSArray* _assets;
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
         @"Price":@(_price),
+        @"SliderNum":@(_sliderNum),
     };
     [session postToApi:@"userPack/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
@@ -478,7 +474,7 @@ static NSArray* _assets;
     UserPack *userPack = [_userPacks objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:userPack.thumb showIndicator:NO completion:nil];
     cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", userPack.playTimes];
-    cell.packId = userPack.packId;
+    cell.userPack = userPack;
     return cell;
 }
 
@@ -544,9 +540,9 @@ static NSArray* _assets;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    SldMyUserPackMenuController *vc = segue.destinationViewController;
     SldMyUserPackCell *cell = sender;
-    vc.packId = cell.packId;
+    SldGameData *gd = [SldGameData getInstance];
+    gd.userPack = cell.userPack;
 }
 
 @end

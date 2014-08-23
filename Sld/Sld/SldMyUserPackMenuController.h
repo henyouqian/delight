@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface SldMyUserPackMenuController : UIViewController<UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic) SInt64 packId;
 @end

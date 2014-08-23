@@ -138,7 +138,6 @@
 @property (nonatomic) SldButton *btnNo;
 @property (nonatomic) SldButton *btnNext;
 
-@property (nonatomic) uint32_t sliderNum;
 @property (nonatomic) NSMutableArray *files;
 @property (nonatomic) NSInteger imgIdx;
 @property (nonatomic) NSMutableArray *sprites;
@@ -222,6 +221,8 @@ NSDate *_gameBeginTime;
         _sprites = [NSMutableArray arrayWithCapacity:3];
         if (_gameData.gameMode == CHALLENGE) {
             _sliderNum = _gameData.challengeInfo.sliderNum;
+        } else if (_gameData.gameMode == USERPACK) {
+            _sliderNum = _gameData.userPack.sliderNum;
         } else {
             _sliderNum = _gameData.eventInfo.sliderNum;
         }

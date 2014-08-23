@@ -298,3 +298,24 @@ NSString* formatInterval(int sec) {
     _refreshing = NO;
 }
 @end
+
+//============================
+@implementation SldSpinFooter
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _spin = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:_spin];
+        _spin.center = CGPointMake(self.frame.size.width*0.5, self.frame.size.height*0.5);
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+

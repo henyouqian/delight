@@ -184,6 +184,24 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 
 @end
 
+//=============================
+@implementation UserPack
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
+        _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
+        _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
+        _price = [(NSNumber*)[dict objectForKey:@"Price"] intValue];
+        _thumb = [dict objectForKey:@"Thumb"];
+        _playTimes = [(NSNumber*)[dict objectForKey:@"PlayTimes"] intValue];
+        return self;
+    }
+    return nil;
+}
+
+@end
+
 //=========================
 @implementation EventPlayRecored
 + (instancetype)recordWithDictionary:(NSDictionary*)dict {

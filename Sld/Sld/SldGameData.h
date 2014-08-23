@@ -120,12 +120,25 @@ enum CupType{
 + (instancetype)recordWithDictionary:(NSDictionary*)dict;
 @end
 
+//============================
+@interface UserPack : NSObject
+@property (nonatomic) SInt64 id;
+@property (nonatomic) SInt64 packId;
+@property (nonatomic) int sliderNum;
+@property (nonatomic) int price;
+@property (nonatomic) NSString *thumb;
+@property (nonatomic) int playTimes;
+
+- (instancetype)initWithDict:(NSDictionary*)dict;
+@end
+
 //=================
 enum GameMode{
     PRACTICE,
     CHALLENGE,
     MATCH,
     OFFLINE,
+    USERPACK,
 };
 
 //=================
@@ -141,6 +154,7 @@ enum GameMode{
 @property (nonatomic) EventPlayRecored *eventPlayRecord;
 @property (nonatomic) int recentScore;
 @property (nonatomic) PlayerInfo *playerInfo;
+@property (nonatomic) UserPack *userPack;
 - (void)resetEvent;
 
 //player

@@ -12,6 +12,7 @@
 @interface SldGameScene : SKScene<SKStoreProductViewControllerDelegate>
 @property (weak, nonatomic) UINavigationController *navigationController;
 @property (weak, nonatomic) SldGameController *gameController;
+@property (nonatomic) uint32_t sliderNum;
 
 + (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller;
 - (instancetype)initWithSize:(CGSize)size controller:(SldGameController*)controller;
