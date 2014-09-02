@@ -123,6 +123,11 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 @end
 
 //=========================
+@implementation AdsConf
+
+@end
+
+//=========================
 @implementation PlayerInfo
 
 + (instancetype)playerWithDictionary:(NSDictionary*)dict {
@@ -144,9 +149,14 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     
     info.rewardCache = [(NSNumber*)[dict objectForKey:@"RewardCache"] longLongValue];
     info.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
-    info.adsPercent = [(NSNumber*)[dict objectForKey:@"AdsPercent"] floatValue];
     info.currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
     info.rateReward = [(NSNumber*)[dict objectForKey:@"RateReward"] intValue];
+    
+    NSDictionary *adsConf = [dict objectForKey:@"AdsConf"];
+    info.adsConf = [[AdsConf alloc] init];
+    info.adsConf.showPercent = [(NSNumber*)[adsConf objectForKey:@"ShowPercent"] floatValue];
+    info.adsConf.delayPercent = [(NSNumber*)[adsConf objectForKey:@"DelayPercent"] floatValue];
+    info.adsConf.delaySec = [(NSNumber*)[adsConf objectForKey:@"DelaySec"] floatValue];
     return info;
 }
 

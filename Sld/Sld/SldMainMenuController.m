@@ -56,19 +56,6 @@
     } else {
         _hiddenButton.hidden = YES;
     }
-    
-    NSString *rules = [[SldDb defaultDb] getString:@"appleRules"];
-    if (rules == nil) {
-        //alert(nil, @"声明：游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。");
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"声明：游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。"
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"知道了"
-                                              otherButtonTitles:nil];
-        [alert show];
-        
-        [[SldDb defaultDb] setKey:@"appleRules" string:@"1"];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -99,7 +86,7 @@
 - (IBAction)onRatingButton:(id)sender {
     int rateReward = [SldGameData getInstance].playerInfo.rateReward;
     if (rateReward > 0) {
-        NSString *str = [NSString stringWithFormat:@"评分奖励%d金币 💅", rateReward];
+        NSString *str = [NSString stringWithFormat:@"给《拼拼拼拼拼》评个分吧🙏"];
         [[[UIAlertView alloc] initWithTitle:str
                                     message:@""
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"再说" action:^{
@@ -131,6 +118,9 @@
 }
 
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+    return;
+    
     if (_storeViewLoaded) {
         _storeViewLoaded = NO;
         

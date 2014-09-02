@@ -160,6 +160,7 @@
 @property (nonatomic) SKLabelNode *curtainLabel;
 @property (nonatomic) BOOL inCurtain;
 @property (nonatomic) SKLabelNode *timerLabel;
+@property (nonatomic) SKSpriteNode *timerBg;
 @property (nonatomic) BOOL packHasFinished;
 @property (nonatomic) SKSpriteNode *lastImageBlurSprite;
 @property (nonatomic) SKSpriteNode *lastImageCover;
@@ -360,11 +361,13 @@ NSDate *_gameBeginTime;
         self.curtainTop = [SKSpriteNode spriteNodeWithColor:colorCtBg size:self.size];
         [self.curtainTop setAnchorPoint:CGPointMake(0.f, 0.f)];
         [self.curtainTop setPosition:CGPointMake(0.f, self.size.height*.5f)];
+        [self.curtainTop setZPosition:9];
         [self addChild:self.curtainTop];
         
         self.curtainBottom = [SKSpriteNode spriteNodeWithColor:colorCtBg size:self.size];
         [self.curtainBottom setAnchorPoint:CGPointMake(0.f, 1.f)];
         [self.curtainBottom setPosition:CGPointMake(0.f, self.size.height*.5f)];
+        [self.curtainBottom setZPosition:9];
         [self addChild:self.curtainBottom];
         
         self.curtainLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
@@ -389,6 +392,7 @@ NSDate *_gameBeginTime;
         [self.curtainBelt setAnchorPoint:CGPointMake(.5f, .5f)];
         [self.curtainBelt setPosition:CGPointMake(self.size.width*.5f, self.size.height*.5f)];
         [self addChild:self.curtainBelt];
+        [self.curtainBelt setZPosition:9];
         [self.curtainBelt addChild:self.curtainLabel];
         
         
@@ -396,14 +400,31 @@ NSDate *_gameBeginTime;
         [self nextImage];
         
         //timer
-//        self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
-//        [self.timerLabel setFontColor:[UIColor whiteColor]];
-//        [self.timerLabel setFontSize:30];
-//        [self.timerLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
-//        [self.timerLabel setPosition:CGPointMake(self.size.width*.5f, self.size.height-30.f)];
-//        [self.timerLabel setText:@"00:35.127"];
-//        [self.timerLabel setZPosition:1.f];
-//        [self addChild:self.timerLabel];
+        float y = self.size.height-45.f;
+        _timerBg = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:0 green:0 blue:0 alpha:.5f] size:CGSizeMake(115, 25)];
+        [_timerBg setAnchorPoint:CGPointMake(1, 0.5)] ;
+        [_timerBg setPosition: CGPointMake(self.size.width, y)];
+        [_timerBg setZPosition:1.f];
+        [self addChild:_timerBg];
+        
+        self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+        [self.timerLabel setFontColor:[UIColor whiteColor]];
+        [self.timerLabel setFontSize:20];
+        [self.timerLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeLeft];
+        [self.timerLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+        [self.timerLabel setPosition:CGPointMake(-100, 0)];
+        [self.timerLabel setText:@"0:00.000"];
+        [self.timerLabel setZPosition:1.f];
+        [_timerBg addChild:self.timerLabel];
+        
+        if (_beltRotate) {
+            _timerBg.zRotation = -M_PI_2;
+            _timerBg.anchorPoint = CGPointMake(0, 0.5);
+            _timerBg.position = CGPointMake(self.size.width-17, self.size.height);
+            _timerBg.size = CGSizeMake(135, 25);
+            _timerLabel.position = CGPointMake(30, 0);
+        }
+        
 //        //timer shadow
 //        SKLabelNode *timerShadow = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
 //        [self.timerLabel setFontColor:[UIColor whiteColor]];
@@ -876,7 +897,12 @@ static float lerpf(float a, float b, float t) {
         NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
         NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
         [_timeBar update:dt];
+        
+        int t = (int)(dt*1000);
+        _timerLabel.text = formatScore(-t);
     }
+    
+//    _timerBg.zRotation = _timerBg.zRotation + 0.01;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1066,8 +1092,18 @@ static float lerpf(float a, float b, float t) {
 
 - (void)onPackFinish {
     float rd = (float)(arc4random() % 100);
-    if (rd/100.f < _gameData.playerInfo.adsPercent) {
-        [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+    AdsConf *adsConf = _gameData.playerInfo.adsConf;
+    if (rd/100.f < adsConf.showPercent) {
+        if (adsConf.delayPercent > 0 && adsConf.delaySec > 0) {
+            rd = (float)(arc4random() % 100)/100.f;
+            if (rd/100.f < adsConf.delayPercent) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                });
+            }
+        } else {
+            [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+        }
     }
     
     _packHasFinished = YES;

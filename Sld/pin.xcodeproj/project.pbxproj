@@ -138,7 +138,6 @@
 		D05E9961195C7189002A6B83 /* coin5.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E995B195C7189002A6B83 /* coin5.png */; };
 		D05E9965195CB1B5002A6B83 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9964195CB1B5002A6B83 /* Security.framework */; };
 		D05E9966195CB1BF002A6B83 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667F221953172C00AD9282 /* CoreTelephony.framework */; };
-		D05E9968195CB1D5002A6B83 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9967195CB1D5002A6B83 /* AdSupport.framework */; };
 		D062EFEF19857F22004AD4A9 /* otlPublish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFEE19857F22004AD4A9 /* otlPublish@2x.png */; };
 		D062EFF119860B63004AD4A9 /* otlFire48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF019860B63004AD4A9 /* otlFire48@2x.png */; };
 		D062EFF319860BF2004AD4A9 /* otlTimer48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */; };
@@ -149,6 +148,7 @@
 		D0667D6419514DD700AD9282 /* SldIapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0667D6319514DD700AD9282 /* SldIapController.m */; };
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
+		D06FDB0D19AEE6C100ECBAEA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9967195CB1D5002A6B83 /* AdSupport.framework */; };
 		D07B0901199BDC470056D102 /* otlPickSide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D07B0900199BDC460056D102 /* otlPickSide@2x.png */; };
 		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
 		D09CF94B199CABFB00786FB1 /* douban64.png in Resources */ = {isa = PBXBuildFile; fileRef = D09CF948199CABFB00786FB1 /* douban64.png */; };
@@ -617,7 +617,7 @@
 				D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */,
 				D05E9965195CB1B5002A6B83 /* Security.framework in Frameworks */,
 				D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */,
-				D05E9968195CB1D5002A6B83 /* AdSupport.framework in Frameworks */,
+				D06FDB0D19AEE6C100ECBAEA /* AdSupport.framework in Frameworks */,
 				D05E9966195CB1BF002A6B83 /* CoreTelephony.framework in Frameworks */,
 				D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */,
 				D0667D731952BE9000AD9282 /* Social.framework in Frameworks */,
@@ -1778,7 +1778,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/External/Flurry",
@@ -1820,7 +1819,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/External/Flurry",

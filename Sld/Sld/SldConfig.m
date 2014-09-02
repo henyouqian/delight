@@ -22,6 +22,7 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     inst.DATA_HOST = @"http://dn-pintugame.qbox.me";
     inst.UPLOAD_HOST = @"http://dn-pintuuserupload.qbox.me";
     inst.KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
+    inst.KEYCHAIN_KV = @"com.liwei.Sld.KV";
     inst.STORE_ID = @"904649492";
 
     inst.HTML5_URL = @"http://pintuhtml5.qiniudn.com/index.html";
@@ -31,9 +32,9 @@ NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
     inst.WEIXIN_KEY = @"wx9cb1a9d645c24d0a";
     
 
-    inst.HOST = @"http://192.168.2.55:9998";
+//    inst.HOST = @"http://192.168.2.55:9998";
 //    inst.HOST = @"http://192.168.1.43:9998";
-//    inst.HOST = @"http://sld.pintugame.com";
+    inst.HOST = @"http://sld.pintugame.com";
     
     return inst;
 }

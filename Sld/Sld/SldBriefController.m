@@ -80,62 +80,67 @@ static NSMutableSet *g_updatedPackIdSet = nil;
     
     //load pack data
     EventInfo *event = _gd.eventInfo;
-    UInt64 packId = event.packId;
-    FMDatabase *db = [SldDb defaultDb].fmdb;
-    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
-    
-    BOOL needGetFromServer = NO;
-    if ([rs next]) { //local
-        NSString *data = [rs stringForColumnIndex:0];
-        NSError *error = nil;
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
-        if (error) {
-            lwError("Json error:%@", [error localizedDescription]);
-            return;
-        }
-        
-//        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
-//        if (packInfo.timeUnix != event.packTimeUnix) {
-//            needGetFromServer = YES;
-//        } else {
-//            _gd.packInfo = packInfo;
-//            [self updatePackInfo];
-//        }
-        
-        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
-        _gd.packInfo = packInfo;
+    [_gd loadPack:event.packId completion:^(PackInfo *packInfo) {
         [self updatePackInfo];
-        
-    } else {
-        needGetFromServer = YES;
-    }
+    }];
     
-    if (needGetFromServer) {
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        NSDictionary *body = @{@"Id":@(packId)};
-        [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                alertHTTPError(error, data);
-                return;
-            }
-            
-            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if (error) {
-                lwError("Json error:%@", [error localizedDescription]);
-                return;
-            }
-            _gd.packInfo = [PackInfo packWithDictionary:dict];
-            
-            //save to db
-            BOOL ok = [db executeUpdate:@"REPLACE INTO pack (id, data) VALUES(?, ?)", dict[@"Id"], data];
-            if (!ok) {
-                lwError("Sql error:%@", [db lastErrorMessage]);
-                return;
-            }
-            
-            [self updatePackInfo];
-        }];
-    }
+//    EventInfo *event = _gd.eventInfo;
+//    UInt64 packId = event.packId;
+//    FMDatabase *db = [SldDb defaultDb].fmdb;
+//    FMResultSet *rs = [db executeQuery:@"SELECT data FROM pack WHERE id = ?", [NSNumber numberWithUnsignedLongLong:packId]];
+//    
+//    BOOL needGetFromServer = NO;
+//    if ([rs next]) { //local
+//        NSString *data = [rs stringForColumnIndex:0];
+//        NSError *error = nil;
+//        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+//        if (error) {
+//            lwError("Json error:%@", [error localizedDescription]);
+//            return;
+//        }
+//        
+////        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
+////        if (packInfo.timeUnix != event.packTimeUnix) {
+////            needGetFromServer = YES;
+////        } else {
+////            _gd.packInfo = packInfo;
+////            [self updatePackInfo];
+////        }
+//        
+//        PackInfo *packInfo = [PackInfo packWithDictionary:dict];
+//        _gd.packInfo = packInfo;
+//        [self updatePackInfo];
+//        
+//    } else {
+//        needGetFromServer = YES;
+//    }
+//    
+//    if (needGetFromServer) {
+//        SldHttpSession *session = [SldHttpSession defaultSession];
+//        NSDictionary *body = @{@"Id":@(packId)};
+//        [session postToApi:@"pack/get" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+//            if (error) {
+//                alertHTTPError(error, data);
+//                return;
+//            }
+//            
+//            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+//            if (error) {
+//                lwError("Json error:%@", [error localizedDescription]);
+//                return;
+//            }
+//            _gd.packInfo = [PackInfo packWithDictionary:dict];
+//            
+//            //save to db
+//            BOOL ok = [db executeUpdate:@"REPLACE INTO pack (id, data) VALUES(?, ?)", dict[@"Id"], data];
+//            if (!ok) {
+//                lwError("Sql error:%@", [db lastErrorMessage]);
+//                return;
+//            }
+//            
+//            [self updatePackInfo];
+//        }];
+//    }
     
     //get play result
     SldHttpSession *session = [SldHttpSession defaultSession];

@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *userInfoCell;
+@property (weak, nonatomic) IBOutlet UIButton *logoutButton;
 
 @end
 
@@ -78,6 +79,16 @@ static __weak SldUserController *g_inst = nil;
             [self updateUI];
         }
     }];
+    
+    //daily logout nums
+    NSDate* now = getServerNow();
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *comp =
+    [gregorian components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour) fromDate:now];
+    
+    lwInfo("%d, %d, %d, %d", comp.year, comp.month, comp.day, comp.hour);
+    
 
 }
 

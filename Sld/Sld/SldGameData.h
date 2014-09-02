@@ -80,6 +80,13 @@ enum CupType{
 @end
 
 //=================
+@interface AdsConf : NSObject
+@property (nonatomic) float showPercent;
+@property (nonatomic) float delayPercent;
+@property (nonatomic) float delaySec;
+@end
+
+//=================
 @interface PlayerInfo : NSObject
 
 @property (nonatomic) SInt64 userId;
@@ -94,7 +101,7 @@ enum CupType{
 @property (nonatomic, readonly) int level;
 @property (nonatomic) SInt64 rewardCache;
 @property (nonatomic) int betCloseBeforeEndSec;
-@property (nonatomic) float adsPercent;
+@property (nonatomic) AdsConf *adsConf;
 @property (nonatomic) int currChallengeId;
 @property (nonatomic) int rateReward;
 
