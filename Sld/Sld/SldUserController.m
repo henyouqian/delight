@@ -27,10 +27,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *userInfoCell;
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
+@property (nonatomic) int logoutNum;
 
 @end
 
 static __weak SldUserController *g_inst = nil;
+static const int DAILLY_LOGOUT_NUM = 5;
 
 @implementation SldUserController
 
@@ -81,15 +83,43 @@ static __weak SldUserController *g_inst = nil;
     }];
     
     //daily logout nums
+    _logoutNum = [self getTodayLogoutNum];
+    
+    NSString *title = [NSString stringWithFormat:@"注销（今日剩%d次）", DAILLY_LOGOUT_NUM-_logoutNum];
+    [_logoutButton setTitle:title forState:UIControlStateNormal];
+}
+
+- (NSString*)getTodayString {
     NSDate* now = getServerNow();
     NSCalendar *gregorian = [[NSCalendar alloc]
                              initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *comp =
-    [gregorian components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour) fromDate:now];
+    [gregorian components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:now];
     
-    lwInfo("%d, %d, %d, %d", comp.year, comp.month, comp.day, comp.hour);
+    NSString *todayStr = [NSString stringWithFormat:@"%d.%d.%d", comp.year, comp.month, comp.day];
     
+    return todayStr;
+}
 
+- (int)getTodayLogoutNum {
+    NSString *todayStr = [self getTodayString];
+    
+    int logoutNum = 0;
+    NSString *js = [SldUtil getKeyChainValueWithKey:@"logoutNum"];
+    if (js) {
+        NSData *data = [js dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error;
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError(@"error: %@", error);
+            return logoutNum;
+        }
+        NSString *date = [dict objectForKey:@"date"];
+        if ([date compare:todayStr] == 0) {
+            logoutNum = [(NSNumber*)[dict objectForKey:@"logoutNum"] intValue];
+        }
+    }
+    return logoutNum;
 }
 
 - (void)updateUI {
@@ -129,6 +159,11 @@ static __weak SldUserController *g_inst = nil;
 }
 
 - (IBAction)onLogoutButton:(id)sender {
+    if (_logoutNum == DAILLY_LOGOUT_NUM) {
+        alert(@"今日注销次数已用完", nil);
+        return;
+    }
+    
     RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"否" action:nil];
     
 	RIButtonItem *logoutItem = [RIButtonItem itemWithLabel:@"是" action:^{
@@ -142,6 +177,13 @@ static __weak SldUserController *g_inst = nil;
                 
                 SldGameData *gd = [SldGameData getInstance];
                 [gd reset];
+                
+                _logoutNum++;
+                NSString *todayStr = [self getTodayString];
+                NSDictionary *dict = @{@"date":todayStr, @"logoutNum":@(_logoutNum)};
+                NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+                NSString* str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                [SldUtil setKeyChainWithKey:@"logoutNum" value:str];
             });
         }];
 	}];

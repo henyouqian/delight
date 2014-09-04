@@ -21,7 +21,7 @@ static const int USER_PACK_LIST_LIMIT = 30;
 //=============================
 @interface SldUserPackLatestCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *playTimesLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
 @property (nonatomic) UserPack* userPack;
 @end
 
@@ -111,7 +111,7 @@ static const int USER_PACK_LIST_LIMIT = 30;
     SldUserPackLatestCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"userPackLatestCell" forIndexPath:indexPath];
     UserPack *userPack = [_userPacks objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:userPack.thumb showIndicator:NO completion:nil];
-    cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", userPack.playTimes];
+//    cell.rewardNumLabel.text = [NSString stringWithFormat:@"%d", userPack.playTimes];
     cell.userPack = userPack;
     return cell;
 }
@@ -178,9 +178,9 @@ static const int USER_PACK_LIST_LIMIT = 30;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    SldMyUserPackCell *cell = sender;
-//    SldGameData *gd = [SldGameData getInstance];
-//    gd.userPack = cell.userPack;
+    SldUserPackLatestCell *cell = sender;
+    SldGameData *gd = [SldGameData getInstance];
+    gd.userPack = cell.userPack;
 }
 
 @end

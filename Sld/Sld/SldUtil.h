@@ -40,6 +40,9 @@ NSString* formatInterval(int sec);
 + (BOOL)validateEmail:(NSString *) candidate;
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 + (void)loadAvatar:(UIImageView*)imageView gravatarKey:(NSString*)gravatarKey customAvatarKey:(NSString*)customAvatarKey;
+
++ (void)setKeyChainWithKey:(NSString*)key value:(NSString*)value;
++ (NSString*)getKeyChainValueWithKey:(NSString*)key;
 @end
 
 @interface NSData (NSData_Conversion)

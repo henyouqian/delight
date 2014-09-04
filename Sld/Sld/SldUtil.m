@@ -193,6 +193,17 @@ NSString* formatInterval(int sec) {
     }
 }
 
++ (void)setKeyChainWithKey:(NSString*)key value:(NSString*)value {
+    SldConfig *conf = [SldConfig getInstance];
+    [SSKeychain setPassword:value forService:conf.KEYCHAIN_KV account:key];
+}
+
++ (NSString*)getKeyChainValueWithKey:(NSString*)key {
+    SldConfig *conf = [SldConfig getInstance];
+    NSString *value = [SSKeychain passwordForService:conf.KEYCHAIN_KV account:key];
+    return value;
+}
+
 @end
 
 

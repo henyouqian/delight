@@ -87,7 +87,7 @@ static NSArray* _assets;
 @property (weak, nonatomic) IBOutlet UITextView *textInput;
 @property (weak, nonatomic) IBOutlet UILabel *sliderNumLabel;
 @property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
-@property (nonatomic) int price;
+@property (nonatomic) int couponReward;
 @property (nonatomic) NSArray *numbers;
 @property (nonatomic) NSArray *sliderNumbers;
 @property (nonatomic) int sliderNum;
@@ -106,8 +106,12 @@ static NSArray* _assets;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _numbers = @[@(1), @(2), @(3), @(4), @(5)];
-    _price = 1;
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:50];
+    for (int i = 0; i < 100; i++) {
+        [array addObject:@(i*100+100)];
+    }
+    _numbers = [NSArray arrayWithArray:array];
+    _couponReward = 50;
     NSInteger numberOfSteps = ((float)[_numbers count] - 1);
     _slider.maximumValue = numberOfSteps;
     _slider.minimumValue = 0;
@@ -119,6 +123,7 @@ static NSArray* _assets;
     
     _titleInput.delegate = self;
     _textInput.delegate = self;
+    [self valueChanged:_slider];
     
     //
     _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7), @(8), @(9)];
@@ -131,14 +136,16 @@ static NSArray* _assets;
     [_sliderNumSlider addTarget:self
                 action:@selector(sliderNumValueChanged:)
       forControlEvents:UIControlEventValueChanged];
+    [self sliderNumValueChanged:_sliderNumSlider];
+    
 }
 
 - (void)valueChanged:(UISlider *)sender {
     NSUInteger index = (NSUInteger)(_slider.value + 0.5);
     [_slider setValue:index animated:NO];
     NSNumber *number = _numbers[index]; // <-- This numeric value you want
-    _price = [number intValue];
-    _priceLable.text = [NSString stringWithFormat:@"定价：%d金币", _price];
+    _couponReward = [number intValue];
+    _priceLable.text = [NSString stringWithFormat:@"提供%d奖票，需要%d水晶", _couponReward, _couponReward];
 }
 
 - (void)sliderNumValueChanged:(UISlider *)sender {
@@ -146,7 +153,7 @@ static NSArray* _assets;
     [_sliderNumSlider setValue:index animated:NO];
     NSNumber *number = _sliderNumbers[index]; // <-- This numeric value you want
     _sliderNum = [number intValue];
-    _sliderNumLabel.text = [NSString stringWithFormat:@"滑块数量：%d", _sliderNum];
+    _sliderNumLabel.text = [NSString stringWithFormat:@"拼图滑块数量：%d", _sliderNum];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -346,7 +353,7 @@ static NSArray* _assets;
         @"Cover":_coverKey,
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
-        @"Price":@(_price),
+        @"CouponReward":@(_couponReward),
         @"SliderNum":@(_sliderNum),
     };
     [session postToApi:@"userPack/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {

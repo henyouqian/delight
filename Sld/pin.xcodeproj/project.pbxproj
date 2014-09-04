@@ -89,6 +89,7 @@
 		D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0078931198B8E9800945D50 /* SldAdviceController.m */; };
 		D00C7548198F964200F32046 /* baidumobadsdk.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D00C7547198F964200F32046 /* baidumobadsdk.bundle */; };
 		D00C754A198F966F00F32046 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */; };
+		D00D900C19B882650026B9FD /* SldUserPackBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00D900B19B882650026B9FD /* SldUserPackBriefController.m */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -150,6 +151,9 @@
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
 		D06FDB0D19AEE6C100ECBAEA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9967195CB1D5002A6B83 /* AdSupport.framework */; };
 		D07B0901199BDC470056D102 /* otlPickSide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D07B0900199BDC460056D102 /* otlPickSide@2x.png */; };
+		D0959EE319B8424800A64767 /* otlList48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE219B8424800A64767 /* otlList48@2x.png */; };
+		D0959EE619B842D000A64767 /* otlBattle48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE419B842D000A64767 /* otlBattle48@2x.png */; };
+		D0959EE719B842D000A64767 /* otlUser48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE519B842D000A64767 /* otlUser48@2x.png */; };
 		D09676971961A08A0052C178 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09676961961A08A0052C178 /* Main_iPad.storyboard */; };
 		D09CF94B199CABFB00786FB1 /* douban64.png in Resources */ = {isa = PBXBuildFile; fileRef = D09CF948199CABFB00786FB1 /* douban64.png */; };
 		D09CF94D199CABFB00786FB1 /* weibo64.png in Resources */ = {isa = PBXBuildFile; fileRef = D09CF94A199CABFB00786FB1 /* weibo64.png */; };
@@ -412,6 +416,8 @@
 		D0078931198B8E9800945D50 /* SldAdviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldAdviceController.m; sourceTree = "<group>"; };
 		D00C7547198F964200F32046 /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = baidumobadsdk.bundle; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/baidumobadsdk.bundle; sourceTree = SOURCE_ROOT; };
 		D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
+		D00D900A19B882650026B9FD /* SldUserPackBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldUserPackBriefController.h; sourceTree = "<group>"; };
+		D00D900B19B882650026B9FD /* SldUserPackBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserPackBriefController.m; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
@@ -477,6 +483,9 @@
 		D0667F221953172C00AD9282 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D066849F1953548D00AD9282 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D07B0900199BDC460056D102 /* otlPickSide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlPickSide@2x.png"; sourceTree = "<group>"; };
+		D0959EE219B8424800A64767 /* otlList48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlList48@2x.png"; sourceTree = "<group>"; };
+		D0959EE419B842D000A64767 /* otlBattle48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBattle48@2x.png"; sourceTree = "<group>"; };
+		D0959EE519B842D000A64767 /* otlUser48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlUser48@2x.png"; sourceTree = "<group>"; };
 		D09676961961A08A0052C178 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
 		D09CF948199CABFB00786FB1 /* douban64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = douban64.png; sourceTree = "<group>"; };
 		D09CF94A199CABFB00786FB1 /* weibo64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo64.png; sourceTree = "<group>"; };
@@ -830,6 +839,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				D00D900A19B882650026B9FD /* SldUserPackBriefController.h */,
+				D00D900B19B882650026B9FD /* SldUserPackBriefController.m */,
 				D0C4EFAC19A68FDC00D2F1D0 /* SldUserPackLatestController.h */,
 				D0C4EFAD19A68FDD00D2F1D0 /* SldUserPackLatestController.m */,
 				D0C4EFA919A51D8500D2F1D0 /* SldMyUserPackMenuController.h */,
@@ -897,6 +908,9 @@
 				D09CF94E199CBE3900786FB1 /* tcWeibo64.png */,
 				D09CF948199CABFB00786FB1 /* douban64.png */,
 				D09CF94A199CABFB00786FB1 /* weibo64.png */,
+				D0959EE419B842D000A64767 /* otlBattle48@2x.png */,
+				D0959EE519B842D000A64767 /* otlUser48@2x.png */,
+				D0959EE219B8424800A64767 /* otlList48@2x.png */,
 				D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */,
 				D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */,
 				D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */,
@@ -1432,6 +1446,7 @@
 				B3835376191AD83500D259F5 /* glyphicons_150_edit@2x.png in Resources */,
 				D0D14B48195B3807009193E6 /* bg_ipad.png in Resources */,
 				D0D14B5B195B3807009193E6 /* webview_bar_back_grey.png in Resources */,
+				D0959EE619B842D000A64767 /* otlBattle48@2x.png in Resources */,
 				D05E995E195C7189002A6B83 /* coin2.png in Resources */,
 				D0D14B47195B3807009193E6 /* webview_bar_share_ipad@2x.png in Resources */,
 				D0D14B11195B3807009193E6 /* adsmogo_adclose@2x.png in Resources */,
@@ -1444,6 +1459,7 @@
 				D0D14B2F195B3807009193E6 /* shareviewhead_icon@2x.png in Resources */,
 				D02F76D51982615300E742F8 /* UMSCommentDetailController.xib in Resources */,
 				D0D14B28195B3807009193E6 /* adsmogo_picrollbg.png in Resources */,
+				D0959EE319B8424800A64767 /* otlList48@2x.png in Resources */,
 				D09CF94D199CABFB00786FB1 /* weibo64.png in Resources */,
 				D0D14B38195B3807009193E6 /* webview_bar_next_hover@2x.png in Resources */,
 				D0D14B5D195B3807009193E6 /* webview_bar_close_hover.png in Resources */,
@@ -1511,6 +1527,7 @@
 				D0D14B20195B3807009193E6 /* download-640x100.gif in Resources */,
 				D0D14B32195B3807009193E6 /* webview_bar_back_grey@2x.png in Resources */,
 				D05E995F195C7189002A6B83 /* coin3.png in Resources */,
+				D0959EE719B842D000A64767 /* otlUser48@2x.png in Resources */,
 				D062EFEF19857F22004AD4A9 /* otlPublish@2x.png in Resources */,
 				D0D14B4A195B3807009193E6 /* webview_bar_back_ipad.png in Resources */,
 				D062EFF5198634FD004AD4A9 /* otlStar48@2x.png in Resources */,
@@ -1567,6 +1584,7 @@
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				D014462C199F27CB00D47DCA /* SldMyUserPackController.m in Sources */,
+				D00D900C19B882650026B9FD /* SldUserPackBriefController.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldBriefController.m in Sources */,
 				B38110401913FC750093F321 /* SldConfig.m in Sources */,
 				B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */,
