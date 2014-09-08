@@ -1,18 +1,18 @@
 //
-//  SldUserPackBriefController.m
+//  SldMatchBriefController.m
 //  pin
 //
 //  Created by 李炜 on 14-9-4.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldUserPackBriefController.h"
+#import "SldMatchBriefController.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldConfig.h"
 #import "SldGameController.h"
 
-@interface SldUserPackBriefController ()
+@interface SldMatchBriefController ()
 @property (weak, nonatomic) IBOutlet UIButton *practiceButton;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *rewardButton;
@@ -21,7 +21,8 @@
 @property (nonatomic) SldGameData *gd;
 @end
 
-@implementation SldUserPackBriefController
+@implementation SldMatchBriefController
+
 
 - (void)viewDidLoad
 {
@@ -34,7 +35,7 @@
     
     //load pack
     _gd = [SldGameData getInstance];
-    [_gd loadPack:_gd.userPack.packId completion:^(PackInfo *packInfo) {
+    [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
         _practiceButton.enabled = YES;
         _matchButton.enabled = YES;
         _rewardButton.enabled = YES;
@@ -103,7 +104,7 @@
 }
 
 - (void)enterGame {
-    _gd.gameMode = PRACTICE;
+    _gd.gameMode = USERPACK;
     
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
     controller.matchSecret = nil;

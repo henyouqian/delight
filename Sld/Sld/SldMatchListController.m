@@ -1,12 +1,12 @@
 //
-//  SldUserPackLatestController.m
+//  SldMatchListController.m
 //  pin
 //
 //  Created by 李炜 on 14-8-16.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldUserPackLatestController.h"
+#import "SldMatchListController.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
 #import "SldGameData.h"
@@ -14,46 +14,46 @@
 #import "UIImage+ImageEffects.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyUserPackMenuController.h"
-#import "SldMyUserPackController.h"
+#import "SldMyMatchController.h"
 
 static const int USER_PACK_LIST_LIMIT = 30;
 
 //=============================
-@interface SldUserPackLatestCell : UICollectionViewCell
+@interface SldMatchListCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
-@property (nonatomic) UserPack* userPack;
+@property (nonatomic) Match* match;
 @end
 
-@implementation SldUserPackLatestCell
+@implementation SldMatchListCell
 
 @end
 
 //=============================
-@interface SldUserPackLatestFooter : UICollectionReusableView
+@interface SldMatchListFooter : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
 @end
 
-@implementation SldUserPackLatestFooter
+@implementation SldMatchListFooter
 
 @end
 
 //=============================
-@interface SldUserPackLatestController()
+@interface SldMatchListController()
 
-@property (nonatomic) NSMutableArray *userPacks;
+@property (nonatomic) NSMutableArray *matches;
 @property (nonatomic) BOOL reachEnd;
 @property (nonatomic) BOOL scrollUnderBottom;
-@property (nonatomic) SldUserPackLatestFooter* footer;
+@property (nonatomic) SldMatchListFooter* footer;
 
 @end
 
-@implementation SldUserPackLatestController
+@implementation SldMatchListController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _userPacks = [NSMutableArray array];
+    _matches = [NSMutableArray array];
     
     UIEdgeInsets insets = self.collectionView.contentInset;
     insets.top = 64;
@@ -64,10 +64,10 @@ static const int USER_PACK_LIST_LIMIT = 30;
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     //
-    if (_userPacks.count == 0) {
-        NSDictionary *body = @{@"StartId": @(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
+    if (_matches.count == 0) {
+        NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session postToApi:@"userPack/listLatest" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"match/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 alertHTTPError(error, data);
                 return;
@@ -84,9 +84,9 @@ static const int USER_PACK_LIST_LIMIT = 30;
             
             NSMutableArray *insertIndexPathes = [NSMutableArray array];
             for (NSDictionary *dict in array) {
-                UserPack *userPack = [[UserPack alloc] initWithDict:dict];
-                [_userPacks addObject:userPack];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_userPacks.count-1 inSection:0];
+                Match *match = [[Match alloc] initWithDict:dict];
+                [_matches addObject:match];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_matches.count-1 inSection:0];
                 [insertIndexPathes addObject:indexPath];
             }
             [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
@@ -104,28 +104,33 @@ static const int USER_PACK_LIST_LIMIT = 30;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _userPacks.count;
+    return _matches.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    SldUserPackLatestCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"userPackLatestCell" forIndexPath:indexPath];
-    UserPack *userPack = [_userPacks objectAtIndex:indexPath.row];
-    [cell.imageView asyncLoadUploadImageWithKey:userPack.thumb showIndicator:NO completion:nil];
-//    cell.rewardNumLabel.text = [NSString stringWithFormat:@"%d", userPack.playTimes];
-    cell.userPack = userPack;
+    SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"matchListCell" forIndexPath:indexPath];
+    Match *match = [_matches objectAtIndex:indexPath.row];
+    [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
+    if (match.extraReward == 0) {
+        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.couponReward];
+    } else {
+        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.couponReward, match.extraReward];
+    }
+    
+    cell.match = match;
     return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionFooter) {
-        _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"userPackLatestFooter" forIndexPath:indexPath];
+        _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"matchListFooter" forIndexPath:indexPath];
         return _footer;
     }
     return nil;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (_userPacks.count == 0 || _reachEnd) {
+    if (_matches.count == 0 || _reachEnd) {
         return;
     }
     
@@ -137,9 +142,9 @@ static const int USER_PACK_LIST_LIMIT = 30;
                 [_footer.spin startAnimating];
                 
                 SInt64 startId = 0;
-                if (_userPacks.count > 0) {
-                    UserPack *userPack = [_userPacks lastObject];
-                    startId = userPack.id;
+                if (_matches.count > 0) {
+                    Match *match = [_matches lastObject];
+                    startId = match.id;
                 }
 //
 //                NSDictionary *body = @{@"StartId": @(startId), @"Limit": @(ADVICE_LIMIT)};
@@ -178,9 +183,9 @@ static const int USER_PACK_LIST_LIMIT = 30;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    SldUserPackLatestCell *cell = sender;
+    SldMatchListCell *cell = sender;
     SldGameData *gd = [SldGameData getInstance];
-    gd.userPack = cell.userPack;
+    gd.match = cell.match;
 }
 
 @end

@@ -195,16 +195,28 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 @end
 
 //=============================
-@implementation UserPack
+@implementation Match
 
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
         _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
         _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
         _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
-        _price = [(NSNumber*)[dict objectForKey:@"Price"] intValue];
+        _couponReward = [(NSNumber*)[dict objectForKey:@"CouponReward"] intValue];
         _thumb = [dict objectForKey:@"Thumb"];
         _playTimes = [(NSNumber*)[dict objectForKey:@"PlayTimes"] intValue];
+        _extraReward = [(NSNumber*)[dict objectForKey:@"ExtraReward"] intValue];
+        _beginTime = [(NSNumber*)[dict objectForKey:@"BeginTime"] longLongValue];
+        _endTime = [(NSNumber*)[dict objectForKey:@"EndTime"] longLongValue];
+        _hasResult = [(NSNumber*)[dict objectForKey:@"HasResult"] longLongValue];
+        _rankRewardProportions = [dict objectForKey:@"RankRewardProportions"];
+        if ((NSNull*)_rankRewardProportions == [NSNull null]) {
+            _rankRewardProportions = nil;
+        }
+        _luckyRewardProportion = [(NSNumber*)[dict objectForKey:@"LuckyRewardProportion"] floatValue];
+        _oneCoinRewardProportion = [(NSNumber*)[dict objectForKey:@"OneCoinRewardProportion"] floatValue];
+        _ownerRewardProportion = [(NSNumber*)[dict objectForKey:@"OwnerRewardProportion"] floatValue];
+        _challengeSeconds = [(NSNumber*)[dict objectForKey:@"ChallengeSeconds"] intValue];
         return self;
     }
     return nil;

@@ -223,7 +223,7 @@ NSDate *_gameBeginTime;
         if (_gameData.gameMode == CHALLENGE) {
             _sliderNum = _gameData.challengeInfo.sliderNum;
         } else if (_gameData.gameMode == USERPACK) {
-            _sliderNum = _gameData.userPack.sliderNum;
+            _sliderNum = _gameData.match.sliderNum;
         } else {
             _sliderNum = _gameData.eventInfo.sliderNum;
         }

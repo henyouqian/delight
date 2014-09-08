@@ -49,7 +49,7 @@
     
     //load pack
     _gd = [SldGameData getInstance];
-    [_gd loadPack:_gd.userPack.packId completion:^(PackInfo *packInfo) {
+    [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
         _playButton.enabled = YES;
         [_playButton setTitle:@"开始游戏" forState:UIControlStateNormal];
     }];

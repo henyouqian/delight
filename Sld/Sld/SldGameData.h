@@ -128,13 +128,22 @@ enum CupType{
 @end
 
 //============================
-@interface UserPack : NSObject
+@interface Match : NSObject
 @property (nonatomic) SInt64 id;
 @property (nonatomic) SInt64 packId;
 @property (nonatomic) int sliderNum;
-@property (nonatomic) int price;
+@property (nonatomic) int couponReward;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) int playTimes;
+@property (nonatomic) int extraReward;
+@property (nonatomic) SInt64 beginTime;
+@property (nonatomic) SInt64 endTime;
+@property (nonatomic) BOOL hasResult;
+@property (nonatomic) NSArray *rankRewardProportions;
+@property (nonatomic) float luckyRewardProportion;
+@property (nonatomic) float oneCoinRewardProportion;
+@property (nonatomic) float ownerRewardProportion;
+@property (nonatomic) int challengeSeconds;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end
@@ -161,7 +170,7 @@ enum GameMode{
 @property (nonatomic) EventPlayRecored *eventPlayRecord;
 @property (nonatomic) int recentScore;
 @property (nonatomic) PlayerInfo *playerInfo;
-@property (nonatomic) UserPack *userPack;
+@property (nonatomic) Match *match;
 - (void)resetEvent;
 
 //player

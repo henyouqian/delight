@@ -1,12 +1,12 @@
 //
-//  SldMyUserPackController.m
+//  SldMyMatchController.m
 //  pin
 //
 //  Created by 李炜 on 14-8-16.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldMyUserPackController.h"
+#import "SldMyMatchController.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
 #import "SldGameData.h"
@@ -19,40 +19,40 @@ static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
 
 //=============================
-@interface SldMyUserPackCell : UICollectionViewCell
+@interface SldMyMatchCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *playTimesLabel;
-@property (nonatomic) UserPack* userPack;
+@property (nonatomic) Match* match;
 @end
 
-@implementation SldMyUserPackCell
+@implementation SldMyMatchCell
 
 @end
 
 //=============================
-@interface SldMyUserPackFooter : UICollectionReusableView
+@interface SldMyMatchFooter : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
 @end
 
-@implementation SldMyUserPackFooter
+@implementation SldMyMatchFooter
 
 @end
 
 //=============================
-@interface SldMyUserPackEditCell : UICollectionViewCell
+@interface SldMyMatchImagePickedCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @end
 
-@implementation SldMyUserPackEditCell
+@implementation SldMyMatchImagePickedCell
 
 @end
 
 //=============================
-@interface SldMyUserPackEditController : UICollectionViewController
+@interface SldMyMatchImagePickListController : UICollectionViewController
 
 @end
 
-@implementation SldMyUserPackEditController
+@implementation SldMyMatchImagePickListController
 - (void)setAssets :(NSArray *)assets{
     _assets = assets;
     [self.collectionView reloadData];
@@ -67,7 +67,7 @@ static NSArray* _assets;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    SldMyUserPackEditCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myUserPackEditCell" forIndexPath:indexPath];
+    SldMyMatchImagePickedCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myMatchImagePickedCell" forIndexPath:indexPath];
     
     ALAsset *asset = [_assets objectAtIndex:indexPath.row];
 //    NSString *path = asset.defaultRepresentation.url.absoluteString;
@@ -80,7 +80,98 @@ static NSArray* _assets;
 @end
 
 //=============================
-@interface SldMyUserPackSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate, QiniuUploadDelegate>
+@interface SldMyMatchGamePlayTuneController : UIViewController
+@property (weak, nonatomic) IBOutlet UILabel *sliderNumLabel;
+@property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
+@property (weak, nonatomic) IBOutlet UILabel *challengeSecondsLabel;
+@property (weak, nonatomic) IBOutlet UISlider *challengeSecondsSlider;
+@property (nonatomic) NSArray *sliderNumbers;
+@property (nonatomic) int sliderNum;
+@property (nonatomic) NSMutableArray *challengeSecs;
+@property (nonatomic) int challengeSec;
+@end
+
+static const int CHALLENGE_SEC_MIN = 3;
+static const int CHALLENGE_SEC_MAX = 90;
+
+@implementation SldMyMatchGamePlayTuneController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    //
+    _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7)];
+    _sliderNum = 5;
+    int numberOfSteps = ((float)[_sliderNumbers count] - 1);
+    _sliderNumSlider.maximumValue = numberOfSteps;
+    _sliderNumSlider.minimumValue = 0;
+    _sliderNumSlider.continuous = YES;
+    _sliderNumSlider.value = 2;
+    [_sliderNumSlider addTarget:self
+                         action:@selector(sliderNumValueChanged:)
+               forControlEvents:UIControlEventValueChanged];
+    [self sliderNumValueChanged:_sliderNumSlider];
+    
+    //
+    _challengeSecs = [NSMutableArray arrayWithCapacity:90];
+    for (int i = CHALLENGE_SEC_MIN; i < CHALLENGE_SEC_MAX+1; ++i) {
+        [_challengeSecs addObject:@(i)];
+    }
+    _challengeSec = 30;
+    numberOfSteps = ((float)[_challengeSecs count] - 1);
+    _challengeSecondsSlider.maximumValue = numberOfSteps;
+    _challengeSecondsSlider.minimumValue = 0;
+    _challengeSecondsSlider.continuous = YES;
+    _challengeSecondsSlider.value = 2;
+    [_challengeSecondsSlider addTarget:self
+                         action:@selector(challengeSecValueChanged:)
+               forControlEvents:UIControlEventValueChanged];
+    [self challengeSecValueChanged:_challengeSecondsSlider];
+}
+
+- (void)sliderNumValueChanged:(UISlider *)sender {
+    NSUInteger index = (NSUInteger)(_sliderNumSlider.value + 0.5);
+    [_sliderNumSlider setValue:index animated:NO];
+    NSNumber *number = _sliderNumbers[index]; // <-- This numeric value you want
+    _sliderNum = [number intValue];
+    _sliderNumLabel.text = [NSString stringWithFormat:@"拼图滑块数量：%d", _sliderNum];
+}
+
+- (void)challengeSecValueChanged:(UISlider *)sender {
+    NSUInteger index = (NSUInteger)(sender.value + 0.5);
+    [sender setValue:index animated:NO];
+    NSNumber *number = _challengeSecs[index]; // <-- This numeric value you want
+    _challengeSec = [number intValue];
+    _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
+}
+
+- (IBAction)onPlusButton:(id)sender {
+    _challengeSec++;
+    if (_challengeSec > CHALLENGE_SEC_MAX) {
+        _challengeSec = CHALLENGE_SEC_MAX;
+    }
+    NSInteger index = [_challengeSecs indexOfObject:@(_challengeSec)];
+    [_challengeSecondsSlider setValue:index animated:NO];
+    
+    _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
+}
+
+- (IBAction)onMinusButton:(id)sender {
+    _challengeSec--;
+    if (_challengeSec < CHALLENGE_SEC_MIN) {
+        _challengeSec = CHALLENGE_SEC_MIN;
+    }
+    NSInteger index = [_challengeSecs indexOfObject:@(_challengeSec)];
+    [_challengeSecondsSlider setValue:index animated:NO];
+    
+    _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
+}
+
+
+
+@end
+
+//=============================
+@interface SldMyMatchSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate, QiniuUploadDelegate>
 @property (weak, nonatomic) IBOutlet UISlider *slider;
 @property (weak, nonatomic) IBOutlet UILabel *priceLable;
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
@@ -101,7 +192,7 @@ static NSArray* _assets;
 @property (nonatomic) NSMutableArray *images;
 @end
 
-@implementation SldMyUserPackSettingsController
+@implementation SldMyMatchSettingsController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -355,8 +446,9 @@ static NSArray* _assets;
         @"Images":_images,
         @"CouponReward":@(_couponReward),
         @"SliderNum":@(_sliderNum),
+        @"BeginTime":@"",
     };
-    [session postToApi:@"userPack/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"match/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             [_alt dismissWithClickedButtonIndex:0 animated:NO];
             _alt = nil;
@@ -380,22 +472,22 @@ static NSArray* _assets;
 @end
 
 //=============================
-@interface SldMyUserPackController()
+@interface SldMyMatchListController()
 
-@property (nonatomic) NSMutableArray *userPacks;
+@property (nonatomic) NSMutableArray *matches;
 @property (nonatomic) BOOL reachEnd;
 @property (nonatomic) BOOL scrollUnderBottom;
-@property (nonatomic) SldMyUserPackFooter* footer;
+@property (nonatomic) SldMyMatchFooter* footer;
 @property (nonatomic) QBImagePickerController *imagePickerController;
 
 @end
 
-@implementation SldMyUserPackController
+@implementation SldMyMatchListController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _userPacks = [NSMutableArray array];
+    _matches = [NSMutableArray array];
     
     UIEdgeInsets insets = self.collectionView.contentInset;
     insets.top = 64;
@@ -406,10 +498,10 @@ static NSArray* _assets;
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     //
-    if (_userPacks.count == 0) {
-        NSDictionary *body = @{@"StartId": @(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
+    if (_matches.count == 0) {
+        NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session postToApi:@"userPack/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"match/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 alertHTTPError(error, data);
                 return;
@@ -426,9 +518,9 @@ static NSArray* _assets;
             
             NSMutableArray *insertIndexPathes = [NSMutableArray array];
             for (NSDictionary *dict in array) {
-                UserPack *userPack = [[UserPack alloc] initWithDict:dict];
-                [_userPacks addObject:userPack];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_userPacks.count-1 inSection:0];
+                Match *match = [[Match alloc] initWithDict:dict];
+                [_matches addObject:match];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_matches.count-1 inSection:0];
                 [insertIndexPathes addObject:indexPath];
             }
             [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
@@ -439,7 +531,7 @@ static NSArray* _assets;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 //    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPack)];
-    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(addPack)];
+    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布新游戏" style:UIBarButtonItemStylePlain target:self action:@selector(addPack)];
 }
 
 - (void)addPack {
@@ -457,7 +549,7 @@ static NSArray* _assets;
 - (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAssets:(NSArray *)assets {
     [self.navigationController popToViewController:self.tabBarController animated:NO];
     
-    SldMyUserPackEditController* vc = (SldMyUserPackEditController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"myUserPackEditVC"];
+    SldMyMatchImagePickListController* vc = (SldMyMatchImagePickListController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"myUserPackEditVC"];
     
     [self.navigationController pushViewController:vc animated:YES];
     
@@ -473,28 +565,28 @@ static NSArray* _assets;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _userPacks.count;
+    return _matches.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    SldMyUserPackCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myUserPackCell" forIndexPath:indexPath];
-    UserPack *userPack = [_userPacks objectAtIndex:indexPath.row];
-    [cell.imageView asyncLoadUploadImageWithKey:userPack.thumb showIndicator:NO completion:nil];
-    cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", userPack.playTimes];
-    cell.userPack = userPack;
+    SldMyMatchCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myMatchCell" forIndexPath:indexPath];
+    Match *match = [_matches objectAtIndex:indexPath.row];
+    [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
+    cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", match.playTimes];
+    cell.match = match;
     return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionFooter) {
-        _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"myUserPackFooter" forIndexPath:indexPath];
+        _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"myMatchFooter" forIndexPath:indexPath];
         return _footer;
     }
     return nil;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (_userPacks.count == 0 || _reachEnd) {
+    if (_matches.count == 0 || _reachEnd) {
         return;
     }
     
@@ -506,9 +598,9 @@ static NSArray* _assets;
                 [_footer.spin startAnimating];
                 
                 SInt64 startId = 0;
-                if (_userPacks.count > 0) {
-                    UserPack *userPack = [_userPacks lastObject];
-                    startId = userPack.id;
+                if (_matches.count > 0) {
+                    Match *match = [_matches lastObject];
+                    startId = match.id;
                 }
 //
 //                NSDictionary *body = @{@"StartId": @(startId), @"Limit": @(ADVICE_LIMIT)};
@@ -547,9 +639,9 @@ static NSArray* _assets;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    SldMyUserPackCell *cell = sender;
+    SldMyMatchCell *cell = sender;
     SldGameData *gd = [SldGameData getInstance];
-    gd.userPack = cell.userPack;
+    gd.match = cell.match;
 }
 
 @end

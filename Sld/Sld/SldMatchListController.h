@@ -1,5 +1,5 @@
 //
-//  SldMyUserPackController.h
+//  SldMatchListController.h
 //  pin
 //
 //  Created by 李炜 on 14-8-16.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldMyUserPackController : UICollectionViewController <QBImagePickerControllerDelegate>
+@interface SldMatchListController : UICollectionViewController
 
 @end

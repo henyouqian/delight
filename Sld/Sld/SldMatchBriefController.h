@@ -1,5 +1,5 @@
 //
-//  SldUserPackBriefController.h
+//  SldUserMatchBriefController.h
 //  pin
 //
 //  Created by 李炜 on 14-9-4.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldUserPackBriefController : UIViewController
+@interface SldMatchBriefController : UIViewController
 
 @end

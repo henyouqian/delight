@@ -89,7 +89,7 @@
 		D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0078931198B8E9800945D50 /* SldAdviceController.m */; };
 		D00C7548198F964200F32046 /* baidumobadsdk.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D00C7547198F964200F32046 /* baidumobadsdk.bundle */; };
 		D00C754A198F966F00F32046 /* libBaiduMobAdSdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */; };
-		D00D900C19B882650026B9FD /* SldUserPackBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00D900B19B882650026B9FD /* SldUserPackBriefController.m */; };
+		D00D900C19B882650026B9FD /* SldMatchBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00D900B19B882650026B9FD /* SldMatchBriefController.m */; };
 		D00F63F41940740600C8EA3F /* SldMatchPrepareController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -98,7 +98,7 @@
 		D01044A219464790008DFF8D /* btnBgBlue90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D010449F19464790008DFF8D /* btnBgBlue90@2x.png */; };
 		D01044A319464790008DFF8D /* btnBgRed90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044A019464790008DFF8D /* btnBgRed90@2x.png */; };
 		D01044A419464790008DFF8D /* btnBgYellow90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D01044A119464790008DFF8D /* btnBgYellow90@2x.png */; };
-		D014462C199F27CB00D47DCA /* SldMyUserPackController.m in Sources */ = {isa = PBXBuildFile; fileRef = D014462B199F27CB00D47DCA /* SldMyUserPackController.m */; };
+		D014462C199F27CB00D47DCA /* SldMyMatchController.m in Sources */ = {isa = PBXBuildFile; fileRef = D014462B199F27CB00D47DCA /* SldMyMatchController.m */; };
 		D0144650199FE79400D47DCA /* otlBag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D014464F199FE79400D47DCA /* otlBag@2x.png */; };
 		D014465219A06B2D00D47DCA /* otlController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D014465119A06B2D00D47DCA /* otlController@2x.png */; };
 		D014465419A06B6900D47DCA /* otlController48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D014465319A06B6900D47DCA /* otlController48@2x.png */; };
@@ -171,7 +171,8 @@
 		D0C4EF8A19A3290800D2F1D0 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EF8919A3290800D2F1D0 /* UIImage+ImageEffects.m */; };
 		D0C4EFA819A5104600D2F1D0 /* thumbDarker2.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C4EFA719A5104600D2F1D0 /* thumbDarker2.png */; };
 		D0C4EFAB19A51D8500D2F1D0 /* SldMyUserPackMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EFAA19A51D8500D2F1D0 /* SldMyUserPackMenuController.m */; };
-		D0C4EFAE19A68FDD00D2F1D0 /* SldUserPackLatestController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EFAD19A68FDD00D2F1D0 /* SldUserPackLatestController.m */; };
+		D0C4EFAE19A68FDD00D2F1D0 /* SldMatchListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C4EFAD19A68FDD00D2F1D0 /* SldMatchListController.m */; };
+		D0CD0D3A19BB7DBE00F6DDBD /* SldRewardDefListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0CD0D3919BB7DBE00F6DDBD /* SldRewardDefListController.m */; };
 		D0CFB4C2195FF9EE00DC4400 /* libAdsMogo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA3195B3744009193E6 /* libAdsMogo.a */; };
 		D0CFB4C519615A8800DC4400 /* libAdsMogo_i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B67195B45DD009193E6 /* libAdsMogo_i386.a */; };
 		D0D14AA8195B3770009193E6 /* libDomobAdSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */; };
@@ -416,8 +417,8 @@
 		D0078931198B8E9800945D50 /* SldAdviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldAdviceController.m; sourceTree = "<group>"; };
 		D00C7547198F964200F32046 /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = baidumobadsdk.bundle; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/baidumobadsdk.bundle; sourceTree = SOURCE_ROOT; };
 		D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
-		D00D900A19B882650026B9FD /* SldUserPackBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldUserPackBriefController.h; sourceTree = "<group>"; };
-		D00D900B19B882650026B9FD /* SldUserPackBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserPackBriefController.m; sourceTree = "<group>"; };
+		D00D900A19B882650026B9FD /* SldMatchBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchBriefController.h; sourceTree = "<group>"; };
+		D00D900B19B882650026B9FD /* SldMatchBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchBriefController.m; sourceTree = "<group>"; };
 		D00F63F21940740600C8EA3F /* SldMatchPrepareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPrepareController.h; sourceTree = "<group>"; };
 		D00F63F31940740600C8EA3F /* SldMatchPrepareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPrepareController.m; sourceTree = "<group>"; };
 		D00F63F819407FD200C8EA3F /* cupGold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cupGold@2x.png"; sourceTree = "<group>"; };
@@ -427,8 +428,8 @@
 		D010449F19464790008DFF8D /* btnBgBlue90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgBlue90@2x.png"; sourceTree = "<group>"; };
 		D01044A019464790008DFF8D /* btnBgRed90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgRed90@2x.png"; sourceTree = "<group>"; };
 		D01044A119464790008DFF8D /* btnBgYellow90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgYellow90@2x.png"; sourceTree = "<group>"; };
-		D014462A199F27CB00D47DCA /* SldMyUserPackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMyUserPackController.h; sourceTree = "<group>"; };
-		D014462B199F27CB00D47DCA /* SldMyUserPackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMyUserPackController.m; sourceTree = "<group>"; };
+		D014462A199F27CB00D47DCA /* SldMyMatchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMyMatchController.h; sourceTree = "<group>"; };
+		D014462B199F27CB00D47DCA /* SldMyMatchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMyMatchController.m; sourceTree = "<group>"; };
 		D014464F199FE79400D47DCA /* otlBag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBag@2x.png"; sourceTree = "<group>"; };
 		D014465119A06B2D00D47DCA /* otlController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlController@2x.png"; sourceTree = "<group>"; };
 		D014465319A06B6900D47DCA /* otlController48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlController48@2x.png"; sourceTree = "<group>"; };
@@ -509,8 +510,10 @@
 		D0C4EFA719A5104600D2F1D0 /* thumbDarker2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumbDarker2.png; sourceTree = "<group>"; };
 		D0C4EFA919A51D8500D2F1D0 /* SldMyUserPackMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMyUserPackMenuController.h; sourceTree = "<group>"; };
 		D0C4EFAA19A51D8500D2F1D0 /* SldMyUserPackMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMyUserPackMenuController.m; sourceTree = "<group>"; };
-		D0C4EFAC19A68FDC00D2F1D0 /* SldUserPackLatestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldUserPackLatestController.h; sourceTree = "<group>"; };
-		D0C4EFAD19A68FDD00D2F1D0 /* SldUserPackLatestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserPackLatestController.m; sourceTree = "<group>"; };
+		D0C4EFAC19A68FDC00D2F1D0 /* SldMatchListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchListController.h; sourceTree = "<group>"; };
+		D0C4EFAD19A68FDD00D2F1D0 /* SldMatchListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchListController.m; sourceTree = "<group>"; };
+		D0CD0D3819BB7DBE00F6DDBD /* SldRewardDefListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldRewardDefListController.h; sourceTree = "<group>"; };
+		D0CD0D3919BB7DBE00F6DDBD /* SldRewardDefListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldRewardDefListController.m; sourceTree = "<group>"; };
 		D0D14AA3195B3744009193E6 /* libAdsMogo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAdsMogo.a; path = External/AdsMoGoLib/AdsMoGoSDK/libAdsMogo.a; sourceTree = "<group>"; };
 		D0D14AA5195B375A009193E6 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.4.7_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D0D14AA7195B3770009193E6 /* libDomobAdSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDomobAdSDK.a; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK/libDomobAdSDK.a; sourceTree = "<group>"; };
@@ -839,14 +842,16 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				D00D900A19B882650026B9FD /* SldUserPackBriefController.h */,
-				D00D900B19B882650026B9FD /* SldUserPackBriefController.m */,
-				D0C4EFAC19A68FDC00D2F1D0 /* SldUserPackLatestController.h */,
-				D0C4EFAD19A68FDD00D2F1D0 /* SldUserPackLatestController.m */,
+				D0CD0D3819BB7DBE00F6DDBD /* SldRewardDefListController.h */,
+				D0CD0D3919BB7DBE00F6DDBD /* SldRewardDefListController.m */,
+				D00D900A19B882650026B9FD /* SldMatchBriefController.h */,
+				D00D900B19B882650026B9FD /* SldMatchBriefController.m */,
+				D0C4EFAC19A68FDC00D2F1D0 /* SldMatchListController.h */,
+				D0C4EFAD19A68FDD00D2F1D0 /* SldMatchListController.m */,
 				D0C4EFA919A51D8500D2F1D0 /* SldMyUserPackMenuController.h */,
 				D0C4EFAA19A51D8500D2F1D0 /* SldMyUserPackMenuController.m */,
-				D014462A199F27CB00D47DCA /* SldMyUserPackController.h */,
-				D014462B199F27CB00D47DCA /* SldMyUserPackController.m */,
+				D014462A199F27CB00D47DCA /* SldMyMatchController.h */,
+				D014462B199F27CB00D47DCA /* SldMyMatchController.m */,
 				D0078930198B8E9800945D50 /* SldAdviceController.h */,
 				D0078931198B8E9800945D50 /* SldAdviceController.m */,
 				D0A555FC1969A8A600369401 /* SldMainMenuController.h */,
@@ -1580,11 +1585,11 @@
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
 				D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */,
-				D0C4EFAE19A68FDD00D2F1D0 /* SldUserPackLatestController.m in Sources */,
+				D0C4EFAE19A68FDD00D2F1D0 /* SldMatchListController.m in Sources */,
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
-				D014462C199F27CB00D47DCA /* SldMyUserPackController.m in Sources */,
-				D00D900C19B882650026B9FD /* SldUserPackBriefController.m in Sources */,
+				D014462C199F27CB00D47DCA /* SldMyMatchController.m in Sources */,
+				D00D900C19B882650026B9FD /* SldMatchBriefController.m in Sources */,
 				B31CBEA1190894EC00621165 /* SldBriefController.m in Sources */,
 				B38110401913FC750093F321 /* SldConfig.m in Sources */,
 				B3C1BB8E191159EF0062D50C /* UIImage+animatedGIF.m in Sources */,
@@ -1600,6 +1605,7 @@
 				B3A521FC19288D4F00D5A38C /* SldOfflineEventListController.m in Sources */,
 				B33121F819165A10003E05DB /* SldRankController.m in Sources */,
 				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,
+				D0CD0D3A19BB7DBE00F6DDBD /* SldRewardDefListController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,
 				D005210E19715BA100F7F915 /* SldBetController.m in Sources */,
