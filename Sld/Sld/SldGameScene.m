@@ -214,8 +214,14 @@ NSDate *_gameBeginTime;
         BUTTON_POS3.x = size.width - BUTTON_POS1.x;
         
         NSMutableArray *files = [NSMutableArray arrayWithCapacity:[_gameData.packInfo.images count]];
-        for (NSString *img in _gameData.packInfo.images) {
-            [files addObject:makeImagePath(img)];
+        if (M_TEST == _gameData.gameMode) {
+            for (NSString *img in _gameData.packInfo.images) {
+                [files addObject:img];
+            }
+        } else {
+            for (NSString *img in _gameData.packInfo.images) {
+                [files addObject:makeImagePath(img)];
+            }
         }
         
         _imgIdx = -1;
@@ -223,6 +229,8 @@ NSDate *_gameBeginTime;
         if (_gameData.gameMode == CHALLENGE) {
             _sliderNum = _gameData.challengeInfo.sliderNum;
         } else if (_gameData.gameMode == USERPACK) {
+            _sliderNum = _gameData.match.sliderNum;
+        } else if (M_PRACTICE == _gameData.gameMode || M_TEST == _gameData.gameMode || M_MATCH == _gameData.gameMode) {
             _sliderNum = _gameData.match.sliderNum;
         } else {
             _sliderNum = _gameData.eventInfo.sliderNum;
@@ -1091,27 +1099,31 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onPackFinish {
-    float rd = (float)(arc4random() % 100);
-    AdsConf *adsConf = _gameData.playerInfo.adsConf;
-    if (rd/100.f < adsConf.showPercent) {
-        if (adsConf.delayPercent > 0 && adsConf.delaySec > 0) {
-            rd = (float)(arc4random() % 100)/100.f;
-            if (rd/100.f < adsConf.delayPercent) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
-                });
+    //ads
+    if (M_TEST != _gameData.gameMode) {
+        float rd = (float)(arc4random() % 100);
+        AdsConf *adsConf = _gameData.playerInfo.adsConf;
+        if (rd/100.f < adsConf.showPercent) {
+            if (adsConf.delayPercent > 0 && adsConf.delaySec > 0) {
+                rd = (float)(arc4random() % 100)/100.f;
+                if (rd/100.f < adsConf.delayPercent) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                    });
+                }
+            } else {
+                [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
             }
-        } else {
-            [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
         }
     }
     
+    //
     _packHasFinished = YES;
     _gameRunning = NO;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];
     
-    //
+    //score
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
     int score = -(int)(dt*1000);
@@ -1209,6 +1221,15 @@ static float lerpf(float a, float b, float t) {
             }
         }];
         [_btnExit setHidden:NO];
+    }
+    
+    // M_TEST
+    else if (_gameData.gameMode == M_TEST) {
+        if (_gameData.userPackTestHistory == nil) {
+            _gameData.userPackTestHistory = [NSMutableArray array];
+        }
+        NSString *str = [NSString stringWithFormat:@"滑块数量：%d，用时：%@", _sliderNum, formatScore(score)];
+        [_gameData.userPackTestHistory insertObject:str atIndex:0];
     }
     
     // challenge

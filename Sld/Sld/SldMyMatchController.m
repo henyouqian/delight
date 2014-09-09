@@ -14,9 +14,11 @@
 #import "UIImage+ImageEffects.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyUserPackMenuController.h"
+#import "SldGameController.h"
 
 static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
+static int _publishDelayHour = 0;
 
 //=============================
 @interface SldMyMatchCell : UICollectionViewCell
@@ -56,6 +58,9 @@ static NSArray* _assets;
 - (void)setAssets :(NSArray *)assets{
     _assets = assets;
     [self.collectionView reloadData];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    gd.userPackTestHistory = nil;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -85,10 +90,13 @@ static NSArray* _assets;
 @property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
 @property (weak, nonatomic) IBOutlet UILabel *challengeSecondsLabel;
 @property (weak, nonatomic) IBOutlet UISlider *challengeSecondsSlider;
+@property (weak, nonatomic) IBOutlet UITextView *playHistoryTextView;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper;
 @property (nonatomic) NSArray *sliderNumbers;
 @property (nonatomic) int sliderNum;
 @property (nonatomic) NSMutableArray *challengeSecs;
 @property (nonatomic) int challengeSec;
+@property (nonatomic) NSMutableArray *filePathes;
 @end
 
 static const int CHALLENGE_SEC_MIN = 3;
@@ -97,6 +105,8 @@ static const int CHALLENGE_SEC_MAX = 90;
 @implementation SldMyMatchGamePlayTuneController
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _filePathes = [NSMutableArray arrayWithCapacity:10];
     
     //
     _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7)];
@@ -121,11 +131,30 @@ static const int CHALLENGE_SEC_MAX = 90;
     _challengeSecondsSlider.maximumValue = numberOfSteps;
     _challengeSecondsSlider.minimumValue = 0;
     _challengeSecondsSlider.continuous = YES;
-    _challengeSecondsSlider.value = 2;
+    _challengeSecondsSlider.value = [_challengeSecs indexOfObject:@(_challengeSec)];
     [_challengeSecondsSlider addTarget:self
                          action:@selector(challengeSecValueChanged:)
                forControlEvents:UIControlEventValueChanged];
     [self challengeSecValueChanged:_challengeSecondsSlider];
+    
+    _stepper.minimumValue = _challengeSecondsSlider.minimumValue;
+    _stepper.maximumValue = _challengeSecondsSlider.maximumValue;
+    _stepper.value = _challengeSecondsSlider.value;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    if (gd.userPackTestHistory && gd.userPackTestHistory.count > 0) {
+        NSMutableString* str = [NSMutableString stringWithString:@""];
+        for (NSString* record in gd.userPackTestHistory) {
+            [str appendFormat:@"%@\n", record];
+        }
+        _playHistoryTextView.text = str;
+    } else {
+        _playHistoryTextView.text = @"暂无记录";
+    }
 }
 
 - (void)sliderNumValueChanged:(UISlider *)sender {
@@ -142,31 +171,137 @@ static const int CHALLENGE_SEC_MAX = 90;
     NSNumber *number = _challengeSecs[index]; // <-- This numeric value you want
     _challengeSec = [number intValue];
     _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
+    
+    _stepper.value = sender.value;
 }
 
-- (IBAction)onPlusButton:(id)sender {
-    _challengeSec++;
-    if (_challengeSec > CHALLENGE_SEC_MAX) {
-        _challengeSec = CHALLENGE_SEC_MAX;
-    }
-    NSInteger index = [_challengeSecs indexOfObject:@(_challengeSec)];
-    [_challengeSecondsSlider setValue:index animated:NO];
-    
+- (IBAction)onStepperValueChanged:(id)sender {
+    _challengeSecondsSlider.value = _stepper.value;
+    _challengeSec =  (int)_stepper.value+CHALLENGE_SEC_MIN;
     _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
 }
 
-- (IBAction)onMinusButton:(id)sender {
-    _challengeSec--;
-    if (_challengeSec < CHALLENGE_SEC_MIN) {
-        _challengeSec = CHALLENGE_SEC_MIN;
+- (IBAction)onPlayButton:(id)sender {
+    if (_filePathes.count == 0) {
+        int i = 0;
+        for (ALAsset *asset in _assets) {
+            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+            
+            //resize
+            float l = MAX(image.size.width, image.size.height);
+            float s = MIN(image.size.width, image.size.height);
+            float scale = 1.0;
+            if (s > 400.0) {
+                scale = 400.0 / s;
+            }
+            float l2 = l * scale;
+            if (l2 > 800.0) {
+                scale *= 800.0 / l2;
+            }
+            float w = floorf(image.size.width * scale);
+            float h = floorf(image.size.height * scale);
+            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+            
+            //save
+            NSData *data = UIImageJPEGRepresentation(image, 0.85);
+            NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
+            NSString *filePath = makeTempPath(fileName);
+            [_filePathes addObject:filePath];
+            [data writeToFile:filePath atomically:YES];
+            
+            i++;
+        }
     }
-    NSInteger index = [_challengeSecs indexOfObject:@(_challengeSec)];
-    [_challengeSecondsSlider setValue:index animated:NO];
     
-    _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
+    SldGameData *gd = [SldGameData getInstance];
+    
+    gd.match = [[Match alloc] init];
+    gd.match.sliderNum = _sliderNum;
+    
+    gd.packInfo = [[PackInfo alloc] init];
+    gd.packInfo.images = _filePathes;
+    
+    //enter game
+    gd.gameMode = M_TEST;
+    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
+    controller.matchSecret = nil;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
+@end
 
+//=============================
+@interface SldMyMatchPromoWebController : UIViewController
+@property (nonatomic) NSURL *url;
+@property (weak, nonatomic) IBOutlet UIWebView *reviewView;
+
+@end
+
+@implementation SldMyMatchPromoWebController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    NSURLRequest* request = [NSURLRequest requestWithURL:_url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    
+    [_reviewView loadRequest:request];
+}
+@end
+
+//=============================
+@interface SldMyMatchPromoController : UIViewController <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *urlInput;
+
+@end
+
+@implementation SldMyMatchPromoController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    _urlInput.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.view endEditing:YES];
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if (identifier && [identifier compare:@"segToPromoWeb"] == 0 && _urlInput.text.length == 0) {
+        alert(@"请填写推广链接地址后再进行预览", nil);
+        return NO;
+    }
+    return YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (segue.identifier && [segue.identifier compare:@"segToPromoWeb"] == 0) {
+
+        NSString *urlStr = _urlInput.text;
+        NSRange range = [_urlInput.text rangeOfString:@"://"];
+        if (range.location == NSNotFound) {
+            urlStr = [NSString stringWithFormat:@"http://%@", urlStr];
+        }
+        
+        SldMyMatchPromoWebController *vc = segue.destinationViewController;
+        vc.url = [NSURL URLWithString:urlStr];
+    }
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [_urlInput resignFirstResponder];
+    return YES;
+}
+
+- (IBAction)onTouch:(id)sender {
+    [self.view endEditing:YES];
+}
 
 @end
 
@@ -174,14 +309,16 @@ static const int CHALLENGE_SEC_MAX = 90;
 @interface SldMyMatchSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate, QiniuUploadDelegate>
 @property (weak, nonatomic) IBOutlet UISlider *slider;
 @property (weak, nonatomic) IBOutlet UILabel *priceLable;
+@property (weak, nonatomic) IBOutlet UILabel *goldCoinLabel;
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
-@property (weak, nonatomic) IBOutlet UITextView *textInput;
-@property (weak, nonatomic) IBOutlet UILabel *sliderNumLabel;
-@property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
+@property (weak, nonatomic) IBOutlet UILabel *publishDelayLabel;
+@property (weak, nonatomic) IBOutlet UISlider *publishDelaySlider;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper;
 @property (nonatomic) int couponReward;
 @property (nonatomic) NSArray *numbers;
 @property (nonatomic) NSArray *sliderNumbers;
 @property (nonatomic) int sliderNum;
+
 @property (nonatomic) QiniuSimpleUploader* uploader;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) int uploadNum;
@@ -192,17 +329,23 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (nonatomic) NSMutableArray *images;
 @end
 
+static const int COUPON_MIN = 100;
+static const int COUPON_MAX = 10000;
+
 @implementation SldMyMatchSettingsController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _titleInput.delegate = self;
+    
+    //coupon slider
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:50];
     for (int i = 0; i < 100; i++) {
         [array addObject:@(i*100+100)];
     }
     _numbers = [NSArray arrayWithArray:array];
-    _couponReward = 50;
+    _couponReward = 100;
     NSInteger numberOfSteps = ((float)[_numbers count] - 1);
     _slider.maximumValue = numberOfSteps;
     _slider.minimumValue = 0;
@@ -212,39 +355,64 @@ static const int CHALLENGE_SEC_MAX = 90;
                action:@selector(valueChanged:)
      forControlEvents:UIControlEventValueChanged];
     
-    _titleInput.delegate = self;
-    _textInput.delegate = self;
     [self valueChanged:_slider];
     
     //
-    _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7), @(8), @(9)];
-    _sliderNum = 5;
-    numberOfSteps = ((float)[_sliderNumbers count] - 1);
-    _sliderNumSlider.maximumValue = numberOfSteps;
-    _sliderNumSlider.minimumValue = 0;
-    _sliderNumSlider.continuous = YES;
-    _sliderNumSlider.value = 2;
-    [_sliderNumSlider addTarget:self
-                action:@selector(sliderNumValueChanged:)
-      forControlEvents:UIControlEventValueChanged];
-    [self sliderNumValueChanged:_sliderNumSlider];
+    _stepper.maximumValue = COUPON_MAX;
+    _stepper.minimumValue = COUPON_MIN;
+    _stepper.value = COUPON_MIN;
+    _stepper.stepValue = 100;
     
+    //publish delay slider
+    _publishDelayHour = 0;
+    _publishDelaySlider.minimumValue = 0;
+    _publishDelaySlider.maximumValue = 24;
+    _publishDelaySlider.continuous = YES;
+    _publishDelaySlider.value = 0;
+    
+    [_publishDelaySlider addTarget:self
+                action:@selector(publishDelayChanged:)
+      forControlEvents:UIControlEventValueChanged];
+    [self publishDelayChanged:_publishDelaySlider];
+}
+
+- (IBAction)onTouch:(id)sender {
+    [self.view endEditing:YES];
 }
 
 - (void)valueChanged:(UISlider *)sender {
     NSUInteger index = (NSUInteger)(_slider.value + 0.5);
     [_slider setValue:index animated:NO];
-    NSNumber *number = _numbers[index]; // <-- This numeric value you want
+    NSNumber *number = _numbers[index];
+    
     _couponReward = [number intValue];
-    _priceLable.text = [NSString stringWithFormat:@"提供%d奖票，需要%d水晶", _couponReward, _couponReward];
+    _stepper.value = _couponReward;
+    
+    [self updateCouponLabel];
 }
 
-- (void)sliderNumValueChanged:(UISlider *)sender {
-    NSUInteger index = (NSUInteger)(_sliderNumSlider.value + 0.5);
-    [_sliderNumSlider setValue:index animated:NO];
-    NSNumber *number = _sliderNumbers[index]; // <-- This numeric value you want
-    _sliderNum = [number intValue];
-    _sliderNumLabel.text = [NSString stringWithFormat:@"拼图滑块数量：%d", _sliderNum];
+- (IBAction)onStepperValueChanged:(id)sender {
+    _couponReward = _stepper.value;
+    _slider.value = [_numbers indexOfObject:@(_couponReward)];
+
+    [self updateCouponLabel];
+}
+
+- (void)updateCouponLabel {
+    _priceLable.text = [NSString stringWithFormat:@"提供奖票数量：%d", _couponReward];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    _goldCoinLabel.text = [NSString stringWithFormat:@"需要支付%d金币（现有%d金币）", _couponReward, gd.playerInfo.goldCoin];
+}
+
+- (void)publishDelayChanged:(UISlider *)sender {
+    _publishDelayHour = (int)(sender.value + 0.5);
+    [sender setValue:_publishDelayHour animated:NO];
+    if (_publishDelayHour == 0) {
+        _publishDelayLabel.text = [NSString stringWithFormat:@"延时发布：%d小时（即时发布）", _publishDelayHour];
+    } else {
+        _publishDelayLabel.text = [NSString stringWithFormat:@"延时发布：%d小时", _publishDelayHour];
+    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -274,6 +442,21 @@ static const int CHALLENGE_SEC_MAX = 90;
 }
 
 - (IBAction)onPublish:(id)sender {
+    //check coupon
+    SldGameData *gd = [SldGameData getInstance];
+    if (gd.playerInfo.goldCoin < _couponReward) {
+        NSString *msg = [NSString stringWithFormat:@"需要%d金币，我拥有%d金币。去商店购买更多金币吗？", _couponReward, gd.playerInfo.goldCoin];
+        [[[UIAlertView alloc] initWithTitle:@"金币不足"
+                                    message:msg
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+            // Handle "Cancel"
+        }]
+                           otherButtonItems:[RIButtonItem itemWithLabel:@"去商店" action:^{
+            //fixme
+        }], nil] show];
+        return;
+    }
+    
     [[[UIAlertView alloc] initWithTitle:@"确定发布吗?"
 	                            message:@""
 		               cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
@@ -434,19 +617,28 @@ static const int CHALLENGE_SEC_MAX = 90;
     
 //    [_alt dismissWithClickedButtonIndex:0 animated:NO];
 //    alert(@"上传成功", nil);
-//    
+//
+    NSString *beginTimeStr = @"";
+    if (_publishDelayHour) {
+        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:_publishDelayHour*3600.0];
+        NSDateFormatter* fmt = [[NSDateFormatter alloc] init];
+        fmt.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];
+        fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss";
+        beginTimeStr = [fmt stringFromDate:date];
+    }
+    
     
     SldHttpSession *session = [SldHttpSession defaultSession];
     NSDictionary *body = @{
         @"Title":_titleInput.text,
-        @"Text":_textInput.text,
+        @"Text":@"",
         @"Thumb":_thumbKey,
         @"Cover":_coverKey,
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
         @"CouponReward":@(_couponReward),
         @"SliderNum":@(_sliderNum),
-        @"BeginTime":@"",
+        @"BeginTime":beginTimeStr,
     };
     [session postToApi:@"match/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {

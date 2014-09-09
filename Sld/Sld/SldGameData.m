@@ -140,7 +140,9 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.teamName = [dict objectForKey:@"TeamName"];
     info.gravatarKey = [dict objectForKey:@"GravatarKey"];
     info.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
-    info.money = [(NSNumber*)[dict objectForKey:@"Money"] intValue];
+    info.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
+    info.goldCoin = [(NSNumber*)[dict objectForKey:@"GoldCoin"] intValue];
+    info.coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] intValue];
     if (gd.playerInfo == nil) {
         [info setTotalRewardRaw:[(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue]];
     } else {

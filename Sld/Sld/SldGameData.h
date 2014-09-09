@@ -97,6 +97,8 @@ enum CupType{
 @property (nonatomic) NSString *gravatarKey;
 @property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) SInt64 money;
+@property (nonatomic) int goldCoin;
+@property (nonatomic) int coupon;
 @property (nonatomic) SInt64 totalReward;
 @property (nonatomic, readonly) int level;
 @property (nonatomic) SInt64 rewardCache;
@@ -155,6 +157,9 @@ enum GameMode{
     MATCH,
     OFFLINE,
     USERPACK,
+    M_TEST,
+    M_PRACTICE,
+    M_MATCH,
 };
 
 //=================
@@ -201,6 +206,9 @@ enum GameMode{
 //load pack
 - (void)loadPack:(SInt64)packId completion:(void (^)(PackInfo*))completion;
 @property (nonatomic) NSMutableDictionary* packDict;
+
+//user pack test
+@property (nonatomic) NSMutableArray *userPackTestHistory; //NSString[]
 
 @end
 
