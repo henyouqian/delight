@@ -232,9 +232,14 @@ static SldIapManager *_sldIapManager = nil;
         NSString *formattedPrice = [numberFormatter stringFromNumber:product.price];
         
         [cell.buyButton setTitle:formattedPrice forState:UIControlStateNormal];
-        cell.descTextView.text = product.localizedDescription;
+//        cell.descTextView.text = product.localizedDescription;
+        cell.descTextView.text = product.localizedTitle;
         cell.descTextView.textColor = [UIColor whiteColor];
-        NSString *coinFile = [NSString stringWithFormat:@"coin%d.png", indexPath.row];
+        NSArray *coinArray = @[
+            @(0),@(0),@(1),@(1),@(2),@(2),@(3),@(3),@(4),@(5)
+        ];
+        int idx = [(NSNumber*)coinArray[indexPath.row] intValue];
+        NSString *coinFile = [NSString stringWithFormat:@"coin%d.png", idx];
         cell.imageView.image = [UIImage imageNamed:coinFile];
     }
     return cell;

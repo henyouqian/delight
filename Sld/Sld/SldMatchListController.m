@@ -96,7 +96,7 @@ static const int USER_PACK_LIST_LIMIT = 30;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.tabBarController.navigationItem.rightBarButtonItem = nil;
+//    self.tabBarController.navigationItem.rightBarButtonItem = nil;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

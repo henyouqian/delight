@@ -19,6 +19,11 @@
 static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
 static int _publishDelayHour = 0;
+static int _challengeSec = 0;
+static NSString *_promoUrl = nil;
+static UIImage *_promoImage = nil;
+static NSString *_promoImageKey = nil;
+static int _sliderNum = 0;
 
 //=============================
 @interface SldMyMatchCell : UICollectionViewCell
@@ -28,6 +33,15 @@ static int _publishDelayHour = 0;
 @end
 
 @implementation SldMyMatchCell
+
+@end
+
+//=============================
+@interface SldMyMatchHeader : UICollectionReusableView
+
+@end
+
+@implementation SldMyMatchHeader
 
 @end
 
@@ -50,11 +64,40 @@ static int _publishDelayHour = 0;
 @end
 
 //=============================
-@interface SldMyMatchImagePickListController : UICollectionViewController
+@interface SldMyMatchImagePickedHeader : UICollectionReusableView
+@property (weak, nonatomic) IBOutlet UILabel *sliderNumLabel;
+@property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
+@end
+
+@implementation SldMyMatchImagePickedHeader
 
 @end
 
+//=============================
+@interface SldMyMatchImagePickListController : UICollectionViewController
+
+@property (nonatomic) NSArray *sliderNumbers;
+@property (nonatomic) NSMutableArray *filePathes;
+@property (nonatomic) SldMyMatchImagePickedHeader *header;
+@property (nonatomic) QBImagePickerController *imagePickerController;
+@end
+
 @implementation SldMyMatchImagePickListController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    //
+    _filePathes = [NSMutableArray arrayWithCapacity:10];
+}
+
+- (void)sliderNumValueChanged:(UISlider *)sender {
+    NSUInteger index = (NSUInteger)(_header.sliderNumSlider.value + 0.5);
+    [_header.sliderNumSlider setValue:index animated:NO];
+    NSNumber *number = _sliderNumbers[index];
+    _sliderNum = [number intValue];
+    _header.sliderNumLabel.text = [NSString stringWithFormat:@"拼图滑块数量：%d", _sliderNum];
+}
+
 - (void)setAssets :(NSArray *)assets{
     _assets = assets;
     [self.collectionView reloadData];
@@ -82,6 +125,76 @@ static int _publishDelayHour = 0;
     return cell;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    if (kind == UICollectionElementKindSectionHeader) {
+        _header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"myMatchImagePickListHeader" forIndexPath:indexPath];
+        
+        //
+        _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7)];
+        _sliderNum = 5;
+        int numberOfSteps = ((float)[_sliderNumbers count] - 1);
+        _header.sliderNumSlider.maximumValue = numberOfSteps;
+        _header.sliderNumSlider.minimumValue = 0;
+        _header.sliderNumSlider.continuous = YES;
+        _header.sliderNumSlider.value = 2;
+        [_header.sliderNumSlider addTarget:self
+                             action:@selector(sliderNumValueChanged:)
+                   forControlEvents:UIControlEventValueChanged];
+        [self sliderNumValueChanged:_header.sliderNumSlider];
+        
+        return _header;
+        
+    }
+    return nil;
+}
+
+- (IBAction)onPlayButton:(id)sender {
+    if (_filePathes.count == 0) {
+        int i = 0;
+        for (ALAsset *asset in _assets) {
+            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+            
+            //resize
+            float l = MAX(image.size.width, image.size.height);
+            float s = MIN(image.size.width, image.size.height);
+            float scale = 1.0;
+            if (s > 400.0) {
+                scale = 400.0 / s;
+            }
+            float l2 = l * scale;
+            if (l2 > 800.0) {
+                scale *= 800.0 / l2;
+            }
+            float w = floorf(image.size.width * scale);
+            float h = floorf(image.size.height * scale);
+            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+            
+            //save
+            NSData *data = UIImageJPEGRepresentation(image, 0.85);
+            NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
+            NSString *filePath = makeTempPath(fileName);
+            [_filePathes addObject:filePath];
+            [data writeToFile:filePath atomically:YES];
+            
+            i++;
+        }
+    }
+    
+    SldGameData *gd = [SldGameData getInstance];
+    
+    gd.match = [[Match alloc] init];
+    gd.match.sliderNum = _sliderNum;
+    
+    gd.packInfo = [[PackInfo alloc] init];
+    gd.packInfo.images = _filePathes;
+    
+    //enter game
+    gd.gameMode = M_TEST;
+    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
+    controller.matchSecret = nil;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 @end
 
 //=============================
@@ -93,9 +206,7 @@ static int _publishDelayHour = 0;
 @property (weak, nonatomic) IBOutlet UITextView *playHistoryTextView;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper;
 @property (nonatomic) NSArray *sliderNumbers;
-@property (nonatomic) int sliderNum;
 @property (nonatomic) NSMutableArray *challengeSecs;
-@property (nonatomic) int challengeSec;
 @property (nonatomic) NSMutableArray *filePathes;
 @end
 
@@ -248,8 +359,9 @@ static const int CHALLENGE_SEC_MAX = 90;
 @end
 
 //=============================
-@interface SldMyMatchPromoController : UIViewController <UITextFieldDelegate>
+@interface SldMyMatchPromoController : UIViewController <UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *urlInput;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end
 
@@ -285,6 +397,11 @@ static const int CHALLENGE_SEC_MAX = 90;
         
         SldMyMatchPromoWebController *vc = segue.destinationViewController;
         vc.url = [NSURL URLWithString:urlStr];
+    } else {
+        _promoUrl = _urlInput.text;
+        if (_promoImageKey == nil) {
+            _promoImageKey = @"";
+        }
     }
 }
 
@@ -303,6 +420,42 @@ static const int CHALLENGE_SEC_MAX = 90;
     [self.view endEditing:YES];
 }
 
+- (IBAction)onDeleteImage:(id)sender {
+    _imageView.image = nil;
+    _promoImage = nil;
+}
+
+- (IBAction)onSelectImage:(id)sender {
+    UIImagePickerController *imagePicker =
+    [[UIImagePickerController alloc] init];
+    
+    imagePicker.delegate = self;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+    imagePicker.allowsEditing = YES;
+    
+    [self presentViewController:imagePicker
+                       animated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    CGRect rect;
+    [(NSValue*)info[UIImagePickerControllerCropRect] getValue:&rect];
+    CGSize scaledToSize = CGSizeMake(512, 512);
+    if (rect.size.width > rect.size.height) {
+        scaledToSize.width = 512 * rect.size.width / rect.size.height;
+    } else if (rect.size.width > rect.size.height) {
+        scaledToSize.height = 512 * rect.size.height / rect.size.width;
+    }
+    UIImage *scaledImage = [SldUtil imageWithImage:info[UIImagePickerControllerEditedImage] scaledToSize:scaledToSize];
+    
+    _imageView.image = scaledImage;
+    _promoImage = scaledImage;
+}
+
+
 @end
 
 //=============================
@@ -314,10 +467,9 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (weak, nonatomic) IBOutlet UILabel *publishDelayLabel;
 @property (weak, nonatomic) IBOutlet UISlider *publishDelaySlider;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper;
+
 @property (nonatomic) int couponReward;
 @property (nonatomic) NSArray *numbers;
-@property (nonatomic) NSArray *sliderNumbers;
-@property (nonatomic) int sliderNum;
 
 @property (nonatomic) QiniuSimpleUploader* uploader;
 @property (nonatomic) UIAlertView *alt;
@@ -329,7 +481,7 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (nonatomic) NSMutableArray *images;
 @end
 
-static const int COUPON_MIN = 100;
+static const int COUPON_MIN = 0;
 static const int COUPON_MAX = 10000;
 
 @implementation SldMyMatchSettingsController
@@ -341,11 +493,11 @@ static const int COUPON_MAX = 10000;
     
     //coupon slider
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:50];
-    for (int i = 0; i < 100; i++) {
-        [array addObject:@(i*100+100)];
+    for (int i = 0; i < 101; i++) {
+        [array addObject:@(i*100)];
     }
     _numbers = [NSArray arrayWithArray:array];
-    _couponReward = 100;
+    _couponReward = COUPON_MIN;
     NSInteger numberOfSteps = ((float)[_numbers count] - 1);
     _slider.maximumValue = numberOfSteps;
     _slider.minimumValue = 0;
@@ -399,7 +551,7 @@ static const int COUPON_MAX = 10000;
 }
 
 - (void)updateCouponLabel {
-    _priceLable.text = [NSString stringWithFormat:@"提供奖票数量：%d", _couponReward];
+    _priceLable.text = [NSString stringWithFormat:@"提供奖金数量：%d", _couponReward];
     
     SldGameData *gd = [SldGameData getInstance];
     _goldCoinLabel.text = [NSString stringWithFormat:@"需要支付%d金币（现有%d金币）", _couponReward, gd.playerInfo.goldCoin];
@@ -639,6 +791,9 @@ static const int COUPON_MAX = 10000;
         @"CouponReward":@(_couponReward),
         @"SliderNum":@(_sliderNum),
         @"BeginTime":beginTimeStr,
+        @"ChallengeSeconds":@(_challengeSec),
+        @"PromoUrl":_promoUrl,
+        @"PromoImage":_promoImageKey,
     };
     [session postToApi:@"match/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
@@ -670,6 +825,7 @@ static const int COUPON_MAX = 10000;
 @property (nonatomic) BOOL reachEnd;
 @property (nonatomic) BOOL scrollUnderBottom;
 @property (nonatomic) SldMyMatchFooter* footer;
+@property (nonatomic) SldMyMatchHeader* header;
 @property (nonatomic) QBImagePickerController *imagePickerController;
 
 @end
@@ -722,11 +878,10 @@ static const int COUPON_MAX = 10000;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPack)];
-    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布新游戏" style:UIBarButtonItemStylePlain target:self action:@selector(addPack)];
+//    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布新游戏" style:UIBarButtonItemStylePlain target:self action:@selector(addPack)];
 }
 
-- (void)addPack {
+- (IBAction)onNewMatch:(id)sender {
     _imagePickerController = [[QBImagePickerController alloc] init];
     _imagePickerController.delegate = self;
     _imagePickerController.filterType = QBImagePickerControllerFilterTypePhotos;
@@ -770,8 +925,12 @@ static const int COUPON_MAX = 10000;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    if (kind == UICollectionElementKindSectionFooter) {
-        _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"myMatchFooter" forIndexPath:indexPath];
+    if (kind == UICollectionElementKindSectionHeader) {
+        _header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"myMatchListHeader" forIndexPath:indexPath];
+        return _header;
+
+    } else if (kind == UICollectionElementKindSectionFooter) {
+        _footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"myMatchListFooter" forIndexPath:indexPath];
         return _footer;
     }
     return nil;
