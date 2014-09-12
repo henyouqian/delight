@@ -146,6 +146,8 @@ enum CupType{
 @property (nonatomic) float oneCoinRewardProportion;
 @property (nonatomic) float ownerRewardProportion;
 @property (nonatomic) int challengeSeconds;
+@property (nonatomic) NSString *promoUrl;
+@property (nonatomic) NSString *promoImage;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end

@@ -219,6 +219,8 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _oneCoinRewardProportion = [(NSNumber*)[dict objectForKey:@"OneCoinRewardProportion"] floatValue];
         _ownerRewardProportion = [(NSNumber*)[dict objectForKey:@"OwnerRewardProportion"] floatValue];
         _challengeSeconds = [(NSNumber*)[dict objectForKey:@"ChallengeSeconds"] intValue];
+        _promoUrl = [dict objectForKey:@"PromoUrl"];
+        _promoImage = [dict objectForKey:@"PromoImage"];
         return self;
     }
     return nil;

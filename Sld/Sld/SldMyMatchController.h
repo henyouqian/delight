@@ -11,3 +11,10 @@
 @interface SldMyMatchListController : UICollectionViewController <QBImagePickerControllerDelegate>
 
 @end
+
+
+//================================
+@interface SldMatchPromoWebController : UIViewController
+@property (nonatomic) NSURL *url;
+@property (weak, nonatomic) IBOutlet UIWebView *reviewView;
+@end

@@ -55,7 +55,7 @@
     });
 }
 
-- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     if (imageKey == nil) {
         return;
     }
@@ -88,7 +88,7 @@
     //remote
     else {
         SldHttpSession *session = [SldHttpSession defaultSession];
-        [session downloadFromUrl:makeImageServerUrl(imageKey)
+        [session downloadFromUrl:makeImageServerUrl2(imageKey, host)
                           toPath:localPath
                         withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
@@ -110,6 +110,16 @@
              }];
          }];
     }
+}
+
+- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+    NSString *host = [SldConfig getInstance].DATA_HOST;
+    [self asyncLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
+}
+
+- (void)asyncLoadUploadedImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+    NSString *host = [SldConfig getInstance].UPLOAD_HOST;
+    [self asyncLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
 }
 
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {

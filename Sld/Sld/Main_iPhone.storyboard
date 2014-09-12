@@ -2010,7 +2010,7 @@
                                         <rect key="frame" x="20" y="115" width="280" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="URL" returnKeyType="done"/>
                                     </textField>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="推广链接地址：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZK-79-J7q">
                                         <rect key="frame" x="20" y="82" width="191" height="21"/>
@@ -2428,7 +2428,7 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x9O-qA-nyV" customClass="SldAsyncImageView">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.84875882059999996" green="0.84236266650000002" blue="0.81648652040000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="thumbDarker2.png" translatesAutoresizingMaskIntoConstraints="NO" id="oVu-iH-PF6">
                                             <rect key="frame" x="0.0" y="125" width="159" height="34"/>
@@ -2471,10 +2471,17 @@
                             <rect key="frame" x="0.0" y="265" width="320" height="50"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="KKo-xz-RNN">
-                                    <rect key="frame" x="150" y="15" width="20" height="20"/>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="KKo-xz-RNN">
+                                    <rect key="frame" x="115" y="15" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MdI-Xk-7EC">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="更多">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                </button>
                             </subviews>
                             <connections>
                                 <outlet property="spin" destination="KKo-xz-RNN" id="9ED-iw-ENB"/>
@@ -2623,7 +2630,7 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exC-UF-EOR">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" red="0.048617567870000003" green="0.42666998509999998" blue="0.99839454890000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" red="0.84875882059999996" green="0.84236266650000002" blue="0.81648652040000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2682,10 +2689,10 @@
             </objects>
             <point key="canvasLocation" x="-2335" y="-1851"/>
         </scene>
-        <!--Sld My Match Promo Web Controller - 推广页面预览-->
+        <!--Sld Match Promo Web Controller-->
         <scene sceneID="Wsa-Gu-qU9">
             <objects>
-                <viewController id="cQ0-OZ-9SH" customClass="SldMyMatchPromoWebController" sceneMemberID="viewController">
+                <viewController id="cQ0-OZ-9SH" customClass="SldMatchPromoWebController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ub3-zF-8uJ"/>
                         <viewControllerLayoutGuide type="bottom" id="tUk-o3-cq9"/>
@@ -2702,7 +2709,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="推广页面预览" id="k4C-I4-5CQ"/>
+                    <navigationItem key="navigationItem" id="k4C-I4-5CQ"/>
                     <connections>
                         <outlet property="reviewView" destination="M7Q-Gn-oi0" id="l5x-f4-Zu2"/>
                     </connections>
@@ -3766,7 +3773,7 @@
         <scene sceneID="9JO-zg-F3w">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="Soe-Ac-Jl8" customClass="SldMatchListController" sceneMemberID="viewController">
-                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="IS7-Mv-u8n">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="IS7-Mv-u8n" customClass="SldCollectionView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3787,7 +3794,7 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qp8-YQ-Scn" customClass="SldAsyncImageView">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.84875882059999996" green="0.84236266650000002" blue="0.81648652040000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="进行中" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGf-5b-MZS">
                                             <rect key="frame" x="83" y="5" width="76" height="20"/>
@@ -3822,12 +3829,29 @@
                             <rect key="frame" x="0.0" y="223" width="320" height="50"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="yDG-qt-EqX">
-                                    <rect key="frame" x="150" y="15" width="20" height="20"/>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="yDG-qt-EqX">
+                                    <rect key="frame" x="120" y="15" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q4p-6a-HaY">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="更多">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="onLoadMoreButton:" destination="Soe-Ac-Jl8" eventType="touchUpInside" id="V8V-tw-SZh"/>
+                                    </connections>
+                                </button>
                             </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="q4p-6a-HaY" secondAttribute="trailing" id="CFk-AL-T8A"/>
+                                <constraint firstItem="q4p-6a-HaY" firstAttribute="leading" secondItem="agB-7I-5gd" secondAttribute="leading" id="HEB-As-Vyz"/>
+                                <constraint firstItem="q4p-6a-HaY" firstAttribute="top" secondItem="agB-7I-5gd" secondAttribute="top" id="Mfb-ay-M1J"/>
+                                <constraint firstAttribute="bottom" secondItem="q4p-6a-HaY" secondAttribute="bottom" id="Xt7-gm-vqA"/>
+                            </constraints>
                             <connections>
+                                <outlet property="loadMoreButton" destination="q4p-6a-HaY" id="XYt-yd-NT4"/>
                                 <outlet property="spin" destination="yDG-qt-EqX" id="YG4-Gd-Vis"/>
                             </connections>
                         </collectionReusableView>
@@ -3969,7 +3993,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rewardDefListImgCell" rowHeight="300" id="ubC-1y-ghv">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rewardDefListImgCell" rowHeight="300" id="ubC-1y-ghv" customClass="SldRewardDefListImgCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="300"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ubC-1y-ghv" id="zF4-sW-xGv">
@@ -3977,30 +4001,45 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pma-PJ-Ugb">
-                                            <rect key="frame" x="20" y="10" width="280" height="280"/>
+                                            <rect key="frame" x="10" y="0.0" width="300" height="300"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="280" id="6aU-2R-1d0"/>
-                                                <constraint firstAttribute="height" constant="280" id="JZ6-Kr-8sm"/>
+                                                <constraint firstAttribute="width" constant="300" id="6aU-2R-1d0"/>
+                                                <constraint firstAttribute="height" constant="300" id="JZ6-Kr-8sm"/>
                                             </constraints>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="thumbDarker2.png" translatesAutoresizingMaskIntoConstraints="NO" id="o2f-cM-PhM">
-                                            <rect key="frame" x="20" y="247" width="280" height="42"/>
+                                            <rect key="frame" x="10" y="251" width="300" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="由xxx独家赞助，点击查看更多。" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I1S-n5-You">
-                                            <rect key="frame" x="33" y="262" width="249" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="点击查看更多" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I1S-n5-You">
+                                            <rect key="frame" x="33" y="269" width="249" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7w9-XJ-JsN">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="299"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <segue destination="cQ0-OZ-9SH" kind="push" identifier="segToPromoWeb" id="ixn-EL-AyK"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerX" secondItem="pma-PJ-Ugb" secondAttribute="centerX" id="YXl-0p-UXJ"/>
                                         <constraint firstAttribute="centerY" secondItem="pma-PJ-Ugb" secondAttribute="centerY" id="yzr-5o-T9R"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="maskImageView" destination="o2f-cM-PhM" id="Qex-92-luz"/>
+                                    <outlet property="maskLabel" destination="I1S-n5-You" id="gCi-aJ-XKj"/>
+                                    <outlet property="promoImageView" destination="pma-PJ-Ugb" id="JUK-o2-5l1"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="rewardDefListRankCell" rowHeight="48" id="pdW-3b-Yrb" customClass="SldRewardDefListRankCell">
                                 <rect key="frame" x="0.0" y="386" width="320" height="48"/>
@@ -4042,10 +4081,10 @@
             </objects>
             <point key="canvasLocation" x="-1750" y="-3159"/>
         </scene>
-        <!--Sld Match List Controller - 推荐-->
+        <!--Collection View Controller - 推荐-->
         <scene sceneID="x2S-ec-kxc">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="qa2-yO-ZUR" customClass="SldMatchListController" sceneMemberID="viewController">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="qa2-yO-ZUR" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="hIN-N3-pla">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4067,7 +4106,7 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nfh-NL-Qky" customClass="SldAsyncImageView">
                                             <rect key="frame" x="0.0" y="0.0" width="159" height="159"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.84875882059999996" green="0.84236266650000002" blue="0.81648652040000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="进行中" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k5U-vJ-Jyc">
                                             <rect key="frame" x="83" y="5" width="76" height="20"/>
@@ -4168,6 +4207,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="wmq-tW-klr"/>
+        <segue reference="ixn-EL-AyK"/>
         <segue reference="HgS-3K-RWw"/>
         <segue reference="DQE-9R-GEV"/>
     </inferredMetricsTieBreakers>

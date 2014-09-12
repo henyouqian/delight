@@ -8,9 +8,15 @@
 
 #import "SldRewardDefListController.h"
 #import "SldGameData.h"
+#import "UIImageView+sldAsyncLoad.h"
+#import "SldMyMatchController.h"
 
 //===========================
 @interface SldRewardDefListImgCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *promoImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *maskImageView;
+@property (weak, nonatomic) IBOutlet UILabel *maskLabel;
 
 @end
 
@@ -65,9 +71,24 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = nil;
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"rewardDefListImgCell" forIndexPath:indexPath];
+        SldRewardDefListImgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rewardDefListImgCell" forIndexPath:indexPath];
+        NSString *imgKey = _gd.match.promoImage;
+        if (imgKey.length) {
+            [cell.promoImageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
+            cell.hidden = NO;
+        } else {
+            cell.hidden = YES;
+        }
+        
+        if (_gd.match.promoUrl.length == 0) {
+            cell.maskImageView.hidden = YES;
+            cell.maskLabel.hidden = YES;
+        } else {
+            cell.maskImageView.hidden = NO;
+            cell.maskLabel.hidden = NO;
+        }
+        
         return cell;
     } else if (indexPath.section == 1) {
         SldRewardDefListRankCell *cell = (SldRewardDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardDefListRankCell" forIndexPath:indexPath];
@@ -102,7 +123,10 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return 300;
+        if (_gd.match.promoImage.length > 0) {
+            return 300;
+        }
+        return 0;
     } else if (indexPath.section == 1) {
         return 48;
     }
@@ -147,15 +171,25 @@
 }
 */
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if (_gd.match.promoUrl.length == 0) {
+        return NO;
+    }
+    return YES;
 }
-*/
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (segue.identifier && [segue.identifier compare:@"segToPromoWeb"] == 0) {
+        NSString *urlStr = _gd.match.promoUrl;
+        
+        NSRange range = [urlStr rangeOfString:@"://"];
+        if (range.location == NSNotFound) {
+            urlStr = [NSString stringWithFormat:@"http://%@", urlStr];
+        }
+        
+        SldMatchPromoWebController *vc = segue.destinationViewController;
+        vc.url = [NSURL URLWithString:urlStr];
+    }
+}
 
 @end

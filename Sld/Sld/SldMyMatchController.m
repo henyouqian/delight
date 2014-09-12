@@ -342,13 +342,7 @@ static const int CHALLENGE_SEC_MAX = 90;
 @end
 
 //=============================
-@interface SldMyMatchPromoWebController : UIViewController
-@property (nonatomic) NSURL *url;
-@property (weak, nonatomic) IBOutlet UIWebView *reviewView;
-
-@end
-
-@implementation SldMyMatchPromoWebController
+@implementation SldMatchPromoWebController
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -395,7 +389,7 @@ static const int CHALLENGE_SEC_MAX = 90;
             urlStr = [NSString stringWithFormat:@"http://%@", urlStr];
         }
         
-        SldMyMatchPromoWebController *vc = segue.destinationViewController;
+        SldMatchPromoWebController *vc = segue.destinationViewController;
         vc.url = [NSURL URLWithString:urlStr];
     } else {
         _promoUrl = _urlInput.text;
@@ -708,6 +702,18 @@ static const int COUPON_MAX = 10000;
     //thumb key
     _thumbKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
     [fileKeys addObject:_thumbKey];
+    
+    //promo image
+    if (_promoImage) {
+        NSData *data = UIImageJPEGRepresentation(_promoImage, 0.85);
+        NSString *fileName = @"promo.jpg";
+        NSString *filePath = makeTempPath(fileName);
+        [filePathes addObject:filePath];
+        [data writeToFile:filePath atomically:YES];
+        
+        _promoImageKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+        [fileKeys addObject:_promoImageKey];
+    }
     
     //
     _alt.title = @"上传中... 0%";
