@@ -22,7 +22,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    self.interactivePopGestureRecognizer.enabled = NO;
+//    self.interactivePopGestureRecognizer.enabled = NO;
     
 //    [[NSNotificationCenter defaultCenter]
 //        addObserver:self

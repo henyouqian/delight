@@ -9,5 +9,4 @@
 //#import "SldEventDetailViewController.h"
 
 @interface SldGameController : UIViewController
-@property (nonatomic) NSString *matchSecret;
 @end

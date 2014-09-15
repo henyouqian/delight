@@ -206,6 +206,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
         _couponReward = [(NSNumber*)[dict objectForKey:@"CouponReward"] intValue];
         _thumb = [dict objectForKey:@"Thumb"];
+        _title = [dict objectForKey:@"Title"];
         _playTimes = [(NSNumber*)[dict objectForKey:@"PlayTimes"] intValue];
         _extraReward = [(NSNumber*)[dict objectForKey:@"ExtraReward"] intValue];
         _beginTime = [(NSNumber*)[dict objectForKey:@"BeginTime"] longLongValue];
@@ -233,7 +234,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 + (instancetype)recordWithDictionary:(NSDictionary*)dict {
     EventPlayRecored *record = [[EventPlayRecored alloc] init];
     record.highScore = [(NSNumber*)[dict objectForKey:@"HighScore"] intValue];
-    record.trys = [(NSNumber*)[dict objectForKey:@"Trys"] intValue];
+    record.tries = [(NSNumber*)[dict objectForKey:@"Tries"] intValue];
     record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
     record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
     record.teamName = [dict objectForKey:@"TeamName"];
@@ -257,6 +258,28 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 
 @end
 
+//========================
+@implementation MatchPlay
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _playTimes = [(NSNumber*)dict[@"PlayTimes"] intValue];
+        _extraReward = [(NSNumber*)dict[@"ExtraReward"] intValue];
+        _highScore = [(NSNumber*)dict[@"HighScore"] intValue];
+        _finalRank = [(NSNumber*)dict[@"FinalRank"] intValue];
+        _freeTries = [(NSNumber*)dict[@"FreeTries"] intValue];
+        _tries = [(NSNumber*)dict[@"Tries"] intValue];
+        _myRank = [(NSNumber*)dict[@"MyRank"] intValue];
+        _rankNum = [(NSNumber*)dict[@"RankNum"] intValue];
+        _team = dict[@"Team"];
+    }
+    return self;
+}
+
+@end
+
+
+//========================
 @implementation SldGameData
 
 static SldGameData *g_inst = nil;

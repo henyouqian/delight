@@ -125,7 +125,7 @@ NSString* sha256(NSString* data, NSString *salt) {
 NSString* formatScore(int score) {
     int msec = -score;
     if (msec == 0) {
-        return @"无记录";
+        return @"暂无记录";
     } else {
         int sec = msec/1000;
         int min = sec / 60;

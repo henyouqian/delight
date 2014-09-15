@@ -66,11 +66,13 @@ static const int USER_PACK_LIST_LIMIT = 6;
 }
 
 - (void)refreshMatch {
-    [_refreshControl endRefreshing];
+    _footer.loadMoreButton.enabled = NO;
     
     NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _footer.loadMoreButton.enabled = YES;
+        [_refreshControl endRefreshing];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -82,7 +84,7 @@ static const int USER_PACK_LIST_LIMIT = 6;
         }
         
         if (array.count < USER_PACK_LIST_LIMIT) {
-            [_footer.loadMoreButton setTitle:@"没有了" forState:UIControlStateNormal];
+            [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
             _footer.loadMoreButton.enabled = NO;
         } else {
             [_footer.loadMoreButton setTitle:@"更多" forState:UIControlStateNormal];
@@ -179,7 +181,7 @@ static const int USER_PACK_LIST_LIMIT = 6;
         }
         
         if (array.count < USER_PACK_LIST_LIMIT) {
-            [_footer.loadMoreButton setTitle:@"没有了" forState:UIControlStateNormal];
+            [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
             _footer.loadMoreButton.enabled = NO;
         }
         

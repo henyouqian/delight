@@ -109,15 +109,14 @@ static SldIapManager *_sldIapManager = nil;
                 lwError("Json error:%@", [error localizedDescription]);
                 return;
             }
-            SInt64 addMoney = [(NSNumber*)[dict objectForKey:@"AddMoney"] longLongValue];
-            SInt64 money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-            gd.playerInfo.money = money;
-            alert([NSString stringWithFormat:@"获得%lld个金币，现有%lld个金币", addMoney, money], nil);
+            int addGoldCoin = [(NSNumber*)[dict objectForKey:@"AddGoldCoin"] intValue];
+            int goldCoin = [(NSNumber*)[dict objectForKey:@"GoldCoin"] intValue];
+            gd.playerInfo.goldCoin = goldCoin;
+            alert([NSString stringWithFormat:@"获得%d个金币，现有%d个金币", addGoldCoin, goldCoin], nil);
             [[SldUserController getInstance] updateMoney];
             
             [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
         }];
-        
     }];
 }
 

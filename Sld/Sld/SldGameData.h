@@ -114,7 +114,7 @@ enum CupType{
 //=================
 @interface EventPlayRecored : NSObject
 @property (nonatomic) int highScore;
-@property (nonatomic) int trys;
+@property (nonatomic) int tries;
 @property (nonatomic) int rank;
 @property (nonatomic) int rankNum;
 @property (nonatomic) NSString *teamName;
@@ -136,6 +136,7 @@ enum CupType{
 @property (nonatomic) int sliderNum;
 @property (nonatomic) int couponReward;
 @property (nonatomic) NSString *thumb;
+@property (nonatomic) NSString *title;
 @property (nonatomic) int playTimes;
 @property (nonatomic) int extraReward;
 @property (nonatomic) SInt64 beginTime;
@@ -150,6 +151,23 @@ enum CupType{
 @property (nonatomic) NSString *promoImage;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
+@end
+
+//==================
+@interface MatchPlay : NSObject
+
+@property (nonatomic) int playTimes;
+@property (nonatomic) int extraReward;
+@property (nonatomic) int highScore;
+@property (nonatomic) int finalRank;
+@property (nonatomic) int freeTries;
+@property (nonatomic) int tries;
+@property (nonatomic) int myRank;
+@property (nonatomic) int rankNum;
+@property (nonatomic) NSString *team;
+
+- (instancetype)initWithDict:(NSDictionary*)dict;
+
 @end
 
 //=================
@@ -178,6 +196,7 @@ enum GameMode{
 @property (nonatomic) int recentScore;
 @property (nonatomic) PlayerInfo *playerInfo;
 @property (nonatomic) Match *match;
+@property (nonatomic) NSString *matchSecret;
 - (void)resetEvent;
 
 //player
@@ -187,6 +206,7 @@ enum GameMode{
 
 
 @property (nonatomic) enum GameMode gameMode;
+@property (nonatomic) BOOL autoPaging;
 
 @property (nonatomic) BOOL needReloadEventList;
 @property (nonatomic) BOOL needReloadChallengeTime;
@@ -211,6 +231,9 @@ enum GameMode{
 
 //user pack test
 @property (nonatomic) NSMutableArray *userPackTestHistory; //NSString[]
+
+//
+@property (nonatomic) MatchPlay *matchPlay;
 
 @end
 

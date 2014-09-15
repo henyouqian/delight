@@ -450,7 +450,7 @@ static NSMutableSet *g_updatedPackIdSet = nil;
                 
                 //
                 SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-                controller.matchSecret = matchSecret;
+                _gd.matchSecret = matchSecret;
                 [self.navigationController pushViewController:controller animated:YES];
                 
                 //

@@ -10,6 +10,8 @@
 
 @interface SldMyMatchListController : UICollectionViewController <QBImagePickerControllerDelegate>
 
+- (void)refresh;
+
 @end
 
 

@@ -134,7 +134,7 @@
     
     //
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    controller.matchSecret = nil;
+    _gd.matchSecret = nil;
     
     if (self.navigationController.topViewController == self ) {
         [self.navigationController pushViewController:controller animated:YES];

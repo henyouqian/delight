@@ -10,4 +10,6 @@
 
 @interface SldMatchBriefController : UIViewController
 
+- (void)refreshUI;
+
 @end

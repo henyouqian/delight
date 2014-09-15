@@ -24,6 +24,7 @@ static NSString *_promoUrl = nil;
 static UIImage *_promoImage = nil;
 static NSString *_promoImageKey = nil;
 static int _sliderNum = 0;
+static SldMyMatchListController *_myMatchListController = nil;
 
 //=============================
 @interface SldMyMatchCell : UICollectionViewCell
@@ -48,6 +49,8 @@ static int _sliderNum = 0;
 //=============================
 @interface SldMyMatchFooter : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
+@property (weak, nonatomic) IBOutlet UIButton *loadMoreButton;
+
 @end
 
 @implementation SldMyMatchFooter
@@ -149,50 +152,62 @@ static int _sliderNum = 0;
 }
 
 - (IBAction)onPlayButton:(id)sender {
-    if (_filePathes.count == 0) {
-        int i = 0;
-        for (ALAsset *asset in _assets) {
-            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+    UIAlertView *alt = alertNoButton(@"生成中...");
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (_filePathes.count == 0) {
             
-            //resize
-            float l = MAX(image.size.width, image.size.height);
-            float s = MIN(image.size.width, image.size.height);
-            float scale = 1.0;
-            if (s > 400.0) {
-                scale = 400.0 / s;
+            
+            int i = 0;
+            for (ALAsset *asset in _assets) {
+                UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+                
+                //resize
+                float l = MAX(image.size.width, image.size.height);
+                float s = MIN(image.size.width, image.size.height);
+                float scale = 1.0;
+                if (s > 400.0) {
+                    scale = 400.0 / s;
+                }
+                float l2 = l * scale;
+                if (l2 > 800.0) {
+                    scale *= 800.0 / l2;
+                }
+                float w = floorf(image.size.width * scale);
+                float h = floorf(image.size.height * scale);
+                image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+                
+                //save
+                NSData *data = UIImageJPEGRepresentation(image, 0.85);
+                NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
+                NSString *filePath = makeTempPath(fileName);
+                [_filePathes addObject:filePath];
+                [data writeToFile:filePath atomically:YES];
+                
+                i++;
             }
-            float l2 = l * scale;
-            if (l2 > 800.0) {
-                scale *= 800.0 / l2;
-            }
-            float w = floorf(image.size.width * scale);
-            float h = floorf(image.size.height * scale);
-            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
-            
-            //save
-            NSData *data = UIImageJPEGRepresentation(image, 0.85);
-            NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
-            NSString *filePath = makeTempPath(fileName);
-            [_filePathes addObject:filePath];
-            [data writeToFile:filePath atomically:YES];
-            
-            i++;
         }
-    }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [alt dismissWithClickedButtonIndex:0 animated:YES];
+            
+            SldGameData *gd = [SldGameData getInstance];
+            
+            gd.match = [[Match alloc] init];
+            gd.match.sliderNum = _sliderNum;
+            
+            gd.packInfo = [[PackInfo alloc] init];
+            gd.packInfo.images = _filePathes;
+            
+            //enter game
+            gd.gameMode = M_TEST;
+            SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
+            gd.matchSecret = nil;
+            [self.navigationController pushViewController:controller animated:YES];  
+        });
+    });
     
-    SldGameData *gd = [SldGameData getInstance];
     
-    gd.match = [[Match alloc] init];
-    gd.match.sliderNum = _sliderNum;
     
-    gd.packInfo = [[PackInfo alloc] init];
-    gd.packInfo.images = _filePathes;
     
-    //enter game
-    gd.gameMode = M_TEST;
-    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    controller.matchSecret = nil;
-    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end
@@ -335,7 +350,7 @@ static const int CHALLENGE_SEC_MAX = 90;
     //enter game
     gd.gameMode = M_TEST;
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    controller.matchSecret = nil;
+    gd.matchSecret = nil;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -809,16 +824,16 @@ static const int COUPON_MAX = 10000;
             return;
         }
         
-//        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-//        if (error) {
-//            lwError("Json error:%@", [error localizedDescription]);
-//            [_alt dismissWithClickedButtonIndex:0 animated:YES];
-//            _alt = nil;
-//            return;
-//        }
-
         [_alt dismissWithClickedButtonIndex:0 animated:YES];
-        alert(@"发布成功", nil);
+        
+        //
+        [[[UIAlertView alloc] initWithTitle:@"发布成功！"
+                                    message:nil
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+            [self.navigationController popToViewController:_myMatchListController.tabBarController animated:YES];
+            [_myMatchListController refresh];
+        }]
+                           otherButtonItems:nil] show];
     }];
 }
 
@@ -828,11 +843,10 @@ static const int COUPON_MAX = 10000;
 @interface SldMyMatchListController()
 
 @property (nonatomic) NSMutableArray *matches;
-@property (nonatomic) BOOL reachEnd;
-@property (nonatomic) BOOL scrollUnderBottom;
 @property (nonatomic) SldMyMatchFooter* footer;
 @property (nonatomic) SldMyMatchHeader* header;
 @property (nonatomic) QBImagePickerController *imagePickerController;
+@property (nonatomic) UIRefreshControl *refreshControl;
 
 @end
 
@@ -841,6 +855,7 @@ static const int COUPON_MAX = 10000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _myMatchListController = self;
     _matches = [NSMutableArray array];
     
     UIEdgeInsets insets = self.collectionView.contentInset;
@@ -851,40 +866,74 @@ static const int COUPON_MAX = 10000;
     self.collectionView.scrollIndicatorInsets = insets;
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
+    //refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.collectionView.alwaysBounceVertical = YES;
+    [self.collectionView addSubview:self.refreshControl];
+    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    
     //
-    if (_matches.count == 0) {
-        NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        [session postToApi:@"match/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                alertHTTPError(error, data);
-                return;
-            }
-            NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if (error) {
-                lwError("Json error:%@", [error localizedDescription]);
-                return;
-            }
-            
-            if (array.count < USER_PACK_LIST_LIMIT) {
-                _reachEnd = YES;
-            }
-            
-            NSMutableArray *insertIndexPathes = [NSMutableArray array];
-            for (NSDictionary *dict in array) {
-                Match *match = [[Match alloc] initWithDict:dict];
-                [_matches addObject:match];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_matches.count-1 inSection:0];
-                [insertIndexPathes addObject:indexPath];
-            }
-            [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
-        }];
-    }
+    [self refresh];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布新游戏" style:UIBarButtonItemStylePlain target:self action:@selector(addPack)];
+    
+    UIEdgeInsets insets = self.collectionView.contentInset;
+    insets.top = 64;
+    insets.bottom = 50;
+    
+    self.collectionView.contentInset = insets;
+    self.collectionView.scrollIndicatorInsets = insets;
+    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+}
+
+- (void)refresh {
+    _footer.loadMoreButton.enabled = NO;
+    
+    NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"match/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _footer.loadMoreButton.enabled = YES;
+        [_refreshControl endRefreshing];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        if (array.count < USER_PACK_LIST_LIMIT) {
+            [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
+            _footer.loadMoreButton.enabled = NO;
+        } else {
+            [_footer.loadMoreButton setTitle:@"更多" forState:UIControlStateNormal];
+            _footer.loadMoreButton.enabled = YES;
+        }
+        
+        //delete
+        int matchNum = _matches.count;
+        [_matches removeAllObjects];
+        NSMutableArray *deleteIndexPathes = [NSMutableArray array];
+        for (int i = 0; i < matchNum; ++i) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            [deleteIndexPathes addObject:indexPath];
+        }
+        [self.collectionView deleteItemsAtIndexPaths:deleteIndexPathes];
+        
+        //insert
+        NSMutableArray *insertIndexPathes = [NSMutableArray array];
+        for (NSDictionary *dict in array) {
+            Match *match = [[Match alloc] initWithDict:dict];
+            [_matches addObject:match];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_matches.count-1 inSection:0];
+            [insertIndexPathes addObject:indexPath];
+        }
+        [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
+    }];
 }
 
 - (IBAction)onNewMatch:(id)sender {
@@ -940,59 +989,6 @@ static const int COUPON_MAX = 10000;
         return _footer;
     }
     return nil;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (_matches.count == 0 || _reachEnd) {
-        return;
-    }
-    
-    if (scrollView.contentSize.height > scrollView.frame.size.height
-        &&(scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height) {
-        if (!_scrollUnderBottom) {
-            _scrollUnderBottom = YES;
-            if (![_footer.spin isAnimating]) {
-                [_footer.spin startAnimating];
-                
-                SInt64 startId = 0;
-                if (_matches.count > 0) {
-                    Match *match = [_matches lastObject];
-                    startId = match.id;
-                }
-//
-//                NSDictionary *body = @{@"StartId": @(startId), @"Limit": @(ADVICE_LIMIT)};
-//                SldHttpSession *session = [SldHttpSession defaultSession];
-//                [session postToApi:@"etc/listAdvice" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//                    [_bottomRefresh endRefreshing];
-//                    if (error) {
-//                        alertHTTPError(error, data);
-//                        return;
-//                    }
-//                    NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-//                    if (error) {
-//                        lwError("Json error:%@", [error localizedDescription]);
-//                        return;
-//                    }
-//                    
-//                    if (array.count < ADVICE_LIMIT) {
-//                        _reachEnd = YES;
-//                    }
-//                    
-//                    NSMutableArray *insertIndexPathes = [NSMutableArray array];
-//                    for (NSDictionary *dict in array) {
-//                        AdviceData *adviceData = [AdviceData adviceDataWithDictionary:dict];
-//                        [_adviceDatas addObject:adviceData];
-//                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_adviceDatas.count-1 inSection:1];
-//                        [insertIndexPathes addObject:indexPath];
-//                    }
-//                    [self.tableView insertRowsAtIndexPaths:insertIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
-//                }];
-            }
-        }
-        
-    } else {
-        _scrollUnderBottom = NO;
-    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

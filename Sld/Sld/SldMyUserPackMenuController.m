@@ -127,7 +127,7 @@
     _gd.gameMode = USERPACK;
     
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    controller.matchSecret = nil;
+    _gd.matchSecret = nil;
     
     [self.navigationController pushViewController:controller animated:YES];
 }
