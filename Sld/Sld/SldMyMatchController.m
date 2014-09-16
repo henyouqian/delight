@@ -15,6 +15,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyUserPackMenuController.h"
 #import "SldGameController.h"
+#import "SldIapController.h"
 
 static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
@@ -613,7 +614,8 @@ static const int COUPON_MAX = 10000;
             // Handle "Cancel"
         }]
                            otherButtonItems:[RIButtonItem itemWithLabel:@"去商店" action:^{
-            //fixme
+            SldIapController* vc = (SldIapController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"iapController"];
+            [self.navigationController pushViewController:vc animated:YES];
         }], nil] show];
         return;
     }

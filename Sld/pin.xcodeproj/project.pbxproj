@@ -131,6 +131,7 @@
 		D03252B0195D761B00D9620C /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D03252AF195D761B00D9620C /* PassKit.framework */; };
 		D03252B8195F064F00D9620C /* libFlurry_5.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */; };
 		D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */; };
+		D059129919C8144A009916AB /* SldMatchRankController.m in Sources */ = {isa = PBXBuildFile; fileRef = D059129819C8144A009916AB /* SldMatchRankController.m */; };
 		D05E995C195C7189002A6B83 /* coin0.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9956195C7189002A6B83 /* coin0.png */; };
 		D05E995D195C7189002A6B83 /* coin1.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9957195C7189002A6B83 /* coin1.png */; };
 		D05E995E195C7189002A6B83 /* coin2.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9958195C7189002A6B83 /* coin2.png */; };
@@ -464,6 +465,8 @@
 		D03252AE195D75B800D9620C /* Sld.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Sld.entitlements; sourceTree = "<group>"; };
 		D03252AF195D761B00D9620C /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_5.1.0.a; path = External/Flurry/libFlurry_5.1.0.a; sourceTree = "<group>"; };
+		D059129719C8144A009916AB /* SldMatchRankController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchRankController.h; sourceTree = "<group>"; };
+		D059129819C8144A009916AB /* SldMatchRankController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchRankController.m; sourceTree = "<group>"; };
 		D05E9956195C7189002A6B83 /* coin0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin0.png; sourceTree = "<group>"; };
 		D05E9957195C7189002A6B83 /* coin1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin1.png; sourceTree = "<group>"; };
 		D05E9958195C7189002A6B83 /* coin2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin2.png; sourceTree = "<group>"; };
@@ -842,6 +845,8 @@
 		B3691E1D1900C3A50055C419 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				D059129719C8144A009916AB /* SldMatchRankController.h */,
+				D059129819C8144A009916AB /* SldMatchRankController.m */,
 				D0CD0D3819BB7DBE00F6DDBD /* SldRewardDefListController.h */,
 				D0CD0D3919BB7DBE00F6DDBD /* SldRewardDefListController.m */,
 				D00D900A19B882650026B9FD /* SldMatchBriefController.h */,
@@ -1608,6 +1613,7 @@
 				D0CD0D3A19BB7DBE00F6DDBD /* SldRewardDefListController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,
+				D059129919C8144A009916AB /* SldMatchRankController.m in Sources */,
 				D005210E19715BA100F7F915 /* SldBetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
