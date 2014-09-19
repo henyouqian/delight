@@ -15,6 +15,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyUserPackMenuController.h"
 #import "SldMyMatchController.h"
+#import "MSWeakTimer.h"
 
 static const int USER_PACK_LIST_LIMIT = 6;
 
@@ -22,7 +23,9 @@ static const int USER_PACK_LIST_LIMIT = 6;
 @interface SldMatchListCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLebel;
 @property (nonatomic) Match* match;
+
 @end
 
 @implementation SldMatchListCell
@@ -45,10 +48,15 @@ static const int USER_PACK_LIST_LIMIT = 6;
 @property (nonatomic) NSMutableArray *matches;
 @property (nonatomic) SldMatchListFooter *footer;
 @property (nonatomic) UIRefreshControl *refreshControl;
+@property (nonatomic) MSWeakTimer *secTimer;
 
 @end
 
 @implementation SldMatchListController
+
+- (void)dealloc {
+    [_secTimer invalidate];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,6 +71,43 @@ static const int USER_PACK_LIST_LIMIT = 6;
     
     //
     [self refreshMatch];
+    
+    //timer
+    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+}
+
+- (void)onSecTimer {
+    NSArray *visibleCells = [self.collectionView visibleCells];
+    for (SldMatchListCell *cell in visibleCells) {
+        [self refreshTimeLabel:cell];
+    }
+}
+
+static float _scrollY = -64;
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+    
+    UIEdgeInsets insets = self.collectionView.contentInset;
+    insets.top = 64;
+    insets.bottom = 50;
+    
+    self.collectionView.contentInset = insets;
+    self.collectionView.scrollIndicatorInsets = insets;
+    
+    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    _scrollY = self.collectionView.contentOffset.y;
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    return YES;
 }
 
 - (void)refreshMatch {
@@ -113,18 +158,6 @@ static const int USER_PACK_LIST_LIMIT = 6;
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    UIEdgeInsets insets = self.collectionView.contentInset;
-    insets.top = 64;
-    insets.bottom = 50;
-    
-    self.collectionView.contentInset = insets;
-    self.collectionView.scrollIndicatorInsets = insets;
-    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
-}
-
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
@@ -144,7 +177,29 @@ static const int USER_PACK_LIST_LIMIT = 6;
     }
     
     cell.match = match;
+    [self refreshTimeLabel:cell];
+    
     return cell;
+}
+
+- (void)refreshTimeLabel:(SldMatchListCell*)cell {
+    UIColor *green = makeUIColor(71, 186, 43, 180);
+    UIColor *red = makeUIColor(212, 62, 91, 180);
+    
+    NSDate *endTime = [NSDate dateWithTimeIntervalSince1970:cell.match.endTime];
+    NSDate *now = getServerNow();
+    NSTimeInterval endIntv = [endTime timeIntervalSinceDate:now];
+    if (endIntv <= 0) {
+        cell.timeLebel.text = @"已结束";
+        cell.timeLebel.backgroundColor = red;
+    } else {
+        cell.timeLebel.backgroundColor = green;
+        if (endIntv > 3600) {
+            cell.timeLebel.text = [NSString stringWithFormat:@"%d小时", (int)endIntv/3600];
+        } else {
+            cell.timeLebel.text = [NSString stringWithFormat:@"%d分钟", (int)endIntv/60];
+        }
+    }
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {

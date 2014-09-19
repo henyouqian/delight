@@ -22,8 +22,7 @@ import (
 )
 
 const (
-	USEAGE = "Useage: \n\tmatchUploader new|del|update <uploadDir> confFile"
-	HOST   = "http://dn-pintugame.qbox.me"
+	USEAGE = "Useage: \n\tmatchUploader new|del <uploadDir> confFile"
 
 	MATCH_JS      = "match.js"
 	MATCH_RESP_JS = "respMatch.js"
@@ -53,20 +52,14 @@ type Image struct {
 	Text  string
 }
 
-type Pack struct {
-	Id        int64
-	Title     string
-	Text      string
-	Cover     string
-	CoverBlur string
-	Thumb     string
-	Images    []Image
-	Tags      []string
-}
-
 type Match struct {
-	Pack
-	BeginTime        string
+	Id               int64
+	Title            string
+	Cover            string
+	CoverBlur        string
+	Thumb            string
+	Images           []Image
+	BeginTimeStr     string
 	SliderNum        int
 	CouponReward     int
 	ChallengeSeconds int
@@ -95,7 +88,7 @@ func main() {
 	flag.Parse()
 
 	//conf
-	confFile := flag.Arg(2)
+	confFile := flag.Arg(0)
 	if confFile == "" {
 		glog.Errorln(USEAGE)
 		return
@@ -116,7 +109,7 @@ func main() {
 		panic(err)
 	}
 
-	workDir := flag.Arg(1)
+	workDir := flag.Arg(2)
 	if workDir == "" {
 		glog.Errorln(USEAGE)
 		return
@@ -126,7 +119,7 @@ func main() {
 
 	os.Chdir(workDir)
 
-	switch flag.Arg(0) {
+	switch flag.Arg(1) {
 	case "new":
 		newMatch()
 	case "del":

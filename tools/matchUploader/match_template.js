@@ -1,6 +1,6 @@
 {
 	"Title":"",
 	"SliderNum": 5,
-	"GoldCoin": 0,
-	"PromoLink": "",
+	"CouponReward": 0,
+	"PromoLink": ""
 }

@@ -477,6 +477,8 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (weak, nonatomic) IBOutlet UILabel *publishDelayLabel;
 @property (weak, nonatomic) IBOutlet UISlider *publishDelaySlider;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper;
+@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
+@property (weak, nonatomic) IBOutlet UITextField *couponInput;
 
 @property (nonatomic) int couponReward;
 @property (nonatomic) NSArray *numbers;
@@ -489,6 +491,7 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (nonatomic) NSString *coverKey;
 @property (nonatomic) NSString *coverBlurKey;
 @property (nonatomic) NSMutableArray *images;
+@property (nonatomic) SldGameData *gd;
 @end
 
 static const int COUPON_MIN = 0;
@@ -538,8 +541,25 @@ static const int COUPON_MAX = 10000;
     [self publishDelayChanged:_publishDelaySlider];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    //
+    _gd = [SldGameData getInstance];
+    _couponLabel.text = [NSString stringWithFormat:@"提供多少金币作为奖励:（现有%d）", _gd.playerInfo.goldCoin];
+}
+
 - (IBAction)onTouch:(id)sender {
     [self.view endEditing:YES];
+}
+
+- (IBAction)couponEditEnd:(id)sender {
+    int n = [_couponInput.text intValue];
+    n = n / 100 * 100;
+    if (n < 0) {
+        n = 0;
+    }
+    _couponInput.text = [NSString stringWithFormat:@"%d", n];
 }
 
 - (void)valueChanged:(UISlider *)sender {
@@ -604,6 +624,13 @@ static const int COUPON_MAX = 10000;
 }
 
 - (IBAction)onPublish:(id)sender {
+    //
+    _couponReward = [_couponInput.text intValue];
+    _couponReward = _couponReward / 100 * 100;
+    if (_couponReward < 0) {
+        _couponReward = 0;
+    }
+    
     //check coupon
     SldGameData *gd = [SldGameData getInstance];
     if (gd.playerInfo.goldCoin < _couponReward) {
@@ -813,7 +840,7 @@ static const int COUPON_MAX = 10000;
         @"Images":_images,
         @"CouponReward":@(_couponReward),
         @"SliderNum":@(_sliderNum),
-        @"BeginTime":beginTimeStr,
+        @"BeginTimeStr":beginTimeStr,
         @"ChallengeSeconds":@(_challengeSec),
         @"PromoUrl":_promoUrl,
         @"PromoImage":_promoImageKey,
@@ -878,8 +905,12 @@ static const int COUPON_MAX = 10000;
     [self refresh];
 }
 
+static float _scrollY = -64;
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     UIEdgeInsets insets = self.collectionView.contentInset;
     insets.top = 64;
@@ -887,7 +918,13 @@ static const int COUPON_MAX = 10000;
     
     self.collectionView.contentInset = insets;
     self.collectionView.scrollIndicatorInsets = insets;
-    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    _scrollY = self.collectionView.contentOffset.y;
 }
 
 - (void)refresh {

@@ -33,7 +33,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 
 @property (nonatomic) SldGameData *gd;
-@property (nonatomic) MSWeakTimer *timer;
+@property (nonatomic) MSWeakTimer *secTimer;
+@property (nonatomic) MSWeakTimer *minTimer;
 
 @property (nonatomic) NSString *secret;
 @end
@@ -41,7 +42,8 @@
 @implementation SldMatchBriefController
 
 -(void)dealloc {
-    [_timer invalidate];
+    [_secTimer invalidate];
+    [_minTimer invalidate];
 }
 
 - (void)viewDidLoad
@@ -52,7 +54,9 @@
     _gd.matchPlay = nil;
     
     //timer
-    _timer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    _minTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     //button disable
     _practiceButton.enabled = NO;
@@ -68,11 +72,10 @@
     int rewardSum = match.couponReward + match.extraReward;
     _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", rewardSum];
     
-    [self onTimer];
+    [self onSecTimer];
     
     //load pack
     [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
-        //dynamic data
         [self refreshDynamicData];
     }];
 }
@@ -85,7 +88,7 @@
     }
 }
 
-- (void)onTimer {
+- (void)onSecTimer {
     Match *match = _gd.match;
     MatchPlay *matchPlay = _gd.matchPlay;
     
@@ -98,23 +101,28 @@
     if (beginIntv > 0) {
         NSString *str = formatInterval((int)beginIntv);
         _matchTimeLabel.text = [NSString stringWithFormat:@"距离开始%@", str];
+        [_matchButton setTitle:@"未开始" forState:UIControlStateDisabled|UIControlStateNormal];
         _matchButton.enabled = NO;
-        [_matchButton setTitle:@"未开始" forState:UIControlStateDisabled];
     } else if (endIntv <= 0 ) {
         _matchTimeLabel.text = @"比赛已结束";
+        [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled|UIControlStateNormal];
         _matchButton.enabled = NO;
-        [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled];
     } else {
         NSString *str = formatInterval((int)endIntv);
         
         _matchTimeLabel.text = [NSString stringWithFormat:@"比赛剩余%@", str];
+        
+        [_matchButton setTitle:@"比赛" forState:UIControlStateDisabled|UIControlStateNormal];
         if (_gd.packInfo && matchPlay) {
             _matchButton.enabled = YES;
         } else {
             _matchButton.enabled = NO;
         }
-        [_matchButton setTitle:@"比赛" forState:UIControlStateNormal];
     }
+}
+
+- (void)onMinTimer {
+    [self refreshDynamicData];
 }
 
 - (void)refreshDynamicData {

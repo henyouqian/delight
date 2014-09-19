@@ -125,7 +125,8 @@ static SldIapManager *_sldIapManager = nil;
 //=======================
 @interface SldIapCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UITextView *descTextView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
 @property (weak, nonatomic) IBOutlet UIButton *buyButton;
 
 @end
@@ -232,8 +233,7 @@ static SldIapManager *_sldIapManager = nil;
         
         [cell.buyButton setTitle:formattedPrice forState:UIControlStateNormal];
 //        cell.descTextView.text = product.localizedDescription;
-        cell.descTextView.text = product.localizedTitle;
-        cell.descTextView.textColor = [UIColor whiteColor];
+        cell.titleLabel.text = product.localizedTitle;
         NSArray *coinArray = @[
             @(0),@(0),@(1),@(1),@(2),@(2),@(3),@(3),@(4),@(5)
         ];
