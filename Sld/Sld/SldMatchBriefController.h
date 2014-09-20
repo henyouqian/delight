@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldMatchBriefController : UIViewController
+@interface SldMatchBriefController : UIViewController <UMSocialUIDelegate>
 
 - (void)refreshUI;
 

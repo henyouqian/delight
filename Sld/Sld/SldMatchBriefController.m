@@ -14,6 +14,7 @@
 #import "SldIapController.h"
 #import "SldUtil.h"
 #import "MSWeakTimer.h"
+#import "UIImageView+sldAsyncLoad.h"
 
 
 //==============================
@@ -25,12 +26,12 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *bestScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
-@property (weak, nonatomic) IBOutlet UIButton *rankRefreshButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *rankRefreshSpin;
 @property (weak, nonatomic) IBOutlet UILabel *matchTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *tryNumLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) MSWeakTimer *secTimer;
@@ -66,17 +67,14 @@
     
     //match info
     Match *match = _gd.match;
-    
     _titleLabel.text = match.title;
-    
-    int rewardSum = match.couponReward + match.extraReward;
-    _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", rewardSum];
     
     [self onSecTimer];
     
     //load pack
     [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
         [self refreshDynamicData];
+        [self loadBackground];
     }];
 }
 
@@ -86,6 +84,17 @@
     if (_gd.matchPlay) {
         [self refreshUI];
     }
+}
+
+- (void)loadBackground{
+    NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
+    
+    [_bgImageView asyncLoadUploadedImageWithKey:bgKey showIndicator:NO completion:^{
+        _bgImageView.alpha = 0.0;
+        [UIView animateWithDuration:1.f animations:^{
+            _bgImageView.alpha = 1.0;
+        }];
+    }];
 }
 
 - (void)onSecTimer {
@@ -100,7 +109,7 @@
     
     if (beginIntv > 0) {
         NSString *str = formatInterval((int)beginIntv);
-        _matchTimeLabel.text = [NSString stringWithFormat:@"距离开始%@", str];
+        _matchTimeLabel.text = [NSString stringWithFormat:@"距离开始：%@", str];
         [_matchButton setTitle:@"未开始" forState:UIControlStateDisabled|UIControlStateNormal];
         _matchButton.enabled = NO;
     } else if (endIntv <= 0 ) {
@@ -110,7 +119,7 @@
     } else {
         NSString *str = formatInterval((int)endIntv);
         
-        _matchTimeLabel.text = [NSString stringWithFormat:@"比赛剩余%@", str];
+        _matchTimeLabel.text = [NSString stringWithFormat:@"比赛剩余：%@", str];
         
         [_matchButton setTitle:@"比赛" forState:UIControlStateDisabled|UIControlStateNormal];
         if (_gd.packInfo && matchPlay) {
@@ -158,14 +167,21 @@
 
 - (void)refreshUI {
     //reward
-    int rewardSum = _gd.match.couponReward + _gd.match.extraReward;
-    _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", rewardSum];
+    Match *match = _gd.match;
+    if (match.extraReward == 0) {
+        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", match.couponReward];
+    } else {
+        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d+%d", match.couponReward, match.extraReward];
+    }
     
     //score
-    _bestScoreLabel.text = [NSString stringWithFormat:@"我的成绩：%@", formatScore(_gd.matchPlay.highScore)];
+    _bestScoreLabel.text = [NSString stringWithFormat:@"%@", formatScore(_gd.matchPlay.highScore)];
     
     //rank
     _rankLabel.text = [NSString stringWithFormat:@"我的排名：%d/%d", _gd.matchPlay.myRank, _gd.matchPlay.rankNum];
+    
+    //try number
+    _tryNumLabel.text = [NSString stringWithFormat:@"尝试次数：%d", _gd.matchPlay.tries];
 }
 
 - (IBAction)onPracticeButton:(id)sender {
@@ -304,6 +320,58 @@
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
     
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (IBAction)onSocial:(id)sender {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    int msec = 0;
+    if (_gd.matchPlay) {
+        msec = -_gd.matchPlay.highScore;
+    }
+    
+    UIAlertView* alt = alertNoButton(@"正在生成我的比赛...");
+    NSDictionary *body = @{@"PackId":@(_gd.match.packId), @"SliderNum":@(_gd.match.sliderNum), @"Msec":@(msec)};
+    [session postToApi:@"social/newPack" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSString *key = [dict objectForKey:@"Key"];
+        
+        //
+        NSString *path = makeImagePath(_gd.match.thumb);
+        UIImage *image = [UIImage imageWithContentsOfFile:path];
+        NSString *url = [NSString stringWithFormat:@"%@?key=%@", [SldConfig getInstance].HTML5_URL, key];
+        
+        [[[UIAlertView alloc] initWithTitle:@"邀请朋友一起玩。朋友可以直接点开链接挑战，也可以下载客户端一起玩。"
+                                    message:nil
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"不了" action:^{
+            // Handle "Cancel"
+        }]
+                           otherButtonItems:[RIButtonItem itemWithLabel:@"好的" action:^{
+            NSString *text = [NSString stringWithFormat:@"我创建了一场比赛，敢来挑战么？"];
+            if (_gd.matchPlay && _gd.matchPlay.highScore != 0) {
+                text = [NSString stringWithFormat:@"我只用了%@就完成了比赛，敢来挑战么？", formatScore(_gd.matchPlay.highScore)];
+            }
+            [UMSocialData defaultData].extConfig.title = @"";
+            [UMSocialData defaultData].extConfig.wechatSessionData.url = url;
+            [UMSocialSnsService presentSnsIconSheetView:self
+                                                 appKey:nil
+                                              shareText:text
+                                             shareImage:image
+                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline]
+                                               delegate:self];
+        }], nil] show];
+    }];
+    
 }
 
 

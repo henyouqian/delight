@@ -7,7 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImageView+sldAsyncLoad.h"
+#import "SldGameData.h"
 
 @interface SldMatchListController : UICollectionViewController
+
+@end
+
+//============================
+@interface SldMatchListCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
+@property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLebel;
+@property (nonatomic) Match* match;
+
+@end
+
+//============================
+@interface SldMatchListFooter : UICollectionReusableView
+
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
+@property (weak, nonatomic) IBOutlet UIButton *loadMoreButton;
 
 @end

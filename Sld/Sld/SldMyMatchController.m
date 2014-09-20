@@ -16,6 +16,7 @@
 #import "SldMyUserPackMenuController.h"
 #import "SldGameController.h"
 #import "SldIapController.h"
+#import "MSWeakTimer.h"
 
 static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
@@ -31,6 +32,8 @@ static SldMyMatchListController *_myMatchListController = nil;
 @interface SldMyMatchCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *playTimesLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (nonatomic) Match* match;
 @end
 
@@ -876,10 +879,15 @@ static const int COUPON_MAX = 10000;
 @property (nonatomic) SldMyMatchHeader* header;
 @property (nonatomic) QBImagePickerController *imagePickerController;
 @property (nonatomic) UIRefreshControl *refreshControl;
+@property (nonatomic) MSWeakTimer *secTimer;
 
 @end
 
 @implementation SldMyMatchListController
+
+- (void)dealloc {
+    [_secTimer invalidate];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -903,6 +911,16 @@ static const int COUPON_MAX = 10000;
     
     //
     [self refresh];
+    
+    //timer
+    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+}
+
+- (void)onSecTimer {
+    NSArray *visibleCells = [self.collectionView visibleCells];
+    for (SldMyMatchCell *cell in visibleCells) {
+        [self refreshTimeLabel:cell];
+    }
 }
 
 static float _scrollY = -64;
@@ -920,6 +938,8 @@ static float _scrollY = -64;
     self.collectionView.scrollIndicatorInsets = insets;
     
     self.collectionView.contentOffset = CGPointMake(0, _scrollY);
+    
+    [_refreshControl endRefreshing];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -975,6 +995,26 @@ static float _scrollY = -64;
     }];
 }
 
+- (void)refreshTimeLabel:(SldMyMatchCell*)cell {
+    UIColor *green = makeUIColor(71, 186, 43, 180);
+    UIColor *red = makeUIColor(212, 62, 91, 180);
+    
+    NSDate *endTime = [NSDate dateWithTimeIntervalSince1970:cell.match.endTime];
+    NSDate *now = getServerNow();
+    NSTimeInterval endIntv = [endTime timeIntervalSinceDate:now];
+    if (endIntv <= 0) {
+        cell.timeLabel.text = @"已结束";
+        cell.timeLabel.backgroundColor = red;
+    } else {
+        cell.timeLabel.backgroundColor = green;
+        if (endIntv > 3600) {
+            cell.timeLabel.text = [NSString stringWithFormat:@"%d小时", (int)endIntv/3600];
+        } else {
+            cell.timeLabel.text = [NSString stringWithFormat:@"%d分钟", (int)endIntv/60];
+        }
+    }
+}
+
 - (IBAction)onNewMatch:(id)sender {
     _imagePickerController = [[QBImagePickerController alloc] init];
     _imagePickerController.delegate = self;
@@ -1014,7 +1054,14 @@ static float _scrollY = -64;
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", match.playTimes];
+    if (match.extraReward == 0) {
+        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.couponReward];
+    } else {
+        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.couponReward, match.extraReward];
+    }
     cell.match = match;
+    
+    [self refreshTimeLabel:cell];
     return cell;
 }
 

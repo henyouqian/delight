@@ -234,6 +234,10 @@ enum GameMode{
 
 //
 @property (nonatomic) MatchPlay *matchPlay;
+@property (nonatomic) BOOL needRefreshPlayedList;
+
+//
+
 
 @end
 

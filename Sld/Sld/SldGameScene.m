@@ -210,6 +210,9 @@ NSDate *_gameBeginTime;
         _gameController = controller;
         
         _gd = [SldGameData getInstance];
+        if (_gd.gameMode == M_MATCH) {
+            _gd.needRefreshPlayedList = YES;
+        }
         
         BUTTON_POS3.x = size.width - BUTTON_POS1.x;
         

@@ -132,6 +132,7 @@
 		D03252B8195F064F00D9620C /* libFlurry_5.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */; };
 		D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */; };
 		D059129919C8144A009916AB /* SldMatchRankController.m in Sources */ = {isa = PBXBuildFile; fileRef = D059129819C8144A009916AB /* SldMatchRankController.m */; };
+		D059129E19CDD439009916AB /* SldPlayedMatchListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D059129D19CDD439009916AB /* SldPlayedMatchListController.m */; };
 		D05E995C195C7189002A6B83 /* coin0.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9956195C7189002A6B83 /* coin0.png */; };
 		D05E995D195C7189002A6B83 /* coin1.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9957195C7189002A6B83 /* coin1.png */; };
 		D05E995E195C7189002A6B83 /* coin2.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E9958195C7189002A6B83 /* coin2.png */; };
@@ -467,6 +468,8 @@
 		D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_5.1.0.a; path = External/Flurry/libFlurry_5.1.0.a; sourceTree = "<group>"; };
 		D059129719C8144A009916AB /* SldMatchRankController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchRankController.h; sourceTree = "<group>"; };
 		D059129819C8144A009916AB /* SldMatchRankController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchRankController.m; sourceTree = "<group>"; };
+		D059129C19CDD439009916AB /* SldPlayedMatchListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldPlayedMatchListController.h; sourceTree = "<group>"; };
+		D059129D19CDD439009916AB /* SldPlayedMatchListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldPlayedMatchListController.m; sourceTree = "<group>"; };
 		D05E9956195C7189002A6B83 /* coin0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin0.png; sourceTree = "<group>"; };
 		D05E9957195C7189002A6B83 /* coin1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin1.png; sourceTree = "<group>"; };
 		D05E9958195C7189002A6B83 /* coin2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin2.png; sourceTree = "<group>"; };
@@ -851,6 +854,8 @@
 				D0CD0D3919BB7DBE00F6DDBD /* SldRewardDefListController.m */,
 				D00D900A19B882650026B9FD /* SldMatchBriefController.h */,
 				D00D900B19B882650026B9FD /* SldMatchBriefController.m */,
+				D059129C19CDD439009916AB /* SldPlayedMatchListController.h */,
+				D059129D19CDD439009916AB /* SldPlayedMatchListController.m */,
 				D0C4EFAC19A68FDC00D2F1D0 /* SldMatchListController.h */,
 				D0C4EFAD19A68FDD00D2F1D0 /* SldMatchListController.m */,
 				D0C4EFA919A51D8500D2F1D0 /* SldMyUserPackMenuController.h */,
@@ -1592,6 +1597,7 @@
 				D0A556011969B38B00369401 /* SldChallengeListController.m in Sources */,
 				D0C4EFAE19A68FDD00D2F1D0 /* SldMatchListController.m in Sources */,
 				B39E4477191E132800CBB247 /* SldAddCommentController.m in Sources */,
+				D059129E19CDD439009916AB /* SldPlayedMatchListController.m in Sources */,
 				B36C27DA18F7D8A700E5A38A /* SldGameScene.m in Sources */,
 				D014462C199F27CB00D47DCA /* SldMyMatchController.m in Sources */,
 				D00D900C19B882650026B9FD /* SldMatchBriefController.m in Sources */,
