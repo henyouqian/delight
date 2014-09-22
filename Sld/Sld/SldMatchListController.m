@@ -14,8 +14,7 @@
 #import "SldMyUserPackMenuController.h"
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
-
-static const int USER_PACK_LIST_LIMIT = 6;
+#import "SldConfig.h"
 
 //=============================
 @implementation SldMatchListCell
@@ -100,7 +99,7 @@ static float _scrollY = -64;
 - (void)refreshMatch {
     _footer.loadMoreButton.enabled = NO;
     
-    NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
+    NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
@@ -115,7 +114,7 @@ static float _scrollY = -64;
             return;
         }
         
-        if (array.count < USER_PACK_LIST_LIMIT) {
+        if (array.count < MATCH_FETCH_LIMIT) {
             [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
             _footer.loadMoreButton.enabled = NO;
         } else {
@@ -207,7 +206,7 @@ static float _scrollY = -64;
     
     Match* lastMatch = [_matches lastObject];
     
-    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"BeginTime":@(lastMatch.beginTime), @"Limit": @(USER_PACK_LIST_LIMIT)};
+    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"BeginTime":@(lastMatch.beginTime), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_footer.spin stopAnimating];
@@ -222,7 +221,7 @@ static float _scrollY = -64;
             return;
         }
         
-        if (array.count < USER_PACK_LIST_LIMIT) {
+        if (array.count < MATCH_FETCH_LIMIT) {
             [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
             _footer.loadMoreButton.enabled = NO;
         }

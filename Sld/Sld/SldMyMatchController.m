@@ -17,8 +17,8 @@
 #import "SldGameController.h"
 #import "SldIapController.h"
 #import "MSWeakTimer.h"
+#import "SldConfig.h"
 
-static const int USER_PACK_LIST_LIMIT = 30;
 static NSArray* _assets;
 static int _publishDelayHour = 0;
 static int _challengeSec = 0;
@@ -95,6 +95,13 @@ static SldMyMatchListController *_myMatchListController = nil;
     
     //
     _filePathes = [NSMutableArray arrayWithCapacity:10];
+    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"取消发布" style:UIBarButtonItemStylePlain target:self action:@selector(onBack)];
+    self.navigationItem.leftBarButtonItem = backButton;
+}
+
+- (void)onBack {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)sliderNumValueChanged:(UISlider *)sender {
@@ -271,7 +278,6 @@ static const int CHALLENGE_SEC_MAX = 90;
     _stepper.maximumValue = _challengeSecondsSlider.maximumValue;
     _stepper.value = _challengeSecondsSlider.value;
 }
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -368,6 +374,8 @@ static const int CHALLENGE_SEC_MAX = 90;
     NSURLRequest* request = [NSURLRequest requestWithURL:_url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
     
     [_reviewView loadRequest:request];
+    
+    self.title = [_url host];
 }
 @end
 
@@ -392,8 +400,13 @@ static const int CHALLENGE_SEC_MAX = 90;
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if (identifier && [identifier compare:@"segToPromoWeb"] == 0 && _urlInput.text.length == 0) {
-        alert(@"请填写推广链接地址后再进行预览", nil);
+    if (identifier && [identifier compare:@"segToPromoWeb"] == 0) {
+        if (_urlInput.text.length == 0) {
+            alert(@"请填写展示链接地址后再进行预览。", nil);
+            return NO;
+        }
+    } else if (_urlInput.text.length != 0 && _imageView.image == nil) {
+        alert(@"填写展示链接地址的情况下必须提供展示图片。", nil);
         return NO;
     }
     return YES;
@@ -482,6 +495,7 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper;
 @property (weak, nonatomic) IBOutlet UILabel *couponLabel;
 @property (weak, nonatomic) IBOutlet UITextField *couponInput;
+@property (weak, nonatomic) IBOutlet UILabel *couponDescLabel;
 
 @property (nonatomic) int couponReward;
 @property (nonatomic) NSArray *numbers;
@@ -505,6 +519,7 @@ static const int COUPON_MAX = 10000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _gd = [SldGameData getInstance];
     _titleInput.delegate = self;
     
     //coupon slider
@@ -542,13 +557,15 @@ static const int COUPON_MAX = 10000;
                 action:@selector(publishDelayChanged:)
       forControlEvents:UIControlEventValueChanged];
     [self publishDelayChanged:_publishDelaySlider];
+    
+    //
+    _couponDescLabel.text = [NSString stringWithFormat:@"注：总奖金的%d%%将作为奖金返还给你，总奖金包括你提供的奖金以及玩家在此游戏中消耗的金币所新增的奖金。", (int)(_gd.ownerRewardProportion*100)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     //
-    _gd = [SldGameData getInstance];
     _couponLabel.text = [NSString stringWithFormat:@"提供多少金币作为奖励:（现有%d）", _gd.playerInfo.goldCoin];
 }
 
@@ -950,7 +967,7 @@ static float _scrollY = -64;
 - (void)refresh {
     _footer.loadMoreButton.enabled = NO;
     
-    NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(USER_PACK_LIST_LIMIT)};
+    NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
@@ -965,7 +982,7 @@ static float _scrollY = -64;
             return;
         }
         
-        if (array.count < USER_PACK_LIST_LIMIT) {
+        if (array.count < MATCH_FETCH_LIMIT) {
             [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
             _footer.loadMoreButton.enabled = NO;
         } else {

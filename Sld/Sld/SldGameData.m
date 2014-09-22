@@ -159,6 +159,8 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.adsConf.showPercent = [(NSNumber*)[adsConf objectForKey:@"ShowPercent"] floatValue];
     info.adsConf.delayPercent = [(NSNumber*)[adsConf objectForKey:@"DelayPercent"] floatValue];
     info.adsConf.delaySec = [(NSNumber*)[adsConf objectForKey:@"DelaySec"] floatValue];
+    
+    gd.ownerRewardProportion = [(NSNumber*)[dict objectForKey:@"OwnerRewardProportion"] floatValue];
     return info;
 }
 

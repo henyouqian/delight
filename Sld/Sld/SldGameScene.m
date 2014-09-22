@@ -1115,11 +1115,19 @@ static float lerpf(float a, float b, float t) {
                 rd = (float)(arc4random() % 100)/100.f;
                 if (rd/100.f < adsConf.delayPercent) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                        if (_gd.match.promoImage) {
+                            [_gameController showUserAds];
+                        } else {
+                            [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                        }
                     });
                 }
             } else {
-                [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                if (_gd.match.promoImage) {
+                    [_gameController showUserAds];
+                } else {
+                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                }
             }
         }
     }

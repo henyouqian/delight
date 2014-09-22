@@ -56,7 +56,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -64,7 +64,9 @@
     if (section == 0) {
         return 1;
     } else if (section == 1) {
-        return _gd.match.rankRewardProportions.count+2;
+        return 1;
+    } else if (section == 2) {
+        return _gd.match.rankRewardProportions.count+1;
     }
     return 0;
 }
@@ -76,9 +78,9 @@
         NSString *imgKey = _gd.match.promoImage;
         if (imgKey.length) {
             [cell.promoImageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
-            cell.hidden = NO;
+//            cell.hidden = NO;
         } else {
-            cell.hidden = YES;
+//            cell.hidden = YES;
         }
         
         if (_gd.match.promoUrl.length == 0) {
@@ -91,26 +93,25 @@
         
         return cell;
     } else if (indexPath.section == 1) {
+        SldRewardDefListRankCell *cell = (SldRewardDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardDefListDescCell" forIndexPath:indexPath];
+        return cell;
+    } else if (indexPath.section == 2) {
         SldRewardDefListRankCell *cell = (SldRewardDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardDefListRankCell" forIndexPath:indexPath];
         
         float couponSum = (float)(_gd.match.couponReward + _gd.match.extraReward);
         
-        if (indexPath.row == 0) {
-            cell.rankLabel.text = @"幸运奖";
-            float coupon = _gd.match.luckyRewardProportion * couponSum;
-            cell.rewardLabel.text = [NSString stringWithFormat:@"%d奖金", (int)coupon];
-        } else if (indexPath.row == _gd.match.rankRewardProportions.count+1) {
+        if (indexPath.row == _gd.match.rankRewardProportions.count) {
             float coupon = _gd.match.oneCoinRewardProportion * couponSum;
-            if (coupon > 0.01f) {
-                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row, indexPath.row+(int)coupon-1];
+            if (coupon > 1.0f) {
+                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row+1, indexPath.row+(int)coupon];
                 cell.rewardLabel.text = @"1奖金";
             } else {
-                cell.rankLabel.text = @"";
-                cell.rewardLabel.text = @"";
+                cell.rankLabel.text = @"暂无";
+                cell.rewardLabel.text = @"1奖金";
             }
         } else{
-            cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", indexPath.row];
-            float prop = [(NSNumber*)_gd.match.rankRewardProportions[indexPath.row-1] floatValue];
+            cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", indexPath.row+1];
+            float prop = [(NSNumber*)_gd.match.rankRewardProportions[indexPath.row] floatValue];
             float coupon = prop * couponSum;
             cell.rewardLabel.text = [NSString stringWithFormat:@"%d奖金", (int)coupon];
         }
@@ -124,11 +125,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         if (_gd.match.promoImage.length > 0) {
-            return 300;
+            return 320;
         }
         return 0;
     } else if (indexPath.section == 1) {
-        return 48;
+        return 74;
     }
     return 48;
 }

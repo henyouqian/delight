@@ -208,7 +208,7 @@
         //check gold coin
         if (_gd.playerInfo.goldCoin == 0) {
             [[[UIAlertView alloc] initWithTitle:@"购买金币？"
-                                        message:@"花一枚金币你可以：1.多一次挑战高分的机会。2.开启自动翻页，助你获得更好成绩。3.获得一个幸运抽奖号码，幸运大奖很有可能就是你的哦。"
+                                        message:@"使用金币游戏可以：1.多一次挑战高分的机会。2.开启自动翻页，助你获得更好成绩。3.此金币加入到奖池中，您可能获得更高到奖金。"
                                cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
                 // Handle "Cancel"
             }]

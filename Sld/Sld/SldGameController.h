@@ -9,4 +9,5 @@
 //#import "SldEventDetailViewController.h"
 
 @interface SldGameController : UIViewController
+- (BOOL)showUserAds;
 @end
