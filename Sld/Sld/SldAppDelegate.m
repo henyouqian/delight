@@ -68,6 +68,9 @@
     [UMSocialWechatHandler setWXAppId:conf.WEIXIN_KEY url:@"http://www.umeng.com/social"];
     [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
+    //
+    self.window.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
+    
     return YES;
 }
 

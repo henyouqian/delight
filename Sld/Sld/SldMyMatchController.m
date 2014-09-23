@@ -897,6 +897,7 @@ static const int COUPON_MAX = 10000;
 @property (nonatomic) QBImagePickerController *imagePickerController;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
+@property (nonatomic) SldGameData *gd;
 
 @end
 
@@ -908,6 +909,8 @@ static const int COUPON_MAX = 10000;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _gd = [SldGameData getInstance];
     
     _myMatchListController = self;
     _matches = [NSMutableArray array];
@@ -957,6 +960,11 @@ static float _scrollY = -64;
     self.collectionView.contentOffset = CGPointMake(0, _scrollY);
     
     [_refreshControl endRefreshing];
+    
+    //refesh
+    if (_gd.playerInfo && _gd.needRefreshOwnerList) {
+        [self refresh];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -965,6 +973,7 @@ static float _scrollY = -64;
 }
 
 - (void)refresh {
+    _gd.needRefreshOwnerList = NO;
     _footer.loadMoreButton.enabled = NO;
     
     NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
@@ -1098,6 +1107,48 @@ static float _scrollY = -64;
     SldMyMatchCell *cell = sender;
     SldGameData *gd = [SldGameData getInstance];
     gd.match = cell.match;
+}
+
+- (IBAction)onLoadMoreButton:(id)sender {
+    if (_matches.count == 0) {
+        return;
+    }
+    
+    [_footer.spin startAnimating];
+    _footer.spin.hidden = NO;
+    _footer.loadMoreButton.enabled = NO;
+    
+    Match* lastMatch = [_matches lastObject];
+    
+    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"BeginTime":@(lastMatch.beginTime), @"Limit": @(MATCH_FETCH_LIMIT)};
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"match/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_footer.spin stopAnimating];
+        _footer.loadMoreButton.enabled = YES;
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        if (array.count < MATCH_FETCH_LIMIT) {
+            [_footer.loadMoreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
+            _footer.loadMoreButton.enabled = NO;
+        }
+        
+        NSMutableArray *insertIndexPathes = [NSMutableArray array];
+        for (NSDictionary *dict in array) {
+            Match *match = [[Match alloc] initWithDict:dict];
+            [_matches addObject:match];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_matches.count-1 inSection:0];
+            [insertIndexPathes addObject:indexPath];
+        }
+        [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
+    }];
 }
 
 @end

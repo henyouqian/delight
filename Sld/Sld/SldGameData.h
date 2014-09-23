@@ -133,6 +133,7 @@ enum CupType{
 @interface Match : NSObject
 @property (nonatomic) SInt64 id;
 @property (nonatomic) SInt64 packId;
+@property (nonatomic) SInt64 ownerId;
 @property (nonatomic) int sliderNum;
 @property (nonatomic) int couponReward;
 @property (nonatomic) NSString *thumb;
@@ -235,6 +236,7 @@ enum GameMode{
 //
 @property (nonatomic) MatchPlay *matchPlay;
 @property (nonatomic) BOOL needRefreshPlayedList;
+@property (nonatomic) BOOL needRefreshOwnerList;
 
 //etc
 @property (nonatomic) float ownerRewardProportion;

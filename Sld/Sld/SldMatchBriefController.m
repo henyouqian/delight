@@ -15,6 +15,7 @@
 #import "SldUtil.h"
 #import "MSWeakTimer.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "SldMyMatchController.h"
 
 
 //==============================
@@ -32,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
 
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) MSWeakTimer *secTimer;
@@ -100,6 +102,7 @@
 - (void)onSecTimer {
     Match *match = _gd.match;
     MatchPlay *matchPlay = _gd.matchPlay;
+    BOOL matchRunning = NO;
     
     NSDate *beginTime = [NSDate dateWithTimeIntervalSince1970:match.beginTime];
     NSTimeInterval beginIntv = [beginTime timeIntervalSinceNow];
@@ -127,6 +130,15 @@
         } else {
             _matchButton.enabled = NO;
         }
+        
+        matchRunning = YES;
+    }
+    
+    //edit button
+    if (_gd.match.ownerId == _gd.playerInfo.userId && matchRunning) {
+        _editButton.hidden = NO;
+    } else {
+        _editButton.hidden = YES;
     }
 }
 
@@ -374,5 +386,114 @@
     
 }
 
+@end
+
+//====================================
+@interface SldMatchEditController : UIViewController <UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+
+@property (weak, nonatomic) IBOutlet UITextField *titleInput;
+@property (weak, nonatomic) IBOutlet UITextField *urlInput;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+
+@property (nonatomic) UIImage *promoImage;
+@property (nonatomic) SldGameData *gd;
+
+@end
+
+@implementation SldMatchEditController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    _gd = [SldGameData getInstance];
+    _urlInput.delegate = self;
+    
+    //fill ui
+    _titleInput.text = _gd.match.title;
+    _urlInput.text = _gd.match.promoUrl;
+    [_imageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.view endEditing:YES];
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if (identifier && [identifier compare:@"segToPromoWeb"] == 0) {
+        if (_urlInput.text.length == 0) {
+            alert(@"请填写展示链接地址后再进行预览。", nil);
+            return NO;
+        }
+    } else if (_urlInput.text.length != 0 && _imageView.image == nil) {
+        alert(@"填写展示链接地址的情况下必须提供展示图片。", nil);
+        return NO;
+    }
+    return YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (segue.identifier && [segue.identifier compare:@"segToPromoWeb"] == 0) {
+        
+        NSString *urlStr = _urlInput.text;
+        NSRange range = [_urlInput.text rangeOfString:@"://"];
+        if (range.location == NSNotFound) {
+            urlStr = [NSString stringWithFormat:@"http://%@", urlStr];
+        }
+        
+        SldMatchPromoWebController *vc = segue.destinationViewController;
+        vc.url = [NSURL URLWithString:urlStr];
+    }
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [_urlInput resignFirstResponder];
+    return YES;
+}
+
+- (IBAction)onTouch:(id)sender {
+    [self.view endEditing:YES];
+}
+
+- (IBAction)onDeleteImage:(id)sender {
+    _imageView.image = nil;
+    _promoImage = nil;
+}
+
+- (IBAction)onSelectImage:(id)sender {
+    UIImagePickerController *imagePicker =
+    [[UIImagePickerController alloc] init];
+    
+    imagePicker.delegate = self;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+    imagePicker.allowsEditing = YES;
+    
+    [self presentViewController:imagePicker
+                       animated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    CGRect rect;
+    [(NSValue*)info[UIImagePickerControllerCropRect] getValue:&rect];
+    CGSize scaledToSize = CGSizeMake(512, 512);
+    if (rect.size.width > rect.size.height) {
+        scaledToSize.width = 512 * rect.size.width / rect.size.height;
+    } else if (rect.size.width > rect.size.height) {
+        scaledToSize.height = 512 * rect.size.height / rect.size.width;
+    }
+    UIImage *scaledImage = [SldUtil imageWithImage:info[UIImagePickerControllerEditedImage] scaledToSize:scaledToSize];
+    
+    _imageView.image = scaledImage;
+    _promoImage = scaledImage;
+}
 
 @end

@@ -27,6 +27,7 @@
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) SInt64 lastPlayedTime;
 
 @end
 
@@ -110,7 +111,8 @@ static float _scrollY = -64;
             alertHTTPError(error, data);
             return;
         }
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *array = dict[@"Matches"];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
@@ -143,6 +145,9 @@ static float _scrollY = -64;
             [insertIndexPathes addObject:indexPath];
         }
         [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
+        
+        //
+        _lastPlayedTime = [(NSNumber*)dict[@"LastPlayedTime"] longLongValue];
     }];
 }
 
@@ -204,11 +209,12 @@ static float _scrollY = -64;
     }
         
     [_footer.spin startAnimating];
+    _footer.spin.hidden = NO;
     _footer.loadMoreButton.enabled = NO;
     
     Match* lastMatch = [_matches lastObject];
     
-    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"PlayedTime":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"PlayedTime":@(_lastPlayedTime), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/listMyPlayed" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_footer.spin stopAnimating];
@@ -217,7 +223,8 @@ static float _scrollY = -64;
             alertHTTPError(error, data);
             return;
         }
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *array = dict[@"Matches"];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
@@ -236,6 +243,9 @@ static float _scrollY = -64;
             [insertIndexPathes addObject:indexPath];
         }
         [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
+        
+        //
+        _lastPlayedTime = [(NSNumber*)dict[@"LastPlayedTime"] longLongValue];
     }];
 }
 

@@ -15,6 +15,7 @@
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
+#import "SldLoginViewController.h"
 
 //=============================
 @implementation SldMatchListCell
@@ -33,6 +34,7 @@
 @property (nonatomic) SldMatchListFooter *footer;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
+@property (nonatomic) SldGameData *gd;
 
 @end
 
@@ -58,6 +60,12 @@
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    //login view
+    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
+   
+    //
+    _gd = [SldGameData getInstance];
 }
 
 - (void)onSecTimer {
@@ -71,6 +79,8 @@ static float _scrollY = -64;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self.tabBarController.tabBar setSelectedImageTintColor:makeUIColor(113, 177, 185, 255)];
     
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -202,6 +212,7 @@ static float _scrollY = -64;
     }
         
     [_footer.spin startAnimating];
+    _footer.spin.hidden = NO;
     _footer.loadMoreButton.enabled = NO;
     
     Match* lastMatch = [_matches lastObject];
@@ -236,61 +247,6 @@ static float _scrollY = -64;
         [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
     }];
 }
-
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    if (_matches.count == 0 || _reachEnd) {
-//        return;
-//    }
-//    
-//    float contentHeight = scrollView.contentSize.height + scrollView.contentInset.top + scrollView.contentInset.bottom;
-//    
-//    if (contentHeight > scrollView.frame.size.height
-//        &&(scrollView.contentOffset.y + scrollView.frame.size.height) > contentHeight) {
-//        if (!_scrollUnderBottom) {
-//            _scrollUnderBottom = YES;
-//            if (![_footer.spin isAnimating]) {
-//                [_footer.spin startAnimating];
-//                
-//                SInt64 startId = 0;
-//                if (_matches.count > 0) {
-//                    Match *match = [_matches lastObject];
-//                    startId = match.id;
-//                }
-////
-////                NSDictionary *body = @{@"StartId": @(startId), @"Limit": @(ADVICE_LIMIT)};
-////                SldHttpSession *session = [SldHttpSession defaultSession];
-////                [session postToApi:@"etc/listAdvice" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-////                    [_bottomRefresh endRefreshing];
-////                    if (error) {
-////                        alertHTTPError(error, data);
-////                        return;
-////                    }
-////                    NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-////                    if (error) {
-////                        lwError("Json error:%@", [error localizedDescription]);
-////                        return;
-////                    }
-////                    
-////                    if (array.count < ADVICE_LIMIT) {
-////                        _reachEnd = YES;
-////                    }
-////                    
-////                    NSMutableArray *insertIndexPathes = [NSMutableArray array];
-////                    for (NSDictionary *dict in array) {
-////                        AdviceData *adviceData = [AdviceData adviceDataWithDictionary:dict];
-////                        [_adviceDatas addObject:adviceData];
-////                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_adviceDatas.count-1 inSection:1];
-////                        [insertIndexPathes addObject:indexPath];
-////                    }
-////                    [self.tableView insertRowsAtIndexPaths:insertIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
-////                }];
-//            }
-//        }
-//        
-//    } else {
-//        _scrollUnderBottom = NO;
-//    }
-//}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     SldMatchListCell *cell = sender;

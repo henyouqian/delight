@@ -205,6 +205,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     if (self = [super init]) {
         _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
         _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
+        _ownerId = [(NSNumber*)[dict objectForKey:@"OwnerId"] longLongValue];
         _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
         _couponReward = [(NSNumber*)[dict objectForKey:@"CouponReward"] intValue];
         _thumb = [dict objectForKey:@"Thumb"];
@@ -343,6 +344,9 @@ static SldGameData *g_inst = nil;
     _userName = nil;
     
     _needReloadEventList = NO;
+    
+    _needRefreshPlayedList = YES;
+    _needRefreshOwnerList = YES;
 }
 
 - (void)loadPack:(SInt64)packId completion:(void (^)(PackInfo*))completion {
