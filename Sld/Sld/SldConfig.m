@@ -7,9 +7,13 @@
 //
 
 #import "SldConfig.h"
+#import "SldUtil.h"
 
 NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
 const int MATCH_FETCH_LIMIT = 4;
+
+UIColor *_matchTimeLabelRed = nil;
+UIColor *_matchTimeLabelGreen = nil;
 
 @implementation SldConfig
 + (instancetype)getInstance {
@@ -36,6 +40,9 @@ const int MATCH_FETCH_LIMIT = 4;
     inst.HOST = @"http://192.168.2.55:9998";
 //    inst.HOST = @"http://192.168.1.43:9998";
 //    inst.HOST = @"http://sld.pintugame.com";
+    
+    _matchTimeLabelGreen = makeUIColor(71, 186, 43, 180);
+    _matchTimeLabelRed = makeUIColor(60, 60, 60, 120);
     
     return inst;
 }

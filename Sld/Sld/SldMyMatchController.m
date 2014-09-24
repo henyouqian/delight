@@ -406,7 +406,7 @@ static const int CHALLENGE_SEC_MAX = 90;
             return NO;
         }
     } else if (_urlInput.text.length != 0 && _imageView.image == nil) {
-        alert(@"填写展示链接地址的情况下必须提供展示图片。", nil);
+        alert(@"填写了展示链接的情况下必须提供展示图片。", nil);
         return NO;
     }
     return YES;
@@ -1022,17 +1022,14 @@ static float _scrollY = -64;
 }
 
 - (void)refreshTimeLabel:(SldMyMatchCell*)cell {
-    UIColor *green = makeUIColor(71, 186, 43, 180);
-    UIColor *red = makeUIColor(212, 62, 91, 180);
-    
     NSDate *endTime = [NSDate dateWithTimeIntervalSince1970:cell.match.endTime];
     NSDate *now = getServerNow();
     NSTimeInterval endIntv = [endTime timeIntervalSinceDate:now];
     if (endIntv <= 0) {
         cell.timeLabel.text = @"已结束";
-        cell.timeLabel.backgroundColor = red;
+        cell.timeLabel.backgroundColor = _matchTimeLabelRed;
     } else {
-        cell.timeLabel.backgroundColor = green;
+        cell.timeLabel.backgroundColor = _matchTimeLabelGreen;
         if (endIntv > 3600) {
             cell.timeLabel.text = [NSString stringWithFormat:@"%d小时", (int)endIntv/3600];
         } else {

@@ -67,10 +67,7 @@
     _rewardButton.enabled = NO;
     _rankButton.enabled = NO;
     
-    //match info
-    Match *match = _gd.match;
-    _titleLabel.text = match.title;
-    
+    //
     [self onSecTimer];
     
     //load pack
@@ -185,6 +182,9 @@
     } else {
         _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d+%d", match.couponReward, match.extraReward];
     }
+    
+    //title
+    _titleLabel.text = match.title;
     
     //score
     _bestScoreLabel.text = [NSString stringWithFormat:@"%@", formatScore(_gd.matchPlay.highScore)];
@@ -365,10 +365,7 @@
         
         [[[UIAlertView alloc] initWithTitle:@"邀请朋友一起玩。朋友可以直接点开链接挑战，也可以下载客户端一起玩。"
                                     message:nil
-                           cancelButtonItem:[RIButtonItem itemWithLabel:@"不了" action:^{
-            // Handle "Cancel"
-        }]
-                           otherButtonItems:[RIButtonItem itemWithLabel:@"好的" action:^{
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
             NSString *text = [NSString stringWithFormat:@"我创建了一场比赛，敢来挑战么？"];
             if (_gd.matchPlay && _gd.matchPlay.highScore != 0) {
                 text = [NSString stringWithFormat:@"我只用了%@就完成了比赛，敢来挑战么？", formatScore(_gd.matchPlay.highScore)];
@@ -381,7 +378,8 @@
                                              shareImage:image
                                         shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline]
                                                delegate:self];
-        }], nil] show];
+        }]
+                           otherButtonItems:nil] show];
     }];
     
 }
@@ -389,7 +387,7 @@
 @end
 
 //====================================
-@interface SldMatchEditController : UIViewController <UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface SldMatchEditController : UIViewController <UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, QiniuUploadDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
 @property (weak, nonatomic) IBOutlet UITextField *urlInput;
@@ -397,6 +395,10 @@
 
 @property (nonatomic) UIImage *promoImage;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) BOOL imageChanged;
+@property (nonatomic) QiniuSimpleUploader* uploader;
+@property (nonatomic) UIAlertView *alt;
+@property (nonatomic) NSString *imageKey;
 
 @end
 
@@ -426,7 +428,7 @@
             return NO;
         }
     } else if (_urlInput.text.length != 0 && _imageView.image == nil) {
-        alert(@"填写展示链接地址的情况下必须提供展示图片。", nil);
+        alert(@"填写了展示链接的情况下必须提供展示图片。", nil);
         return NO;
     }
     return YES;
@@ -462,6 +464,10 @@
 }
 
 - (IBAction)onDeleteImage:(id)sender {
+    if (_imageView.image) {
+        _imageChanged = YES;
+    }
+    
     _imageView.image = nil;
     _promoImage = nil;
 }
@@ -494,6 +500,119 @@
     
     _imageView.image = scaledImage;
     _promoImage = scaledImage;
+    
+    _imageChanged = YES;
+}
+
+- (IBAction)onModButton:(id)sender {
+    NSString *title = _titleInput.text;
+    NSString *promoUrl = _urlInput.text;
+    if (promoUrl.length > 0 && !_imageView.image) {
+        alert(@"填写了展示链接的情况下必须提供展示图片。", nil);
+        return;
+    }
+    
+    if ([title compare:_gd.match.title] != 0
+        || [promoUrl compare:_gd.match.promoUrl] != 0
+        || _imageChanged)
+    {
+        _alt = alertNoButton(@"更改中");
+        
+        if (_imageView.image) {
+            _imageKey = _gd.match.promoImage;
+        }
+        
+        if (_imageChanged && _imageView.image) {
+            NSData *data = UIImageJPEGRepresentation(_imageView.image, 0.85);
+            NSString *fileName = @"promo.jpg";
+            NSString *filePath = makeTempPath(fileName);
+            [data writeToFile:filePath atomically:YES];
+            
+            _imageKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            
+            //
+            SldHttpSession *session = [SldHttpSession defaultSession];
+            [session postToApi:@"player/getUptoken" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                if (error) {
+                    alertHTTPError(error, data);
+                    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                    _alt = nil;
+                    return;
+                }
+                
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error) {
+                    lwError("Json error:%@", [error localizedDescription]);
+                    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                    _alt = nil;
+                    return;
+                }
+                
+                NSString *token = [dict objectForKey:@"Token"];
+                
+                _uploader = [QiniuSimpleUploader uploaderWithToken:token];
+                _uploader.delegate = self;
+                
+                [_uploader uploadFile:filePath key:_imageKey extra:nil];
+            }];
+        } else {
+            [self postModMsg];
+        }
+
+
+    } else {
+        alert(@"没有任何变动。", nil);
+    }
+}
+
+- (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
+    [self postModMsg];
+}
+
+- (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
+    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+    _alt = nil;
+    alert(@"上传失败", nil);
+}
+
+- (void)postModMsg {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSString *title = _titleInput.text;
+    if (title == nil) {
+        title = @"";
+    }
+    NSString *url = _urlInput.text;
+    if (url == nil) {
+        url = @"";
+    }
+    if (_imageKey == nil) {
+        _imageKey = @"";
+    }
+    NSDictionary *body = @{
+                           @"MatchId":@(_gd.match.id),
+                           @"Title":title,
+                           @"PromoUrl":url,
+                           @"PromoImage":_imageKey,
+                           };
+    [session postToApi:@"match/mod" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_alt dismissWithClickedButtonIndex:0 animated:NO];
+        
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        _gd.match.title = _titleInput.text;
+        _gd.match.promoUrl = _urlInput.text;
+        _gd.match.promoImage = _imageKey;
+        
+        [[[UIAlertView alloc] initWithTitle:@"更改成功。"
+                                    message:nil
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+            [self.navigationController popViewControllerAnimated:YES];
+        }]
+                           otherButtonItems:nil] show];
+    }];
 }
 
 @end

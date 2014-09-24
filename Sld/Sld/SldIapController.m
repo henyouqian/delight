@@ -126,8 +126,7 @@ static SldIapManager *_sldIapManager = nil;
 @interface SldIapCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-
-@property (weak, nonatomic) IBOutlet UIButton *buyButton;
+@property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 
 @end
 
@@ -153,12 +152,11 @@ static SldIapManager *_sldIapManager = nil;
     _gd = [SldGameData getInstance];
     
     _gd.iapProducts = [NSArray array];
-    //UIAlertView *alt = alertNoButton(@"获取商品信息");
-    UIAlertView *alt = alertWithButton(@"获取商品信息...", nil, @"关闭");
+//    UIAlertView *alt = alertWithButton(@"获取商品信息...", nil, @"关闭");
     
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        [alt dismissWithClickedButtonIndex:0 animated:YES];
+//        [alt dismissWithClickedButtonIndex:0 animated:YES];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -185,8 +183,7 @@ static SldIapManager *_sldIapManager = nil;
 
 - (void)validateProductIdentifiers
 {
-    //_alt = alertNoButton(@"验证商品信息");
-    _alt = alertWithButton(@"验证商品信息...", nil, @"关闭");
+//    _alt = alertWithButton(@"验证商品信息...", nil, @"关闭");
     SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
                                           initWithProductIdentifiers:[NSSet setWithArray:_productIds]];
     productsRequest.delegate = self;
@@ -197,8 +194,8 @@ static SldIapManager *_sldIapManager = nil;
 - (void)productsRequest:(SKProductsRequest *)request
      didReceiveResponse:(SKProductsResponse *)response
 {
-    [_alt dismissWithClickedButtonIndex:0 animated:YES];
-    _alt = nil;
+//    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+//    _alt = nil;
     _gd.iapProducts = [response.products sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         int price1 = [((SKProduct*)obj1).price intValue];
         int price2 = [((SKProduct*)obj2).price intValue];
@@ -231,7 +228,7 @@ static SldIapManager *_sldIapManager = nil;
         [numberFormatter setLocale:product.priceLocale];
         NSString *formattedPrice = [numberFormatter stringFromNumber:product.price];
         
-        [cell.buyButton setTitle:formattedPrice forState:UIControlStateNormal];
+        cell.priceLabel.text = formattedPrice;
 //        cell.descTextView.text = product.localizedDescription;
         cell.titleLabel.text = product.localizedTitle;
         NSArray *coinArray = @[

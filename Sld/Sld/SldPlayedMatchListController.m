@@ -176,17 +176,14 @@ static float _scrollY = -64;
 }
 
 - (void)refreshTimeLabel:(SldMatchListCell*)cell {
-    UIColor *green = makeUIColor(71, 186, 43, 180);
-    UIColor *red = makeUIColor(212, 62, 91, 180);
-    
     NSDate *endTime = [NSDate dateWithTimeIntervalSince1970:cell.match.endTime];
     NSDate *now = getServerNow();
     NSTimeInterval endIntv = [endTime timeIntervalSinceDate:now];
     if (endIntv <= 0) {
         cell.timeLebel.text = @"已结束";
-        cell.timeLebel.backgroundColor = red;
+        cell.timeLebel.backgroundColor = _matchTimeLabelRed;
     } else {
-        cell.timeLebel.backgroundColor = green;
+        cell.timeLebel.backgroundColor = _matchTimeLabelGreen;
         if (endIntv > 3600) {
             cell.timeLebel.text = [NSString stringWithFormat:@"%d小时", (int)endIntv/3600];
         } else {

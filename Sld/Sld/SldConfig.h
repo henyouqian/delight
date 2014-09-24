@@ -30,3 +30,5 @@ extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
 @end
 
 extern const int MATCH_FETCH_LIMIT;
+extern UIColor *_matchTimeLabelRed;
+extern UIColor *_matchTimeLabelGreen;

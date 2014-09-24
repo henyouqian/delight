@@ -34,6 +34,8 @@ tools/ImageMagick-6.8.8/thumb.jpg
 bak/
 tools/ImageMagick-6.8.8/cover.gif
 tools/ImageMagick-6.8.8/thumb.gif
+tools/matchUploader/matchUploader
+tools/matchUploader/matches/
 html5/slider/qiniuSync/
 html5/slider/res/nouse/
 tools/pickSideUploader/events/
