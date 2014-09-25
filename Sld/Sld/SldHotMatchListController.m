@@ -101,7 +101,7 @@ static float _scrollY = -64;
     g_needRefreshHotList = NO;
     _footer.loadMoreButton.enabled = NO;
     
-    NSDictionary *body = @{@"StartId":@(0), @"CouponSum":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId":@(0), @"CouponSum":@(-1), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;

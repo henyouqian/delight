@@ -13,8 +13,3 @@
 - (void)updateUI;
 - (void)updateMoney;
 @end
-
-@interface SldEventResultController : UITableViewController
-@property (nonatomic) SldUserController *userController;
-
-@end

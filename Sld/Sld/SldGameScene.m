@@ -249,7 +249,7 @@ NSDate *_gameBeginTime;
         _timeBar = [[TimeBar alloc] initWithChallengeSecs:@[@10, @20, @30] size:CGSizeMake(size.width, 3)];
         [_timeBar setPosition:CGPointMake(0, size.height)];
         _timeBar.zPosition = buttonZ;
-        [self addChild:_timeBar];
+        //[self addChild:_timeBar];
         
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];

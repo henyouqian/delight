@@ -280,7 +280,7 @@ static NSString *SNS_DOUBAN = @"douban";
     NSDictionary *body = @{@"Username":email, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/login" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        [loginAlert dismissWithClickedButtonIndex:0 animated:YES];
+        [loginAlert dismissWithClickedButtonIndex:0 animated:NO];
         
         if (error) {
             NSString *errType = getServerErrorType(data);
@@ -315,14 +315,9 @@ static NSString *SNS_DOUBAN = @"douban";
         }
         
         //get player info
-        UIAlertView *getUserInfoAlert = [[UIAlertView alloc] initWithTitle:@"获取用户信息..."
-                                                                   message:nil
-                                                                  delegate:nil
-                                                         cancelButtonTitle:nil
-                                                         otherButtonTitles:nil];
-        [getUserInfoAlert show];
+        UIAlertView *alt = alert(@"获取用户信息...", nil);
         [session postToApi:@"player/getInfo" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            [getUserInfoAlert dismissWithClickedButtonIndex:0 animated:YES];
+            [alt dismissWithClickedButtonIndex:0 animated:YES];
             if (error) {
                 if (isServerError(error)) {
                     //show player setting page
