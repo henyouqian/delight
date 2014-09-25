@@ -14,7 +14,6 @@
 #import "SldHttpSession.h"
 #import "UIImage+ImageEffects.h"
 #import "UIImageView+sldAsyncLoad.h"
-#import "SldMyUserPackMenuController.h"
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
@@ -163,12 +162,7 @@ static float _scrollY = -64;
     SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"matchListCell" forIndexPath:indexPath];
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
-    if (match.extraReward == 0) {
-        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.couponReward];
-    } else {
-        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.couponReward, match.extraReward];
-    }
-    
+    cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.rewardCoupon + match.extraCoupon];
     cell.match = match;
     [self refreshTimeLabel:cell];
     

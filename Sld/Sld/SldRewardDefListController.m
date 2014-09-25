@@ -98,7 +98,7 @@
     } else if (indexPath.section == 2) {
         SldRewardDefListRankCell *cell = (SldRewardDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardDefListRankCell" forIndexPath:indexPath];
         
-        float couponSum = (float)(_gd.match.couponReward + _gd.match.extraReward);
+        float couponSum = (float)(_gd.match.rewardCoupon + _gd.match.extraCoupon);
         
         if (indexPath.row == _gd.match.rankRewardProportions.count) {
             float coupon = _gd.match.oneCoinRewardProportion * couponSum;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zZm-Ci-tiO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zZm-Ci-tiO">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -1229,9 +1229,8 @@
                         <outlet property="logoutCell" destination="9Nr-VA-3Wg" id="J4l-u5-Q5n"/>
                         <outlet property="moneyLabel" destination="2LP-oi-Ekp" id="7NI-TK-Sju"/>
                         <outlet property="nickNameLabel" destination="BZN-FC-JW3" id="gX1-56-oaC"/>
-                        <outlet property="rewardLabel" destination="NEz-rZ-tz7" id="bjm-tf-AVA"/>
                         <outlet property="teamLabel" destination="du4-rS-KnV" id="6Yd-ZZ-ZuU"/>
-                        <outlet property="totalRewardLabel" destination="VpN-01-Vdl" id="fQs-zj-GuG"/>
+                        <outlet property="totalCouponLabel" destination="VpN-01-Vdl" id="5wx-OF-Nuo"/>
                         <outlet property="userInfoCell" destination="jgW-GC-fXD" id="FBT-C2-gDz"/>
                     </connections>
                 </tableViewController>

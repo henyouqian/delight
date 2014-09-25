@@ -161,7 +161,7 @@
         _gd.matchPlay = [[MatchPlay alloc] initWithDict:dict];
         
         //reward
-        _gd.match.extraReward = _gd.matchPlay.extraReward;
+        _gd.match.extraCoupon = _gd.matchPlay.extraCoupon;
         _gd.match.playTimes = _gd.matchPlay.playTimes;
         
         //buttons
@@ -177,10 +177,10 @@
 - (void)refreshUI {
     //reward
     Match *match = _gd.match;
-    if (match.extraReward == 0) {
-        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", match.couponReward];
+    if (match.extraCoupon == 0) {
+        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", match.rewardCoupon];
     } else {
-        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d+%d", match.couponReward, match.extraReward];
+        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d+%d", match.rewardCoupon, match.extraCoupon];
     }
     
     //title

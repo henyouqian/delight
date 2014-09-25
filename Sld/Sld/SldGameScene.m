@@ -7,9 +7,6 @@
 //
 
 #import "SldGameScene.h"
-#import "SldBriefController.h"
-#import "SldRankController.h"
-//#import "SldBetController.h"
 #import "SldUtil.h"
 #import "SldButton.h"
 #import "SldSprite.h"
@@ -229,15 +226,7 @@ NSDate *_gameBeginTime;
         
         _imgIdx = -1;
         _sprites = [NSMutableArray arrayWithCapacity:3];
-        if (_gd.gameMode == CHALLENGE) {
-            _sliderNum = _gd.challengeInfo.sliderNum;
-        } else if (_gd.gameMode == USERPACK) {
-            _sliderNum = _gd.match.sliderNum;
-        } else if (M_PRACTICE == _gd.gameMode || M_TEST == _gd.gameMode || M_MATCH == _gd.gameMode) {
-            _sliderNum = _gd.match.sliderNum;
-        } else {
-            _sliderNum = _gd.eventInfo.sliderNum;
-        }
+        _sliderNum = _gd.match.sliderNum;
             
         _needRotate = NO;
         _sliderParent = [SKNode node];
@@ -257,13 +246,10 @@ NSDate *_gameBeginTime;
         float buttonZ = 10.f;
         
         //time bar
-        _timeBar = [[TimeBar alloc] initWithChallengeSecs:_gd.challengeInfo.challengeSecs size:CGSizeMake(size.width, 3)];
+        _timeBar = [[TimeBar alloc] initWithChallengeSecs:@[@10, @20, @30] size:CGSizeMake(size.width, 3)];
         [_timeBar setPosition:CGPointMake(0, size.height)];
         _timeBar.zPosition = buttonZ;
         [self addChild:_timeBar];
-        if (_gd.gameMode != CHALLENGE) {
-            _timeBar.hidden = YES;
-        }
         
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];
@@ -536,7 +522,7 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onBackYes {
-    if (_gd.gameMode == MATCH || _gd.gameMode == M_MATCH) {
+    if (_gd.gameMode == M_MATCH) {
         RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"否" action:nil];
         
         RIButtonItem *yesItem = [RIButtonItem itemWithLabel:@"退出!" action:^{
@@ -1115,7 +1101,7 @@ static float lerpf(float a, float b, float t) {
                 rd = (float)(arc4random() % 100)/100.f;
                 if (rd/100.f < adsConf.delayPercent) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        if (_gd.match.promoImage) {
+                        if (_gd.match.promoImage && _gd.match.promoImage.length) {
                             [_gameController showUserAds];
                         } else {
                             [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
@@ -1123,7 +1109,7 @@ static float lerpf(float a, float b, float t) {
                     });
                 }
             } else {
-                if (_gd.match.promoImage) {
+                if (_gd.match.promoImage && _gd.match.promoImage.length) {
                     [_gameController showUserAds];
                 } else {
                     [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
@@ -1143,100 +1129,6 @@ static float lerpf(float a, float b, float t) {
     NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
     int score = -(int)(dt*1000);
     _gd.recentScore = score;
-    EventPlayRecored *record = _gd.eventPlayRecord;
-    
-    //match
-    if (_gd.gameMode == MATCH) {
-        [_btnExit setHidden:YES];
-        
-        //rank label
-        SKLabelNode *rankLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
-        [rankLabel setFontColor:makeUIColor(255, 197, 131, 255)];
-        [rankLabel setFontSize:32];
-        [rankLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-        [rankLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-        [_lastImageCover addChild:rankLabel];
-        
-        CGPoint pos = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
-        
-        if (_needRotate) {
-            rankLabel.zRotation = -M_PI_2;
-            pos.x -= 25;
-        } else {
-            pos.y -= 25;
-        }
-        rankLabel.position = pos;
-        rankLabel.text = @"提交成绩...";
-        
-        //rankLabel action
-        float dur = .4f;
-        rankLabel.xScale = 0.f;
-        rankLabel.yScale = 2.f;
-        SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-            float t = QuarticEaseOut(elapsedTime/dur);
-            [node setYScale:lerpf(0.f, 1.f, t)];
-            [node setXScale:2.0-lerpf(0.f, 1.f, t)];
-        }];
-        [rankLabel runAction:appear];
-        
-        //checksum
-        NSString *checksum = [NSString stringWithFormat:@"%@+%d9d7a", _gd.matchSecret, score+8703];
-        checksum = [SldUtil sha1WithString:checksum];
-        
-        //post
-        SldHttpSession *session = [SldHttpSession defaultSession];
-        NSDictionary *body = @{@"EventId":@(_gd.eventInfo.id),
-                               @"Secret":_gd.matchSecret,
-                               @"Score":@(score),
-                               @"Checksum":checksum};
-        
-        [session postToApi:@"event/playEnd" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            //[av dismissWithClickedButtonIndex:0 animated:YES];
-            if (error) {
-                alertHTTPError(error, data);
-            } else {
-                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                if (error) {
-                    alert(@"Json error", [error localizedDescription]);
-                    return;
-                }
-                
-                //update detail vc
-                SldBriefController *briefVC = [SldBriefController getInstance];
-                if (score > record.highScore || record.highScore == 0) {
-                    record.highScore = score;
-                }
-                record.rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
-                record.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
-                [briefVC updatePlayRecord];
-                
-                //rank label
-                double delayInSeconds = .4f;
-                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                    //SKAction *wait = [SKAction waitForDuration:1.f];
-                    SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-                        float t = QuarticEaseIn(elapsedTime/dur);
-                        [node setYScale:lerpf(1.f, 0.f, t)];
-                    }];
-                    SKAction *setText = [SKAction runBlock:^{
-                        rankLabel.text = [NSString stringWithFormat:@"当前排名: %d", record.rank];
-                    }];
-                    SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-                        float t = QuarticEaseOut(elapsedTime/dur);
-                        [node setYScale:lerpf(0.f, 1.f, t)];
-                    }];
-                    SKAction *seq = [SKAction sequence:@[/*wait, */flip1, setText, flip2]];
-                    [rankLabel runAction:seq];
-                });
-                
-                //update rank controller
-                [[SldRankController getInstance] updateRanks];
-                //fixme [[SldBetController getInstance] updateTeamScore];
-            }
-        }];
-        [_btnExit setHidden:NO];
-    }
     
     //M_MATCH
     if (_gd.gameMode == M_MATCH) {
@@ -1319,10 +1211,6 @@ static float lerpf(float a, float b, float t) {
                     SKAction *seq = [SKAction sequence:@[/*wait, */flip1, setText, flip2]];
                     [rankLabel runAction:seq];
                 });
-                
-                //update rank controller
-                [[SldRankController getInstance] updateRanks];
-                //fixme [[SldBetController getInstance] updateTeamScore];
             }
         }];
         [_btnExit setHidden:NO];
@@ -1335,170 +1223,6 @@ static float lerpf(float a, float b, float t) {
         }
         NSString *str = [NSString stringWithFormat:@"滑块数量：%d，用时：%@", _sliderNum, formatScore(score)];
         [_gd.userPackTestHistory insertObject:str atIndex:0];
-    }
-    
-    // challenge
-    else if (_gd.gameMode == CHALLENGE) {
-        ChallengeInfo *chaInfo = _gd.challengeInfo;
-        ChallengePlay *chaPlay = _gd.challengePlay;
-        int oldScore = chaPlay.highScore;
-        if (oldScore == 0 || score > oldScore) {
-            chaPlay.highScore = score;
-            
-            //submit label
-            SKLabelNode *submitLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
-            [submitLabel setFontColor:makeUIColor(255, 197, 131, 255)];
-            [submitLabel setFontSize:24];
-            [submitLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-            [submitLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-            [_lastImageCover addChild:submitLabel];
-
-            CGPoint pos = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
-
-            if (_needRotate) {
-                submitLabel.zRotation = -M_PI_2;
-                pos.x -= 25;
-            } else {
-                pos.y -= 25;
-            }
-            submitLabel.position = pos;
-            submitLabel.text = @"提交成绩...";
-
-            //label action
-            float dur = .4f;
-            submitLabel.xScale = 0.f;
-            submitLabel.yScale = 2.f;
-            SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-                float t = QuarticEaseOut(elapsedTime/dur);
-                [node setYScale:lerpf(0.f, 1.f, t)];
-                [node setXScale:2.0-lerpf(0.f, 1.f, t)];
-            }];
-            [submitLabel runAction:appear];
-
-            //checksum
-            NSString *checksum = [NSString stringWithFormat:@"zzzz%d9d7a", score+8703];
-            lwInfo("%@", checksum);
-            checksum = [SldUtil sha1WithString:checksum];
-
-            //post
-            SldHttpSession *session = [SldHttpSession defaultSession];
-            NSDictionary *body = @{@"ChallengeId":@(_gd.challengeInfo.id),
-                                   @"Score":@(score),
-                                   @"Checksum":checksum};
-
-            [session postToApi:@"challenge/submitScore" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                if (error) {
-                    alertHTTPError(error, data);
-                } else {
-                    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                    if (error) {
-                        alert(@"Json error", [error localizedDescription]);
-                        return;
-                    }
-                    
-                    _gd.needReloadEventList = YES;
-                    _gd.needReloadChallengeTime = YES;
-                    int cupType = [(NSNumber*)[dict objectForKey:@"CupType"] intValue];
-                    chaInfo.cupType = cupType;
-                    chaPlay.cupType = cupType;
-                    
-                    
-                    //currChallengeId
-                    _gd.playerInfo.currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
-
-                    //money label
-                    double delayInSeconds = .4f;
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        SKAction *flip1 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-                            float t = QuarticEaseIn(elapsedTime/dur);
-                            [node setYScale:lerpf(1.f, 0.f, t)];
-                        }];
-                        SKAction *setText = [SKAction runBlock:^{
-                            int reward = [(NSNumber*)[dict objectForKey:@"Reward"] intValue];
-                            SInt64 newMoney = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-                            SInt64 totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
-                            if (reward > 0) {
-                                NSString *starStr = @"";
-                                if (cupType == CUP_GOLD) {
-                                    starStr = @"⭐️⭐️⭐️";
-                                } else if (cupType == CUP_SILVER) {
-                                    starStr = @"⭐️⭐️";
-                                } else if (cupType == CUP_BRONZE) {
-                                    starStr = @"⭐️";
-                                }
-                                submitLabel.text = [NSString stringWithFormat:@"%@获得奖金: %d金币", starStr, reward];
-                                _gd.playerInfo.money = newMoney;
-                                _gd.playerInfo.totalReward = totalReward;
-                            } else {
-                                submitLabel.text = @"提交完毕";
-                            }
-                            
-                        }];
-                        SKAction *flip2 = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
-                            float t = QuarticEaseOut(elapsedTime/dur);
-                            [node setYScale:lerpf(0.f, 1.f, t)];
-                        }];
-                        SKAction *seq = [SKAction sequence:@[/*wait, */flip1, setText, flip2]];
-                        [submitLabel runAction:seq];
-                    });
-                }
-            }];
-        }
-        
-//        //save to local
-//        //fixme
-//        FMDatabase *db = [SldDb defaultDb].fmdb;
-//        NSString *key = [NSString stringWithFormat:@"%d/%d", (int)_gd.eventInfo.id, (int)_gd.userId];
-//        FMResultSet *rs = [db executeQuery:@"SELECT data FROM localScore WHERE key = ?", key];
-//        NSMutableArray *scores = nil;
-//        NSError *error;
-//        if ([rs next]) {
-//            NSData *js = [rs dataForColumnIndex:0];
-//            scores = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:js options:0 error:&error]];
-//            if (error) {
-//                lwError("%@", error);
-//                return;
-//            }
-//            [scores addObject:@(score)];
-//            [scores sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-//                return [obj1 integerValue] < [obj2 integerValue];
-//            }];
-//            while (scores.count > LOCAL_SCORE_COUNT_LIMIT) {
-//                [scores removeLastObject];
-//            }
-//        } else {
-//            scores = [NSMutableArray arrayWithArray:@[@(score)]];
-//        }
-//        
-//        NSData *js = [NSJSONSerialization dataWithJSONObject:scores options:0 error:&error];
-//        if (error) {
-//            lwError("%@", error);
-//            return;
-//        }
-//        BOOL ok = [db executeUpdate:@"REPLACE INTO localScore VALUES (?, ?)", key, js];
-//        if (!ok) {
-//            lwError("%@", db.lastErrorMessage);
-//            return;
-//        }
-    }
-    
-    else if (_gd.gameMode == PRACTICE) {
-        SldDb *db = [SldDb defaultDb];
-        NSString *key = @"practiceHistory";
-        NSData *data = [db getValue:key];
-        NSMutableArray *history = [NSMutableArray array];
-        if (data) {
-            NSArray *arr = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-            history = [NSMutableArray arrayWithArray:arr];
-        }
-        NSString *value = [NSString stringWithFormat:@"id: %lld, num: %d, time: %f", _gd.packInfo.id, _gd.eventInfo.sliderNum, dt];
-        [history insertObject:value atIndex:0];
-        while (history.count > 100) {
-            [history removeLastObject];
-        }
-        data = [NSJSONSerialization dataWithJSONObject:history options:0 error:nil];
-        [db setKey:key value:data];
     }
     
     //show blured image and cover

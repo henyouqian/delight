@@ -7,7 +7,6 @@
 //
 
 #import "SldLoginViewController.h"
-#import "SldEventListViewController.h"
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 #import "SldGameData.h"
@@ -65,10 +64,9 @@ static NSString *SNS_DOUBAN = @"douban";
 }
 
 - (IBAction)onOfflineButton:(id)sender {
-    //[self dismissViewControllerAnimated:YES completion:nil];
-    SldGameData *gd = [SldGameData getInstance];
-    gd.online = NO;
-    gd.gameMode = OFFLINE;
+//    SldGameData *gd = [SldGameData getInstance];
+//    gd.online = NO;
+//    gd.gameMode = OFFLINE;
 }
 
 - (IBAction)onWeiboLoginButton:(id)sender {

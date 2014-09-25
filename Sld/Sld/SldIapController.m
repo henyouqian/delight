@@ -172,9 +172,6 @@ static SldIapManager *_sldIapManager = nil;
     }];
 }
 
-- (void)dealloc {
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

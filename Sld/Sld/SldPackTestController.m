@@ -29,17 +29,6 @@
 }
 
 - (IBAction)onStartButton:(id)sender {
-    //event
-    if (_gd.eventInfo == nil) {
-        _gd.eventInfo = [[EventInfo alloc] init];
-    }
-    _gd.eventInfo.sliderNum = [_sliderNumInput.text intValue];
-    if (_gd.eventInfo.sliderNum < 3) {
-        _gd.eventInfo.sliderNum = 3;
-    } else if (_gd.eventInfo.sliderNum > 12) {
-        _gd.eventInfo.sliderNum = 12;
-    }
-    
     //get pack
     int packId = [_packIdInput.text intValue];
     
@@ -122,15 +111,7 @@
 }
 
 - (void)enterGame {
-    _gd.gameMode = PRACTICE;
-    
-    //update db
-    FMDatabase *db = [SldDb defaultDb].fmdb;
-    BOOL ok = [db executeUpdate:@"UPDATE event SET packDownloaded=1 WHERE id=?", @(_gd.challengeInfo.id)];
-    if (!ok) {
-        lwError("Sql error:%@", [db lastErrorMessage]);
-        return;
-    }
+    _gd.gameMode = M_TEST;
     
     //
     SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];

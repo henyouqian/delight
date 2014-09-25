@@ -13,7 +13,6 @@
 #import "SldHttpSession.h"
 #import "UIImage+ImageEffects.h"
 #import "UIImageView+sldAsyncLoad.h"
-#import "SldMyUserPackMenuController.h"
 #import "SldGameController.h"
 #import "SldIapController.h"
 #import "MSWeakTimer.h"
@@ -215,156 +214,10 @@ static SldMyMatchListController *_myMatchListController = nil;
             [self.navigationController pushViewController:controller animated:YES];  
         });
     });
-    
-    
-    
-    
 }
 
 @end
 
-//=============================
-@interface SldMyMatchGamePlayTuneController : UIViewController
-@property (weak, nonatomic) IBOutlet UILabel *sliderNumLabel;
-@property (weak, nonatomic) IBOutlet UISlider *sliderNumSlider;
-@property (weak, nonatomic) IBOutlet UILabel *challengeSecondsLabel;
-@property (weak, nonatomic) IBOutlet UISlider *challengeSecondsSlider;
-@property (weak, nonatomic) IBOutlet UITextView *playHistoryTextView;
-@property (weak, nonatomic) IBOutlet UIStepper *stepper;
-@property (nonatomic) NSArray *sliderNumbers;
-@property (nonatomic) NSMutableArray *challengeSecs;
-@property (nonatomic) NSMutableArray *filePathes;
-@end
-
-static const int CHALLENGE_SEC_MIN = 3;
-static const int CHALLENGE_SEC_MAX = 90;
-
-@implementation SldMyMatchGamePlayTuneController
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    _filePathes = [NSMutableArray arrayWithCapacity:10];
-    
-    //
-    _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7)];
-    _sliderNum = 5;
-    int numberOfSteps = ((float)[_sliderNumbers count] - 1);
-    _sliderNumSlider.maximumValue = numberOfSteps;
-    _sliderNumSlider.minimumValue = 0;
-    _sliderNumSlider.continuous = YES;
-    _sliderNumSlider.value = 2;
-    [_sliderNumSlider addTarget:self
-                         action:@selector(sliderNumValueChanged:)
-               forControlEvents:UIControlEventValueChanged];
-    [self sliderNumValueChanged:_sliderNumSlider];
-    
-    //
-    _challengeSecs = [NSMutableArray arrayWithCapacity:90];
-    for (int i = CHALLENGE_SEC_MIN; i < CHALLENGE_SEC_MAX+1; ++i) {
-        [_challengeSecs addObject:@(i)];
-    }
-    _challengeSec = 30;
-    numberOfSteps = ((float)[_challengeSecs count] - 1);
-    _challengeSecondsSlider.maximumValue = numberOfSteps;
-    _challengeSecondsSlider.minimumValue = 0;
-    _challengeSecondsSlider.continuous = YES;
-    _challengeSecondsSlider.value = [_challengeSecs indexOfObject:@(_challengeSec)];
-    [_challengeSecondsSlider addTarget:self
-                         action:@selector(challengeSecValueChanged:)
-               forControlEvents:UIControlEventValueChanged];
-    [self challengeSecValueChanged:_challengeSecondsSlider];
-    
-    _stepper.minimumValue = _challengeSecondsSlider.minimumValue;
-    _stepper.maximumValue = _challengeSecondsSlider.maximumValue;
-    _stepper.value = _challengeSecondsSlider.value;
-}
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    SldGameData *gd = [SldGameData getInstance];
-    if (gd.userPackTestHistory && gd.userPackTestHistory.count > 0) {
-        NSMutableString* str = [NSMutableString stringWithString:@""];
-        for (NSString* record in gd.userPackTestHistory) {
-            [str appendFormat:@"%@\n", record];
-        }
-        _playHistoryTextView.text = str;
-    } else {
-        _playHistoryTextView.text = @"暂无记录";
-    }
-}
-
-- (void)sliderNumValueChanged:(UISlider *)sender {
-    NSUInteger index = (NSUInteger)(_sliderNumSlider.value + 0.5);
-    [_sliderNumSlider setValue:index animated:NO];
-    NSNumber *number = _sliderNumbers[index]; // <-- This numeric value you want
-    _sliderNum = [number intValue];
-    _sliderNumLabel.text = [NSString stringWithFormat:@"拼图滑块数量：%d", _sliderNum];
-}
-
-- (void)challengeSecValueChanged:(UISlider *)sender {
-    NSUInteger index = (NSUInteger)(sender.value + 0.5);
-    [sender setValue:index animated:NO];
-    NSNumber *number = _challengeSecs[index]; // <-- This numeric value you want
-    _challengeSec = [number intValue];
-    _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
-    
-    _stepper.value = sender.value;
-}
-
-- (IBAction)onStepperValueChanged:(id)sender {
-    _challengeSecondsSlider.value = _stepper.value;
-    _challengeSec =  (int)_stepper.value+CHALLENGE_SEC_MIN;
-    _challengeSecondsLabel.text = [NSString stringWithFormat:@"挑战目标：%d秒", _challengeSec];
-}
-
-- (IBAction)onPlayButton:(id)sender {
-    if (_filePathes.count == 0) {
-        int i = 0;
-        for (ALAsset *asset in _assets) {
-            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
-            
-            //resize
-            float l = MAX(image.size.width, image.size.height);
-            float s = MIN(image.size.width, image.size.height);
-            float scale = 1.0;
-            if (s > 400.0) {
-                scale = 400.0 / s;
-            }
-            float l2 = l * scale;
-            if (l2 > 800.0) {
-                scale *= 800.0 / l2;
-            }
-            float w = floorf(image.size.width * scale);
-            float h = floorf(image.size.height * scale);
-            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
-            
-            //save
-            NSData *data = UIImageJPEGRepresentation(image, 0.85);
-            NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
-            NSString *filePath = makeTempPath(fileName);
-            [_filePathes addObject:filePath];
-            [data writeToFile:filePath atomically:YES];
-            
-            i++;
-        }
-    }
-    
-    SldGameData *gd = [SldGameData getInstance];
-    
-    gd.match = [[Match alloc] init];
-    gd.match.sliderNum = _sliderNum;
-    
-    gd.packInfo = [[PackInfo alloc] init];
-    gd.packInfo.images = _filePathes;
-    
-    //enter game
-    gd.gameMode = M_TEST;
-    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    gd.matchSecret = nil;
-    [self.navigationController pushViewController:controller animated:YES];
-}
-
-@end
 
 //=============================
 @implementation SldMatchPromoWebController
@@ -497,7 +350,7 @@ static const int CHALLENGE_SEC_MAX = 90;
 @property (weak, nonatomic) IBOutlet UITextField *couponInput;
 @property (weak, nonatomic) IBOutlet UILabel *couponDescLabel;
 
-@property (nonatomic) int couponReward;
+@property (nonatomic) int rewardCoupon;
 @property (nonatomic) NSArray *numbers;
 
 @property (nonatomic) QiniuSimpleUploader* uploader;
@@ -528,7 +381,7 @@ static const int COUPON_MAX = 10000;
         [array addObject:@(i*100)];
     }
     _numbers = [NSArray arrayWithArray:array];
-    _couponReward = COUPON_MIN;
+    _rewardCoupon = COUPON_MIN;
     NSInteger numberOfSteps = ((float)[_numbers count] - 1);
     _slider.maximumValue = numberOfSteps;
     _slider.minimumValue = 0;
@@ -587,24 +440,24 @@ static const int COUPON_MAX = 10000;
     [_slider setValue:index animated:NO];
     NSNumber *number = _numbers[index];
     
-    _couponReward = [number intValue];
-    _stepper.value = _couponReward;
+    _rewardCoupon = [number intValue];
+    _stepper.value = _rewardCoupon;
     
     [self updateCouponLabel];
 }
 
 - (IBAction)onStepperValueChanged:(id)sender {
-    _couponReward = _stepper.value;
-    _slider.value = [_numbers indexOfObject:@(_couponReward)];
+    _rewardCoupon = _stepper.value;
+    _slider.value = [_numbers indexOfObject:@(_rewardCoupon)];
 
     [self updateCouponLabel];
 }
 
 - (void)updateCouponLabel {
-    _priceLable.text = [NSString stringWithFormat:@"提供奖金数量：%d", _couponReward];
+    _priceLable.text = [NSString stringWithFormat:@"提供奖金数量：%d", _rewardCoupon];
     
     SldGameData *gd = [SldGameData getInstance];
-    _goldCoinLabel.text = [NSString stringWithFormat:@"需要支付%d金币（现有%d金币）", _couponReward, gd.playerInfo.goldCoin];
+    _goldCoinLabel.text = [NSString stringWithFormat:@"需要支付%d金币（现有%d金币）", _rewardCoupon, gd.playerInfo.goldCoin];
 }
 
 - (void)publishDelayChanged:(UISlider *)sender {
@@ -645,16 +498,20 @@ static const int COUPON_MAX = 10000;
 
 - (IBAction)onPublish:(id)sender {
     //
-    _couponReward = [_couponInput.text intValue];
-    _couponReward = _couponReward / 100 * 100;
-    if (_couponReward < 0) {
-        _couponReward = 0;
+    _rewardCoupon = [_couponInput.text intValue];
+    if (_rewardCoupon % 100 != 0) {
+        alert(@"奖励必须为0或者100的倍数", nil);
+        return;
+    }
+    
+    if (_rewardCoupon < 0) {
+        _rewardCoupon = 0;
     }
     
     //check coupon
     SldGameData *gd = [SldGameData getInstance];
-    if (gd.playerInfo.goldCoin < _couponReward) {
-        NSString *msg = [NSString stringWithFormat:@"需要%d金币，我拥有%d金币。去商店购买更多金币吗？", _couponReward, gd.playerInfo.goldCoin];
+    if (gd.playerInfo.goldCoin < _rewardCoupon) {
+        NSString *msg = [NSString stringWithFormat:@"需要%d金币，我拥有%d金币。去商店购买更多金币吗？", _rewardCoupon, gd.playerInfo.goldCoin];
         [[[UIAlertView alloc] initWithTitle:@"金币不足"
                                     message:msg
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
@@ -858,7 +715,7 @@ static const int COUPON_MAX = 10000;
         @"Cover":_coverKey,
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
-        @"CouponReward":@(_couponReward),
+        @"RewardCoupon":@(_rewardCoupon),
         @"SliderNum":@(_sliderNum),
         @"BeginTimeStr":beginTimeStr,
         @"ChallengeSeconds":@(_challengeSec),
@@ -1077,10 +934,10 @@ static float _scrollY = -64;
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", match.playTimes];
-    if (match.extraReward == 0) {
-        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.couponReward];
+    if (match.extraCoupon == 0) {
+        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.rewardCoupon];
     } else {
-        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.couponReward, match.extraReward];
+        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.rewardCoupon, match.extraCoupon];
     }
     cell.match = match;
     

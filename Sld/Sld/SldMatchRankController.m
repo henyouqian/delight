@@ -201,8 +201,8 @@ static SldMatchRankController *_inst = nil;
             return;
         }
         
-        gameData.eventPlayRecord.rank = [(NSNumber*)[dict objectForKey:@"MyRank"] intValue];
-        gameData.eventPlayRecord.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
+        gameData.matchPlay.myRank = [(NSNumber*)[dict objectForKey:@"MyRank"] intValue];
+        gameData.matchPlay.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
         
         for (NSDictionary *rankDict in rankArray) {
             MatchRankInfo *rankInfo = [MatchRankInfo create:rankDict];
@@ -228,9 +228,9 @@ static SldMatchRankController *_inst = nil;
     }
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"EventId":@(gameData.eventInfo.id), @"Offset":[NSNumber numberWithInt:offset], @"Limit":@25};
+    NSDictionary *body = @{@"MatchId":@(gameData.match.id), @"Offset":@(offset), @"Limit":@25};
     _loadingRank = YES;
-    [session postToApi:@"event/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"match/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _loadingRank = NO;
         if (error) {
             alertHTTPError(error, data);
@@ -329,7 +329,7 @@ static SldMatchRankController *_inst = nil;
                 cell.scoreLabel.text = rankInfo.score;
                 cell.teamLabel.text = rankInfo.teamName;
                 
-                if (gamedata.eventPlayRecord.rank == rank) {
+                if (gamedata.matchPlay.myRank == rank) {
                     setLabelColor(cell, meColor);
                 } else {
                     setLabelColor(cell, normalColor);

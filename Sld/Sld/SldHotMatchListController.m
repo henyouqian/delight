@@ -1,33 +1,27 @@
 //
-//  SldMatchListController.m
+//  SldHotMatchListController.m
 //  pin
 //
 //  Created by 李炜 on 14-8-16.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
+#import "SldHotMatchListController.h"
 #import "SldMatchListController.h"
+#import "UIImageView+sldAsyncLoad.h"
 #import "SldUtil.h"
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "UIImage+ImageEffects.h"
+#import "UIImageView+sldAsyncLoad.h"
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
-#import "SldLoginViewController.h"
+
+BOOL g_needRefreshHotList = NO;
 
 //=============================
-@implementation SldMatchListCell
-
-@end
-
-//=============================
-@implementation SldMatchListFooter
-
-@end
-
-//=============================
-@interface SldMatchListController()
+@interface SldHotMatchListController()
 
 @property (nonatomic) NSMutableArray *matches;
 @property (nonatomic) SldMatchListFooter *footer;
@@ -37,7 +31,7 @@
 
 @end
 
-@implementation SldMatchListController
+@implementation SldHotMatchListController
 
 - (void)dealloc {
     [_secTimer invalidate];
@@ -47,6 +41,7 @@
     [super viewDidLoad];
     
     _matches = [NSMutableArray array];
+    _gd = [SldGameData getInstance];
     
     //refresh control
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -59,12 +54,6 @@
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
-    
-    //login view
-    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-   
-    //
-    _gd = [SldGameData getInstance];
 }
 
 - (void)onSecTimer {
@@ -79,8 +68,6 @@ static float _scrollY = -64;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.tabBarController.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
-    
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     UIEdgeInsets insets = self.collectionView.contentInset;
@@ -93,6 +80,11 @@ static float _scrollY = -64;
     self.collectionView.contentOffset = CGPointMake(0, _scrollY);
     
     [_refreshControl endRefreshing];
+    
+    //refesh
+    if (g_needRefreshHotList) {
+        [self refreshMatch];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -106,18 +98,20 @@ static float _scrollY = -64;
 }
 
 - (void)refreshMatch {
+    g_needRefreshHotList = NO;
     _footer.loadMoreButton.enabled = NO;
     
-    NSDictionary *body = @{@"StartId": @(0), @"BeginTime":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId":@(0), @"CouponSum":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"match/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
         [_refreshControl endRefreshing];
         if (error) {
             alertHTTPError(error, data);
             return;
         }
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *array = dict[@"Matches"];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
@@ -180,7 +174,6 @@ static float _scrollY = -64;
     if (endIntv <= 0) {
         cell.timeLebel.text = @"已结束";
         cell.timeLebel.backgroundColor = _matchTimeLabelRed;
-        cell.timeLebel.alpha = 200;
     } else {
         cell.timeLebel.backgroundColor = _matchTimeLabelGreen;
         if (endIntv > 3600) {
@@ -188,7 +181,6 @@ static float _scrollY = -64;
         } else {
             cell.timeLebel.text = [NSString stringWithFormat:@"%d分钟", (int)endIntv/60];
         }
-        cell.timeLebel.alpha = 255;
     }
 }
 
@@ -211,16 +203,19 @@ static float _scrollY = -64;
     
     Match* lastMatch = [_matches lastObject];
     
-    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"BeginTime":@(lastMatch.beginTime), @"Limit": @(MATCH_FETCH_LIMIT)};
+    int lastCouponSum = lastMatch.rewardCoupon + lastMatch.extraCoupon;
+    
+    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"CouponSum":@(lastCouponSum), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"match/list" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_footer.spin stopAnimating];
         _footer.loadMoreButton.enabled = YES;
         if (error) {
             alertHTTPError(error, data);
             return;
         }
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *array = dict[@"Matches"];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
@@ -241,6 +236,61 @@ static float _scrollY = -64;
         [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
     }];
 }
+
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (_matches.count == 0 || _reachEnd) {
+//        return;
+//    }
+//    
+//    float contentHeight = scrollView.contentSize.height + scrollView.contentInset.top + scrollView.contentInset.bottom;
+//    
+//    if (contentHeight > scrollView.frame.size.height
+//        &&(scrollView.contentOffset.y + scrollView.frame.size.height) > contentHeight) {
+//        if (!_scrollUnderBottom) {
+//            _scrollUnderBottom = YES;
+//            if (![_footer.spin isAnimating]) {
+//                [_footer.spin startAnimating];
+//                
+//                SInt64 startId = 0;
+//                if (_matches.count > 0) {
+//                    Match *match = [_matches lastObject];
+//                    startId = match.id;
+//                }
+////
+////                NSDictionary *body = @{@"StartId": @(startId), @"Limit": @(ADVICE_LIMIT)};
+////                SldHttpSession *session = [SldHttpSession defaultSession];
+////                [session postToApi:@"etc/listAdvice" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+////                    [_bottomRefresh endRefreshing];
+////                    if (error) {
+////                        alertHTTPError(error, data);
+////                        return;
+////                    }
+////                    NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+////                    if (error) {
+////                        lwError("Json error:%@", [error localizedDescription]);
+////                        return;
+////                    }
+////                    
+////                    if (array.count < ADVICE_LIMIT) {
+////                        _reachEnd = YES;
+////                    }
+////                    
+////                    NSMutableArray *insertIndexPathes = [NSMutableArray array];
+////                    for (NSDictionary *dict in array) {
+////                        AdviceData *adviceData = [AdviceData adviceDataWithDictionary:dict];
+////                        [_adviceDatas addObject:adviceData];
+////                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_adviceDatas.count-1 inSection:1];
+////                        [insertIndexPathes addObject:indexPath];
+////                    }
+////                    [self.tableView insertRowsAtIndexPaths:insertIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
+////                }];
+//            }
+//        }
+//        
+//    } else {
+//        _scrollUnderBottom = NO;
+//    }
+//}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     SldMatchListCell *cell = sender;

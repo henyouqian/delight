@@ -21,10 +21,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
-@property (weak, nonatomic) IBOutlet UILabel *moneyLabel;
-@property (weak, nonatomic) IBOutlet UILabel *totalRewardLabel;
-@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
-@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *goldCoinLabel;
+@property (weak, nonatomic) IBOutlet UILabel *totalCouponLabel;
+@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *userInfoCell;
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
 @property (nonatomic) int logoutNum;
@@ -269,10 +268,9 @@ static const int DAILLY_LOGOUT_NUM = 5;
 - (void)updateMoney {
     SldGameData *gd = [SldGameData getInstance];
     PlayerInfo *playerInfo = gd.playerInfo;
-    _moneyLabel.text = [NSString stringWithFormat:@"%lld", playerInfo.money];
-    _rewardLabel.text = [NSString stringWithFormat:@"可领取奖金%lld", playerInfo.rewardCache];
-    _totalRewardLabel.text = [NSString stringWithFormat:@"%lld", playerInfo.totalReward];
-    _levelLabel.text = [NSString stringWithFormat:@"%d", playerInfo.level];
+    _goldCoinLabel.text = [NSString stringWithFormat:@"%d", playerInfo.goldCoin];
+    _couponLabel.text = [NSString stringWithFormat:@"可领取奖金%d", playerInfo.couponCache];
+    _totalCouponLabel.text = [NSString stringWithFormat:@"%d", playerInfo.totalCoupon];
 }
 
 @end
@@ -415,9 +413,9 @@ const int RESULT_LIMIT = 20;
     if (indexPath.section == 0) {
         SldGetRewardCacheCell *cell = (SldGetRewardCacheCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardCacheCell" forIndexPath:indexPath];
         
-        NSString *title = [NSString stringWithFormat:@"点击领取奖金：%lld", gd.playerInfo.rewardCache];
+        NSString *title = [NSString stringWithFormat:@"点击领取奖金：%d", gd.playerInfo.couponCache];
         [cell.getRewardButton setTitle:title forState:(UIControlStateNormal&UIControlStateHighlighted&UIControlStateDisabled)];
-        if (gd.playerInfo.rewardCache == 0) {
+        if (gd.playerInfo.couponCache == 0) {
             cell.getRewardButton.enabled = NO;
             cell.getRewardButton.backgroundColor = [UIColor lightGrayColor];
         } else {
@@ -457,7 +455,7 @@ const int RESULT_LIMIT = 20;
     UIAlertView *alt = alertNoButton(@"领取中...");
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"player/addRewardFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"player/addCouponFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [alt dismissWithClickedButtonIndex:0 animated:YES];
         if (error) {
             alertHTTPError(error, data);
@@ -472,16 +470,16 @@ const int RESULT_LIMIT = 20;
         
         SldGameData *gd = [SldGameData getInstance];
         PlayerInfo *playerInfo = gd.playerInfo;
-        SInt64 prevMoney = playerInfo.money;
-        playerInfo.money = [(NSNumber*)[dict objectForKey:@"Money"] longLongValue];
-        playerInfo.totalReward = [(NSNumber*)[dict objectForKey:@"TotalReward"] longLongValue];
-        playerInfo.rewardCache = 0;
+        int prevCoupon = playerInfo.coupon;
+        playerInfo.coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] intValue];
+        playerInfo.totalCoupon = [(NSNumber*)[dict objectForKey:@"TotalCoupon"] intValue];
+        playerInfo.couponCache = 0;
         
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
         
         [_userController updateMoney];
         
-        alert(@"金币领取成功", [NSString stringWithFormat:@"%lld + %lld = %lld", prevMoney, playerInfo.money-prevMoney, playerInfo.money]);
+        alert(@"金币领取成功", [NSString stringWithFormat:@"%d + %d = %d", prevCoupon, playerInfo.coupon-prevCoupon, playerInfo.coupon]);
     }];
 }
 
@@ -533,34 +531,3 @@ const int RESULT_LIMIT = 20;
 
 @end
 
-//=====================
-@interface SldLevelTableController : UITableViewController
-
-@end
-
-@implementation SldLevelTableController
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    SldGameData *gd = [SldGameData getInstance];
-    return gd.levelArray.count-1;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = (UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"levelTableCell" forIndexPath:indexPath];
-    
-    SldGameData *gd = [SldGameData getInstance];
-    
-    int level = indexPath.row + 1;
-    int reward = [(NSNumber*)[gd.levelArray objectAtIndex:level] intValue];
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"奖金总额：%d，等级：%d", reward, level];
-    if (level == gd.playerInfo.level) {
-        cell.textLabel.textColor = makeUIColor(244, 75, 116, 255);
-    } else {
-        cell.textLabel.textColor = [UIColor darkGrayColor];
-    }
-    
-    return cell;
-}
-
-@end
