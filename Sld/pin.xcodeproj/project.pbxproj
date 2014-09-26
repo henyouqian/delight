@@ -251,6 +251,8 @@
 		D0D14B66195B38AB009193E6 /* DomobAdSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B65195B38AB009193E6 /* DomobAdSDKBundle.bundle */; };
 		D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */; };
 		D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D14B6F195B6A83009193E6 /* NSData+Base64.m */; };
+		D0F24A8119D5E95000A63C30 /* SldExchangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8019D5E95000A63C30 /* SldExchangeController.m */; };
+		D0F24A8419D5F21700A63C30 /* SldCouponCardController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -574,6 +576,10 @@
 		D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBalintimesO2OmobiAd.a; path = External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd/libBalintimesO2OmobiAd.a; sourceTree = "<group>"; };
 		D0D14B6E195B6A83009193E6 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D0D14B6F195B6A83009193E6 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		D0F24A7F19D5E95000A63C30 /* SldExchangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldExchangeController.h; sourceTree = "<group>"; };
+		D0F24A8019D5E95000A63C30 /* SldExchangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldExchangeController.m; sourceTree = "<group>"; };
+		D0F24A8219D5F21700A63C30 /* SldCouponCardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldCouponCardController.h; sourceTree = "<group>"; };
+		D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldCouponCardController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -810,6 +816,12 @@
 				D05912AC19D34A00009916AB /* SldMainTabBarController.m */,
 				D05912A819D32F47009916AB /* SldTradeController.h */,
 				D05912A919D32F47009916AB /* SldTradeController.m */,
+				D0F24A7F19D5E95000A63C30 /* SldExchangeController.h */,
+				D0F24A8019D5E95000A63C30 /* SldExchangeController.m */,
+				D0667D6219514DD700AD9282 /* SldIapController.h */,
+				D0667D6319514DD700AD9282 /* SldIapController.m */,
+				D0AF924F19D493560079F218 /* SldRewardListController.h */,
+				D0AF925019D493560079F218 /* SldRewardListController.m */,
 				D059129719C8144A009916AB /* SldMatchRankController.h */,
 				D059129819C8144A009916AB /* SldMatchRankController.m */,
 				D0CD0D3819BB7DBE00F6DDBD /* SldRewardDefListController.h */,
@@ -834,8 +846,6 @@
 				B39E4485191E9E6D00CBB247 /* SldUserController.m */,
 				B34D52A51921695B00277EBC /* SldUserInfoController.h */,
 				B34D52A61921695B00277EBC /* SldUserInfoController.m */,
-				D0667D6219514DD700AD9282 /* SldIapController.h */,
-				D0667D6319514DD700AD9282 /* SldIapController.m */,
 				B3D0545F1910084C00CEFCBE /* SldMusicViewController.h */,
 				B3D054601910084C00CEFCBE /* SldMusicViewController.m */,
 				B39E446E191BEDB600CBB247 /* SldCommentController.h */,
@@ -846,8 +856,8 @@
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				D02F76C0198142AE00E742F8 /* SldPackTestController.h */,
 				D02F76C1198142AF00E742F8 /* SldPackTestController.m */,
-				D0AF924F19D493560079F218 /* SldRewardListController.h */,
-				D0AF925019D493560079F218 /* SldRewardListController.m */,
+				D0F24A8219D5F21700A63C30 /* SldCouponCardController.h */,
+				D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -1502,6 +1512,7 @@
 				B374C57B19177B2F00E5C6A2 /* SldGameData.m in Sources */,
 				D0C4EF8A19A3290800D2F1D0 /* UIImage+ImageEffects.m in Sources */,
 				B31CBEB3190AA47500621165 /* SldButton.m in Sources */,
+				D0F24A8119D5E95000A63C30 /* SldExchangeController.m in Sources */,
 				D0078932198B8E9800945D50 /* SldAdviceController.m in Sources */,
 				B37A9C3618F2E4850080E8F0 /* SldUtil.m in Sources */,
 				B3F517741903B1BF00499209 /* SldLoginViewController.m in Sources */,
@@ -1535,6 +1546,7 @@
 				D05912B019D3541B009916AB /* SldHotMatchListController.m in Sources */,
 				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,
 				D0CD0D3A19BB7DBE00F6DDBD /* SldRewardDefListController.m in Sources */,
+				D0F24A8419D5F21700A63C30 /* SldCouponCardController.m in Sources */,
 				D05912AA19D32F47009916AB /* SldTradeController.m in Sources */,
 				B36DAD17190F99F900435EF4 /* SldStreamPlayer.m in Sources */,
 				B38110491914F5B00093F321 /* SldNevigationController.m in Sources */,

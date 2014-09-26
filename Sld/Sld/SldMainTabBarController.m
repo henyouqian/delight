@@ -8,6 +8,7 @@
 
 #import "SldMainTabBarController.h"
 #import "SldStreamPlayer.h"
+#import "SldLoginViewController.h"
 
 @interface SldMainTabBarController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *discView;
@@ -23,6 +24,9 @@
                                             selector:@selector(rotateDisc)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    
+    //login view
+    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

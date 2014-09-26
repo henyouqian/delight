@@ -7,9 +7,14 @@
 //
 
 #import "SldRewardListController.h"
+#import "SldHttpSession.h"
+#import "SldGameData.h"
+
+static const int REWARD_LIST_FETCH_LIMIT = 30;
 
 //=================
 @interface SldGetCouponCacheCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
 @property (weak, nonatomic) IBOutlet UIButton *getRewardButton;
 @end
 
@@ -18,26 +23,34 @@
 
 //=================
 @interface SldRewardCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *thumbView;
+@property (weak, nonatomic) IBOutlet UILabel *reasonLabel;
+@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
-@property (weak, nonatomic) IBOutlet UILabel *matchRewardLabel;
-@property (weak, nonatomic) IBOutlet UILabel *betMoneyLabel;
-@property (weak, nonatomic) IBOutlet UILabel *betRewardLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *packThumbView;
 
 @end
 
 @implementation SldRewardCell
 @end
 
+//=================
+@interface SldMoreRewardCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
+@property (weak, nonatomic) IBOutlet UIButton *moreButton;
+
+@end
+
+@implementation SldMoreRewardCell
+@end
 
 //=================
 @interface SldRewardRecord : NSObject
-@property (nonatomic) int matchId;
-@property (nonatomic) NSString* thumbKey;
+@property (nonatomic) SInt64 selfId;
+@property (nonatomic) SInt64 matchId;
+@property (nonatomic) NSString *thumb;
+@property (nonatomic) NSString *reason;
+@property (nonatomic) int coupon;
 @property (nonatomic) int rank;
-@property (nonatomic) int matchReward;
-@property (nonatomic) int betMoneySum;
-@property (nonatomic) int betReward;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end
@@ -45,12 +58,12 @@
 @implementation SldRewardRecord
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
-        _matchId = [(NSNumber*)[dict objectForKey:@"MatchId"] intValue];
-        _thumbKey = [dict objectForKey:@"PackThumbKey"];
+        _selfId = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
+        _matchId = [(NSNumber*)[dict objectForKey:@"MatchId"] longLongValue];
+        _thumb = [dict objectForKey:@"Thumb"];
+        _reason = [dict objectForKey:@"Reason"];
+        _coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] intValue];
         _rank = [(NSNumber*)[dict objectForKey:@"FinalRank"] intValue];
-        _matchReward = [(NSNumber*)[dict objectForKey:@"MatchReward"] intValue];
-        _betMoneySum = [(NSNumber*)[dict objectForKey:@"BetMoneySum"] intValue];
-        _betReward = [(NSNumber*)[dict objectForKey:@"BetReward"] intValue];
     }
     return self;
 }
@@ -60,6 +73,10 @@
 //================================
 @interface SldRewardListController ()
 
+@property (nonatomic) NSMutableArray *rewardRecords;
+@property (nonatomic) SldGameData *gd;
+@property (nonatomic) SldMoreRewardCell *moreRewardCell;
+
 @end
 
 @implementation SldRewardListController
@@ -68,24 +85,94 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    _gd = [SldGameData getInstance];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    _rewardRecords = [NSMutableArray array];
+    
+    //refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    
+    //
+    [self refresh];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.refreshControl endRefreshing];
+    
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void)fetchWithStartId:(SInt64)startId {
+    _moreRewardCell.moreButton.enabled = NO;
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"StartId":@(startId), @"Limit":@(REWARD_LIST_FETCH_LIMIT)};
+    [session postToApi:@"player/listMyReward" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _moreRewardCell.moreButton.enabled = YES;
+        [self.refreshControl endRefreshing];
+        [_moreRewardCell.spin stopAnimating];
+        
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSArray *jsRewardRecords = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        if (jsRewardRecords.count < REWARD_LIST_FETCH_LIMIT) {
+            [_moreRewardCell.moreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
+            _moreRewardCell.moreButton.enabled = NO;
+        } else {
+            [_moreRewardCell.moreButton setTitle:@"更多" forState:UIControlStateNormal];
+            _moreRewardCell.moreButton.enabled = YES;
+        }
+        
+        if (startId == 0) {
+            [_rewardRecords removeAllObjects];
+        }
+        
+        NSMutableArray *insetIndexPathes = [NSMutableArray array];
+        
+        for (NSDictionary *jsRecord in jsRewardRecords) {
+            SldRewardRecord *record = [[SldRewardRecord alloc] initWithDict:jsRecord];
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_rewardRecords.count inSection:1];
+            
+            [_rewardRecords addObject:record];
+            [insetIndexPathes addObject:indexPath];
+        }
+        
+        if (startId == 0) {
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+        } else {
+            [self.tableView insertRowsAtIndexPaths:insetIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+    }];
+}
+
+- (void)refresh {
+    [self fetchWithStartId:0];
+}
+
+- (IBAction)onMoreRewardButton:(id)sender {
+    if (_rewardRecords.count) {
+        [_moreRewardCell.spin startAnimating];
+        _moreRewardCell.hidden = NO;
+        SldRewardRecord *record = [_rewardRecords lastObject];
+        [self fetchWithStartId:record.selfId];
+    }
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -93,7 +180,9 @@
     if (section == 0) {
         return 1;
     } else if (section == 1) {
-        return 10;
+        return _rewardRecords.count;
+    } else if (section == 2) {
+        return 1;
     }
     return 0;
 }
@@ -101,67 +190,53 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = nil;
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"matchGetCouponCacheCell" forIndexPath:indexPath];
+        SldGetCouponCacheCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchGetCouponCacheCell" forIndexPath:indexPath];
+        int couponCache = _gd.playerInfo.couponCache;
+        
+        cell.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%d", _gd.playerInfo.coupon];
+        
+        NSString *title = [NSString stringWithFormat:@"可领取奖金：%d", couponCache];
+        [cell.getRewardButton setTitle:title forState:UIControlStateNormal|UIControlStateDisabled];
+        if (couponCache > 0) {
+            cell.getRewardButton.enabled = YES;
+            cell.getRewardButton.backgroundColor = makeUIColor(244, 75, 116, 255);
+        } else {
+            cell.getRewardButton.enabled = NO;
+            cell.getRewardButton.backgroundColor = [UIColor grayColor];
+        }
+        return cell;
     } else if (indexPath.section == 1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"matchRewardCell" forIndexPath:indexPath];
+        SldRewardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchRewardCell" forIndexPath:indexPath];
+        SldRewardRecord *record = _rewardRecords[indexPath.row];
+        cell.reasonLabel.text = record.reason;
+        cell.couponLabel.text = [NSString stringWithFormat:@"奖金：%d", record.coupon];
+        if (record.rank != 0) {
+            cell.rankLabel.text = [NSString stringWithFormat:@"排名：%d", record.rank];
+        }
+        return cell;
+    } else if (indexPath.section == 2) {
+        SldMoreRewardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"moreRewardCell" forIndexPath:indexPath];
+        
+        _moreRewardCell = cell;
+        return cell;
     }
     
-    
-    // Configure the cell...
-    
-    return cell;
+    return nil;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return 85;
+    } else if (indexPath.section == 1){
+        return 60;
+    } else  if (indexPath.section == 2){
+        return 60;
+    }
+    return 0;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+- (IBAction)onGetRewardButton:(id)sender {
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

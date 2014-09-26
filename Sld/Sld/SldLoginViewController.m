@@ -315,9 +315,7 @@ static NSString *SNS_DOUBAN = @"douban";
         }
         
         //get player info
-        UIAlertView *alt = alert(@"获取用户信息...", nil);
         [session postToApi:@"player/getInfo" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            [alt dismissWithClickedButtonIndex:0 animated:YES];
             if (error) {
                 if (isServerError(error)) {
                     //show player setting page

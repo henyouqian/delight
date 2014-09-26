@@ -14,7 +14,6 @@
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
-#import "SldLoginViewController.h"
 
 //=============================
 @implementation SldMatchListCell
@@ -59,9 +58,6 @@
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
-    
-    //login view
-    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
    
     //
     _gd = [SldGameData getInstance];
