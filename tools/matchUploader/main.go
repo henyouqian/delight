@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	USEAGE = "Useage: \n\tmatchUploader new|del <uploadDir> confFile"
+	USEAGE = "Useage: \n\tmatchUploader confFile new|del <uploadDir> \n\tor matchUploader confFile img <imageFile>"
 
 	MATCH_JS      = "match.js"
 	MATCH_RESP_JS = "respMatch.js"
@@ -124,6 +124,8 @@ func main() {
 		newMatch()
 	case "del":
 		delMatch()
+	case "img":
+		uploadImage()
 	default:
 		glog.Errorln(USEAGE)
 	}
@@ -314,6 +316,25 @@ func delMatch() {
 	postReq("match/del", []byte(body))
 
 	glog.Infoln("del ok")
+}
+
+func uploadImage() {
+	path := flag.Arg(2)
+	key := genImageKey(path)
+
+	glog.Infof("key=%s", key)
+
+	//gen token
+	putPolicy := qiniurs.PutPolicy{
+		Scope: _conf.QiniuBucket,
+	}
+	token := putPolicy.Token(nil)
+
+	//upload
+	var ret qiniuio.PutRet
+	err := qiniuio.PutFile(nil, &ret, token, key, path, nil)
+	checkErr(err)
+	glog.Infof("upload image ok: path=%s", path)
 }
 
 func rewriteFile(path string, content []byte) {

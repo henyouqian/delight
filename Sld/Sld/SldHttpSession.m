@@ -9,6 +9,7 @@
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 #import "SldConfig.h"
+#import "SldLoginViewController.h"
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
@@ -192,7 +193,14 @@ void alertHTTPError(NSError *error, NSData *data) {
         NSString *errorString = [dict objectForKey:@"ErrorString"];
         if (errorType && errorString) {
             if ([errorType compare:@"err_auth"] == 0) {
-                alert(@"账号异常，请重新登录", nil);
+                UIViewController *vc = [[[UIApplication sharedApplication] keyWindow] visibleViewController];
+                [[[UIAlertView alloc] initWithTitle:@"账号异常，请重新登录。"
+                                            message:nil
+                                   cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+                    [SldLoginViewController createAndPresentWithCurrentController:vc animated:NO];
+                }]
+                                   otherButtonItems:nil] show];
+                
             } else {
                 alert(errorType, errorString);
             }
@@ -223,5 +231,6 @@ void alertHTTPError(NSError *error, NSData *data) {
                            otherButtonItems:nil] show];
     }
 }
+
 
 @end

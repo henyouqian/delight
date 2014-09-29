@@ -7,11 +7,49 @@
 //
 
 #import "SldExchangeController.h"
+#import "SldHttpSession.h"
+#import "UIImageView+sldAsyncLoad.h"
 
+//===============================
+@interface SldEcardType : NSObject
+@property (nonatomic) NSString *key;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *provider;
+@property (nonatomic) NSString *thumb;
+@property (nonatomic) int couponPrice;
+@end
+
+@implementation SldEcardType
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _key = dict[@"Key"];
+        _name = dict[@"Name"];
+        _provider = dict[@"Provider"];
+        _thumb = dict[@"Thumb"];
+        _couponPrice = [(NSNumber*)dict[@"CouponPrice"] intValue];
+    }
+    
+    return self;
+}
+
+@end
+
+//===============================
+@interface SldExchangeCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *imgView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIButton *buyButton;
+@end
+
+@implementation SldExchangeCell
+
+@end
+
+//===============================
 @interface SldExchangeController ()
-
 @property (nonatomic) UIRefreshControl *refreshControl;
-
+@property (nonatomic) NSMutableArray *ecardTypes;
 @end
 
 @implementation SldExchangeController
@@ -20,15 +58,45 @@
 {
     [super viewDidLoad];
     
+    //
+    _ecardTypes = [NSMutableArray array];
+    
     //refresh control
     self.refreshControl = [[UIRefreshControl alloc] init];
     self.collectionView.alwaysBounceVertical = YES;
     [self.collectionView addSubview:self.refreshControl];
     [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    
+    [self refresh];
+    
+    
 }
 
 - (void)refresh {
-    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"store/listEcardType" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        [self.refreshControl endRefreshing];
+        
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        [_ecardTypes removeAllObjects];
+        for (NSDictionary *dict in array) {
+            SldEcardType *cardType = [[SldEcardType alloc] initWithDict:dict];
+            [_ecardTypes addObject:cardType];
+        }
+        [self.collectionView reloadData];
+    }];
+
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -36,11 +104,19 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 10;
+    return _ecardTypes.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"exchangeCell" forIndexPath:indexPath];
+    SldExchangeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"exchangeCell" forIndexPath:indexPath];
+    
+    SldEcardType *cardType = _ecardTypes[indexPath.row];
+    if (cardType) {
+        cell.titleLabel.text = cardType.name;
+        [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换", cardType.couponPrice] forState:UIControlStateNormal];
+        
+        [cell.imgView asyncLoadUploadedImageWithKey:cardType.thumb showIndicator:NO completion:nil];
+    }
     return cell;
 }
 

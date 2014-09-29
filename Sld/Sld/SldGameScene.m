@@ -210,6 +210,9 @@ NSDate *_gameBeginTime;
         if (_gd.gameMode == M_MATCH) {
             _gd.needRefreshPlayedList = YES;
         }
+         
+        _gd.matchPlay.tries++;
+        _gd.matchPlay.playTimes++;
         
         BUTTON_POS3.x = size.width - BUTTON_POS1.x;
         

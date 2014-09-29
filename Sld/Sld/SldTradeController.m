@@ -28,6 +28,11 @@
     _cardView.hidden = YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.tabBarController.navigationItem.title = self.tabBarItem.title;
+}
+
 - (IBAction)onSegChange:(id)sender {
     _rewardView.hidden = YES;
     _buyView.hidden = YES;

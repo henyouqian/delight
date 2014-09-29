@@ -71,4 +71,9 @@ NSString* formatInterval(int sec);
 @end
 
 //============================
+@interface UIWindow (PazLabs)
+
+- (UIViewController *) visibleViewController;
+
+@end
 

@@ -67,6 +67,7 @@ static float _scrollY = -64;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.tabBarController.navigationItem.title = self.tabBarItem.title;
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     UIEdgeInsets insets = self.collectionView.contentInset;

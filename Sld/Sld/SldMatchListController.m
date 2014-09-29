@@ -75,8 +75,8 @@ static float _scrollY = -64;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.tabBarController.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
-    
+    self.tabBarController.navigationItem.title = self.tabBarItem.title;
+    //[self.tabBarController.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
     self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     UIEdgeInsets insets = self.collectionView.contentInset;

@@ -34,6 +34,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
+@property (weak, nonatomic) IBOutlet UIButton *reportButton;
 
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) MSWeakTimer *secTimer;
@@ -59,7 +60,7 @@
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
-    _minTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    _minTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(onMinTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     //button disable
     _practiceButton.enabled = NO;
@@ -82,6 +83,7 @@
     
     if (_gd.matchPlay) {
         [self refreshUI];
+        //refreshDynamicData;
     }
 }
 
@@ -134,8 +136,10 @@
     //edit button
     if (_gd.match.ownerId == _gd.playerInfo.userId && matchRunning) {
         _editButton.hidden = NO;
+        _reportButton.hidden = YES;
     } else {
         _editButton.hidden = YES;
+        _reportButton.hidden = NO;
     }
 }
 
@@ -193,7 +197,7 @@
     _rankLabel.text = [NSString stringWithFormat:@"我的排名：%d/%d", _gd.matchPlay.myRank, _gd.matchPlay.rankNum];
     
     //try number
-    _tryNumLabel.text = [NSString stringWithFormat:@"尝试次数：%d", _gd.matchPlay.tries];
+    _tryNumLabel.text = [NSString stringWithFormat:@"尝试次数：%d/%d", _gd.matchPlay.tries, _gd.matchPlay.playTimes];
 }
 
 - (IBAction)onPracticeButton:(id)sender {
@@ -382,6 +386,28 @@
                            otherButtonItems:nil] show];
     }];
     
+}
+
+- (IBAction)onReportButton:(id)sender {
+    [[[UIAlertView alloc] initWithTitle:@"举报此图集有色情暴力等不和谐内容?"
+	                            message:nil
+		               cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+        // Handle "Cancel"
+    }]
+				       otherButtonItems:[RIButtonItem itemWithLabel:@"举报！" action:^{
+        UIAlertView *alt = alertNoButton(@"举报中...");
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"MatchId":@(_gd.match.id)};
+        [session postToApi:@"etc/report" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [alt dismissWithClickedButtonIndex:0 animated:NO];
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            alert(@"举报完毕", nil);
+        }];
+
+    }], nil] show];
 }
 
 @end
@@ -614,5 +640,7 @@
                            otherButtonItems:nil] show];
     }];
 }
+
+
 
 @end

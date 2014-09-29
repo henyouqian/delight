@@ -1211,7 +1211,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y2m-Va-fXD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1030" y="-1183"/>
+            <point key="canvasLocation" x="278" y="-995"/>
         </scene>
         <!--Sld Add Advice Controller-->
         <scene sceneID="SBK-gh-Re8">
@@ -1253,7 +1253,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="034-KQ-jTm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1533" y="-1183"/>
+            <point key="canvasLocation" x="781" y="-995"/>
         </scene>
         <!--Sld Pack Test Controller-->
         <scene sceneID="KJG-WC-RL4">
@@ -1378,7 +1378,6 @@
             <objects>
                 <tabBarController definesPresentationContext="YES" id="ZaF-Nn-xfe" customClass="SldMainTabBarController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="PMT-0X-O2o">
-                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" image="otlDisc48.png" id="36e-R0-tFo">
                             <connections>
                                 <segue destination="UXk-Ax-sCN" kind="push" id="bmR-1y-HiB"/>
@@ -1717,69 +1716,42 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="exchangeCell" id="gCA-ze-tRP">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="exchangeCell" id="gCA-ze-tRP" customClass="SldExchangeCell">
                                 <rect key="frame" x="32" y="20" width="256" height="256"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="256" height="256"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zw2-XS-9uI">
-                                            <rect key="frame" x="0.0" y="0.0" width="256" height="208"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zw2-XS-9uI">
+                                            <rect key="frame" x="0.0" y="0.0" width="256" height="256"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="0.4088" green="0.60687333330000004" blue="0.72999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="亚马逊10元电子礼品卡" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUt-qw-Czx">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="亚马逊10元电子礼品卡" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUt-qw-Czx">
                                             <rect key="frame" x="20" y="15" width="216" height="39"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="39" id="TK4-Da-1lx"/>
-                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="需12345奖金兑换" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFy-Ce-sj8">
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3RC-1h-alg">
                                             <rect key="frame" x="0.0" y="208" width="256" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" red="0.7263734879" green="0.44412118910000004" blue="0.55958968219243821" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3RC-1h-alg">
-                                            <rect key="frame" x="0.0" y="208" width="256" height="48"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="48" id="ce0-za-Qps"/>
-                                            </constraints>
-                                            <state key="normal">
+                                            <color key="backgroundColor" red="0.7263734879" green="0.44412118909999998" blue="0.55958968220000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <state key="normal" title="使用12335奖金兑换">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="vFy-Ce-sj8" secondAttribute="trailing" id="4nr-Zd-sEK"/>
-                                    <constraint firstItem="vFy-Ce-sj8" firstAttribute="top" secondItem="Zw2-XS-9uI" secondAttribute="bottom" id="5ca-b7-Gic"/>
-                                    <constraint firstItem="3RC-1h-alg" firstAttribute="leading" secondItem="gCA-ze-tRP" secondAttribute="leading" id="6Cs-zz-Uz6"/>
-                                    <constraint firstItem="3RC-1h-alg" firstAttribute="top" secondItem="Zw2-XS-9uI" secondAttribute="bottom" id="AUR-Sr-DO0"/>
-                                    <constraint firstAttribute="bottom" secondItem="vFy-Ce-sj8" secondAttribute="bottom" id="FhV-h8-xnz"/>
-                                    <constraint firstItem="Zw2-XS-9uI" firstAttribute="top" secondItem="gCA-ze-tRP" secondAttribute="top" id="PT7-RY-Yfe"/>
-                                    <constraint firstItem="vFy-Ce-sj8" firstAttribute="leading" secondItem="gCA-ze-tRP" secondAttribute="leading" id="XZi-gK-73n"/>
-                                    <constraint firstItem="3RC-1h-alg" firstAttribute="leading" secondItem="gCA-ze-tRP" secondAttribute="leading" id="Xre-Il-IrO"/>
-                                    <constraint firstAttribute="bottom" secondItem="3RC-1h-alg" secondAttribute="bottom" id="YGv-Ee-n4a"/>
-                                    <constraint firstItem="gUt-qw-Czx" firstAttribute="leading" secondItem="gCA-ze-tRP" secondAttribute="leading" constant="20" id="aLq-8B-FPi"/>
-                                    <constraint firstItem="gUt-qw-Czx" firstAttribute="top" secondItem="gCA-ze-tRP" secondAttribute="top" constant="15" id="b8D-Qs-vT8"/>
-                                    <constraint firstAttribute="trailing" secondItem="3RC-1h-alg" secondAttribute="trailing" id="eN9-kk-YLX"/>
-                                    <constraint firstAttribute="trailing" secondItem="Zw2-XS-9uI" secondAttribute="trailing" id="ey6-Ff-4P4"/>
-                                    <constraint firstAttribute="trailing" secondItem="3RC-1h-alg" secondAttribute="trailing" id="mft-Mh-O2k"/>
-                                    <constraint firstAttribute="bottom" secondItem="3RC-1h-alg" secondAttribute="bottom" id="nzF-UQ-xoj"/>
-                                    <constraint firstAttribute="trailing" secondItem="gUt-qw-Czx" secondAttribute="trailing" constant="20" id="oye-g5-I27"/>
-                                    <constraint firstItem="Zw2-XS-9uI" firstAttribute="leading" secondItem="gCA-ze-tRP" secondAttribute="leading" id="upf-xg-Ux0"/>
-                                    <constraint firstItem="3RC-1h-alg" firstAttribute="top" secondItem="Zw2-XS-9uI" secondAttribute="bottom" id="zWC-oR-fD0"/>
-                                </constraints>
+                                <connections>
+                                    <outlet property="buyButton" destination="3RC-1h-alg" id="tId-SQ-koI"/>
+                                    <outlet property="imgView" destination="Zw2-XS-9uI" id="S48-RY-hXE"/>
+                                    <outlet property="titleLabel" destination="gUt-qw-Czx" id="yU3-Gy-b13"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="exchangeHeader" id="eo0-rf-noa">
@@ -2295,7 +2267,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xJu-jP-z2C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1020" y="-2066"/>
+            <point key="canvasLocation" x="268" y="-1878"/>
         </scene>
         <!--Sld Add Comment Controller-->
         <scene sceneID="DB0-hG-4P1">
@@ -2349,7 +2321,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lkJ-0q-38Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="jOM-8Z-76P" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1588" y="-2020"/>
+            <point key="canvasLocation" x="836" y="-1832"/>
         </scene>
         <!--Sld Forgot Password Control - 找回密码-->
         <scene sceneID="ZSI-Oq-XqJ">
@@ -2653,6 +2625,9 @@
                                         <state key="normal" title="比赛" backgroundImage="btnBgRed90.png">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        </state>
                                         <connections>
                                             <action selector="onMatchButton:" destination="Xho-hf-wAk" eventType="touchUpInside" id="Yri-Dx-Z9y"/>
                                         </connections>
@@ -2694,15 +2669,27 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SME-Nj-oJb">
-                                        <rect key="frame" x="237" y="329" width="60" height="40"/>
+                                        <rect key="frame" x="237" y="324" width="60" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="编辑">
                                             <color key="titleColor" red="0.6114226310544284" green="0.95790146610608407" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <segue destination="bLl-2K-hSc" kind="push" id="44B-7J-if3"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cry-XW-XX7">
+                                        <rect key="frame" x="237" y="359" width="60" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="举报">
+                                            <color key="titleColor" red="0.61142263109999995" green="0.95790146610000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onReportButton:" destination="Xho-hf-wAk" eventType="touchUpInside" id="OuC-ZZ-DVI"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2728,6 +2715,7 @@
                         <outlet property="practiceButton" destination="Sl0-PV-xdg" id="Jti-LT-zui"/>
                         <outlet property="rankButton" destination="SvF-Lb-DjB" id="pdc-qV-BHe"/>
                         <outlet property="rankLabel" destination="lfv-Pu-Rh4" id="Ezp-HX-GAl"/>
+                        <outlet property="reportButton" destination="cry-XW-XX7" id="KHS-O5-4Jg"/>
                         <outlet property="rewardButton" destination="fzZ-AM-Lsu" id="HdT-d3-aqN"/>
                         <outlet property="rewardLabel" destination="Zmi-DX-524" id="IHw-qe-gqV"/>
                         <outlet property="titleLabel" destination="xjE-Hb-U2d" id="XdS-FJ-4vA"/>
@@ -2876,7 +2864,7 @@
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rankCell" rowHeight="62" id="alw-yi-Qdc" customClass="RankCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rankCell" rowHeight="62" id="alw-yi-Qdc" customClass="MatchRankCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="alw-yi-Qdc" id="emO-rc-IUX">
@@ -3369,7 +3357,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="B7L-c9-Wa6"/>
+        <segue reference="KZA-Pm-1f3"/>
         <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>

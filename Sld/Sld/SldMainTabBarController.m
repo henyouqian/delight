@@ -9,6 +9,7 @@
 #import "SldMainTabBarController.h"
 #import "SldStreamPlayer.h"
 #import "SldLoginViewController.h"
+#import "SldUtil.h"
 
 @interface SldMainTabBarController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *discView;
@@ -27,6 +28,7 @@
     
     //login view
     [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
+    [self.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
