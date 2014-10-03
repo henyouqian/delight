@@ -250,6 +250,61 @@ func addMoney(adminCookie *http.Cookie, userName string, addMoney int) {
 	glog.Info(string(resp))
 }
 
+func matchPlay(userName string, matchId int64, minScore int32, maxScore int32) {
+	//playBegin
+	url := HOST + "/match/playBegin"
+	body := struct {
+		MatchId int64
+	}{
+		matchId,
+	}
+
+	_resp := post(userName, url, body)
+	defer _resp.Body.Close()
+
+	resp, err := ioutil.ReadAll(_resp.Body)
+	checkErr(err)
+
+	if _resp.StatusCode != 200 {
+		glog.Fatalf("http code=%d, body=%s", _resp.StatusCode, string(resp))
+	}
+
+	secret := struct {
+		Secret string
+	}{}
+	err = json.Unmarshal(resp, &secret)
+	checkErr(err)
+
+	//
+	score := minScore + int32(rand.Int())%(maxScore-minScore)
+
+	//checksum
+	checksum := fmt.Sprintf("%s+%d9d7a", secret.Secret, score+8703)
+	hasher := sha1.New()
+	hasher.Write([]byte(checksum))
+	checksum = hex.EncodeToString(hasher.Sum(nil))
+
+	//playEnd
+	url = HOST + "/match/playEnd"
+	playEndBody := struct {
+		MatchId  int64
+		Secret   string
+		Score    int32
+		CheckSum string
+	}{
+		matchId,
+		secret.Secret,
+		score,
+		checksum,
+	}
+
+	_resp = post(userName, url, playEndBody)
+	defer _resp.Body.Close()
+	resp, err = ioutil.ReadAll(_resp.Body)
+	checkErr(err)
+	glog.Info(string(resp))
+}
+
 func main() {
 	flag.Parse()
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -257,24 +312,28 @@ func main() {
 	glog.Infof("Robot running: cpu=%d", runtime.NumCPU())
 
 	rand.Seed(time.Now().UnixNano())
+
+	// matchId := int64(33)
+
 	// adminCookie := login(ADMIN_NAME, ADMIN_PASSWORD)
-	for i := 0; i < 1000; i++ {
-		eventId := int64(33)
+	for i := 0; i < 100; i++ {
+
 		username := fmt.Sprintf("test%d@pt.com", i)
 
-		// register(username)
-		// setInfo(username)
+		register(username)
+		setInfo(username)
 
-		//play(userName string, eventId uint64, minScore int32, maxScore int32)
-		play(username, eventId, -1000*50, -1000*30)
+		// play(userName string, eventId uint64, minScore int32, maxScore int32)
+		//play(username, eventId, -1000*50, -1000*30)
+		//playMatch(username, eventId, -1000*50, -1000*30)
 
 		//
 		// addMoney(adminCookie, username, 10000)
 
-		//bet
-		teamName := TEAM_NAMES[rand.Int()%len(TEAM_NAMES)]
-		money := 20 + rand.Int()%200
-		bet(username, eventId, teamName, money)
+		// //bet
+		// teamName := TEAM_NAMES[rand.Int()%len(TEAM_NAMES)]
+		// money := 20 + rand.Int()%200
+		// bet(username, eventId, teamName, money)
 	}
 
 	// var w sync.WaitGroup

@@ -192,11 +192,11 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
 {
     if (indexPath.section == 0) {
         SldGetCouponCacheCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchGetCouponCacheCell" forIndexPath:indexPath];
-        int couponCache = _gd.playerInfo.couponCache;
+        float couponCache = _gd.playerInfo.couponCache;
         
-        cell.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%d", _gd.playerInfo.coupon];
+        cell.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%.2f", _gd.playerInfo.coupon];
         
-        NSString *title = [NSString stringWithFormat:@"可领取奖金：%d", couponCache];
+        NSString *title = [NSString stringWithFormat:@"可领取奖金：%.2f", couponCache];
         [cell.getRewardButton setTitle:title forState:UIControlStateNormal|UIControlStateDisabled];
         if (couponCache > 0) {
             cell.getRewardButton.enabled = YES;

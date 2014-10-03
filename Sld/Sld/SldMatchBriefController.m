@@ -57,6 +57,8 @@
     _gd = [SldGameData getInstance];
     _gd.matchPlay = nil;
     
+    lwInfo("matchId: %lld", _gd.match.id);
+    
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     

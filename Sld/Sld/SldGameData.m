@@ -61,10 +61,9 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.gravatarKey = [dict objectForKey:@"GravatarKey"];
     info.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
     info.goldCoin = [(NSNumber*)[dict objectForKey:@"GoldCoin"] intValue];
-    info.coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] intValue];
-    info.totalCoupon = [(NSNumber*)[dict objectForKey:@"TotalCoupon"] intValue];
-    
-    info.couponCache = [(NSNumber*)[dict objectForKey:@"CouponCache"] intValue];
+    info.coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] floatValue];
+    info.totalCoupon = [(NSNumber*)[dict objectForKey:@"TotalCoupon"] floatValue];
+    info.couponCache = [(NSNumber*)[dict objectForKey:@"CouponCache"] floatValue];
     info.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
     info.currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
     info.rateReward = [(NSNumber*)[dict objectForKey:@"RateReward"] intValue];

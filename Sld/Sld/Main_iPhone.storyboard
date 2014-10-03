@@ -1383,7 +1383,7 @@
                                 <segue destination="UXk-Ax-sCN" kind="push" id="bmR-1y-HiB"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="otlUser48.png" style="plain" id="Qwm-rr-wfK">
+                        <barButtonItem key="rightBarButtonItem" image="otlUser48.png" id="Qwm-rr-wfK">
                             <connections>
                                 <segue destination="90s-2y-g5U" kind="push" id="wmq-tW-klr"/>
                             </connections>
@@ -1431,7 +1431,7 @@
                                     <segment title="收入"/>
                                     <segment title="购买"/>
                                     <segment title="兑换"/>
-                                    <segment title="奖品"/>
+                                    <segment title="已兑"/>
                                 </segments>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>

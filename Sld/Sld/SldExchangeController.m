@@ -68,8 +68,11 @@
     [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
     
     [self refresh];
-    
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.refreshControl endRefreshing];
 }
 
 - (void)refresh {

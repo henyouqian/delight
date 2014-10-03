@@ -261,8 +261,8 @@ static const int DAILLY_LOGOUT_NUM = 5;
     SldGameData *gd = [SldGameData getInstance];
     PlayerInfo *playerInfo = gd.playerInfo;
     _goldCoinLabel.text = [NSString stringWithFormat:@"%d", playerInfo.goldCoin];
-    _couponLabel.text = [NSString stringWithFormat:@"可领取奖金%d", playerInfo.couponCache];
-    _totalCouponLabel.text = [NSString stringWithFormat:@"%d", playerInfo.totalCoupon];
+    _couponLabel.text = [NSString stringWithFormat:@"可领取奖金%.2f", playerInfo.couponCache];
+    _totalCouponLabel.text = [NSString stringWithFormat:@"%.2f", playerInfo.totalCoupon];
 }
 
 @end

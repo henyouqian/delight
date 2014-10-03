@@ -100,20 +100,22 @@
         
         float couponSum = (float)(_gd.match.rewardCoupon + _gd.match.extraCoupon);
         
+        float minRankCoupon = [(NSNumber*)[_gd.match.rankRewardProportions lastObject] floatValue] * couponSum;
+        
         if (indexPath.row == _gd.match.rankRewardProportions.count) {
-            float coupon = _gd.match.oneCoinRewardProportion * couponSum;
-            if (coupon > 1.0f) {
-                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row+1, indexPath.row+(int)coupon];
+            int oneCouponNum = (int)(_gd.match.oneCoinRewardProportion * couponSum);
+            if (oneCouponNum > 1 && minRankCoupon > 1.0f) {
+                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row+1, indexPath.row+oneCouponNum];
                 cell.rewardLabel.text = @"1奖金";
             } else {
                 cell.rankLabel.text = @"暂无";
                 cell.rewardLabel.text = @"1奖金";
             }
-        } else{
+        } else {
             cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", indexPath.row+1];
             float prop = [(NSNumber*)_gd.match.rankRewardProportions[indexPath.row] floatValue];
             float coupon = prop * couponSum;
-            cell.rewardLabel.text = [NSString stringWithFormat:@"%d奖金", (int)coupon];
+            cell.rewardLabel.text = [NSString stringWithFormat:@"%.2f奖金", coupon];
         }
         
         return cell;
