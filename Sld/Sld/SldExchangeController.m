@@ -9,6 +9,10 @@
 #import "SldExchangeController.h"
 #import "SldHttpSession.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "SldGameData.h"
+#import "SldHttpSession.h"
+#import "SldUtil.h"
+#import "SldCouponCardController.h"
 
 //===============================
 @interface SldEcardType : NSObject
@@ -17,6 +21,7 @@
 @property (nonatomic) NSString *provider;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) int couponPrice;
+@property (nonatomic) int num;
 @end
 
 @implementation SldEcardType
@@ -28,6 +33,7 @@
         _provider = dict[@"Provider"];
         _thumb = dict[@"Thumb"];
         _couponPrice = [(NSNumber*)dict[@"CouponPrice"] intValue];
+        _num = [(NSNumber*)dict[@"Num"] intValue];
     }
     
     return self;
@@ -47,9 +53,21 @@
 @end
 
 //===============================
+@interface SldExchangeHeader : UICollectionReusableView
+@property (weak, nonatomic) IBOutlet UIButton *getRewardButton;
+@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
+@end
+
+@implementation SldExchangeHeader
+
+@end
+
+//===============================
 @interface SldExchangeController ()
+
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) NSMutableArray *ecardTypes;
+@property (nonatomic) SldGameData *gd;
 @end
 
 @implementation SldExchangeController
@@ -57,6 +75,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _gd = [SldGameData getInstance];
     
     //
     _ecardTypes = [NSMutableArray array];
@@ -116,7 +136,15 @@
     SldEcardType *cardType = _ecardTypes[indexPath.row];
     if (cardType) {
         cell.titleLabel.text = cardType.name;
-        [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换", cardType.couponPrice] forState:UIControlStateNormal];
+        if (cardType.num == 0) {
+            [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换(兑完补货中)", cardType.couponPrice] forState:UIControlStateNormal];
+            cell.buyButton.enabled = NO;
+            cell.buyButton.backgroundColor = [UIColor grayColor];
+        } else {
+            [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换", cardType.couponPrice] forState:UIControlStateNormal];
+            cell.buyButton.enabled = YES;
+            cell.buyButton.backgroundColor = [SldUtil getPinkColor];
+        }
         
         [cell.imgView asyncLoadUploadedImageWithKey:cardType.thumb showIndicator:NO completion:nil];
     }
@@ -125,11 +153,82 @@
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionHeader) {
-        UICollectionReusableView *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"exchangeHeader" forIndexPath:indexPath];
+        SldExchangeHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"exchangeHeader" forIndexPath:indexPath];
+        header.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%.2f", _gd.playerInfo.coupon];
+        NSString *title = [NSString stringWithFormat:@"可领取奖金：%.2f", _gd.playerInfo.couponCache];
+        [header.getRewardButton setTitle:title forState:UIControlStateNormal];
+        [header.getRewardButton setTitle:title forState:UIControlStateDisabled];
+        if (_gd.playerInfo.couponCache < 0.01) {
+            header.getRewardButton.enabled = NO;
+            header.getRewardButton.backgroundColor = [UIColor grayColor];
+        } else {
+            header.getRewardButton.enabled = YES;
+            header.getRewardButton.backgroundColor = [SldUtil getPinkColor];
+        }
         return header;
     }
     return nil;
 }
 
+- (IBAction)onGetRewardButton:(id)sender {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/addCouponFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        _gd.playerInfo.coupon = [(NSNumber*)dict[@"Coupon"] floatValue];
+        _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
+        _gd.playerInfo.couponCache = 0;
+        
+        [self.collectionView reloadData];
+    }];
+}
+
+- (IBAction)onExchangeButton:(id)sender {
+    UIButton *btn = sender;
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[self.collectionView convertPoint:btn.center fromView:btn.superview]];
+    
+    
+    SldEcardType *cardType = _ecardTypes[indexPath.row];
+    if (_gd.playerInfo.coupon < (float)cardType.couponPrice) {
+        alert(@"奖金不足。", nil);
+        return;
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"TypeKey":cardType.key};
+    [session postToApi:@"store/buyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            NSString *error = dict[@"Error"];
+            if ([error compare:@"err_zero"] == 0) {
+                alert(@"兑完补货中，请稍后再来🙇", nil);
+            }
+            cardType.num = 0;
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSDictionary *ecardDict = dict[@"Ecard"];
+        SldEcard *ecard = [[SldEcard alloc] initWithDict:ecardDict];
+        [[SldCouponCardController getInstance] addEcard:ecard];
+        alert(@"兑换成功，请至“已兑”界面查看。", nil);
+    }];
+
+}
 
 @end

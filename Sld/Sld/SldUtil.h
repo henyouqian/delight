@@ -43,6 +43,8 @@ NSString* formatInterval(int sec);
 
 + (void)setKeyChainWithKey:(NSString*)key value:(NSString*)value;
 + (NSString*)getKeyChainValueWithKey:(NSString*)key;
+
++ (UIColor*)getPinkColor;
 @end
 
 @interface NSData (NSData_Conversion)
@@ -76,4 +78,11 @@ NSString* formatInterval(int sec);
 - (UIViewController *) visibleViewController;
 
 @end
+
+//=================
+@interface SldLoadMoreCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
+@property (weak, nonatomic) IBOutlet UIButton *moreButton;
+@end
+
 

@@ -10,7 +10,7 @@
 
 @interface SldIapManager : NSObject<SKPaymentTransactionObserver>
 + (instancetype)getInstance;
-@property (nonatomic) UIAlertView *alt;
+@property (nonatomic, weak) UIAlertView *alt;
 @end
 
 @interface SldIapController : UICollectionViewController <SKProductsRequestDelegate>

@@ -423,21 +423,21 @@ static const int COUPON_MAX = 10000;
     [super viewWillAppear:animated];
     
     //
-    _couponLabel.text = [NSString stringWithFormat:@"提供多少金币作为奖励:（现有%d）", _gd.playerInfo.goldCoin];
+    _couponLabel.text = [NSString stringWithFormat:@"（现有%d金币）", _gd.playerInfo.goldCoin];
 }
 
 - (IBAction)onTouch:(id)sender {
     [self.view endEditing:YES];
 }
 
-- (IBAction)couponEditEnd:(id)sender {
-    int n = [_couponInput.text intValue];
-    n = n / 100 * 100;
-    if (n < 0) {
-        n = 0;
-    }
-    _couponInput.text = [NSString stringWithFormat:@"%d", n];
-}
+//- (IBAction)couponEditEnd:(id)sender {
+//    int n = [_couponInput.text intValue];
+//    n = n / 100 * 100;
+//    if (n < 0) {
+//        n = 0;
+//    }
+//    _couponInput.text = [NSString stringWithFormat:@"%d", n];
+//}
 
 - (void)valueChanged:(UISlider *)sender {
     NSUInteger index = (NSUInteger)(_slider.value + 0.5);
@@ -503,10 +503,10 @@ static const int COUPON_MAX = 10000;
 - (IBAction)onPublish:(id)sender {
     //
     _rewardCoupon = [_couponInput.text intValue];
-    if (_rewardCoupon % 100 != 0) {
-        alert(@"奖励必须为0或者100的倍数", nil);
-        return;
-    }
+//    if (_rewardCoupon % 100 != 0) {
+//        alert(@"奖励必须为0或者100的倍数", nil);
+//        return;
+//    }
     
     if (_rewardCoupon < 0) {
         _rewardCoupon = 0;

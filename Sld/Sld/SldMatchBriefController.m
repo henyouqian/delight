@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
 @property (weak, nonatomic) IBOutlet UIButton *rewardButton;
 @property (weak, nonatomic) IBOutlet UIButton *rankButton;
+@property (weak, nonatomic) IBOutlet UIButton *reviewButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *bestScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
@@ -41,6 +42,7 @@
 @property (nonatomic) MSWeakTimer *minTimer;
 
 @property (nonatomic) NSString *secret;
+@property (nonatomic) BOOL matchRunning;
 @end
 
 @implementation SldMatchBriefController
@@ -69,6 +71,7 @@
     _matchButton.enabled = NO;
     _rewardButton.enabled = NO;
     _rankButton.enabled = NO;
+    _reviewButton.enabled = NO;
     
     //
     [self onSecTimer];
@@ -103,7 +106,7 @@
 - (void)onSecTimer {
     Match *match = _gd.match;
     MatchPlay *matchPlay = _gd.matchPlay;
-    BOOL matchRunning = NO;
+    _matchRunning = NO;
     
     NSDate *beginTime = [NSDate dateWithTimeIntervalSince1970:match.beginTime];
     NSTimeInterval beginIntv = [beginTime timeIntervalSinceNow];
@@ -114,29 +117,29 @@
     if (beginIntv > 0) {
         NSString *str = formatInterval((int)beginIntv);
         _matchTimeLabel.text = [NSString stringWithFormat:@"距离开始：%@", str];
-        [_matchButton setTitle:@"未开始" forState:UIControlStateDisabled|UIControlStateNormal];
+        [_matchButton setTitle:@"未开始" forState:UIControlStateDisabled];
         _matchButton.enabled = NO;
     } else if (endIntv <= 0 ) {
         _matchTimeLabel.text = @"比赛已结束";
-        [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled|UIControlStateNormal];
+        [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled];
         _matchButton.enabled = NO;
     } else {
         NSString *str = formatInterval((int)endIntv);
         
         _matchTimeLabel.text = [NSString stringWithFormat:@"比赛剩余：%@", str];
         
-        [_matchButton setTitle:@"比赛" forState:UIControlStateDisabled|UIControlStateNormal];
+        [_matchButton setTitle:@"比赛" forState:UIControlStateNormal];
         if (_gd.packInfo && matchPlay) {
             _matchButton.enabled = YES;
         } else {
             _matchButton.enabled = NO;
         }
         
-        matchRunning = YES;
+        _matchRunning = YES;
     }
     
     //edit button
-    if (_gd.match.ownerId == _gd.playerInfo.userId && matchRunning) {
+    if (_gd.match.ownerId == _gd.playerInfo.userId && _matchRunning) {
         _editButton.hidden = NO;
         _reportButton.hidden = YES;
     } else {
@@ -200,6 +203,11 @@
     
     //try number
     _tryNumLabel.text = [NSString stringWithFormat:@"尝试次数：%d/%d", _gd.matchPlay.tries, _gd.matchPlay.playTimes];
+    
+    //review button
+    if ((_gd.matchPlay && _gd.matchPlay.highScore != 0) || _matchRunning == NO) {
+        _reviewButton.enabled = YES;
+    }
 }
 
 - (IBAction)onPracticeButton:(id)sender {

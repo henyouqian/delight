@@ -71,6 +71,8 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
 
 
 //================================
+static __weak SldRewardListController *_inst = nil;
+
 @interface SldRewardListController ()
 
 @property (nonatomic) NSMutableArray *rewardRecords;
@@ -81,9 +83,15 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
 
 @implementation SldRewardListController
 
++ (instancetype)getInstence {
+    return _inst;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _inst = self;
     
     _gd = [SldGameData getInstance];
     
@@ -197,7 +205,8 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
         cell.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%.2f", _gd.playerInfo.coupon];
         
         NSString *title = [NSString stringWithFormat:@"可领取奖金：%.2f", couponCache];
-        [cell.getRewardButton setTitle:title forState:UIControlStateNormal|UIControlStateDisabled];
+        [cell.getRewardButton setTitle:title forState:UIControlStateNormal];
+        [cell.getRewardButton setTitle:title forState:UIControlStateDisabled];
         if (couponCache > 0) {
             cell.getRewardButton.enabled = YES;
             cell.getRewardButton.backgroundColor = makeUIColor(244, 75, 116, 255);
@@ -237,6 +246,26 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
 }
 
 - (IBAction)onGetRewardButton:(id)sender {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/addCouponFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        _gd.playerInfo.coupon = [(NSNumber*)dict[@"Coupon"] floatValue];
+        _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
+        _gd.playerInfo.couponCache = 0;
+        
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    }];
 }
 
 @end

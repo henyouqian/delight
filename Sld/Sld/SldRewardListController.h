@@ -10,4 +10,6 @@
 
 @interface SldRewardListController : UITableViewController
 
++ (instancetype)getInstence;
+
 @end

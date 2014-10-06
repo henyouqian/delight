@@ -253,6 +253,7 @@
 		D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D14B6F195B6A83009193E6 /* NSData+Base64.m */; };
 		D0F24A8119D5E95000A63C30 /* SldExchangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8019D5E95000A63C30 /* SldExchangeController.m */; };
 		D0F24A8419D5F21700A63C30 /* SldCouponCardController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */; };
+		D0F24A8A19E1177100A63C30 /* btnBgPurple90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0F24A8919E1177100A63C30 /* btnBgPurple90@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -580,6 +581,7 @@
 		D0F24A8019D5E95000A63C30 /* SldExchangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldExchangeController.m; sourceTree = "<group>"; };
 		D0F24A8219D5F21700A63C30 /* SldCouponCardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldCouponCardController.h; sourceTree = "<group>"; };
 		D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldCouponCardController.m; sourceTree = "<group>"; };
+		D0F24A8919E1177100A63C30 /* btnBgPurple90@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgPurple90@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -826,10 +828,12 @@
 				D05912A919D32F47009916AB /* SldTradeController.m */,
 				D0AF924F19D493560079F218 /* SldRewardListController.h */,
 				D0AF925019D493560079F218 /* SldRewardListController.m */,
-				D0F24A7F19D5E95000A63C30 /* SldExchangeController.h */,
-				D0F24A8019D5E95000A63C30 /* SldExchangeController.m */,
 				D0667D6219514DD700AD9282 /* SldIapController.h */,
 				D0667D6319514DD700AD9282 /* SldIapController.m */,
+				D0F24A7F19D5E95000A63C30 /* SldExchangeController.h */,
+				D0F24A8019D5E95000A63C30 /* SldExchangeController.m */,
+				D0F24A8219D5F21700A63C30 /* SldCouponCardController.h */,
+				D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */,
 				D059129719C8144A009916AB /* SldMatchRankController.h */,
 				D059129819C8144A009916AB /* SldMatchRankController.m */,
 				D0CD0D3819BB7DBE00F6DDBD /* SldRewardDefListController.h */,
@@ -856,8 +860,6 @@
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				D02F76C0198142AE00E742F8 /* SldPackTestController.h */,
 				D02F76C1198142AF00E742F8 /* SldPackTestController.m */,
-				D0F24A8219D5F21700A63C30 /* SldCouponCardController.h */,
-				D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -919,6 +921,7 @@
 				B3835374191AD83500D259F5 /* glyphicons_150_edit@2x.png */,
 				B33121FA1916D02C003E05DB /* thumbDarker.png */,
 				D0C4EFA719A5104600D2F1D0 /* thumbDarker2.png */,
+				D0F24A8919E1177100A63C30 /* btnBgPurple90@2x.png */,
 				D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */,
 				D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */,
 				D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */,
@@ -1416,6 +1419,7 @@
 				D02F76D51982615300E742F8 /* UMSCommentDetailController.xib in Resources */,
 				D0D14B28195B3807009193E6 /* adsmogo_picrollbg.png in Resources */,
 				D0959EE319B8424800A64767 /* otlList48@2x.png in Resources */,
+				D0F24A8A19E1177100A63C30 /* btnBgPurple90@2x.png in Resources */,
 				D09CF94D199CABFB00786FB1 /* weibo64.png in Resources */,
 				D0D14B38195B3807009193E6 /* webview_bar_next_hover@2x.png in Resources */,
 				D0D14B5D195B3807009193E6 /* webview_bar_close_hover.png in Resources */,

@@ -7,92 +7,190 @@
 //
 
 #import "SldCouponCardController.h"
+#import "SldHttpSession.h"
+
+//============================
+@implementation SldEcard
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _Id = [(NSNumber*)dict[@"Id"] longLongValue];
+        _TypeKey = dict[@"TypeKey"];
+        _CouponCode = dict[@"CouponCode"];
+        _ExpireDate = dict[@"ExpireDate"];
+        _GenDate = dict[@"GenDate"];
+        _UserGetDate = dict[@"UserGetDate"];
+        _Title = dict[@"Title"];
+        _RechargeUrl = dict[@"RechargeUrl"];
+        _HelpText = dict[@"HelpText"];
+    }
+    
+    return self;
+}
+
+@end
+
+static SldEcard *_selectedEcard = nil;
+
+//============================
+@interface SldEcardCell: UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *idLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+
+@end
+
+@implementation SldEcardCell
+
+@end
+
+//============================
+static __weak SldCouponCardController *_inst = nil;
+static int _fetchLimit = 30;
 
 @interface SldCouponCardController ()
-
+@property (nonatomic) NSMutableArray *ecards;
+@property (nonatomic) SldLoadMoreCell *loadMoreCell;
 @end
 
 @implementation SldCouponCardController
 
++ (instancetype)getInstance {
+    return _inst;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _inst = self;
+    _ecards = [NSMutableArray array];
+    
+    //refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    
+    [self refresh];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)refresh {
+    [_ecards removeAllObjects];
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"StartId":@0, @"Limit":@(_fetchLimit)};
+    [session postToApi:@"player/listMyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [self.refreshControl endRefreshing];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        for (NSDictionary *dict in array) {
+            SldEcard *ecard = [[SldEcard alloc] initWithDict:dict];
+            [_ecards addObject:ecard];
+        }
+        
+        [self.tableView reloadData];
+    }];
+
+}
+
+- (void)addEcard:(SldEcard*)ecard {
+    [_ecards insertObject:ecard atIndex:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    if (section == 0) {
+        return _ecards.count;
+    } else {
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"couponCardCell" forIndexPath:indexPath];
+    if (indexPath.section == 0) {
+        SldEcardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ecardCell" forIndexPath:indexPath];
+        
+        SldEcard *ecard = _ecards[indexPath.row];
+        cell.titleLabel.text = ecard.Title;
+        cell.idLabel.text = [NSString stringWithFormat:@"No.%lld", ecard.Id];
+        cell.timeLabel.text = ecard.UserGetDate;
+        
+        return cell;
+    } else {
+        _loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"loadMoreCell" forIndexPath:indexPath];
+        return _loadMoreCell;
+    }
     
-    // Configure the cell...
-    
-    return cell;
+    return nil;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (IBAction)onLoadMore:(id)sender {
+    [_loadMoreCell.spin startAnimating];
+    _loadMoreCell.spin.hidden = NO;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    SldEcardCell *cell = sender;
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    _selectedEcard = _ecards[indexPath.row];
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
+
+//===============================
+@interface SldRechargeController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextView *helpTextView;
+
+@end
+
+@implementation SldRechargeController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = _selectedEcard.CouponCode;
+    
+    [_helpTextView setText:_selectedEcard.HelpText];
+}
+
+@end
+
+//===============================
+@interface SldRechargeWebController : UIViewController
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+
+@end
+
+@implementation SldRechargeWebController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    NSURL *url = [NSURL URLWithString:_selectedEcard.RechargeUrl];
+    
+    NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    
+    [_webView loadRequest:request];
+}
+
+@end
+

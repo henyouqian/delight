@@ -15,6 +15,7 @@
 
 //=======================
 static SldIapManager *_sldIapManager = nil;
+static UIView *_hudView = nil;
 
 @interface SldIapManager()
 @property (nonatomic) SldGameData *gd;
@@ -42,23 +43,33 @@ static SldIapManager *_sldIapManager = nil;
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
-    if (_alt) {
-        [_alt dismissWithClickedButtonIndex:0 animated:YES];
-        _alt = nil;
-    }
+//    if (_alt) {
+//        [_alt dismissWithClickedButtonIndex:0 animated:YES];
+//        _alt = nil;
+//    }
     for (SKPaymentTransaction *transaction in transactions) {
         switch (transaction.transactionState) {
+            case SKPaymentTransactionStatePurchasing:
+                lwInfo("SKPaymentTransactionStatePurchasing");
+                break;
             case SKPaymentTransactionStatePurchased:
+                lwInfo("SKPaymentTransactionStatePurchased");
                 [self purchase:transaction];
+                [MBProgressHUD hideHUDForView:_hudView animated:YES];
                 break;
             case SKPaymentTransactionStateFailed:
+                lwInfo("SKPaymentTransactionStateFailed");
                 lwError("%@", [transaction.error localizedDescription]);
-                alert([transaction.error localizedDescription], nil);
+//                alert([transaction.error localizedDescription], nil);
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+                [MBProgressHUD hideHUDForView:_hudView animated:YES];
                 break;
             case SKPaymentTransactionStateRestored:
+                lwInfo("SKPaymentTransactionStateRestored");
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+                [MBProgressHUD hideHUDForView:_hudView animated:YES];
             default:
+                lwInfo("default");
                 //lwError("%@", [transaction.error localizedDescription]);
                 break;
         }
@@ -141,6 +152,7 @@ static SldIapManager *_sldIapManager = nil;
 @property (nonatomic) NSString *secret;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSArray *productIds;
+@property (nonatomic) BOOL initialized;
 @end
 
 @implementation SldIapController
@@ -150,32 +162,37 @@ static SldIapManager *_sldIapManager = nil;
     [super viewDidLoad];
     
     _gd = [SldGameData getInstance];
-    
     _gd.iapProducts = [NSArray array];
-//    UIAlertView *alt = alertWithButton(@"获取商品信息...", nil, @"关闭");
-    
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//        [alt dismissWithClickedButtonIndex:0 animated:YES];
-        if (error) {
-            alertHTTPError(error, data);
-            return;
-        }
-        
-        _productIds = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            lwError("Json error:%@", [error localizedDescription]);
-            return;
-        }
-        
-        [self validateProductIdentifiers];
-    }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (!_initialized) {
+        _initialized = YES;
+        
+        //UIAlertView *alt = alertNoButton(@"获取商品信息...");
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.dimBackground = YES;
+        
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        [session postToApi:@"store/listIapProductId" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            //[alt dismissWithClickedButtonIndex:0 animated:YES];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            _productIds = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            
+            [self validateProductIdentifiers];
+        }];
+    }
 }
 
 - (void)validateProductIdentifiers
@@ -197,13 +214,14 @@ static SldIapManager *_sldIapManager = nil;
         int price1 = [((SKProduct*)obj1).price intValue];
         int price2 = [((SKProduct*)obj2).price intValue];
         if (price1 < price2) {
-            return NSOrderedDescending;
-        } else if (price1 > price2) {
+//            return NSOrderedDescending;
             return NSOrderedAscending;
+        } else if (price1 > price2) {
+//            return NSOrderedAscending;
+            return NSOrderedDescending;
         }
         return NSOrderedSame;
     }];
-    
     
     [self.collectionView reloadData];
 }
@@ -228,9 +246,12 @@ static SldIapManager *_sldIapManager = nil;
         cell.priceLabel.text = formattedPrice;
 //        cell.descTextView.text = product.localizedDescription;
         cell.titleLabel.text = product.localizedTitle;
+//        NSArray *coinArray = @[
+//            @(0),@(0),@(1),@(1),@(2),@(2),@(3),@(3),@(4),@(5)
+//        ];
         NSArray *coinArray = @[
-            @(0),@(0),@(1),@(1),@(2),@(2),@(3),@(3),@(4),@(5)
-        ];
+                               @(0),@(1),@(2),@(2),@(3),@(3),@(4),@(4),@(5),@(5)
+                               ];
         int idx = [(NSNumber*)coinArray[indexPath.row] intValue];
         NSString *coinFile = [NSString stringWithFormat:@"coin%d.png", idx];
         cell.imageView.image = [UIImage imageNamed:coinFile];
@@ -255,8 +276,13 @@ static SldIapManager *_sldIapManager = nil;
         payment.quantity = 1;
         payment.applicationUsername = [SldUtil sha1WithString:gd.userName];
         
-        //_altBuy = alertNoButton(@"提交购买请求中...");
-        [SldIapManager getInstance].alt = alert(@"提交购买请求中...", nil);
+//        [SldIapManager getInstance].alt = alertNoButton(@"提交购买请求中...");
+//        [SldIapManager getInstance].alt = alert(@"提交购买请求中...", nil);
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.dimBackground = YES;
+        _hudView = self.view;
+        
         [[SKPaymentQueue defaultQueue] addPayment:payment];
     }
 }

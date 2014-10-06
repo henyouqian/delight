@@ -28,7 +28,8 @@
     
     //login view
     [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-    [self.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
+//    [self.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
+    [self.tabBar setSelectedImageTintColor:makeUIColor(244, 75, 116, 255)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

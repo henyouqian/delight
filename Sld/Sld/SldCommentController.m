@@ -21,9 +21,6 @@
 @end
 
 @implementation CommentHeaderCell
-- (void)dealloc {
-    
-}
 @end
 
 

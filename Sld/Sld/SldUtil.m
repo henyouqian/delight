@@ -204,6 +204,10 @@ NSString* formatInterval(int sec) {
     return value;
 }
 
++ (UIColor*)getPinkColor {
+    return makeUIColor(244, 75, 116, 255);
+}
+
 @end
 
 
@@ -365,6 +369,10 @@ NSString* formatInterval(int sec) {
     }
 }
 
+@end
+
+//============================
+@implementation SldLoadMoreCell
 @end
 
 
