@@ -51,6 +51,7 @@ static int _fetchLimit = 30;
 @interface SldCouponCardController ()
 @property (nonatomic) NSMutableArray *ecards;
 @property (nonatomic) SldLoadMoreCell *loadMoreCell;
+@property (nonatomic) SInt64 lastScore;
 @end
 
 @implementation SldCouponCardController
@@ -71,13 +72,24 @@ static int _fetchLimit = 30;
     [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
     
     [self refresh];
+    
+    //login notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)onLogin {
+    [self refresh];
 }
 
 - (void)refresh {
     [_ecards removeAllObjects];
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"StartId":@0, @"Limit":@(_fetchLimit)};
+    NSDictionary *body = @{@"StartId":@0, @"LastScore":@(_lastScore), @"Limit":@(_fetchLimit)};
     [session postToApi:@"player/listMyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [self.refreshControl endRefreshing];
         if (error) {
@@ -85,18 +97,26 @@ static int _fetchLimit = 30;
             return;
         }
         
-        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
         
-        for (NSDictionary *dict in array) {
-            SldEcard *ecard = [[SldEcard alloc] initWithDict:dict];
+        NSArray *ecards = dict[@"Ecards"];
+        for (NSDictionary *ecardDict in ecards) {
+            SldEcard *ecard = [[SldEcard alloc] initWithDict:ecardDict];
             [_ecards addObject:ecard];
         }
         
+        _lastScore = [(NSNumber*)dict[@"LastScore"] longLongValue];
+        
         [self.tableView reloadData];
+        
+        if (ecards.count < _fetchLimit) {
+            [_loadMoreCell noMore];
+        }
     }];
 
 }
@@ -143,8 +163,45 @@ static int _fetchLimit = 30;
 }
 
 - (IBAction)onLoadMore:(id)sender {
-    [_loadMoreCell.spin startAnimating];
-    _loadMoreCell.spin.hidden = NO;
+    [_loadMoreCell startSpin];
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    SInt64 lastId = 0;
+    if (_ecards.count > 0) {
+        SldEcard *ecard = _ecards.lastObject;
+        lastId = ecard.Id;
+    }
+    NSDictionary *body = @{@"StartId":@(lastId), @"LastScore":@(_lastScore), @"Limit":@(_fetchLimit)};
+    [session postToApi:@"player/listMyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_loadMoreCell stopSpin];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSArray *ecards = dict[@"Ecards"];
+        NSMutableArray *ips = [NSMutableArray array];
+        for (NSDictionary *ecardDict in ecards) {
+            SldEcard *ecard = [[SldEcard alloc] initWithDict:ecardDict];
+            NSIndexPath *ip = [NSIndexPath indexPathForRow:_ecards.count inSection:0];
+            [ips addObject:ip];
+            [_ecards addObject:ecard];
+        }
+        
+        [self.tableView insertRowsAtIndexPaths:ips withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        _lastScore = [(NSNumber*)dict[@"LastScore"] longLongValue];
+        
+        if (ecards.count < _fetchLimit) {
+            [_loadMoreCell noMore];
+        }
+    }];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

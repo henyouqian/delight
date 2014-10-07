@@ -10,13 +10,18 @@
 #import "SldStreamPlayer.h"
 #import "SldLoginViewController.h"
 #import "SldUtil.h"
+#import "MSWeakTimer.h"
 
 @interface SldMainTabBarController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *discView;
-
+@property (nonatomic) MSWeakTimer *minTimer;
 @end
 
 @implementation SldMainTabBarController
+
+- (void)dealloc {
+    [_minTimer invalidate];
+}
 
 - (void)viewDidLoad
 {
@@ -28,8 +33,18 @@
     
     //login view
     [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-//    [self.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
+    
     [self.tabBar setSelectedImageTintColor:makeUIColor(244, 75, 116, 255)];
+    
+    //
+    [(UIViewController *)[self.viewControllers objectAtIndex:4] tabBarItem].badgeValue = @"...";
+    
+    //timer
+    _minTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(onMinTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+}
+
+- (void)onMinTimer {
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {

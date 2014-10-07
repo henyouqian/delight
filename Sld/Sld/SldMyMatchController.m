@@ -26,6 +26,8 @@ static UIImage *_promoImage = nil;
 static NSString *_promoImageKey = nil;
 static int _sliderNum = 0;
 static SldMyMatchListController *_myMatchListController = nil;
+static const int IMAGE_SIZE_LIMIT_MB = 1;
+static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 
 //=============================
 @interface SldMyMatchCell : UICollectionViewCell
@@ -549,38 +551,65 @@ static const int COUPON_MAX = 10000;
     NSMutableArray *fileKeys = [NSMutableArray array];
     
     for (ALAsset *asset in _assets) {
-        UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
-        
-        //resize
-        float l = MAX(image.size.width, image.size.height);
-        float s = MIN(image.size.width, image.size.height);
-        float scale = 1.0;
-        if (s > 400.0) {
-            scale = 400.0 / s;
-        }
-        float l2 = l * scale;
-        if (l2 > 800.0) {
-            scale *= 800.0 / l2;
-        }
-        float w = floorf(image.size.width * scale);
-        float h = floorf(image.size.height * scale);
-        image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
-        
-        //save
-        NSData *data = UIImageJPEGRepresentation(image, 0.85);
         NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
         NSString *filePath = makeTempPath(fileName);
-        [filePathes addObject:filePath];
-        [data writeToFile:filePath atomically:YES];
+        ALAssetRepresentation *repr = asset.defaultRepresentation;
+        NSString *key = @"";
         
-        //key
-        NSString *key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+        UIImage *image = [[UIImage alloc] initWithCGImage:repr.fullScreenImage];
+        
+        //check gif
+        unsigned char bytes[4];
+        [repr getBytes:bytes fromOffset:0 length:4 error:nil];
+        if (bytes[0]=='G' && bytes[1]=='I' && bytes[2]=='F') {
+            fileName = [NSString stringWithFormat:@"%d.gif", i];
+            filePath = makeTempPath(fileName);
+            
+            unsigned int size = (unsigned int)repr.size;
+            Byte *buffer = (Byte*)malloc(size);
+            NSUInteger buffered = [repr getBytes:buffer fromOffset:0 length:size error:nil];
+            NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+            [data writeToFile:filePath atomically:YES];
+            key = [NSString stringWithFormat:@"%@.gif", [SldUtil sha1WithData:data]];
+            
+            if (size > IMAGE_SIZE_LIMIT_BYTE) {
+                NSString *str = [NSString stringWithFormat:@"单张图片不得大于%dMB，第%d张不符合要求", IMAGE_SIZE_LIMIT_MB, i+1];
+                [_alt dismissWithClickedButtonIndex:0 animated:NO];
+                alert(str, nil);
+                return;
+            }
+            lwInfo("gifSize: %d", (int)size);
+            //free(buffer);
+        } else {
+            //resize
+            float l = MAX(image.size.width, image.size.height);
+            float s = MIN(image.size.width, image.size.height);
+            float scale = 1.0;
+            if (s > 400.0) {
+                scale = 400.0 / s;
+            }
+            float l2 = l * scale;
+            if (l2 > 800.0) {
+                scale *= 800.0 / l2;
+            }
+            float w = floorf(image.size.width * scale);
+            float h = floorf(image.size.height * scale);
+            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+            
+            //save
+            NSData *data = UIImageJPEGRepresentation(image, 0.85);
+            [data writeToFile:filePath atomically:YES];
+            
+            //key
+            key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+        }
+        
         [fileKeys addObject:key];
+        [filePathes addObject:filePath];
         [_images addObject:@{@"File":fileName, @"Key":key}];
         
         //blur first image
         if (i == 0) {
-            //image = [image applyLightEffect];
             UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:0.3];
             image = [image applyBlurWithRadius:25 tintColor:tintColor saturationDeltaFactor:1.4 maskImage:nil];
             
@@ -693,6 +722,7 @@ static const int COUPON_MAX = 10000;
     [_alt dismissWithClickedButtonIndex:0 animated:YES];
     _alt = nil;
     alert(@"上传失败", nil);
+    lwError(@"uploadFailed: %@", filePath);
 }
 
 - (void)addUserPack {
@@ -735,6 +765,8 @@ static const int COUPON_MAX = 10000;
         }
         
         [_alt dismissWithClickedButtonIndex:0 animated:YES];
+        
+        _gd.playerInfo.goldCoin -= _rewardCoupon;
         
         //
         [[[UIAlertView alloc] initWithTitle:@"发布成功！"

@@ -313,19 +313,19 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	// matchId := int64(33)
+	matchId := int64(9)
 
 	// adminCookie := login(ADMIN_NAME, ADMIN_PASSWORD)
 	for i := 0; i < 100; i++ {
 
 		username := fmt.Sprintf("test%d@pt.com", i)
 
-		register(username)
-		setInfo(username)
+		// register(username)
+		// setInfo(username)
 
 		// play(userName string, eventId uint64, minScore int32, maxScore int32)
 		//play(username, eventId, -1000*50, -1000*30)
-		//playMatch(username, eventId, -1000*50, -1000*30)
+		matchPlay(username, matchId, -1000*50, -1000*30)
 
 		//
 		// addMoney(adminCookie, username, 10000)

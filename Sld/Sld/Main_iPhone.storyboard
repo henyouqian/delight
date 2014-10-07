@@ -1809,7 +1809,7 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.87295236895161288" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <outlet property="couponLabel" destination="lYj-Qh-0a0" id="FvP-1b-bg8"/>
                                 <outlet property="getRewardButton" destination="qeM-P1-LIZ" id="wWE-Wh-d6L"/>

@@ -9,6 +9,7 @@
 #import "SldRewardListController.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
+#import "UIImageView+sldAsyncLoad.h"
 
 static const int REWARD_LIST_FETCH_LIMIT = 30;
 
@@ -103,13 +104,22 @@ static __weak SldRewardListController *_inst = nil;
     
     //
     [self refresh];
+    
+    //login notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)onLogin {
+    [self refresh];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.refreshControl endRefreshing];
-    
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)fetchWithStartId:(SInt64)startId {
@@ -156,7 +166,8 @@ static __weak SldRewardListController *_inst = nil;
         }
         
         if (startId == 0) {
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView reloadData];
         } else {
             [self.tableView insertRowsAtIndexPaths:insetIndexPathes withRowAnimation:UITableViewRowAnimationAutomatic];
         }
@@ -223,6 +234,7 @@ static __weak SldRewardListController *_inst = nil;
         if (record.rank != 0) {
             cell.rankLabel.text = [NSString stringWithFormat:@"排名：%d", record.rank];
         }
+        [cell.thumbView asyncLoadUploadedImageWithKey:record.thumb showIndicator:NO completion:nil];
         return cell;
     } else if (indexPath.section == 2) {
         SldMoreRewardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"moreRewardCell" forIndexPath:indexPath];

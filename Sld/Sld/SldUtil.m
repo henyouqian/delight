@@ -373,6 +373,20 @@ NSString* formatInterval(int sec) {
 
 //============================
 @implementation SldLoadMoreCell
+
+- (void)startSpin {
+    _spin.hidden = NO;
+    [_spin startAnimating];
+}
+- (void)stopSpin {
+    [_spin stopAnimating];
+    _spin.hidden = YES;
+}
+- (void)noMore {
+    _moreButton.enabled = NO;
+    [_moreButton setTitle:@"后面没有了" forState:UIControlStateDisabled];
+}
+
 @end
 
 

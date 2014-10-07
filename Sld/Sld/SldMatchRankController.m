@@ -307,7 +307,7 @@ static SldMatchRankController *_inst = nil;
         //cell.userNameLabel.text = gamedata.nickName;
         cell.userNameLabel.text = @"“我”";
         cell.teamLabel.text = gamedata.playerInfo.teamName;
-        cell.rankLabel.text = [NSString stringWithFormat:@"%d", gamedata.matchPlay.myRank];
+        cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", gamedata.matchPlay.myRank];
         NSString *timeStr = formatScore(gamedata.matchPlay.highScore);
         cell.scoreLabel.text = timeStr;
         

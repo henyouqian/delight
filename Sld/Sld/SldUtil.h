@@ -83,6 +83,11 @@ NSString* formatInterval(int sec);
 @interface SldLoadMoreCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
 @property (weak, nonatomic) IBOutlet UIButton *moreButton;
+
+- (void)startSpin;
+- (void)stopSpin;
+- (void)noMore;
+
 @end
 
 

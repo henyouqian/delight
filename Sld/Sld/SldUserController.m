@@ -177,7 +177,7 @@ static const int DAILLY_LOGOUT_NUM = 5;
                 SldGameData *gd = [SldGameData getInstance];
                 [gd reset];
                 
-                _logoutNum++;
+//                _logoutNum++;
                 NSString *todayStr = [self getTodayString];
                 NSDictionary *dict = @{@"date":todayStr, @"logoutNum":@(_logoutNum)};
                 NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];

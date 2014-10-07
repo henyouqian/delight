@@ -88,6 +88,17 @@
     [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
     
     [self refresh];
+    
+    //login notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)onLogin {
+    [self refresh];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
