@@ -139,12 +139,11 @@
     }
     
     //edit button
+    _reportButton.hidden = _gd.match.ownerId == _gd.playerInfo.userId;
     if (_gd.match.ownerId == _gd.playerInfo.userId && _matchRunning) {
         _editButton.hidden = NO;
-        _reportButton.hidden = YES;
     } else {
         _editButton.hidden = YES;
-        _reportButton.hidden = NO;
     }
 }
 
@@ -380,17 +379,20 @@
         [[[UIAlertView alloc] initWithTitle:@"邀请朋友一起玩。朋友可以直接点开链接挑战，也可以下载客户端一起玩。"
                                     message:nil
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
-            NSString *text = [NSString stringWithFormat:@"我创建了一场比赛，敢来挑战么？"];
+            NSString *weixinText = [NSString stringWithFormat:@"我创建了一场比赛，敢来挑战么？"];
             if (_gd.matchPlay && _gd.matchPlay.highScore != 0) {
-                text = [NSString stringWithFormat:@"我只用了%@就完成了比赛，敢来挑战么？", formatScore(_gd.matchPlay.highScore)];
+                weixinText = [NSString stringWithFormat:@"我只用了%@就完成了比赛，敢来挑战么？", formatScore(_gd.matchPlay.highScore)];
             }
-            [UMSocialData defaultData].extConfig.title = @"";
-            [UMSocialData defaultData].extConfig.wechatSessionData.url = url;
+            UMSocialData *umData = [UMSocialData defaultData];
+            umData.extConfig.title = @"";
+            umData.extConfig.wechatSessionData.url = url;
+            umData.extConfig.wechatSessionData.shareText = weixinText;
+            NSString *text = [NSString stringWithFormat:@"%@\n%@", weixinText, url];
             [UMSocialSnsService presentSnsIconSheetView:self
                                                  appKey:nil
                                               shareText:text
                                              shareImage:image
-                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline]
+                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina,UMShareToTencent]
                                                delegate:self];
         }]
                            otherButtonItems:nil] show];

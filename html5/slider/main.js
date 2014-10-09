@@ -26,7 +26,8 @@
  ****************************************************************************/
 var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
-var QINIU_HOST = "http://dn-pintugame.qbox.me/"
+// var QINIU_HOST = "http://dn-pintugame.qbox.me/"
+var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"
 
 var cocos2dApp = cc.Application.extend({
     config:document['ccConfig'],

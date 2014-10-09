@@ -12,6 +12,7 @@
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldUtil.h"
+#import "SldTradeController.h"
 #import "SldCouponCardController.h"
 
 //===============================
@@ -91,6 +92,7 @@
     
     //login notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshCouponUI) name:@"couponCacheChange" object:nil];
 }
 
 - (void)dealloc {
@@ -99,6 +101,10 @@
 
 - (void)onLogin {
     [self refresh];
+}
+
+- (void)refreshCouponUI {
+    [self.collectionView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -199,7 +205,9 @@
         _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
         _gd.playerInfo.couponCache = 0;
         
-        [self.collectionView reloadData];
+        [SldTradeController getInstance].tabBarItem.badgeValue = nil;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
     }];
 }
 
@@ -214,32 +222,42 @@
         return;
     }
     
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"TypeKey":cardType.key};
-    [session postToApi:@"store/buyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            NSString *error = dict[@"Error"];
-            if ([error compare:@"err_zero"] == 0) {
-                alert(@"兑完补货中，请稍后再来🙇", nil);
+    NSString *str = [NSString stringWithFormat:@"确定兑换“%@”?", cardType.name];
+    [[[UIAlertView alloc] initWithTitle:str
+	                            message:nil
+		               cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+        
+    }]
+				       otherButtonItems:[RIButtonItem itemWithLabel:@"兑换" action:^{
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"TypeKey":cardType.key};
+        [session postToApi:@"store/buyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                NSString *error = dict[@"Error"];
+                if ([error compare:@"err_zero"] == 0) {
+                    alert(@"已经没有了，正在补货中，请稍后再来🙇", nil);
+                }
+                cardType.num = 0;
+                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                return;
             }
-            cardType.num = 0;
-            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-            return;
-        }
-        
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            lwError("Json error:%@", [error localizedDescription]);
-            return;
-        }
-        
-        NSDictionary *ecardDict = dict[@"Ecard"];
-        SldEcard *ecard = [[SldEcard alloc] initWithDict:ecardDict];
-        [[SldCouponCardController getInstance] addEcard:ecard];
-        alert(@"兑换成功，请至“已兑”界面查看。", nil);
-    }];
-
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            
+            NSDictionary *ecardDict = dict[@"Ecard"];
+            SldEcard *ecard = [[SldEcard alloc] initWithDict:ecardDict];
+            [[SldCouponCardController getInstance] addEcard:ecard];
+            alert(@"兑换成功，请至“已兑”界面查看。", nil);
+            
+            _gd.playerInfo.coupon = [(NSNumber*)dict[@"PlayerCoupon"] floatValue];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
+        }];
+    }], nil] show];
 }
 
 @end

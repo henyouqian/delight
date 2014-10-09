@@ -16,7 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //creat image cache dir
-    NSString *imgCacheDir = makeDocPath(@"imgCache");
+    NSString *imgCacheDir = makeDocPath([SldConfig getInstance].IMG_CACHE_DIR);
     [[NSFileManager defaultManager] createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
     
     //conf

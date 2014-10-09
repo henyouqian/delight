@@ -85,7 +85,6 @@
 		D014465219A06B2D00D47DCA /* otlController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D014465119A06B2D00D47DCA /* otlController@2x.png */; };
 		D014465419A06B6900D47DCA /* otlController48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D014465319A06B6900D47DCA /* otlController48@2x.png */; };
 		D014466819A1167E00D47DCA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014465F19A1167E00D47DCA /* InfoPlist.strings */; };
-		D014466919A1167E00D47DCA /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D014466119A1167E00D47DCA /* Main_iPhone.storyboard */; };
 		D014466A19A1167E00D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466319A1167E00D47DCA /* QBImagePickerController.strings */; };
 		D014466B19A1167E00D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466619A1167E00D47DCA /* QBImagePickerController.strings */; };
 		D014466F19A1174600D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466D19A1174600D47DCA /* QBImagePickerController.strings */; };
@@ -398,7 +397,6 @@
 		D014465319A06B6900D47DCA /* otlController48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlController48@2x.png"; sourceTree = "<group>"; };
 		D014465D19A1164C00D47DCA /* pin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pin-Prefix.pch"; sourceTree = "<group>"; };
 		D014466019A1167E00D47DCA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
-		D014466219A1167E00D47DCA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D014466419A1167E00D47DCA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = QBImagePickerController.strings; sourceTree = "<group>"; };
 		D014466719A1167E00D47DCA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = QBImagePickerController.strings; sourceTree = "<group>"; };
 		D014466E19A1174600D47DCA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = QBImagePickerController.strings; sourceTree = "<group>"; };
@@ -952,7 +950,6 @@
 			isa = PBXGroup;
 			children = (
 				D014465F19A1167E00D47DCA /* InfoPlist.strings */,
-				D014466119A1167E00D47DCA /* Main_iPhone.storyboard */,
 				D014466319A1167E00D47DCA /* QBImagePickerController.strings */,
 			);
 			path = en.lproj;
@@ -1436,7 +1433,6 @@
 				B3024C5F18FE7EF600F9EEA3 /* audio in Resources */,
 				D0D14B13195B3807009193E6 /* adsmogo_bannerface305.png in Resources */,
 				D0D14B31195B3807009193E6 /* webview_bar_back@2x.png in Resources */,
-				D014466919A1167E00D47DCA /* Main_iPhone.storyboard in Resources */,
 				D0A55614196EADD800369401 /* otlCup@2x.png in Resources */,
 				D0D14B4B195B3807009193E6 /* webview_bar_close_hover_ipad.png in Resources */,
 				D0D14B45195B3807009193E6 /* webview_bar_pause_ipad@2x.png in Resources */,
@@ -1604,14 +1600,6 @@
 				D014466019A1167E00D47DCA /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		D014466119A1167E00D47DCA /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D014466219A1167E00D47DCA /* en */,
-			);
-			name = Main_iPhone.storyboard;
 			sourceTree = "<group>";
 		};
 		D014466319A1167E00D47DCA /* QBImagePickerController.strings */ = {

@@ -17,11 +17,19 @@
 
 @end
 
+static __weak SldTradeController *_inst = nil;
+
 @implementation SldTradeController
+
++ (instancetype)getInstance {
+    return _inst;
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _inst = self;
     
     _buyView.hidden = YES;
     _exchangeView.hidden = YES;

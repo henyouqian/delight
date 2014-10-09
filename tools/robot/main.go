@@ -313,7 +313,7 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	matchId := int64(9)
+	matchId := int64(43)
 
 	// adminCookie := login(ADMIN_NAME, ADMIN_PASSWORD)
 	for i := 0; i < 100; i++ {

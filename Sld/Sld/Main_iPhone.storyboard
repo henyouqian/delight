@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QQC-Jn-OIJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QQC-Jn-OIJ">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -314,7 +314,7 @@
             </objects>
             <point key="canvasLocation" x="-2669" y="-1205"/>
         </scene>
-        <!--Sld User Controller - 选手信息-->
+        <!--Sld User Controller - 用户-->
         <scene sceneID="hGH-xz-a0n">
             <objects>
                 <tableViewController id="90s-2y-g5U" customClass="SldUserController" sceneMemberID="viewController">
@@ -409,7 +409,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="123456" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lei-TU-WB4">
-                                                    <rect key="frame" x="86" y="11" width="121" height="21"/>
+                                                    <rect key="frame" x="84" y="11" width="121" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -445,26 +445,24 @@
                             </tableViewSection>
                             <tableViewSection headerTitle=" " id="nOC-Un-OEY">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="9Nr-VA-3Wg">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="9Nr-VA-3Wg">
                                         <rect key="frame" x="0.0" y="348" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Nr-VA-3Wg" id="Pzg-2C-bAT">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="我的成绩" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dwu-id-xE6">
-                                                    <rect key="frame" x="15" y="11" width="156" height="21"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VOH-Lk-AfT">
+                                                    <rect key="frame" x="20" y="7" width="280" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="可领取奖金123456" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NEz-rZ-tz7">
-                                                    <rect key="frame" x="145" y="11" width="142" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                    <color key="textColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <state key="normal" title="清理缓存">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="onClearCache:" destination="90s-2y-g5U" eventType="touchUpInside" id="2Hu-NQ-EAA"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
@@ -507,7 +505,7 @@
                             <outlet property="delegate" destination="90s-2y-g5U" id="4C1-zQ-bfn"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="选手信息" id="oSG-kY-Msf"/>
+                    <navigationItem key="navigationItem" title="用户" id="oSG-kY-Msf"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="avatarView" destination="FB4-PD-5iM" id="pcg-0A-uvJ"/>
@@ -515,7 +513,6 @@
                         <outlet property="genderLabel" destination="MMG-cc-23n" id="PnU-vW-Sh5"/>
                         <outlet property="goldCoinLabel" destination="2LP-oi-Ekp" id="YXG-kb-l6S"/>
                         <outlet property="logoutButton" destination="ChJ-Ez-hbx" id="tiF-pa-WW6"/>
-                        <outlet property="logoutCell" destination="9Nr-VA-3Wg" id="J4l-u5-Q5n"/>
                         <outlet property="nickNameLabel" destination="BZN-FC-JW3" id="gX1-56-oaC"/>
                         <outlet property="teamLabel" destination="du4-rS-KnV" id="6Yd-ZZ-ZuU"/>
                         <outlet property="totalCouponLabel" destination="VpN-01-Vdl" id="LSR-m2-yRS"/>
@@ -1661,11 +1658,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YWP-WT-3Z0">
-                                <rect key="frame" x="117" y="473" width="86" height="38"/>
+                                <rect key="frame" x="82" y="473" width="156" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="tintColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="充值">
+                                <state key="normal" title="充值到我的账户">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -3006,7 +3003,7 @@
                                             <outlet property="userNameLabel" destination="rVO-8W-loE" id="PTH-q7-dV1"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="bottomCell" rowHeight="80" id="7v2-Uy-U4d" customClass="BottomCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="bottomCell" rowHeight="80" id="7v2-Uy-U4d" customClass="MatchRankBottomCell">
                                         <rect key="frame" x="0.0" y="84" width="320" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7v2-Uy-U4d" id="ATD-9d-BnT">

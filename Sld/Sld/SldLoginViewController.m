@@ -176,7 +176,6 @@ static NSString *SNS_DOUBAN = @"douban";
                     
                 } else {
                     gameData.online = YES;
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"login" object:nil];
                     
                     //update game data
                     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -195,6 +194,8 @@ static NSString *SNS_DOUBAN = @"douban";
                     } else {
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"login" object:nil];
                 }
             }];
             
@@ -327,7 +328,6 @@ static NSString *SNS_DOUBAN = @"douban";
                 
             } else {
                 gameData.online = YES;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"login" object:nil];
                 
                 //update game data
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -346,6 +346,8 @@ static NSString *SNS_DOUBAN = @"douban";
                 } else {
                     [self dismissViewControllerAnimated:YES completion:nil];
                 }
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"login" object:nil];
             }
         }];
     }];

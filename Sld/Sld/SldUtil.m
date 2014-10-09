@@ -183,10 +183,10 @@ NSString* formatInterval(int sec) {
 }
 
 + (void)loadAvatar:(UIImageView*)imageView gravatarKey:(NSString*)gravatarKey customAvatarKey:(NSString*)customAvatarKey {
-    
     imageView.image = nil;
     if (customAvatarKey && customAvatarKey.length > 0) {
-        [imageView asyncLoadImageWithKey:customAvatarKey showIndicator:NO completion:nil];
+        //[imageView asyncLoadImageWithKey:customAvatarKey showIndicator:NO completion:nil];
+        [imageView asyncLoadUploadedImageWithKey:customAvatarKey showIndicator:NO completion:nil];
     } else if (gravatarKey && gravatarKey.length > 0){
         NSString *url = [SldUtil makeGravatarUrlWithKey:gravatarKey width:imageView.frame.size.width];
         [imageView asyncLoadImageWithUrl:url showIndicator:NO completion:nil];

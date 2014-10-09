@@ -16,7 +16,6 @@
 #import "SldUtil.h"
 
 @interface SldUserController ()
-@property (weak, nonatomic) IBOutlet UITableViewCell *logoutCell;
 @property (weak, nonatomic) IBOutlet UIImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
@@ -177,7 +176,9 @@ static const int DAILLY_LOGOUT_NUM = 5;
                 SldGameData *gd = [SldGameData getInstance];
                 [gd reset];
                 
-//                _logoutNum++;
+#ifndef DEBUG
+                _logoutNum++;
+#endif
                 NSString *todayStr = [self getTodayString];
                 NSDictionary *dict = @{@"date":todayStr, @"logoutNum":@(_logoutNum)};
                 NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
@@ -194,75 +195,30 @@ static const int DAILLY_LOGOUT_NUM = 5;
 	[alertView show];
 }
 
-
-#pragma mark - Table view data source
-
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//    return 0;
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    return 0;
-//}
-
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
-}
-*/
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 - (void)updateMoney {
     SldGameData *gd = [SldGameData getInstance];
     PlayerInfo *playerInfo = gd.playerInfo;
     _goldCoinLabel.text = [NSString stringWithFormat:@"%d", playerInfo.goldCoin];
-    _couponLabel.text = [NSString stringWithFormat:@"可领取奖金%.2f", playerInfo.couponCache];
+    _couponLabel.text = [NSString stringWithFormat:@"%.2f", playerInfo.coupon];
     _totalCouponLabel.text = [NSString stringWithFormat:@"%.2f", playerInfo.totalCoupon];
+}
+
+- (IBAction)onClearCache:(id)sender {
+    UIAlertView *alt = alertNoButton(@"清理中");
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *imgCacheDir = makeDocPath([SldConfig getInstance].IMG_CACHE_DIR);
+    NSError *error = nil;
+    BOOL success = [fm removeItemAtPath:imgCacheDir error:&error];
+    
+    [fm createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    [alt dismissWithClickedButtonIndex:0 animated:NO];
+    
+    if (!success || error) {
+        alert(@"清理失败", nil);
+        return;
+    }
+    alert(@"清理完毕", nil);
 }
 
 @end

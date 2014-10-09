@@ -26,7 +26,7 @@ static UIImage *_promoImage = nil;
 static NSString *_promoImageKey = nil;
 static int _sliderNum = 0;
 static SldMyMatchListController *_myMatchListController = nil;
-static const int IMAGE_SIZE_LIMIT_MB = 1;
+static const int IMAGE_SIZE_LIMIT_MB = 5;
 static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 
 //=============================
@@ -171,34 +171,54 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
     UIAlertView *alt = alertNoButton(@"生成中...");
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (_filePathes.count == 0) {
-            
-            
             int i = 0;
             for (ALAsset *asset in _assets) {
+                ALAssetRepresentation *repr = asset.defaultRepresentation;
                 UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+                NSString *filePath = @"";
                 
-                //resize
-                float l = MAX(image.size.width, image.size.height);
-                float s = MIN(image.size.width, image.size.height);
-                float scale = 1.0;
-                if (s > 400.0) {
-                    scale = 400.0 / s;
+                //check gif
+                unsigned char bytes[4];
+                [repr getBytes:bytes fromOffset:0 length:4 error:nil];
+                if (bytes[0]=='G' && bytes[1]=='I' && bytes[2]=='F') {
+                    NSString *fileName = [NSString stringWithFormat:@"%d.gif", i];
+                    filePath = makeTempPath(fileName);
+                    
+                    unsigned int size = (unsigned int)repr.size;
+                    Byte *buffer = (Byte*)malloc(size);
+                    NSUInteger buffered = [repr getBytes:buffer fromOffset:0 length:size error:nil];
+                    NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+                    [data writeToFile:filePath atomically:YES];
+                    
+                    if (size > IMAGE_SIZE_LIMIT_BYTE) {
+                        NSString *str = [NSString stringWithFormat:@"单张图片不得大于%dMB，第%d张不符合要求", IMAGE_SIZE_LIMIT_MB, i+1];
+                        alert(str, nil);
+                        return;
+                    }
+                } else {
+                    //resize
+                    float l = MAX(image.size.width, image.size.height);
+                    float s = MIN(image.size.width, image.size.height);
+                    float scale = 1.0;
+                    if (s > 400.0) {
+                        scale = 400.0 / s;
+                    }
+                    float l2 = l * scale;
+                    if (l2 > 800.0) {
+                        scale *= 800.0 / l2;
+                    }
+                    float w = floorf(image.size.width * scale);
+                    float h = floorf(image.size.height * scale);
+                    image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+                    
+                    //save
+                    NSData *data = UIImageJPEGRepresentation(image, 0.85);
+                    NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
+                    filePath = makeTempPath(fileName);
+                    [data writeToFile:filePath atomically:YES];
                 }
-                float l2 = l * scale;
-                if (l2 > 800.0) {
-                    scale *= 800.0 / l2;
-                }
-                float w = floorf(image.size.width * scale);
-                float h = floorf(image.size.height * scale);
-                image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
                 
-                //save
-                NSData *data = UIImageJPEGRepresentation(image, 0.85);
-                NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
-                NSString *filePath = makeTempPath(fileName);
                 [_filePathes addObject:filePath];
-                [data writeToFile:filePath atomically:YES];
-                
                 i++;
             }
         }
@@ -542,169 +562,172 @@ static const int COUPON_MAX = 10000;
 
 - (void)doPublish {
     //save to temp dir
-    _alt = alertNoButton(@"上传中...");
-    
+    _alt = alertNoButton(@"生成中...");
     _images = [NSMutableArray array];
     
-    int i = 0;
-    NSMutableArray *filePathes = [NSMutableArray array];
-    NSMutableArray *fileKeys = [NSMutableArray array];
-    
-    for (ALAsset *asset in _assets) {
-        NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
-        NSString *filePath = makeTempPath(fileName);
-        ALAssetRepresentation *repr = asset.defaultRepresentation;
-        NSString *key = @"";
-        
-        UIImage *image = [[UIImage alloc] initWithCGImage:repr.fullScreenImage];
-        
-        //check gif
-        unsigned char bytes[4];
-        [repr getBytes:bytes fromOffset:0 length:4 error:nil];
-        if (bytes[0]=='G' && bytes[1]=='I' && bytes[2]=='F') {
-            fileName = [NSString stringWithFormat:@"%d.gif", i];
-            filePath = makeTempPath(fileName);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        int i = 0;
+        NSMutableArray *filePathes = [NSMutableArray array];
+        NSMutableArray *fileKeys = [NSMutableArray array];
+
+        for (ALAsset *asset in _assets) {
+            NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
+            NSString *filePath = makeTempPath(fileName);
+            ALAssetRepresentation *repr = asset.defaultRepresentation;
+            NSString *key = @"";
             
-            unsigned int size = (unsigned int)repr.size;
-            Byte *buffer = (Byte*)malloc(size);
-            NSUInteger buffered = [repr getBytes:buffer fromOffset:0 length:size error:nil];
-            NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-            [data writeToFile:filePath atomically:YES];
-            key = [NSString stringWithFormat:@"%@.gif", [SldUtil sha1WithData:data]];
+            UIImage *image = [[UIImage alloc] initWithCGImage:repr.fullScreenImage];
             
-            if (size > IMAGE_SIZE_LIMIT_BYTE) {
-                NSString *str = [NSString stringWithFormat:@"单张图片不得大于%dMB，第%d张不符合要求", IMAGE_SIZE_LIMIT_MB, i+1];
-                [_alt dismissWithClickedButtonIndex:0 animated:NO];
-                alert(str, nil);
-                return;
+            //check gif
+            unsigned char bytes[4];
+            [repr getBytes:bytes fromOffset:0 length:4 error:nil];
+            if (bytes[0]=='G' && bytes[1]=='I' && bytes[2]=='F') {
+                fileName = [NSString stringWithFormat:@"%d.gif", i];
+                filePath = makeTempPath(fileName);
+                
+                unsigned int size = (unsigned int)repr.size;
+                Byte *buffer = (Byte*)malloc(size);
+                NSUInteger buffered = [repr getBytes:buffer fromOffset:0 length:size error:nil];
+                NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+                [data writeToFile:filePath atomically:YES];
+                key = [NSString stringWithFormat:@"%@.gif", [SldUtil sha1WithData:data]];
+                
+                if (size > IMAGE_SIZE_LIMIT_BYTE) {
+                    NSString *str = [NSString stringWithFormat:@"单张图片不得大于%dMB，第%d张不符合要求", IMAGE_SIZE_LIMIT_MB, i+1];
+                    [_alt dismissWithClickedButtonIndex:0 animated:NO];
+                    alert(str, nil);
+                    return;
+                }
+                lwInfo("gifSize: %d", (int)size);
+                //free(buffer);
+            } else {
+                //resize
+                float l = MAX(image.size.width, image.size.height);
+                float s = MIN(image.size.width, image.size.height);
+                float scale = 1.0;
+                if (s > 400.0) {
+                    scale = 400.0 / s;
+                }
+                float l2 = l * scale;
+                if (l2 > 800.0) {
+                    scale *= 800.0 / l2;
+                }
+                float w = floorf(image.size.width * scale);
+                float h = floorf(image.size.height * scale);
+                image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+                
+                //save
+                NSData *data = UIImageJPEGRepresentation(image, 0.85);
+                [data writeToFile:filePath atomically:YES];
+                
+                //key
+                key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
             }
-            lwInfo("gifSize: %d", (int)size);
-            //free(buffer);
-        } else {
-            //resize
-            float l = MAX(image.size.width, image.size.height);
-            float s = MIN(image.size.width, image.size.height);
-            float scale = 1.0;
-            if (s > 400.0) {
-                scale = 400.0 / s;
-            }
-            float l2 = l * scale;
-            if (l2 > 800.0) {
-                scale *= 800.0 / l2;
-            }
-            float w = floorf(image.size.width * scale);
-            float h = floorf(image.size.height * scale);
-            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
             
-            //save
-            NSData *data = UIImageJPEGRepresentation(image, 0.85);
-            [data writeToFile:filePath atomically:YES];
+            [fileKeys addObject:key];
+            [filePathes addObject:filePath];
+            [_images addObject:@{@"File":fileName, @"Key":key}];
             
-            //key
-            key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            //blur first image
+            if (i == 0) {
+                UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:0.3];
+                image = [image applyBlurWithRadius:25 tintColor:tintColor saturationDeltaFactor:1.4 maskImage:nil];
+                
+                //save
+                NSData *data = UIImageJPEGRepresentation(image, 0.85);
+                NSString *fileName = @"coverBlur.jpg";
+                NSString *filePath = makeTempPath(fileName);
+                [filePathes addObject:filePath];
+                [data writeToFile:filePath atomically:YES];
+                
+                _coverKey = key;
+                _coverBlurKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+                [fileKeys addObject:_coverBlurKey];
+            }
+            
+            i++;
         }
-        
-        [fileKeys addObject:key];
-        [filePathes addObject:filePath];
-        [_images addObject:@{@"File":fileName, @"Key":key}];
-        
-        //blur first image
-        if (i == 0) {
-            UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:0.3];
-            image = [image applyBlurWithRadius:25 tintColor:tintColor saturationDeltaFactor:1.4 maskImage:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //thumb
+            ALAsset *asset = [_assets firstObject];
+            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+            float s = MIN(image.size.width, image.size.height);
+            float scale = 256.0/s;
+            float w = image.size.width * scale;
+            float h = image.size.height * scale;
+            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+            CGRect cropRect = CGRectMake(0, 0, 256, 256);
+            if (image.size.width >= image.size.height) {
+                cropRect.origin.x = w*0.5-128;
+            } else {
+                cropRect.origin.y = h*0.5-128;
+            }
             
-            //save
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
+            image = [UIImage imageWithCGImage:imageRef];
+            
+            //thumb save
             NSData *data = UIImageJPEGRepresentation(image, 0.85);
-            NSString *fileName = @"coverBlur.jpg";
+            NSString *fileName = @"thumb.jpg";
             NSString *filePath = makeTempPath(fileName);
             [filePathes addObject:filePath];
             [data writeToFile:filePath atomically:YES];
             
-            _coverKey = key;
-            _coverBlurKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
-            [fileKeys addObject:_coverBlurKey];
-        }
-        
-        i++;
-    }
+            //thumb key
+            _thumbKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            [fileKeys addObject:_thumbKey];
+            
+            //promo image
+            if (_promoImage) {
+                NSData *data = UIImageJPEGRepresentation(_promoImage, 0.85);
+                NSString *fileName = @"promo.jpg";
+                NSString *filePath = makeTempPath(fileName);
+                [filePathes addObject:filePath];
+                [data writeToFile:filePath atomically:YES];
+                
+                _promoImageKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+                [fileKeys addObject:_promoImageKey];
+            }
+            
+            //
+            _alt.title = @"上传中... 0%";
+            
+            //uploader
+            SldHttpSession *session = [SldHttpSession defaultSession];
+            [session postToApi:@"player/getUptoken" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                if (error) {
+                    alertHTTPError(error, data);
+                    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                    _alt = nil;
+                    return;
+                }
+                
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error) {
+                    lwError("Json error:%@", [error localizedDescription]);
+                    [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                    _alt = nil;
+                    return;
+                }
+                
+                NSString *token = [dict objectForKey:@"Token"];
+                
+                _uploader = [QiniuSimpleUploader uploaderWithToken:token];
+                _uploader.delegate = self;
+                
+                _uploadNum = 0;
+                _finishNum = 0;
+                int i = 0;
+                for (NSString *filePath in filePathes) {
+                    NSString *key = [fileKeys objectAtIndex:i];
+                    [_uploader uploadFile:filePath key:key extra:nil];
+                    _uploadNum++;
+                    i++;
+                }
+            }];
+        });
+    });
     
-    //thumb
-    ALAsset *asset = [_assets firstObject];
-    UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
-    float s = MIN(image.size.width, image.size.height);
-    float scale = 256.0/s;
-    float w = image.size.width * scale;
-    float h = image.size.height * scale;
-    image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
-    CGRect cropRect = CGRectMake(0, 0, 256, 256);
-    if (image.size.width >= image.size.height) {
-        cropRect.origin.x = w*0.5-128;
-    } else {
-        cropRect.origin.y = h*0.5-128;
-    }
-    
-    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
-    image = [UIImage imageWithCGImage:imageRef];
-    
-    //thumb save
-    NSData *data = UIImageJPEGRepresentation(image, 0.85);
-    NSString *fileName = @"thumb.jpg";
-    NSString *filePath = makeTempPath(fileName);
-    [filePathes addObject:filePath];
-    [data writeToFile:filePath atomically:YES];
-    
-    //thumb key
-    _thumbKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
-    [fileKeys addObject:_thumbKey];
-    
-    //promo image
-    if (_promoImage) {
-        NSData *data = UIImageJPEGRepresentation(_promoImage, 0.85);
-        NSString *fileName = @"promo.jpg";
-        NSString *filePath = makeTempPath(fileName);
-        [filePathes addObject:filePath];
-        [data writeToFile:filePath atomically:YES];
-        
-        _promoImageKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
-        [fileKeys addObject:_promoImageKey];
-    }
-    
-    //
-    _alt.title = @"上传中... 0%";
-    
-    //uploader
-    SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"player/getUptoken" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            alertHTTPError(error, data);
-            [_alt dismissWithClickedButtonIndex:0 animated:YES];
-            _alt = nil;
-            return;
-        }
-        
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            lwError("Json error:%@", [error localizedDescription]);
-            [_alt dismissWithClickedButtonIndex:0 animated:YES];
-            _alt = nil;
-            return;
-        }
-        
-        NSString *token = [dict objectForKey:@"Token"];
-        
-        _uploader = [QiniuSimpleUploader uploaderWithToken:token];
-        _uploader.delegate = self;
-        
-        _uploadNum = 0;
-        _finishNum = 0;
-        int i = 0;
-        for (NSString *filePath in filePathes) {
-            NSString *key = [fileKeys objectAtIndex:i];
-            [_uploader uploadFile:filePath key:key extra:nil];
-            _uploadNum++;
-            i++;
-        }
-    }];
 }
 
 - (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {

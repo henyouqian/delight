@@ -9,6 +9,7 @@
 #import "SldRewardListController.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
+#import "SldTradeController.h"
 #import "UIImageView+sldAsyncLoad.h"
 
 static const int REWARD_LIST_FETCH_LIMIT = 30;
@@ -50,7 +51,7 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
 @property (nonatomic) SInt64 matchId;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *reason;
-@property (nonatomic) int coupon;
+@property (nonatomic) float coupon;
 @property (nonatomic) int rank;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
@@ -63,8 +64,8 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
         _matchId = [(NSNumber*)[dict objectForKey:@"MatchId"] longLongValue];
         _thumb = [dict objectForKey:@"Thumb"];
         _reason = [dict objectForKey:@"Reason"];
-        _coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] intValue];
-        _rank = [(NSNumber*)[dict objectForKey:@"FinalRank"] intValue];
+        _coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] floatValue];
+        _rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
     }
     return self;
 }
@@ -107,6 +108,7 @@ static __weak SldRewardListController *_inst = nil;
     
     //login notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshCouponUI) name:@"couponCacheChange" object:nil];
 }
 
 - (void)dealloc {
@@ -230,9 +232,12 @@ static __weak SldRewardListController *_inst = nil;
         SldRewardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchRewardCell" forIndexPath:indexPath];
         SldRewardRecord *record = _rewardRecords[indexPath.row];
         cell.reasonLabel.text = record.reason;
-        cell.couponLabel.text = [NSString stringWithFormat:@"奖金：%d", record.coupon];
+        cell.couponLabel.text = [NSString stringWithFormat:@"奖金：%.2f", record.coupon];
         if (record.rank != 0) {
             cell.rankLabel.text = [NSString stringWithFormat:@"排名：%d", record.rank];
+            cell.rankLabel.hidden = NO;
+        } else {
+            cell.rankLabel.hidden = YES;
         }
         [cell.thumbView asyncLoadUploadedImageWithKey:record.thumb showIndicator:NO completion:nil];
         return cell;
@@ -275,9 +280,15 @@ static __weak SldRewardListController *_inst = nil;
         _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
         _gd.playerInfo.couponCache = 0;
         
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
-        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        [SldTradeController getInstance].tabBarItem.badgeValue = nil;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
     }];
+}
+
+- (void)refreshCouponUI {
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
+    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 @end

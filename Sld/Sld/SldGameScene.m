@@ -155,6 +155,7 @@
 @property (nonatomic) SKSpriteNode *curtainBottom;
 @property (nonatomic) SKSpriteNode *curtainBelt;
 @property (nonatomic) SKLabelNode *curtainLabel;
+@property (nonatomic) SKLabelNode *loadingLabel;
 @property (nonatomic) BOOL inCurtain;
 @property (nonatomic) SKLabelNode *timerLabel;
 @property (nonatomic) SKSpriteNode *timerBg;
@@ -378,6 +379,12 @@ NSDate *_gameBeginTime;
         //[self.curtainLabel setAlpha:0.f];
         self.curtainLabel.yScale = 0.f;
         
+        self.loadingLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+        [self.loadingLabel setFontColor:colorCtText];
+        [self.loadingLabel setText:@"读取中..."];
+        [self.loadingLabel setFontSize:22];
+        [self.loadingLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+        
         
         //belt and rotate
         UIImage *image = [UIImage imageWithContentsOfFile:[_files firstObject]];
@@ -394,6 +401,7 @@ NSDate *_gameBeginTime;
         [self addChild:self.curtainBelt];
         [self.curtainBelt setZPosition:9];
         [self.curtainBelt addChild:self.curtainLabel];
+        [self.curtainBelt addChild:self.loadingLabel];
         
         
         //load image
@@ -866,13 +874,20 @@ static float lerpf(float a, float b, float t) {
             usleep(100000);
             [self.scene setUserInteractionEnabled:YES];
             
-            float dur = .4f;
+            float dur = .6f;
             SKAction *action = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
                 float t = QuarticEaseOut(elapsedTime/dur);
                 [node setYScale:lerpf(0.f, 1.f, t)];
                 [node setXScale:2.0-lerpf(0.f, 1.f, t)];
             }];
             [self.curtainLabel runAction:action];
+            
+            SKAction *hideAction = [SKAction customActionWithDuration:dur*.5f actionBlock:^(SKNode *node, CGFloat elapsedTime) {
+                float t = QuarticEaseOut(elapsedTime/dur);
+                [node setAlpha:lerpf(1.f, 0.f, t)];
+            }];
+            [self.loadingLabel runAction:hideAction];
+            
             _isLoaded = YES;
         }];
     }

@@ -10,4 +10,6 @@
 
 @interface SldTradeController : UIViewController
 
++ (instancetype)getInstance;
+
 @end

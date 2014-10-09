@@ -89,7 +89,7 @@ static int _fetchLimit = 30;
     [_ecards removeAllObjects];
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"StartId":@0, @"LastScore":@(_lastScore), @"Limit":@(_fetchLimit)};
+    NSDictionary *body = @{@"StartId":@0, @"LastScore":@(0), @"Limit":@(_fetchLimit)};
     [session postToApi:@"player/listMyEcard" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [self.refreshControl endRefreshing];
         if (error) {

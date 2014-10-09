@@ -10,22 +10,30 @@
 #import "SldStreamPlayer.h"
 #import "SldLoginViewController.h"
 #import "SldUtil.h"
+#import "SldHttpSession.h"
+#import "SldGameData.h"
 #import "MSWeakTimer.h"
+#import "SldDb.h"
 
 @interface SldMainTabBarController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *discView;
 @property (nonatomic) MSWeakTimer *minTimer;
+@property (nonatomic) SldGameData *gd;
 @end
 
 @implementation SldMainTabBarController
 
 - (void)dealloc {
     [_minTimer invalidate];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _gd = [SldGameData getInstance];
+    
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(rotateDisc)
                                                 name:UIApplicationDidBecomeActiveNotification
@@ -36,15 +44,53 @@
     
     [self.tabBar setSelectedImageTintColor:makeUIColor(244, 75, 116, 255)];
     
-    //
-    [(UIViewController *)[self.viewControllers objectAtIndex:4] tabBarItem].badgeValue = @"...";
-    
     //timer
     _minTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(onMinTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    //
+    SldDb *db = [SldDb defaultDb];
+    NSString *rules = [db getString:@"appleRules"];
+    if (rules == nil) {
+        //alert(nil, @"声明：游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。");
+        alertWithButton(@"声明", @"•  游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。\n•  请勿上传色情，暴力，侵权等内容。", @"知道了");
+        
+        [db setKey:@"appleRules" string:@"1"];
+    }
+    
+    //login notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
+}
+
+- (void)onLogin {
+    [self onMinTimer];
 }
 
 - (void)onMinTimer {
-    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session postToApi:@"player/getCouponCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        float old = _gd.playerInfo.couponCache;
+        _gd.playerInfo.couponCache = [(NSNumber*)dict[@"CouponCache"] floatValue];
+        if (old != _gd.playerInfo.couponCache) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
+        }
+        
+        NSString *str = nil;
+        if (_gd.playerInfo.couponCache >= 0.01) {
+            str = @"奖";
+        }
+        [(UIViewController *)[self.viewControllers objectAtIndex:4] tabBarItem].badgeValue = str;
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
