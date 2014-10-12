@@ -430,6 +430,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
 @property (weak, nonatomic) IBOutlet UITextField *urlInput;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UISwitch *privateSwitch;
 
 @property (nonatomic) UIImage *promoImage;
 @property (nonatomic) SldGameData *gd;
@@ -437,6 +438,7 @@
 @property (nonatomic) QiniuSimpleUploader* uploader;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) NSString *imageKey;
+
 
 @end
 
@@ -452,6 +454,7 @@
     _titleInput.text = _gd.match.title;
     _urlInput.text = _gd.match.promoUrl;
     [_imageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
+    _privateSwitch.on = _gd.match.isPrivate;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -552,7 +555,8 @@
     
     if ([title compare:_gd.match.title] != 0
         || [promoUrl compare:_gd.match.promoUrl] != 0
-        || _imageChanged)
+        || _imageChanged
+        || _gd.match.isPrivate != _privateSwitch.on)
     {
         _alt = alertNoButton(@"更改中");
         
@@ -631,6 +635,7 @@
                            @"Title":title,
                            @"PromoUrl":url,
                            @"PromoImage":_imageKey,
+                           @"Private":@(_privateSwitch.on),
                            };
     [session postToApi:@"match/mod" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_alt dismissWithClickedButtonIndex:0 animated:NO];
@@ -643,6 +648,7 @@
         _gd.match.title = _titleInput.text;
         _gd.match.promoUrl = _urlInput.text;
         _gd.match.promoImage = _imageKey;
+        _gd.match.isPrivate = _privateSwitch.on;
         
         [[[UIAlertView alloc] initWithTitle:@"更改成功。"
                                     message:nil

@@ -113,7 +113,8 @@
 }
 
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
-    NSString *host = [SldConfig getInstance].DATA_HOST;
+    //NSString *host = [SldConfig getInstance].DATA_HOST;
+    NSString *host = [SldConfig getInstance].UPLOAD_HOST;
     [self asyncLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
 }
 
@@ -312,7 +313,8 @@
 }
 
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
-    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].DATA_HOST showIndicator:showIndicator completion:completion];
+//    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].DATA_HOST showIndicator:showIndicator completion:completion];
+    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];
 }
 - (void)asyncLoadUploadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];

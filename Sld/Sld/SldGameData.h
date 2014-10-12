@@ -75,6 +75,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int challengeSeconds;
 @property (nonatomic) NSString *promoUrl;
 @property (nonatomic) NSString *promoImage;
+@property (nonatomic) BOOL isPrivate;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end

@@ -73,7 +73,7 @@ function msecToStr(msec) {
 }
 
 function showDownLoadDesc() {
-    alert("如无法跳转到App Store(苹果应用商店)。请在App Store中搜索《拼拼拼拼拼》下载，谢谢。")
+    alert("如无法跳转到App Store(苹果应用商店)。请在App Store中搜索《蛮拼的》下载，谢谢。")
 }
 
 function updateWeixin() {
@@ -87,7 +87,7 @@ function updateWeixin() {
     var imgUrl = g_thumbUrl;
     var lineLink = window.location.href;
     var descContent = "好玩爽快的拼图游戏，小伙伴们拼起来！";
-    var shareTitle = '《拼拼拼拼拼》';
+    var shareTitle = '《蛮拼的》';
     var appid = 'wx9cb1a9d645c24d0a';
 
     if (gMyScore != "") {

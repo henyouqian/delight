@@ -375,6 +375,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @property (weak, nonatomic) IBOutlet UILabel *couponLabel;
 @property (weak, nonatomic) IBOutlet UITextField *couponInput;
 @property (weak, nonatomic) IBOutlet UILabel *couponDescLabel;
+@property (weak, nonatomic) IBOutlet UISwitch *privateSwitch;
 
 @property (nonatomic) int rewardCoupon;
 @property (nonatomic) NSArray *numbers;
@@ -763,7 +764,6 @@ static const int COUPON_MAX = 10000;
         beginTimeStr = [fmt stringFromDate:date];
     }
     
-    
     SldHttpSession *session = [SldHttpSession defaultSession];
     NSDictionary *body = @{
         @"Title":_titleInput.text,
@@ -778,6 +778,7 @@ static const int COUPON_MAX = 10000;
         @"ChallengeSeconds":@(_challengeSec),
         @"PromoUrl":_promoUrl,
         @"PromoImage":_promoImageKey,
+        @"Private":@([_privateSwitch isOn]),
     };
     [session postToApi:@"match/new" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {

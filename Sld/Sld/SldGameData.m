@@ -107,6 +107,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _challengeSeconds = [(NSNumber*)[dict objectForKey:@"ChallengeSeconds"] intValue];
         _promoUrl = [dict objectForKey:@"PromoUrl"];
         _promoImage = [dict objectForKey:@"PromoImage"];
+        _isPrivate = [(NSNumber*)[dict objectForKey:@"Private"] boolValue];
         return self;
     }
     return nil;
