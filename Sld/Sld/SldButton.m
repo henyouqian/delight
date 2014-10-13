@@ -25,6 +25,7 @@
 
 - (instancetype)initWithImageNamed:(NSString*)imageName {
     if (self = [super init]) {
+        _enabled = YES;
         self.scaleNode = [SKNode node];
         [self addChild:self.scaleNode];
         
@@ -93,7 +94,7 @@
         [self.scaleNode runAction:scale];
         self.highlight = NO;
         
-        if (self.onClick) {
+        if (self.onClick && _enabled) {
             self.onClick();
         }
     }

@@ -30,6 +30,8 @@
 @end
 
 @interface MatchRankBottomCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIButton *moreButton;
+
 @end
 
 @implementation MatchRankBottomCell
@@ -69,6 +71,7 @@
 @property (nonatomic) NSMutableArray *rankInfos;
 @property (nonatomic) BOOL loadingRank;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@property (nonatomic) MatchRankBottomCell *bottomCell;
 @end
 
 static SldMatchRankController *_inst = nil;
@@ -228,7 +231,8 @@ static SldMatchRankController *_inst = nil;
     }
     
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"MatchId":@(gameData.match.id), @"Offset":@(offset), @"Limit":@25};
+    int limit = 25;
+    NSDictionary *body = @{@"MatchId":@(gameData.match.id), @"Offset":@(offset), @"Limit":@(limit)};
     _loadingRank = YES;
     [session postToApi:@"match/getRanks" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _loadingRank = NO;
@@ -248,6 +252,12 @@ static SldMatchRankController *_inst = nil;
             return;
         }
         int num = [rankArray count];
+        
+        if (num < limit) {
+            _bottomCell.moreButton.enabled = NO;
+            [_bottomCell.moreButton setTitle:@"后面没有了" forState:UIControlStateDisabled];
+        }
+        
         if (num == 0) {
             return;
         }
@@ -307,7 +317,12 @@ static SldMatchRankController *_inst = nil;
         //cell.userNameLabel.text = gamedata.nickName;
         cell.userNameLabel.text = @"“我”";
         cell.teamLabel.text = gamedata.playerInfo.teamName;
-        cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", gamedata.matchPlay.myRank];
+        if (gamedata.matchPlay.myRank == 0) {
+            cell.rankLabel.text = [NSString stringWithFormat:@"无名次"];
+        } else {
+            cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", gamedata.matchPlay.myRank];
+        }
+        
         NSString *timeStr = formatScore(gamedata.matchPlay.highScore);
         cell.scoreLabel.text = timeStr;
         
@@ -324,7 +339,7 @@ static SldMatchRankController *_inst = nil;
                 MatchRankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
                 [cell reset];
                 int rank = [rankInfo.rank intValue];
-                cell.rankLabel.text = [NSString stringWithFormat:@"%d", rank];
+                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", rank];
                 cell.userNameLabel.text = rankInfo.nickName;
                 cell.scoreLabel.text = rankInfo.score;
                 cell.teamLabel.text = rankInfo.teamName;
@@ -341,9 +356,9 @@ static SldMatchRankController *_inst = nil;
                 return cell;
             }
         } else if (indexPath.row == [_rankInfos count]) {
-            MatchRankBottomCell *bottomCell = [tableView dequeueReusableCellWithIdentifier:@"bottomCell" forIndexPath:indexPath];
-            bottomCell.backgroundColor = [UIColor clearColor];
-            return bottomCell;
+            _bottomCell = [tableView dequeueReusableCellWithIdentifier:@"bottomCell" forIndexPath:indexPath];
+            _bottomCell.backgroundColor = [UIColor clearColor];
+            return _bottomCell;
         }
     }
     return [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];

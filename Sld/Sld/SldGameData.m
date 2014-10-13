@@ -88,6 +88,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
         _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
         _ownerId = [(NSNumber*)[dict objectForKey:@"OwnerId"] longLongValue];
+        _ownerName = [dict objectForKey:@"OwnerName"];
         _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
         _rewardCoupon = [(NSNumber*)[dict objectForKey:@"RewardCoupon"] intValue];
         _thumb = [dict objectForKey:@"Thumb"];

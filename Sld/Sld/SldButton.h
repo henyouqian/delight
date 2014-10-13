@@ -14,6 +14,7 @@ typedef void(^OnButtonClickBlock)(void);
 @interface SldButton : SKNode
 
 @property (nonatomic, strong) OnButtonClickBlock onClick;
+@property (nonatomic) BOOL enabled;
 
 + (instancetype)buttonWithImageNamed:(NSString*)imageName;
 - (void)setBackgroundAlpha:(float)alpha;

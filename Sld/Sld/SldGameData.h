@@ -59,6 +59,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) SInt64 id;
 @property (nonatomic) SInt64 packId;
 @property (nonatomic) SInt64 ownerId;
+@property (nonatomic) NSString *ownerName;
 @property (nonatomic) int sliderNum;
 @property (nonatomic) int rewardCoupon;
 @property (nonatomic) NSString *thumb;

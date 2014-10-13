@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *matchTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tryNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ownerLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
@@ -58,6 +59,8 @@
     
     _gd = [SldGameData getInstance];
     _gd.matchPlay = nil;
+    
+    _ownerLabel.hidden = YES;
     
     lwInfo("matchId: %lld", _gd.match.id);
     
@@ -207,6 +210,12 @@
     if ((_gd.matchPlay && _gd.matchPlay.highScore != 0) || _matchRunning == NO) {
         _reviewButton.enabled = YES;
     }
+    
+    //owner label
+    if (_gd.match.ownerName && _gd.match.ownerName.length > 0) {
+        _ownerLabel.text = [NSString stringWithFormat:@"发布者：%@", _gd.match.ownerName];
+        _ownerLabel.hidden = NO;
+    }
 }
 
 - (IBAction)onPracticeButton:(id)sender {
@@ -220,13 +229,13 @@
     MatchPlay *matchPlay = _gd.matchPlay;
     
     if (matchPlay.freeTries > 0) {
-        NSString *str = [NSString stringWithFormat:@"剩余%d次免费机会，开始游戏吗？", matchPlay.freeTries];
+        NSString *str = [NSString stringWithFormat:@"剩余%d次免费机会，开始比赛吗？", matchPlay.freeTries];
         [[[UIAlertView alloc] initWithTitle:str
                                     message:nil
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
             // Handle "Cancel"
         }]
-                           otherButtonItems:[RIButtonItem itemWithLabel:@"开始游戏" action:^{
+                           otherButtonItems:[RIButtonItem itemWithLabel:@"开始比赛" action:^{
             [self playBegin];
         }], nil] show];
     } else {
@@ -244,14 +253,14 @@
                 
             }], nil] show];
         } else {
-            NSString *str = [NSString stringWithFormat:@"花一枚金币，开始游戏？(现有%d金币)", _gd.playerInfo.goldCoin];
+            NSString *str = [NSString stringWithFormat:@"花一枚金币，开始比赛？(现有%d金币)", _gd.playerInfo.goldCoin];
             
             [[[UIAlertView alloc] initWithTitle:str
                                         message:nil
                                cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
                 // Handle "Cancel"
             }]
-                               otherButtonItems:[RIButtonItem itemWithLabel:@"开始游戏" action:^{
+                               otherButtonItems:[RIButtonItem itemWithLabel:@"开始比赛" action:^{
                 [self playBegin];
             }], nil] show];
         }

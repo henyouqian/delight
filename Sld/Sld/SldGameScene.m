@@ -413,6 +413,7 @@ NSDate *_gameBeginTime;
         [_timerBg setAnchorPoint:CGPointMake(1, 0.5)] ;
         [_timerBg setPosition: CGPointMake(self.size.width, y)];
         [_timerBg setZPosition:1.f];
+        [_timerBg setUserInteractionEnabled:NO];
         [self addChild:_timerBg];
         
         self.timerLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
@@ -423,6 +424,7 @@ NSDate *_gameBeginTime;
         [self.timerLabel setPosition:CGPointMake(-100, 0)];
         [self.timerLabel setText:@"0:00.000"];
         [self.timerLabel setZPosition:1.f];
+        [self.timerLabel setUserInteractionEnabled:NO];
         [_timerBg addChild:self.timerLabel];
         
         if (_beltRotate) {
@@ -934,7 +936,7 @@ static float lerpf(float a, float b, float t) {
     
     //hit test
     CGPoint pt = [touch locationInNode: self.scene];
-    SKNode *node = [self.scene nodeAtPoint:pt];
+    SKNode *node = [_sliderParent nodeAtPoint:pt];
     
     //curtain
     float dur = .3f;
@@ -1118,7 +1120,9 @@ static float lerpf(float a, float b, float t) {
             if (adsConf.delayPercent > 0 && adsConf.delaySec > 0) {
                 rd = (float)(arc4random() % 100)/100.f;
                 if (rd/100.f < adsConf.delayPercent) {
+                    self.btnExit.enabled = NO;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        self.btnExit.enabled = YES;
                         if (_gd.match.promoImage && _gd.match.promoImage.length) {
                             [_gameController showUserAds];
                         } else {

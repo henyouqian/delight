@@ -256,6 +256,11 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
     
     self.title = [_url host];
 }
+
+- (IBAction)openSafari:(id)sender {
+    [[UIApplication sharedApplication] openURL:_url];
+}
+
 @end
 
 //=============================

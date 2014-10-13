@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *couponLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *userInfoCell;
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
+@property (weak, nonatomic) IBOutlet UILabel *idLabel;
 @property (nonatomic) int logoutNum;
 
 @end
@@ -145,6 +146,9 @@ static const int DAILLY_LOGOUT_NUM = 5;
         _genderLabel.textColor = makeUIColor(128, 128, 128, 255);
     }
     
+    //id
+    _idLabel.text = [NSString stringWithFormat:@"ID：%lld", playerInfo.userId];
+    
     [self updateMoney];
 }
 
@@ -157,11 +161,13 @@ static const int DAILLY_LOGOUT_NUM = 5;
 }
 
 - (IBAction)onLogoutButton:(id)sender {
+#ifndef DEBUG
     if (_logoutNum == DAILLY_LOGOUT_NUM) {
         alert(@"今日注销次数已用完", nil);
         return;
     }
-    
+#endif
+
     RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:@"否" action:nil];
     
 	RIButtonItem *logoutItem = [RIButtonItem itemWithLabel:@"是" action:^{
@@ -176,9 +182,8 @@ static const int DAILLY_LOGOUT_NUM = 5;
                 SldGameData *gd = [SldGameData getInstance];
                 [gd reset];
                 
-#ifndef DEBUG
                 _logoutNum++;
-#endif
+                
                 NSString *todayStr = [self getTodayString];
                 NSDictionary *dict = @{@"date":todayStr, @"logoutNum":@(_logoutNum)};
                 NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
@@ -204,21 +209,27 @@ static const int DAILLY_LOGOUT_NUM = 5;
 }
 
 - (IBAction)onClearCache:(id)sender {
-    UIAlertView *alt = alertNoButton(@"清理中");
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *imgCacheDir = makeDocPath([SldConfig getInstance].IMG_CACHE_DIR);
-    NSError *error = nil;
-    BOOL success = [fm removeItemAtPath:imgCacheDir error:&error];
-    
-    [fm createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    [alt dismissWithClickedButtonIndex:0 animated:NO];
-    
-    if (!success || error) {
-        alert(@"清理失败", nil);
-        return;
-    }
-    alert(@"清理完毕", nil);
+    [[[UIAlertView alloc] initWithTitle:@"确定清理缓存?"
+	                            message:nil
+		               cancelButtonItem:[RIButtonItem itemWithLabel:@"不了" action:^{
+        // Handle "Cancel"
+    }]
+				       otherButtonItems:[RIButtonItem itemWithLabel:@"现在清理" action:^{
+        UIAlertView *alt = alertNoButton(@"清理中");
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSString *imgCacheDir = makeDocPath([SldConfig getInstance].IMG_CACHE_DIR);
+        NSError *error = nil;
+        BOOL success = [fm removeItemAtPath:imgCacheDir error:&error];
+        
+        [fm createDirectoryAtPath:imgCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        [alt dismissWithClickedButtonIndex:0 animated:NO];
+        
+        if (!success || error) {
+            alert(@"清理失败", nil);
+            return;
+        }
+        alert(@"清理完毕", nil);    }], nil] show];
 }
 
 @end

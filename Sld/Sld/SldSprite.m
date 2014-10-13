@@ -94,7 +94,7 @@
     }
     
     //ext code
-    Float32 currFrameDuration = 0;
+    Float32 currFrameDuration = 0.1;
     bool hasTrans = false;
     unsigned char transIdx = 0;
     GraphicsControlBlock gcb;
@@ -108,6 +108,9 @@
             }
             DGifExtensionToGCB(extBlk->ByteCount, extBlk->Bytes, &gcb);
             currFrameDuration = gcb.DelayTime * 0.01;
+            if (currFrameDuration < 0.01) {
+                currFrameDuration = 0.1;
+            }
             break;
         }
     }

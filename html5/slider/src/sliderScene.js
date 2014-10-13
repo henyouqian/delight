@@ -23,7 +23,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-var APP_STORE_URL = "https://itunes.apple.com/cn/app/pin-pin-pin-pin-pin/id904649492?l=zh&ls=1&mt=8"
+var APP_STORE_URL = "https://itunes.apple.com/cn/app/man-pin-de/id923531990?l=zh&ls=1&mt=8"
 var USER_NAME = "userName"
 
 var DOT_Y = 940

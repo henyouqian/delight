@@ -66,6 +66,9 @@
 }
 
 - (void)onMinTimer {
+    if (!_gd.online) {
+        return;
+    }
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"player/getCouponCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {

@@ -33,7 +33,8 @@
         
         // Create a image view
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         [self.contentView addSubview:imageView];
         self.imageView = imageView;
@@ -107,7 +108,7 @@
     _asset = asset;
     
     // Update view
-    CGImageRef thumbnailImageRef = [asset thumbnail];
+    CGImageRef thumbnailImageRef = [asset aspectRatioThumbnail];
     
     if (thumbnailImageRef) {
         self.imageView.image = [UIImage imageWithCGImage:thumbnailImageRef];
@@ -121,6 +122,12 @@
     } else {
         [self hideVideoIndicatorView];
     }
+    
+    //
+//    asset.
+//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 10, 5)];
+//    [_imageView addSubview:label];
+//    label.backgroundColor = [UIColor grayColor];
 }
 
 - (UIImage *)blankImage
