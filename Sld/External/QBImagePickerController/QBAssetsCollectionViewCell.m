@@ -19,6 +19,8 @@
 @property (nonatomic, strong) QBAssetsCollectionVideoIndicatorView *videoIndicatorView;
 
 @property (nonatomic, strong) UIImage *blankImage;
+@property (nonatomic) UILabel *gifLabel;
+@property (nonatomic) UILabel *sizeLabel;
 
 @end
 
@@ -33,12 +35,32 @@
         
         // Create a image view
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-//        imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        //        imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         [self.contentView addSubview:imageView];
         self.imageView = imageView;
     }
+    
+    // gif label
+    UIColor *bgColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.5];
+    _gifLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 12)];
+    [_imageView addSubview:_gifLabel];
+    _gifLabel.backgroundColor = bgColor;
+    _gifLabel.text = @"GIF";
+    _gifLabel.font = [_gifLabel.font fontWithSize:12];
+    _gifLabel.textColor = [UIColor whiteColor];
+    _gifLabel.textAlignment = NSTextAlignmentCenter;
+    _gifLabel.hidden = YES;
+    
+    
+    _sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 12, 12)];
+    [_imageView addSubview:_sizeLabel];
+    _sizeLabel.backgroundColor = bgColor;
+    _sizeLabel.text = @"横";
+    _sizeLabel.font = [_sizeLabel.font fontWithSize:12];
+    _sizeLabel.textColor = [UIColor whiteColor];
+    _sizeLabel.textAlignment = NSTextAlignmentCenter;
     
     return self;
 }
@@ -108,7 +130,7 @@
     _asset = asset;
     
     // Update view
-    CGImageRef thumbnailImageRef = [asset aspectRatioThumbnail];
+    CGImageRef thumbnailImageRef = [asset thumbnail];
     
     if (thumbnailImageRef) {
         self.imageView.image = [UIImage imageWithCGImage:thumbnailImageRef];
@@ -123,11 +145,34 @@
         [self hideVideoIndicatorView];
     }
     
-    //
-//    asset.
-//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 10, 5)];
-//    [_imageView addSubview:label];
-//    label.backgroundColor = [UIColor grayColor];
+    // check gif
+    ALAssetRepresentation *repr = asset.defaultRepresentation;
+    
+    float width = 16;
+    float x = self.frame.size.width - width;
+    float y = self.frame.size.height - 12;
+    _sizeLabel.frame = CGRectMake(x, y, width, 12);
+    if (repr.dimensions.width > repr.dimensions.height) {
+        _sizeLabel.hidden = NO;
+    } else {
+        _sizeLabel.hidden = YES;
+    }
+    
+    _gifLabel.frame = CGRectMake(0, y, 26, 12);
+    NSRange range = [repr.filename rangeOfString:@".GIF"];
+    if (range.location == NSNotFound) {
+        _gifLabel.hidden = YES;
+    } else {
+        _gifLabel.hidden = NO;
+    }
+//    NSLog(@"%@", repr.filename);
+//    unsigned char bytes[4];
+//    [repr getBytes:bytes fromOffset:0 length:4 error:nil];
+//    if (bytes[0]=='G' && bytes[1]=='I' && bytes[2]=='F') {
+//        _gifLabel.hidden = NO;
+//    } else {
+//        _gifLabel.hidden = YES;
+//    }
 }
 
 - (UIImage *)blankImage

@@ -16,9 +16,9 @@
 #import "SldDb.h"
 
 @interface SldMainTabBarController ()
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *discView;
 @property (nonatomic) MSWeakTimer *minTimer;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) UIView *discView;
 @end
 
 @implementation SldMainTabBarController
@@ -33,6 +33,8 @@
     [super viewDidLoad];
     
     _gd = [SldGameData getInstance];
+    
+    _discView = [self.navigationController.navigationBar.subviews objectAtIndex:1];
     
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(rotateDisc)
@@ -52,7 +54,7 @@
     NSString *rules = [db getString:@"appleRules"];
     if (rules == nil) {
         //alert(nil, @"声明：游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。");
-        alertWithButton(@"声明", @"•  游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。\n•  请勿上传色情，暴力，侵权等内容。", @"知道了");
+        alertWithButton(@"声明", @"•  游戏中的比赛、比赛获得的奖励、投注以及投注获得的奖励均与苹果公司无关。\n•  请勿上传色情，暴力等不和谐内容。", @"知道了");
         
         [db setKey:@"appleRules" string:@"1"];
     }
@@ -102,7 +104,6 @@
 }
 
 - (void)rotateDisc {
-    UIView *view = [self.navigationController.navigationBar.subviews objectAtIndex:2];
     if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
         CABasicAnimation* rotationAnimation;
         rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
@@ -111,9 +112,9 @@
         rotationAnimation.cumulative = YES;
         rotationAnimation.repeatCount = 10000000;
         
-        [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+        [_discView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
     } else {
-        [view.layer removeAllAnimations];
+        [_discView.layer removeAllAnimations];
     }
 }
 

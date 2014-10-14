@@ -88,10 +88,10 @@ function updateWeixin() {
     var lineLink = window.location.href;
     var descContent = "好玩爽快的拼图游戏，小伙伴们拼起来！";
     var shareTitle = '《蛮拼的》';
-    var appid = 'wx9cb1a9d645c24d0a';
+    var appid = 'wxa959a211a5061fb6';
 
     if (gMyScore != "") {
-        descContent = "我只用了"+gMyScore+"就完成了比赛，谁敢来挑战？"
+        descContent = "我只用了"+gMyScore+"就完成了比赛，敢来挑战么？"
     }
 
     function shareFriend() {
