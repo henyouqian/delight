@@ -6,15 +6,17 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
-	// "log"
+	"net/http"
 	"net/mail"
-	// "os"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/famz/RFC2047"
 	"github.com/golang/glog"
 	"github.com/mxk/go-imap/imap"
 )
@@ -25,22 +27,47 @@ const (
 	// Pass = "nmmgblzksn"
 	// MBox = "INBOX"
 
-	Addr = "imap.qq.com:993"
-	User = "madeingermany@qq.com"
-	Pass = "nmmgbnmmgb"
-	MBox = "INBOX"
+	// Addr = "imap.qq.com:993"
+	// User = "madeingermany@qq.com"
+	// Pass = "nmmgbnmmgb"
+	// MBox = "z"
+
+	Addr = "imap.163.com:993"
+	User = "15921062294@163.com"
+	Pass = "Nmmgb808313"
+	MBox = "z"
+
+	AMAZON_EMAIL    = "gc-orders@gc.email.amazon.cn"
+	PROVIDER_AMAZON = "amazon"
 )
 
-const Msg = `
-Subject: GoIMAP
-From: GoIMAP <goimap@example.org>
+type Ecard struct {
+	Provider string
+	Price    float32
+	Code     string
+}
 
-hello, world
+var (
+	_userToken = ""
+	_conf      Conf
+	_startId   int
+	_limit     int
+)
 
-`
+type Conf struct {
+	UserName   string
+	Password   string
+	ServerHost string
+}
 
 func main() {
 	flag.Parse()
+
+	//
+	_conf.UserName = "henyouqian@gmail.com"
+	_conf.Password = "Nmmgb808313"
+	// _conf.ServerHost = "http://sld.pintugame.com"
+	_conf.ServerHost = "http://localhost:9998/"
 
 	glog.Info("starting..........")
 	// imap.DefaultLogger = log.New(os.Stdout, "", 0)
@@ -49,9 +76,9 @@ func main() {
 	c := Dial(Addr)
 	defer func() { ReportOK(c.Logout(30 * time.Second)) }()
 
-	if c.Caps["STARTTLS"] {
-		ReportOK(c.StartTLS(nil))
-	}
+	// if c.Caps["STARTTLS"] {
+	// 	ReportOK(c.StartTLS(nil))
+	// }
 
 	if c.Caps["ID"] {
 		ReportOK(c.ID("name", "goimap"))
@@ -64,163 +91,165 @@ func main() {
 		ReportOK(c.GetQuotaRoot("INBOX"))
 	}
 
-	cmd := ReportOK(c.List("", ""))
-	// delim := cmd.Data[0].MailboxInfo().Delim
+	cmd := ReportOK(c.List("", "%"))
 
-	fmt.Println("\nTop-level mailboxes:")
-	for _, rsp := range cmd.Data {
-		fmt.Println("|--", rsp.MailboxInfo())
-	}
-
-	c.Select("INBOX", false)
-	fmt.Print("\nMailbox status:\n", c.Mailbox)
-
-	fmt.Printf("Msgs: %d\n", c.Mailbox.Messages)
-
-	// Fetch the headers of the 10 most recent messages
-	set, _ := imap.NewSeqSet("")
-	if c.Mailbox.Messages >= 10 {
-		set.AddRange(c.Mailbox.Messages-9, c.Mailbox.Messages)
-	} else {
-		set.Add("1:*")
-	}
-
-	//header
-	bodySet, _ := imap.NewSeqSet("")
-	cmd, _ = c.Fetch(set, "RFC822.HEADER")
-	for cmd.InProgress() {
-		// Wait for the next response (no timeout)
-		c.Recv(-1)
-
-		// Process command data
-		for _, rsp := range cmd.Data {
-			header := imap.AsBytes(rsp.MessageInfo().Attrs["RFC822.HEADER"])
-
-			if msg, _ := mail.ReadMessage(bytes.NewReader(header)); msg != nil {
-				from := msg.Header.Get("From")
-				if strings.Contains(from, "gc-orders@gc.email.amazon.cn") {
-					bodySet.AddNum(rsp.MessageInfo().Seq)
-				}
-			}
-		}
-		cmd.Data = nil
-
-		// Process unilateral server data
-		for _, rsp := range c.Data {
-			fmt.Println("Server data:", rsp)
-		}
-		c.Data = nil
-	}
-
-	//body
-	cmd, _ = c.Fetch(bodySet, "BODY[]")
-
-	for cmd.InProgress() {
-		// Wait for the next response (no timeout)
-		c.Recv(-1)
-
-		// Process command data
-		for _, rsp := range cmd.Data {
-			body := imap.AsBytes(rsp.MessageInfo().Attrs["BODY[]"])
-			// glog.Info(string(body))
-
-			msg, err := mail.ReadMessage(bytes.NewReader(body))
-			if msg != nil {
-				// glog.Info(msg)
-				from := msg.Header.Get("From")
-				if strings.Contains(from, "gc-orders@gc.email.amazon.cn") {
-					bts, _ := ioutil.ReadAll(msg.Body)
-					str := string(bts)
-
-					yen := "=EF=BF=A5"
-					priceIdx := strings.Index(str, yen)
-					priceStr := str[priceIdx+len(yen):]
-					priceIdx = strings.Index(priceStr, "\n")
-					priceStr = priceStr[0:priceIdx]
-					glog.Info("price: ", priceStr)
-
-					strs := strings.Split(str, "Claim code ")
-					code := strs[1]
-					n := strings.Index(code, "\n")
-					code = code[0:n]
-					glog.Info("code: ", code)
-				}
-			}
-			if err != nil {
-				glog.Errorln(err)
-			}
-
-			// header := imap.AsBytes(rsp.MessageInfo().Attrs["RFC822.HEADER"])
-
-			// if msg, _ := mail.ReadMessage(bytes.NewReader(header)); msg != nil {
-			// 	fmt.Println("|--", msg.Header.Get("Subject"))
-			// 	fmt.Println("|--", msg.Header.Get("From"))
-
-			// 	bts, _ := ioutil.ReadAll(msg.Body)
-			// 	fmt.Println("|--", string(bts))
-			// }
-		}
-		cmd.Data = nil
-
-		// Process unilateral server data
-		for _, rsp := range c.Data {
-			fmt.Println("Server data:", rsp)
-		}
-		c.Data = nil
-	}
-
-	// Check command completion status
-	if rsp, err := cmd.Result(imap.OK); err != nil {
-		if err == imap.ErrAborted {
-			fmt.Println("Fetch command aborted")
-		} else {
-			fmt.Println("Fetch error:", rsp.Info)
-		}
-	}
-
-	// mbox := MBox + delim + "Demo1"
-	// if cmd, err := imap.Wait(c.Create(mbox)); err != nil {
-	// 	if rsp, ok := err.(imap.ResponseError); ok && rsp.Status == imap.NO {
-	// 		ReportOK(c.Delete(mbox))
-	// 	}
-	// 	ReportOK(c.Create(mbox))
-	// } else {
-	// 	ReportOK(cmd, err)
+	// glog.Info("\nTop-level mailboxes:")
+	// for _, rsp := range cmd.Data {
+	// 	glog.Info("|--", rsp.MailboxInfo())
 	// }
-	// ReportOK(c.List("", MBox))
-	// ReportOK(c.List("", mbox))
-	// ReportOK(c.Rename(mbox, mbox+"2"))
-	// ReportOK(c.Rename(mbox+"2", mbox))
-	// ReportOK(c.Subscribe(mbox))
-	// ReportOK(c.Unsubscribe(mbox))
-	// ReportOK(c.Status(mbox))
-	// ReportOK(c.Delete(mbox))
 
-	// ReportOK(c.Create(mbox))
-	// ReportOK(c.Select(mbox, true))
-	// ReportOK(c.Close(false))
+	c.Select(MBox, false)
+	msgId := int(c.Mailbox.Messages)
+	batchNum := 4
 
-	// msg := []byte(strings.Replace(Msg[1:], "\n", "\r\n", -1))
-	// ReportOK(c.Append(mbox, nil, nil, imap.NewLiteral(msg)))
+	ecards := make([]Ecard, 0)
 
-	// ReportOK(c.Select(mbox, false))
-	// ReportOK(c.Check())
+	for true {
+		if msgId <= 0 {
+			break
+		}
 
-	// fmt.Println(c.Mailbox)
+		set, _ := imap.NewSeqSet("")
+		msgIdMin := msgId - batchNum + 1
+		if msgIdMin < 1 {
+			msgIdMin = 1
+		}
 
-	// cmd = ReportOK(c.UIDSearch("SUBJECT", c.Quote("GoIMAP")))
-	// set, _ := imap.NewSeqSet("")
-	// set.AddNum(cmd.Data[0].SearchResults()...)
+		set.AddRange(uint32(msgIdMin), uint32(msgId))
+		msgId = msgIdMin - 1
 
-	// ReportOK(c.Fetch(set, "FLAGS", "INTERNALDATE", "RFC822.SIZE", "BODY[]"))
-	// ReportOK(c.UIDStore(set, "+FLAGS.SILENT", imap.NewFlagSet(`\Deleted`)))
-	// ReportOK(c.Expunge(nil))
-	// ReportOK(c.UIDSearch("SUBJECT", c.Quote("GoIMAP")))
+		bodySet, _ := imap.NewSeqSet("")
 
-	// fmt.Println(c.Mailbox)
+		//header
+		cmd, _ = c.Fetch(set, "RFC822.HEADER")
 
-	// ReportOK(c.Close(true))
-	// ReportOK(c.Delete(mbox))
+		for cmd.InProgress() {
+			// Wait for the next response (no timeout)
+			c.Recv(-1)
+
+			// Process command data
+			// for i := len(cmd.Data) - 1; i >= 0; i-- {
+			for i := 0; i < len(cmd.Data); i++ {
+				rsp := cmd.Data[i]
+				header := imap.AsBytes(rsp.MessageInfo().Attrs["RFC822.HEADER"])
+
+				if msg, _ := mail.ReadMessage(bytes.NewReader(header)); msg != nil {
+					from := msg.Header.Get("From")
+					subject := msg.Header.Get("Subject")
+					subject = RFC2047.Decode(subject)
+					// glog.Info(subject)
+					if strings.Contains(from, AMAZON_EMAIL) {
+						bodySet.AddNum(rsp.MessageInfo().Seq)
+					}
+				}
+			}
+
+			cmd.Data = nil
+
+			// Process unilateral server data
+			for _, rsp := range c.Data {
+				fmt.Println("Server data:", rsp)
+			}
+			c.Data = nil
+		}
+
+		//body
+		cmd, _ = c.Fetch(bodySet, "BODY[]")
+		ecardsBuff := make([]Ecard, 0)
+		for cmd.InProgress() {
+			// Wait for the next response (no timeout)
+			c.Recv(-1)
+
+			// Process command data
+			for _, rsp := range cmd.Data {
+				body := imap.AsBytes(rsp.MessageInfo().Attrs["BODY[]"])
+
+				msg, err := mail.ReadMessage(bytes.NewReader(body))
+				if msg != nil {
+					from := msg.Header.Get("From")
+
+					//amazon
+					if strings.Contains(from, AMAZON_EMAIL) {
+						bts, _ := ioutil.ReadAll(msg.Body)
+						str := string(bts)
+
+						yen := "=EF=BF=A5"
+						priceIdx := strings.Index(str, yen)
+						priceStr := str[priceIdx+len(yen):]
+						priceIdx = strings.Index(priceStr, "\n")
+						priceStr = priceStr[0 : priceIdx-1]
+						price, _ := strconv.ParseFloat(priceStr, 32)
+
+						strs := strings.Split(str, "Claim code ")
+						code := strs[1]
+						n := strings.Index(code, "\n")
+						code = code[0:n]
+
+						// expireIdx := strings.Index(str, yen)
+
+						var ecard Ecard
+						ecard.Provider = PROVIDER_AMAZON
+						ecard.Price = float32(price)
+						ecard.Code = code
+						ecardsBuff = append(ecardsBuff, ecard)
+					}
+				}
+				if err != nil {
+					glog.Errorln(err)
+				}
+
+			}
+			cmd.Data = nil
+
+			// Process unilateral server data
+			for _, rsp := range c.Data {
+				fmt.Println("Server data:", rsp)
+			}
+			c.Data = nil
+		}
+
+		//ecardsBuff to ecards
+		n := len(ecardsBuff)
+		for i, _ := range ecardsBuff {
+			ecard := ecardsBuff[n-i-1]
+			ecards = append(ecards, ecard)
+		}
+	}
+
+	//just for test
+	ecards = []Ecard{
+		{PROVIDER_AMAZON, 10, "5"},
+		{PROVIDER_AMAZON, 10, "6"},
+		{PROVIDER_AMAZON, 10, "7"},
+	}
+
+	//add to server
+	if len(ecards) > 0 {
+		loginSldServer()
+	}
+	for _, ecard := range ecards {
+		glog.Info(ecard.Code)
+
+		body := map[string]interface{}{
+			"Provider":   ecard.Provider,
+			"RmbPrice":   ecard.Price,
+			"CouponCode": ecard.Code,
+		}
+
+		js, err := json.Marshal(body)
+		checkErr(err)
+
+		bytes, err := postReq("store/addEcard", js)
+
+		if err != nil {
+			respMap := map[string]interface{}{}
+			err = json.Unmarshal(bytes, &respMap)
+			checkErr(err)
+			glog.Error("add err: ", respMap)
+		} else {
+			glog.Info("add ok: ", ecard)
+		}
+	}
 }
 
 func Dial(addr string) (c *imap.Client) {
@@ -252,22 +281,79 @@ func Sensitive(c *imap.Client, action string) imap.LogMask {
 }
 
 func ReportOK(cmd *imap.Command, err error) *imap.Command {
-	var rsp *imap.Response
+	// var rsp *imap.Response
 	if cmd == nil {
-		fmt.Printf("--- ??? ---\n%v\n\n", err)
+		// fmt.Printf("--- ??? ---\n%v\n\n", err)
 		panic(err)
 	} else if err == nil {
-		rsp, err = cmd.Result(imap.OK)
+		// rsp, err = cmd.Result(imap.OK)
 	}
 	if err != nil {
-		fmt.Printf("--- %s ---\n%v\n\n", cmd.Name(true), err)
+		// fmt.Printf("--- %s ---\n%v\n\n", cmd.Name(true), err)
 		panic(err)
 	}
 	c := cmd.Client()
-	fmt.Printf("--- %s ---\n"+
-		"%d command response(s), %d unilateral response(s)\n"+
-		"%s %s\n\n",
-		cmd.Name(true), len(cmd.Data), len(c.Data), rsp.Status, rsp.Info)
+	// fmt.Printf("--- %s ---\n"+
+	// 	"%d command response(s), %d unilateral response(s)\n"+
+	// 	"%s %s\n\n",
+	// 	cmd.Name(true), len(cmd.Data), len(c.Data), rsp.Status, rsp.Info)
+
+	cmd.Result(imap.OK)
 	c.Data = nil
 	return cmd
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func loginSldServer() {
+	client := &http.Client{}
+
+	url := _conf.ServerHost + "auth/login"
+	body := fmt.Sprintf(`{
+	    "Username": "%s",
+	    "Password": "%s"
+	}`, _conf.UserName, _conf.Password)
+
+	resp, err := client.Post(url, "application/json", bytes.NewReader([]byte(body)))
+	checkErr(err)
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		glog.Fatalf("Login Error: username=%s", _conf.UserName)
+		//glog.Fatalf("login error: resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
+	}
+	bts, err := ioutil.ReadAll(resp.Body)
+	checkErr(err)
+
+	msg := struct {
+		Token string
+	}{}
+	err = json.Unmarshal(bts, &msg)
+	checkErr(err)
+	_userToken = msg.Token
+}
+
+func postReq(partialUrl string, body []byte) (respBytes []byte, err error) {
+	url := _conf.ServerHost + partialUrl
+
+	req, err := http.NewRequest("POST", url, bytes.NewReader(body))
+	req.AddCookie(&http.Cookie{Name: "usertoken", Value: _userToken})
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	checkErr(err)
+	defer resp.Body.Close()
+	respBytes, _ = ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != 200 {
+		return respBytes, fmt.Errorf("resp.StatusCode != 200, =%d, url=%s", resp.StatusCode, url)
+	}
+	return respBytes, nil
+}
+
+func makeEcardTypeKey(provider string, price int) string {
+	return fmt.Sprintf("%s/%d", provider, price)
 }

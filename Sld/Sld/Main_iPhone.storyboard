@@ -1869,9 +1869,9 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="12345678" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uA-sV-8O6">
-                                            <rect key="frame" x="12" y="131" width="127" height="21"/>
+                                            <rect key="frame" x="12" y="135" width="127" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -2562,7 +2562,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="奖金：读取中" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xFh-RA-fJa">
-                                            <rect key="frame" x="5" y="84" width="96" height="20"/>
+                                            <rect key="frame" x="5" y="86" width="96" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="QLV-Hf-r59"/>
@@ -2580,7 +2580,7 @@
                                     <constraint firstItem="sjS-nQ-6JA" firstAttribute="leading" secondItem="ubl-Xc-0AK" secondAttribute="leading" id="K1i-EY-rxh"/>
                                     <constraint firstItem="Qp8-YQ-Scn" firstAttribute="leading" secondItem="ubl-Xc-0AK" secondAttribute="leading" id="LKm-D0-wB7"/>
                                     <constraint firstItem="Qp8-YQ-Scn" firstAttribute="top" secondItem="ubl-Xc-0AK" secondAttribute="top" id="TR0-OE-F4B"/>
-                                    <constraint firstAttribute="bottom" secondItem="xFh-RA-fJa" secondAttribute="bottom" constant="2" id="arF-P7-EBF"/>
+                                    <constraint firstAttribute="bottom" secondItem="xFh-RA-fJa" secondAttribute="bottom" id="arF-P7-EBF"/>
                                     <constraint firstAttribute="bottom" secondItem="Qp8-YQ-Scn" secondAttribute="bottom" id="dZj-Tw-o8n"/>
                                     <constraint firstAttribute="trailing" secondItem="sjS-nQ-6JA" secondAttribute="trailing" id="deH-fx-9uA"/>
                                     <constraint firstAttribute="trailing" secondItem="xFh-RA-fJa" secondAttribute="trailing" constant="5" id="lA3-Y7-IHM"/>
@@ -2674,7 +2674,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="我的排名：查询中" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lfv-Pu-Rh4">
-                                        <rect key="frame" x="20" y="263" width="268" height="21"/>
+                                        <rect key="frame" x="20" y="258" width="268" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2768,28 +2768,28 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="发布者：查询中" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="96s-U3-OOd">
-                                        <rect key="frame" x="20" y="204" width="268" height="21"/>
+                                        <rect key="frame" x="20" y="209" width="268" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="比赛剩余：查询中" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABG-Pp-vWX">
-                                        <rect key="frame" x="20" y="322" width="268" height="21"/>
+                                        <rect key="frame" x="20" y="307" width="268" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="尝试次数：查询中" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dcd-x6-BhL">
-                                        <rect key="frame" x="20" y="292" width="268" height="21"/>
+                                        <rect key="frame" x="20" y="282" width="268" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SME-Nj-oJb">
-                                        <rect key="frame" x="237" y="349" width="60" height="40"/>
+                                        <rect key="frame" x="237" y="334" width="60" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="编辑">
@@ -2801,7 +2801,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cry-XW-XX7">
-                                        <rect key="frame" x="237" y="349" width="60" height="40"/>
+                                        <rect key="frame" x="237" y="334" width="60" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="举报">
@@ -3253,7 +3253,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="奖金：读取中" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cO8-bx-374">
-                                            <rect key="frame" x="5" y="84" width="96" height="20"/>
+                                            <rect key="frame" x="5" y="86" width="96" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="nRj-Ye-fna"/>
@@ -3271,7 +3271,7 @@
                                     <constraint firstItem="cO8-bx-374" firstAttribute="leading" secondItem="qiE-fz-bWN" secondAttribute="leading" constant="5" id="C5U-oJ-VYa"/>
                                     <constraint firstAttribute="trailing" secondItem="vOB-wU-xmr" secondAttribute="trailing" id="H9m-gb-PhT"/>
                                     <constraint firstAttribute="trailing" secondItem="oaC-Ng-nfy" secondAttribute="trailing" id="Hg7-4t-oSx"/>
-                                    <constraint firstAttribute="bottom" secondItem="cO8-bx-374" secondAttribute="bottom" constant="2" id="XaJ-hT-jBY"/>
+                                    <constraint firstAttribute="bottom" secondItem="cO8-bx-374" secondAttribute="bottom" id="XaJ-hT-jBY"/>
                                     <constraint firstItem="vOB-wU-xmr" firstAttribute="leading" secondItem="qiE-fz-bWN" secondAttribute="leading" id="Zsh-N9-paD"/>
                                     <constraint firstAttribute="trailing" secondItem="x8s-J7-BE0" secondAttribute="trailing" id="eK4-5n-d3R"/>
                                     <constraint firstAttribute="bottom" secondItem="oaC-Ng-nfy" secondAttribute="bottom" id="f8n-re-d1w"/>
@@ -3384,7 +3384,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="奖金：读取中" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wD3-YI-c6h">
-                                            <rect key="frame" x="5" y="84" width="96" height="20"/>
+                                            <rect key="frame" x="5" y="86" width="96" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="ZJh-KR-DE2"/>
@@ -3399,7 +3399,7 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="ITE-ik-xGm" secondAttribute="bottom" id="3hZ-r6-hDr"/>
                                     <constraint firstItem="TPl-Gz-Pvx" firstAttribute="leading" secondItem="piV-7Y-0Xa" secondAttribute="leading" id="5kU-6o-n3t"/>
-                                    <constraint firstAttribute="bottom" secondItem="wD3-YI-c6h" secondAttribute="bottom" constant="2" id="7ue-hf-ufT"/>
+                                    <constraint firstAttribute="bottom" secondItem="wD3-YI-c6h" secondAttribute="bottom" id="7ue-hf-ufT"/>
                                     <constraint firstItem="ITE-ik-xGm" firstAttribute="top" secondItem="piV-7Y-0Xa" secondAttribute="top" id="GQa-fN-VGT"/>
                                     <constraint firstAttribute="bottom" secondItem="TPl-Gz-Pvx" secondAttribute="bottom" id="ULq-XD-umc"/>
                                     <constraint firstAttribute="trailing" secondItem="TPl-Gz-Pvx" secondAttribute="trailing" id="eBD-ND-w7K"/>
@@ -3497,7 +3497,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="28D-cR-agb"/>
         <segue reference="B7L-c9-Wa6"/>
+        <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>

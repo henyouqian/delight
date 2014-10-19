@@ -388,7 +388,7 @@
         [[[UIAlertView alloc] initWithTitle:@"邀请朋友一起玩。朋友可以直接点开链接挑战，也可以下载客户端一起玩。"
                                     message:nil
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
-            NSString *weixinText = [NSString stringWithFormat:@"我创建了一场比赛，敢来挑战么？"];
+            NSString *weixinText = [NSString stringWithFormat:@"我自己做的拼图游戏，一起来玩吧。"];
             if (_gd.matchPlay && _gd.matchPlay.highScore != 0) {
                 weixinText = [NSString stringWithFormat:@"我只用了%@就完成了比赛，敢来挑战么？", formatScore(_gd.matchPlay.highScore)];
             }
