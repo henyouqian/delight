@@ -419,7 +419,7 @@
         UIAlertView *alt = alertNoButton(@"举报中...");
         SldHttpSession *session = [SldHttpSession defaultSession];
         NSDictionary *body = @{@"MatchId":@(_gd.match.id)};
-        [session postToApi:@"etc/report" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [session postToApi:@"match/report" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             [alt dismissWithClickedButtonIndex:0 animated:NO];
             if (error) {
                 alertHTTPError(error, data);
