@@ -67,68 +67,37 @@ var cocos2dApp = cc.Application.extend({
         };
         //var key = parseInt(getUrlParam("key")) 
         var key = getUrlParam("key")
+
         var app = this
+        g_key = key
 
-        if (key == "") {
-            g_key = null
-            var id = parseInt(getUrlParam("id"))
-            var body = {
-                "MatchId": id
-            }
-
-            var url = HOST + "match/get"
-            $.post(url, JSON.stringify(body), function(resp){
-                var match = resp
-
-                var reses = []
-                g_imageUrls = []
-                g_socialPack = resp
-                var images = resp.Pack.Images
-                for (var i in images) {
-                    var image = images[i]
-                    var url = QINIU_HOST+image.Key
-                    reses.push({src:url})
-                    g_imageUrls.push(url)
-                }
-                g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
-                reses.push({src:g_bgUrl})
-
-                g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
-
-                cc.LoaderScene.preload(reses, function () {
-                    director.replaceScene(new app.startScene());
-                }, app);
-            }, "json")
-
-        } else {
-            g_key = key
-            var body = {
-                "Key": key
-            }
-            
-            var url = HOST + "social/getPack"
-            $.post(url, JSON.stringify(body), function(resp){
-                var reses = []
-                g_imageUrls = []
-                g_socialPack = resp
-                var images = resp.Pack.Images
-                for (var i in images) {
-                    var image = images[i]
-                    var url = QINIU_HOST+image.Key
-                    reses.push({src:url})
-                    g_imageUrls.push(url)
-                }
-                g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
-                reses.push({src:g_bgUrl})
-
-                g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
-
-                cc.LoaderScene.preload(reses, function () {
-                    director.replaceScene(new app.startScene());
-                }, app);
-
-            }, "json")
+        var body = {
+            "Key": key
         }
+        
+        var url = HOST + "social/getPack"
+        $.post(url, JSON.stringify(body), function(resp){
+            var reses = []
+            g_imageUrls = []
+            g_socialPack = resp
+            var images = resp.Pack.Images
+            for (var i in images) {
+                var image = images[i]
+                var url = QINIU_HOST+image.Key
+                reses.push({src:url})
+                g_imageUrls.push(url)
+            }
+            g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
+            reses.push({src:g_bgUrl})
+
+            g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
+
+            cc.LoaderScene.preload(reses, function () {
+                director.replaceScene(new app.startScene());
+            }, app);
+
+        }, "json")
+
         return true;
     }
 });

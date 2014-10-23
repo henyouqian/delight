@@ -17,8 +17,8 @@
             console.log(thumbUrl)
 
             $("#thumbRoot").append( '\
-                <div class="col-xs-4 col-md-3">\
-                <a href="index.html?id=' + match.Id + '" class="thumbnail">\
+                <div class="col-xs-4 col-sm-4">\
+                <a href="index.html?key=' + match.Id + '" class="thumbnail">\
                   <img src="' + thumbUrl +'">\
                 </a>\
               </div>\

@@ -223,12 +223,26 @@ var SliderLayer = cc.Layer.extend({
             this.reset(0)
         },this);
 
-        retry.setScale(0.75, 0.75)
+        retry.setScale(0.6, 0.6)
 
         var menuRetry = cc.Menu.create(retry)
         this._resultView.addChild(menuRetry, 0)
-        menuRetry.setPosition(cc.p(130, 100))
+        menuRetry.setPosition(cc.p(70, 100))
         menuRetry.setOpacity(120)
+
+        //more
+        var sptMore1 = cc.Sprite.create("res/more1.png")
+        var sptMore2 = cc.Sprite.create("res/more2.png")
+        var more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
+            document.location.href = "matchList.html"
+        },this);
+
+        more.setScale(0.6, 0.6)
+
+        var menuMore = cc.Menu.create(more)
+        this._resultView.addChild(menuMore, 0)
+        menuMore.setPosition(cc.p(200, 100))
+        menuMore.setOpacity(120)
 
         //rename
         var sptRename1 = cc.Sprite.create("res/rename1.png")
