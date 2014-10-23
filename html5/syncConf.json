@@ -1,5 +1,5 @@
 {
-    "src":          "/Users/liwei/Documents/projects/2014/delight/html5/slider/qiniuSync",
+    "src":          "/Users/liwei/Documents/projects/2014/delight/html5/qiniuSync",
     "dest":         "qiniu:access_key=XLlx3EjYfZJ-kYDAmNZhnH109oadlGjrGsb4plVy&secret_key=FQfB3pG4UCkQZ3G7Y9JW8az2BN1aDkIJ-7LKVwTJ&bucket=pintuhtml5",
     "deletable":    1,
     "debug_level":  1

@@ -35,13 +35,13 @@
         loadExtension:false,
         renderMode:0,       //Choose of RenderMode: 0(default), 1(Canvas only), 2(WebGL only)
         tag:'gameCanvas', //the dom element to run cocos2d on
-        // SingleEngineFile:'slider.js'
-        engineDir:'../cocos2d/',
-        appFiles:[
-            'src/sliderScene.js',
-            'src/zepto.min.js',
-            'src/resource.js',
-        ]
+        SingleEngineFile:'slider.js'
+        // engineDir:'../cocos2d/',
+        // appFiles:[
+        //     'src/sliderScene.js',
+        //     'src/zepto.min.js',
+        //     'src/resource.js',
+        // ]
     };
 
     if(!d.createElement('canvas').getContext){

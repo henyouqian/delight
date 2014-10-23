@@ -1,5 +1,6 @@
 (function(){
-    var HOST = "http://localhost:9998/"
+    var HOST = "http://sld.pintugame.com/"
+    // var HOST = "http://localhost:9998/"
     var RES_HOST = "http://dn-pintuuserupload.qbox.me/"
 
     var url = HOST + "match/list"
@@ -16,12 +17,17 @@
             var thumbUrl = RES_HOST + match.Thumb
             console.log(thumbUrl)
 
+            // $("#thumbRoot").append( '\
+            //     <div class="col-xs-4 col-sm-4">\
+            //     <a href="index.html?key=' + match.Id + '" class="thumbnail">\
+            //       <img src="' + thumbUrl +'">\
+            //     </a>\
+            //   </div>\
+            //     ' );
             $("#thumbRoot").append( '\
-                <div class="col-xs-4 col-sm-4">\
                 <a href="index.html?key=' + match.Id + '" class="thumbnail">\
                   <img src="' + thumbUrl +'">\
                 </a>\
-              </div>\
                 ' );
         }
         

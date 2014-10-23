@@ -9,10 +9,10 @@
                 debug="false" output="slider.js">
                 <!--sourceMapOutputFile="sourcemap"
                 sourceMapFormat="V3">-->
-            <externs dir="${basedir}/../cocos2d">
+            <externs dir="${basedir}/cocos2d">
                 <file name="core/cocos2d_externs.js"/>
             </externs>
-            <sources dir="${basedir}/../cocos2d">
+            <sources dir="${basedir}/cocos2d">
                 <file name="core/platform/CCClass.js"/>
                 <file name="core/cocoa/CCGeometry.js"/>
                 <file name="core/platform/Sys.js"/>
@@ -128,7 +128,7 @@
                 <file name="CCImage.js"/>
             </sources>
             <!-- extensions -->
-            <sources dir="${basedir}/../extensions">
+            <sources dir="${basedir}/extensions">
                 <file name="CCBReader/CCBReaderUtil.js"/>
                 <file name="CCBReader/CCBValue.js"/>
                 <file name="CCBReader/CCBKeyframe.js"/>

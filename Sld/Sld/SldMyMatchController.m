@@ -723,12 +723,41 @@ static const int COUPON_MAX = 10000;
                 
                 _uploadNum = 0;
                 _finishNum = 0;
+//                int i = 0;
+                
+                SldConfig *conf = [SldConfig getInstance];
                 int i = 0;
                 for (NSString *filePath in filePathes) {
                     NSString *key = [fileKeys objectAtIndex:i];
-                    [_uploader uploadFile:filePath key:key extra:nil];
-                    _uploadNum++;
                     i++;
+                    NSString *strUrl = [NSString stringWithFormat:@"%@/%@", conf.UPLOAD_HOST, key];
+                    _uploadNum++;
+                    
+                    //check exist
+                    NSURL *url = [NSURL URLWithString: strUrl];
+                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url];
+                    [request setHTTPMethod: @"HEAD"];
+                    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                        NSHTTPURLResponse *response;
+                        NSError *error;
+                        [NSURLConnection sendSynchronousRequest: request returningResponse: &response error: &error];
+                        
+                        dispatch_async( dispatch_get_main_queue(), ^{
+                            if (response.statusCode != 200) {
+                                //upload
+                                [_uploader uploadFile:filePath key:key extra:nil];
+                            } else {
+                                _finishNum++;
+                                if (_finishNum >= _uploadNum) {
+                                    [self addUserPack];
+                                } else {
+                                    float f = (float)_finishNum/_uploadNum;
+                                    int n = f*100;
+                                    _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+                                }
+                            }
+                        });
+                    });
                 }
             }];
         });

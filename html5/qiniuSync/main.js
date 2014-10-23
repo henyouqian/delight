@@ -27,7 +27,7 @@
 var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
 // var QINIU_HOST = "http://dn-pintugame.qbox.me/"
-var QINIU_HOST = "dn-pintuuserupload.qbox.me/"
+var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"
 
 var cocos2dApp = cc.Application.extend({
     config:document['ccConfig'],
@@ -67,13 +67,16 @@ var cocos2dApp = cc.Application.extend({
         };
         //var key = parseInt(getUrlParam("key")) 
         var key = getUrlParam("key")
+
+        var app = this
         g_key = key
-        var data = {
+
+        var body = {
             "Key": key
         }
-        var app = this
+        
         var url = HOST + "social/getPack"
-        $.post(url, JSON.stringify(data), function(resp){
+        $.post(url, JSON.stringify(body), function(resp){
             var reses = []
             g_imageUrls = []
             g_socialPack = resp
@@ -89,16 +92,11 @@ var cocos2dApp = cc.Application.extend({
 
             g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
 
-
             cc.LoaderScene.preload(reses, function () {
                 director.replaceScene(new app.startScene());
             }, app);
 
-            
-
         }, "json")
-
-        
 
         return true;
     }

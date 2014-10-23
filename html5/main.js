@@ -24,10 +24,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-// var HOST = "http://sld.pintugame.com/"
-var HOST = "http://localhost:9998/"
-// var QINIU_HOST = "http://dn-pintugame.qbox.me/"
+var HOST = "http://sld.pintugame.com/"
+// var HOST = "http://localhost:9998/"
 var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"
+var MATCH_LIST_URL = "http://www.pintugame.com/"
 
 var cocos2dApp = cc.Application.extend({
     config:document['ccConfig'],

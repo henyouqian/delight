@@ -234,7 +234,7 @@ var SliderLayer = cc.Layer.extend({
         var sptMore1 = cc.Sprite.create("res/more1.png")
         var sptMore2 = cc.Sprite.create("res/more2.png")
         var more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
-            document.location.href = "matchList.html"
+            document.location.href = MATCH_LIST_URL
         },this);
 
         more.setScale(0.6, 0.6)
@@ -298,7 +298,7 @@ var SliderLayer = cc.Layer.extend({
         var menu2 = cc.Menu.create(appStore);
         // menu.alignItemsVerticallyWithPadding(10);
         this._resultView.addChild(menu2, 0);
-        menu2.setPosition(cc.p(winSize.width-200, 100));
+        menu2.setPosition(cc.p(winSize.width-180, 100));
 
         //time label
         this._timeLabel = cc.LabelTTF.create("0:00.000", "Arial", 70, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
@@ -375,12 +375,26 @@ var SliderLayer = cc.Layer.extend({
             this._startView.setVisible(false)
             // document.location.href = "ads.html"
         },this);
-        start.setScale(0.75, 0.75)
-        start.setOpacity(160)
+        start.setScale(0.6, 0.6)
+        start.setOpacity(120)
 
         var startMenu = cc.Menu.create(start);
         this._startView.addChild(startMenu, 1);
-        startMenu.setPosition(cc.p(140, 140));
+        startMenu.setPosition(cc.p(70, 140));
+
+        //more
+        sptMore1 = cc.Sprite.create("res/more1.png")
+        sptMore2 = cc.Sprite.create("res/more2.png")
+        more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
+            document.location.href = MATCH_LIST_URL
+        },this);
+
+        more.setScale(0.6, 0.6)
+
+        menuMore = cc.Menu.create(more)
+        this._startView.addChild(menuMore, 1)
+        menuMore.setPosition(cc.p(200, 140))
+        menuMore.setOpacity(120)
 
         //name label
         var y = 420
@@ -419,7 +433,7 @@ var SliderLayer = cc.Layer.extend({
         var menuAppStore = cc.Menu.create(appStore);
         // menu.alignItemsVerticallyWithPadding(10);
         this._startView.addChild(menuAppStore, 0);
-        menuAppStore.setPosition(cc.p(winSize.width-200, 140));
+        menuAppStore.setPosition(cc.p(winSize.width-180, 140));
 
 
         //rank

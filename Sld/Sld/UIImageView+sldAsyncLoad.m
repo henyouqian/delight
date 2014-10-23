@@ -96,7 +96,7 @@
                  if (indicatorView) {
                      [indicatorView removeFromSuperview];
                  }
-                 lwError("Download error: %@", error.localizedDescription);
+                 lwError("Download error: %@, url:%@", error.localizedDescription, location);
                  return;
              }
              
@@ -162,7 +162,7 @@
                  if (indicatorView) {
                      [indicatorView removeFromSuperview];
                  }
-                 lwError("Download error: %@", error.localizedDescription);
+                 lwError("Download error: %@, url:%@", error.localizedDescription, location);
                  return;
              }
              
@@ -299,7 +299,7 @@
                  return;
              }
              if (error) {
-                 lwError("Download error: %@", error.localizedDescription);
+                 lwError("Download error: %@, url:%@", error.localizedDescription, location);
                  return;
              }
              
@@ -375,7 +375,7 @@
              }
              
              if (error) {
-                 lwError("Download error: %@", error.localizedDescription);
+                 lwError("Download error: %@, url:%@", error.localizedDescription, location);
                  return;
              }
              

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="res/icon.png"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>蛮拼的</title>
 
     <!-- Bootstrap -->
@@ -12,19 +12,26 @@
     <style type="text/css">
 	    .col-xs-4 {
 		    padding: 0;
+		    margin:0;
 		}
 		.col-xs-4 a {
 		    margin-bottom: 0;
 		}
 		.row {
-			margin-left: 10px;
-			margin-right: 10px;
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+		.fontZero {
+			font-size: 0;
+			padding-right: 5px;
+			padding-left: 5px;
 		}
 
 		.thumbnail {
-			display: block;
+			display: inline-block;
+			width:32%;
 			padding: 0px;
-			margin: 2px;
+			margin: 1px;
 			background-color: #fff;
 			border: 0px solid #ddd;
 			-webkit-transition: all .2s ease-in-out;
@@ -42,13 +49,11 @@
     <![endif]-->
   </head>
   <body>
-    <h3> &nbsp更多：</h3>
-
-    <div class="container">
-    	<div class="row" id="thumbRoot">
-
-		</div>
+  	</br>
+    <div class="container fontZero" id="thumbRoot">
+    	
     </div>
+	</br>
     
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -56,5 +61,6 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="matchList.js"></script>
+    <script charset="gbk" src="http://p.tanx.com/ex?i=mm_62440092_7858637_26616991&m=1"></script>
   </body>
 </html>
