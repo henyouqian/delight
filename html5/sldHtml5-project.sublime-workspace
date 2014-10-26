@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"inl",
+				"inline-block"
+			],
+			[
+				"paddin",
+				"padding-right"
+			],
+			[
+				"pad",
+				"padding-left"
+			],
+			[
 				"he",
 				"WriteHeader	 ƒ"
 			],
@@ -444,10 +456,58 @@
 	"buffers":
 	[
 		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 1502,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "main.js",
+			"settings":
+			{
+				"buffer_size": 3915,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "cocos2d.js",
 			"settings":
 			{
-				"buffer_size": 3980,
+				"buffer_size": 3995,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/sliderScene.js",
+			"settings":
+			{
+				"buffer_size": 27782,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "matchList.html",
+			"settings":
+			{
+				"buffer_size": 1811,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "matchList.js",
+			"settings":
+			{
+				"buffer_size": 1891,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/resource.js",
+			"settings":
+			{
+				"buffer_size": 618,
 				"line_ending": "Windows"
 			}
 		}
@@ -566,6 +626,26 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"document.location.href",
+			"MATCH_LIST_URL",
+			"document.location.href",
+			"matchlist",
+			"app store",
+			"_startView",
+			"start",
+			"g_key",
+			"g_sldNum",
+			"apiMatchmod",
+			"g_",
+			"g_socialPack",
+			"data",
+			"g_key",
+			"app",
+			"pack",
+			"reses",
+			"g_imageUrls",
+			"HOST",
+			"post",
 			"HandleFunc",
 			"Access-Control-Allow-Origin",
 			"rootTextFile",
@@ -673,27 +753,7 @@
 			"HGetStruct",
 			"getPlayerInfo",
 			"apiGetPlayerInfo",
-			"PLAYER_COUPON",
-			"PLAYER_COUPON_CACHE",
-			"ssdb.HGet",
-			"HGet",
-			"hget",
-			"apiGetPlayerInfo",
-			"RewardRecord",
-			"listMyReward",
-			"itune",
-			"充值",
-			"MATCH_TIME_HOUR",
-			"24",
-			"endtime",
-			"en d",
-			"apiMatchNew",
-			"makePlayerEcardZsetKey",
-			"in.StartId",
-			"listmyecar",
-			"handleError",
-			".Provider",
-			"provider"
+			"PLAYER_COUPON"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -724,23 +784,189 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "cocos2d.js",
+					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 3980,
+						"buffer_size": 1502,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								193,
+								193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "main.js",
+					"settings":
+					{
+						"buffer_size": 3915,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1595,
+								1595
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 3.0,
+						"translation.y": 273.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "cocos2d.js",
+					"settings":
+					{
+						"buffer_size": 3995,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1762,
+								1778
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 500.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/sliderScene.js",
+					"settings":
+					{
+						"buffer_size": 27782,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13249,
+								13249
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7569.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "matchList.html",
+					"settings":
+					{
+						"buffer_size": 1811,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1381,
+								1381
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 753.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "matchList.js",
+					"settings":
+					{
+						"buffer_size": 1891,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								306,
+								306
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/resource.js",
+					"settings":
+					{
+						"buffer_size": 618,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								383,
+								383
 							]
 						],
 						"settings":
@@ -764,7 +990,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 37.0
 	},
 	"layout":
 	{
