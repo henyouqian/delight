@@ -369,7 +369,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @end
 
 //=============================
-@interface SldMyMatchSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate, QiniuUploadDelegate>
+@interface SldMyMatchSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UISlider *slider;
 @property (weak, nonatomic) IBOutlet UILabel *priceLable;
 @property (weak, nonatomic) IBOutlet UILabel *goldCoinLabel;
@@ -385,7 +385,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @property (nonatomic) int rewardCoupon;
 @property (nonatomic) NSArray *numbers;
 
-@property (nonatomic) QiniuSimpleUploader* uploader;
+@property (nonatomic) QNUploadManager *upManager;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) int uploadNum;
 @property (nonatomic) int finishNum;
@@ -718,8 +718,7 @@ static const int COUPON_MAX = 10000;
                 
                 NSString *token = [dict objectForKey:@"Token"];
                 
-                _uploader = [QiniuSimpleUploader uploaderWithToken:token];
-                _uploader.delegate = self;
+                _upManager = [[QNUploadManager alloc] init];
                 
                 _uploadNum = 0;
                 _finishNum = 0;
@@ -745,7 +744,27 @@ static const int COUPON_MAX = 10000;
                         dispatch_async( dispatch_get_main_queue(), ^{
                             if (response.statusCode != 200) {
                                 //upload
-                                [_uploader uploadFile:filePath key:key extra:nil];
+                                [_upManager putFile:filePath
+                                               key:key
+                                             token:token
+                                          complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                                              if (info.ok) {
+                                                  _finishNum++;
+                                                  if (_finishNum >= _uploadNum) {
+                                                      [self addUserPack];
+                                                  } else {
+                                                      float f = (float)_finishNum/_uploadNum;
+                                                      int n = f*100;
+                                                      _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+                                                  }
+                                              } else {
+                                                  [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                                                  _alt = nil;
+                                                  alert(@"上传失败", nil);
+                                                  lwError(@"uploadFailed: %@", filePath);
+                                              }
+                                          }
+                                            option:nil];
                             } else {
                                 _finishNum++;
                                 if (_finishNum >= _uploadNum) {
@@ -763,24 +782,6 @@ static const int COUPON_MAX = 10000;
         });
     });
     
-}
-
-- (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
-    _finishNum++;
-    if (_finishNum >= _uploadNum) {
-        [self addUserPack];
-    } else {
-        float f = (float)_finishNum/_uploadNum;
-        int n = f*100;
-        _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
-    }
-}
-
-- (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
-    [_alt dismissWithClickedButtonIndex:0 animated:YES];
-    _alt = nil;
-    alert(@"上传失败", nil);
-    lwError(@"uploadFailed: %@", filePath);
 }
 
 - (void)addUserPack {

@@ -245,9 +245,9 @@
         _imageViews = [NSMutableArray array];
         for(NSString *imageKey in images) {
             CGRect frame;
-            frame.origin.x = (cell.scrollView.frame.size.width) * (imageIndex+1);
+            frame.origin.x = (cell.contentView.frame.size.width) * (imageIndex+1);
             frame.origin.y = 0;
-            frame.size = cell.frame.size;
+            frame.size = cell.contentView.frame.size;
             //frame = CGRectInset(frame, 5.0, 0.0);
             
             SldAsyncImageView *imageView = [[SldAsyncImageView alloc] initWithImage:nil];
@@ -261,16 +261,19 @@
             
             imageIndex++;
         }
-        CGSize pageScrollViewSize = cell.scrollView.frame.size;
+        CGSize pageScrollViewSize = cell.contentView.frame.size;
         cell.scrollView.contentSize = CGSizeMake(pageScrollViewSize.width * (images.count+1), pageScrollViewSize.height);
         
         //set second page present
         [cell.pageControl setCurrentPage:1];
         
-        frame = cell.scrollView.frame;
+        cell.scrollView.frame = cell.frame;
+        
+        frame = cell.contentView.frame;
         frame.origin.x = frame.size.width;
         frame.origin.y = 0;
         [cell.scrollView scrollRectToVisible:frame animated:NO];
+        lwInfo("%f, %f, %f, %f", cell.scrollView.frame.origin.x, cell.scrollView.frame.origin.y, cell.scrollView.frame.size.width, cell.scrollView.frame.size.height);
         
         //tap gesture
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];

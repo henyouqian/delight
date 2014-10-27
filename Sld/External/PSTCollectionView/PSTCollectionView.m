@@ -2280,17 +2280,39 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
     }
 }
 
-CGFloat PSTSimulatorAnimationDragCoefficient(void) {
-    static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
+//CGFloat PSTSimulatorAnimationDragCoefficient(void) {
+//    static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
+//#if TARGET_IPHONE_SIMULATOR
+//#import <dlfcn.h>
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        UIAnimationDragCoefficient = (CGFloat (*)(void))dlsym(RTLD_DEFAULT, "UIAnimationDragCoefficient");
+//    });
+//#endif
+//    return UIAnimationDragCoefficient ? UIAnimationDragCoefficient() : 1.f;
+//}
+
 #if TARGET_IPHONE_SIMULATOR
 #import <dlfcn.h>
+CGFloat PSTSimulatorAnimationDragCoefficient(void) {
+    static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         UIAnimationDragCoefficient = (CGFloat (*)(void))dlsym(RTLD_DEFAULT, "UIAnimationDragCoefficient");
     });
-#endif
+
     return UIAnimationDragCoefficient ? UIAnimationDragCoefficient() : 1.f;
 }
+
+#else
+
+CGFloat PSTSimulatorAnimationDragCoefficient(void) {
+    static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
+    return UIAnimationDragCoefficient ? UIAnimationDragCoefficient() : 1.f;
+}
+
+#endif
 
 // helper to check for ivar layout
 #if 0

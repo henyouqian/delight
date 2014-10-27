@@ -257,9 +257,27 @@ static NSArray *_genderStrings;
             NSString *token = [dict objectForKey:@"Token"];
             
             //upload
-            QiniuSimpleUploader *uploader = [QiniuSimpleUploader uploaderWithToken:token];
-            uploader.delegate = self;
-            [uploader uploadFile:filePath key:key extra:nil];
+            QNUploadManager *upManager = [[QNUploadManager alloc] init];
+            [upManager putFile:filePath
+                        key:key
+                        token:token
+                        complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                            if (info.ok) {
+                                [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
+                                [self save];
+                                _gd.playerInfo.customAvatarKey = _customAvatarKey;
+                                _needUploadCustomAvatar = NO;
+                            } else {
+                                [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
+                                alert(@"头像上传失败", nil);
+                                _customAvatarKey = _gd.playerInfo.customAvatarKey;
+                            }
+                        }
+                        option:nil];
+                        
+//            QiniuSimpleUploader *uploader = [QiniuSimpleUploader uploaderWithToken:token];
+//            uploader.delegate = self;
+//            [uploader uploadFile:filePath key:key extra:nil];
         }];
     } else {
         [self save];
@@ -304,19 +322,6 @@ static NSArray *_genderStrings;
         SldUserController *userVc = [SldUserController getInstance];
         [userVc updateUI];
     }];
-}
-
-- (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
-    [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
-    [self save];
-    _gd.playerInfo.customAvatarKey = _customAvatarKey;
-    _needUploadCustomAvatar = NO;
-}
-
-- (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
-    [_avatarUploadAlt dismissWithClickedButtonIndex:0 animated:YES];
-    alert(@"头像上传失败", nil);
-    _customAvatarKey = _gd.playerInfo.customAvatarKey;
 }
 
 - (IBAction)onCancel:(id)sender {

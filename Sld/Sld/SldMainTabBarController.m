@@ -41,9 +41,6 @@
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
     
-    //login view
-    [SldLoginViewController createAndPresentWithCurrentController:self animated:NO];
-    
     [self.tabBar setSelectedImageTintColor:makeUIColor(244, 75, 116, 255)];
     
     //timer
@@ -62,6 +59,8 @@
     //login notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
 }
+
+
 
 - (void)onLogin {
     [self onMinTimer];
@@ -101,6 +100,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self rotateDisc];
+    
+    //login view
+    SldGameData *gd = [SldGameData getInstance];
+    if (!gd.online) {
+        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+    }
 }
 
 - (void)rotateDisc {

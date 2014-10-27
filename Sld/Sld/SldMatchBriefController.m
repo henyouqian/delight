@@ -434,7 +434,7 @@
 @end
 
 //====================================
-@interface SldMatchEditController : UIViewController <UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, QiniuUploadDelegate>
+@interface SldMatchEditController : UITableViewController <UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
 @property (weak, nonatomic) IBOutlet UITextField *urlInput;
@@ -444,7 +444,7 @@
 @property (nonatomic) UIImage *promoImage;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) BOOL imageChanged;
-@property (nonatomic) QiniuSimpleUploader* uploader;
+@property (nonatomic) QNUploadManager *upManager;
 @property (nonatomic) UIAlertView *alt;
 @property (nonatomic) NSString *imageKey;
 
@@ -601,10 +601,20 @@
                 
                 NSString *token = [dict objectForKey:@"Token"];
                 
-                _uploader = [QiniuSimpleUploader uploaderWithToken:token];
-                _uploader.delegate = self;
-                
-                [_uploader uploadFile:filePath key:_imageKey extra:nil];
+                _upManager = [[QNUploadManager alloc] init];
+                [_upManager putFile:filePath
+                                key:_imageKey
+                              token:token
+                           complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                               if (info.ok) {
+                                  [self postModMsg];
+                               } else {
+                                   [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                                   _alt = nil;
+                                   alert(@"上传失败", nil);
+                               }
+                           }
+                             option:nil];
             }];
         } else {
             [self postModMsg];
@@ -614,16 +624,6 @@
     } else {
         alert(@"没有任何变动。", nil);
     }
-}
-
-- (void)uploadSucceeded:(NSString *)filePath ret:(NSDictionary *)ret {
-    [self postModMsg];
-}
-
-- (void)uploadFailed:(NSString *)filePath error:(NSError *)error {
-    [_alt dismissWithClickedButtonIndex:0 animated:YES];
-    _alt = nil;
-    alert(@"上传失败", nil);
 }
 
 - (void)postModMsg {
