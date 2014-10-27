@@ -115,6 +115,8 @@ static UIView *_hudView = nil;
                 return;
             }
             
+            [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+            
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (error) {
                 lwError("Json error:%@", [error localizedDescription]);
@@ -125,8 +127,6 @@ static UIView *_hudView = nil;
             gd.playerInfo.goldCoin = goldCoin;
             alert([NSString stringWithFormat:@"获得%d个金币，现有%d个金币", addGoldCoin, goldCoin], nil);
             [[SldUserController getInstance] updateMoney];
-            
-            [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
         }];
     }];
 }

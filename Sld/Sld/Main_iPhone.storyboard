@@ -1054,7 +1054,7 @@
                                             <action selector="onWeiboLoginButton:" destination="hGO-Bw-qgY" eventType="touchUpInside" id="3tZ-cb-Y7w"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tcWeibo64.png" translatesAutoresizingMaskIntoConstraints="NO" id="DfQ-O1-mvq">
+                                    <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qq64.png" translatesAutoresizingMaskIntoConstraints="NO" id="DfQ-O1-mvq">
                                         <rect key="frame" x="142" y="275" width="36" height="36"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="36" id="VtS-Ly-nxv"/>
@@ -1727,7 +1727,7 @@
                             <constraint firstItem="nu4-5Z-8gv" firstAttribute="leading" secondItem="fxD-Hh-Fhp" secondAttribute="leading" id="xf1-ks-5Db"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="兑奖" image="otlBag48.png" badgeValue="奖" id="Vz3-5I-Fne"/>
+                    <tabBarItem key="tabBarItem" title="兑奖" image="otlBag48.png" id="Vz3-5I-Fne"/>
                     <connections>
                         <outlet property="buyView" destination="nu4-5Z-8gv" id="Fs9-8X-sMN"/>
                         <outlet property="cardView" destination="H2W-Fg-VdH" id="yeT-9q-FJ5"/>
@@ -4069,7 +4069,7 @@
         <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlTimer48.png" width="24" height="24"/>
         <image name="otlUser48.png" width="24" height="24"/>
-        <image name="tcWeibo64.png" width="128" height="128"/>
+        <image name="qq64.png" width="128" height="128"/>
         <image name="thumbDarker2.png" width="256" height="51"/>
         <image name="weibo64.png" width="128" height="128"/>
     </resources>

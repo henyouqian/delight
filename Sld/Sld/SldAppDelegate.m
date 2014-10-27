@@ -65,7 +65,7 @@
     
     //umeng
     [UMSocialData setAppKey:conf.UMENG_SOCIAL_KEY];
-    [UMSocialWechatHandler setWXAppId:conf.WEIXIN_KEY url:@"http://www.umeng.com/social"];
+    [UMSocialWechatHandler setWXAppId:conf.WEIXIN_KEY appSecret:@"b3e3e5593a736a3439529d881cf85a1e" url:@"http://www.umeng.com/social"];
     [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
     //

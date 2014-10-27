@@ -65,20 +65,49 @@ static NSArray *_genderStrings;
     _nameInput.delegate = self;
     
     _genderStrings = @[@"女", @"男", @"保密"];
+    PlayerSnsInfo *snsInfo = [PlayerSnsInfo getInstance];
     
-    _nameInput.text = playerInfo.nickName;
-    _genderInput.text = [_genderStrings objectAtIndex:playerInfo.gender];
-    _teamInput.text = playerInfo.teamName;
-    _gravatarKey = playerInfo.gravatarKey;
-    if (!_gravatarKey) {
-        _gravatarKey = @"";
-    }
-    _customAvatarKey = playerInfo.customAvatarKey;
-    if (!_customAvatarKey) {
-        _customAvatarKey = @"";
+    if (playerInfo) {
+        _nameInput.text = playerInfo.nickName;
+        _genderInput.text = [_genderStrings objectAtIndex:playerInfo.gender];
+        _teamInput.text = playerInfo.teamName;
+        _gravatarKey = playerInfo.gravatarKey;
+        if (!_gravatarKey) {
+            _gravatarKey = @"";
+        }
+        _customAvatarKey = playerInfo.customAvatarKey;
+        if (!_customAvatarKey) {
+            _customAvatarKey = @"";
+        }
+    } else {
+        _nameInput.text = snsInfo.nickName;
+        
+        if (snsInfo.gender && ([snsInfo.gender compare:@"男"] == 0 || [snsInfo.gender compare:@"女"] == 0)) {
+            _genderInput.text = snsInfo.gender;
+        } else {
+            _genderInput.text = _genderStrings[2];
+        }
+        
+        if (snsInfo.teamName.length == 0) {
+            snsInfo.teamName = _gd.TEAM_NAMES[arc4random() % _gd.TEAM_NAMES.count];
+        }
+        _teamInput.text = snsInfo.teamName;
+        
+        //thumb
+        if (snsInfo.customAvatarKey.length > 0) {
+            _needUploadCustomAvatar = YES;
+            [_avatarImageView asyncLoadImageWithUrl:snsInfo.customAvatarKey showIndicator:NO completion:nil];
+            _gravatarKey = @"";
+        } else {
+            _gravatarKey = [NSString stringWithFormat:@"%u", arc4random() % UINT32_MAX];
+        }
+        
+//        _customAvatarKey = info.customAvatarKey;
     }
     
-    [SldUtil loadAvatar:_avatarImageView gravatarKey:playerInfo.gravatarKey customAvatarKey:_gd.playerInfo.customAvatarKey];
+    if (!_needUploadCustomAvatar) {
+        [SldUtil loadAvatar:_avatarImageView gravatarKey:_gravatarKey customAvatarKey:_customAvatarKey];
+    }
     
     if (_nameInput.text == nil || _nameInput.text.length == 0) {
         [_nameInput becomeFirstResponder];
@@ -523,6 +552,24 @@ static UInt32 _idStart = 0;
 
 @end
 
+
+static PlayerSnsInfo *_playerSnsInfo = nil;
+
+@implementation PlayerSnsInfo : NSObject
+
++ (instancetype)getInstance {
+    if (_playerSnsInfo == nil) {
+        _playerSnsInfo = [[PlayerSnsInfo alloc] init];
+        _playerSnsInfo.nickName = @"";
+        _playerSnsInfo.gender = @"";
+        _playerSnsInfo.teamName = @"";
+        _playerSnsInfo.gravatarKey = @"";
+        _playerSnsInfo.customAvatarKey = @"";
+    }
+    return _playerSnsInfo;
+}
+
+@end
 
 
 

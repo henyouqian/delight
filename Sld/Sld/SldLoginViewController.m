@@ -16,7 +16,7 @@
 #import "SldIapController.h"
 
 static NSString *SNS_WEIBO = @"weibo";
-static NSString *SNS_TENCENT = @"tencent";
+static NSString *SNS_QZONE = @"qzone";
 static NSString *SNS_DOUBAN = @"douban";
 
 
@@ -74,7 +74,7 @@ static NSString *SNS_DOUBAN = @"douban";
 }
 
 - (IBAction)onQQLoginButton:(id)sender {
-    [self snsLogin:UMShareToTencent];
+    [self snsLogin:UMShareToQzone];
 }
 
 - (IBAction)onDoubanLoginButton:(id)sender {
@@ -92,15 +92,29 @@ static NSString *SNS_DOUBAN = @"douban";
           NSString *type = @"";
           NSString *key = @"";
           NSDictionary *snsDict = [response.data objectForKey:snsName];
+          PlayerSnsInfo *info = [PlayerSnsInfo getInstance];
           if ([snsName compare:UMShareToSina] == 0) {
               type = SNS_WEIBO;
-              key = [snsDict objectForKey:@"usid"];
-          } else if ([snsName compare:UMShareToTencent] == 0) {
-              type = SNS_TENCENT;
-              key = [snsDict objectForKey:@"openid"];
+          } else if ([snsName compare:UMShareToQzone] == 0) {
+              type = SNS_QZONE;
           } else if ([snsName compare:UMShareToDouban] == 0) {
               type = SNS_DOUBAN;
-              key = [snsDict objectForKey:@"usid"];
+          }
+          key = [snsDict objectForKey:@"usid"];
+          
+          info.nickName = [snsDict objectForKey:@"username"];
+          if (![info.nickName isKindOfClass:[NSString class]]) {
+              info.nickName = @"";
+          }
+          
+          info.gender = [snsDict objectForKey:@"gender"];
+          if (![info.gender isKindOfClass:[NSString class]]) {
+              info.gender = @"";
+          }
+          
+          info.customAvatarKey = [snsDict objectForKey:@"icon"];
+          if (![info.customAvatarKey isKindOfClass:[NSString class]]) {
+              info.customAvatarKey = @"";
           }
           
           [self snsLoginWithType:type Key:key];
@@ -235,7 +249,7 @@ static NSString *SNS_DOUBAN = @"douban";
         
         //
         if ([username compare:SNS_WEIBO] == 0
-            || [username compare:SNS_TENCENT] == 0
+            || [username compare:SNS_QZONE] == 0
             || [username compare:SNS_DOUBAN] == 0)
         {
             NSString *type = username;

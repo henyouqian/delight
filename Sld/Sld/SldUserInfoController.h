@@ -16,3 +16,15 @@
 @interface SldAvatarSelectController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) SldUserInfoController *userInfoController;
 @end
+
+
+@interface PlayerSnsInfo : NSObject
++ (instancetype)getInstance;
+
+@property (nonatomic) NSString *nickName;
+@property (nonatomic) NSString *gender;
+@property (nonatomic) NSString *teamName;
+@property (nonatomic) NSString *gravatarKey;
+@property (nonatomic) NSString *customAvatarKey;
+
+@end
