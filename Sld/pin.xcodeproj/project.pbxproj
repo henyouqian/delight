@@ -86,6 +86,8 @@
 		D014466A19A1167E00D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466319A1167E00D47DCA /* QBImagePickerController.strings */; };
 		D014466B19A1167E00D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466619A1167E00D47DCA /* QBImagePickerController.strings */; };
 		D014466F19A1174600D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466D19A1174600D47DCA /* QBImagePickerController.strings */; };
+		D01B3B281A04DDE600C7BD10 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B3B271A04DDE600C7BD10 /* libicucore.dylib */; };
+		D01B3B2B1A04E4FF00C7BD10 /* SldBattleController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B3B2A1A04E4FF00C7BD10 /* SldBattleController.m */; };
 		D02F76BB197FFBE200E742F8 /* btnBgBlue90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */; };
 		D02F76BC197FFBE200E742F8 /* btnBgGreen90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */; };
 		D02F76BD197FFBE200E742F8 /* btnBgRed90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */; };
@@ -395,6 +397,9 @@
 		D014466419A1167E00D47DCA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = QBImagePickerController.strings; sourceTree = "<group>"; };
 		D014466719A1167E00D47DCA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = QBImagePickerController.strings; sourceTree = "<group>"; };
 		D014466E19A1174600D47DCA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = QBImagePickerController.strings; sourceTree = "<group>"; };
+		D01B3B271A04DDE600C7BD10 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		D01B3B291A04E4FF00C7BD10 /* SldBattleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleController.h; sourceTree = "<group>"; };
+		D01B3B2A1A04E4FF00C7BD10 /* SldBattleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleController.m; sourceTree = "<group>"; };
 		D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgBlue90h@2x.png"; sourceTree = "<group>"; };
 		D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgGreen90h@2x.png"; sourceTree = "<group>"; };
 		D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgRed90h@2x.png"; sourceTree = "<group>"; };
@@ -587,6 +592,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D01B3B281A04DDE600C7BD10 /* libicucore.dylib in Frameworks */,
 				D057C1D519FE625B00C56A0D /* libUMSocial_Sdk_4.2.a in Frameworks */,
 				D02F76E5198261D400E742F8 /* libSocialWechat.a in Frameworks */,
 				D02F76E6198261D400E742F8 /* libWeChatSDK.a in Frameworks */,
@@ -650,6 +656,7 @@
 		B31EE7CA18F05BE60047E9FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D01B3B271A04DDE600C7BD10 /* libicucore.dylib */,
 				D06748C91A00E60600C390DB /* libDomobAdSDK.a */,
 				D06748C71A00E5CF00C390DB /* libBaiduMobAdSdk.a */,
 				D0C4EFA519A4396C00D2F1D0 /* libGoogleAdMobAds.a */,
@@ -855,6 +862,8 @@
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				D02F76C0198142AE00E742F8 /* SldPackTestController.h */,
 				D02F76C1198142AF00E742F8 /* SldPackTestController.m */,
+				D01B3B291A04E4FF00C7BD10 /* SldBattleController.h */,
+				D01B3B2A1A04E4FF00C7BD10 /* SldBattleController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -1496,6 +1505,7 @@
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
+				D01B3B2B1A04E4FF00C7BD10 /* SldBattleController.m in Sources */,
 				D0667D6419514DD700AD9282 /* SldIapController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
@@ -1702,14 +1712,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/External/Flurry",
-					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_4.0",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_4.2",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.2_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_435/DomobAdSDK",
@@ -1747,14 +1753,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdsMoGoSDK",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_429/DomobAdSDK",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd",
 					"$(PROJECT_DIR)/External/Flurry",
-					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_4.0",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib",
-					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_692",
 					"$(PROJECT_DIR)/External/umeng_ios_social/UMSocial_Sdk_4.2",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.2_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_435/DomobAdSDK",

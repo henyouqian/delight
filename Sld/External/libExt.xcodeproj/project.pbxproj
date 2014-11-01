@@ -101,6 +101,7 @@
 		D014464C199F912E00D47DCA /* QBImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0144640199F912E00D47DCA /* QBImagePickerController.m */; };
 		D014464D199F912E00D47DCA /* QBImagePickerGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0144642199F912E00D47DCA /* QBImagePickerGroupCell.m */; };
 		D014464E199F912E00D47DCA /* QBImagePickerThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0144644199F912E00D47DCA /* QBImagePickerThumbnailView.m */; };
+		D01B3B261A04DCAB00C7BD10 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B3B251A04DCAB00C7BD10 /* SRWebSocket.m */; };
 		D03CEA4619FE2C290095C160 /* QNAsyncRun.m in Sources */ = {isa = PBXBuildFile; fileRef = D03CEA2C19FE2C290095C160 /* QNAsyncRun.m */; };
 		D03CEA4719FE2C290095C160 /* QNConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = D03CEA2E19FE2C290095C160 /* QNConfig.m */; };
 		D03CEA4819FE2C290095C160 /* QNCrc32.m in Sources */ = {isa = PBXBuildFile; fileRef = D03CEA3019FE2C290095C160 /* QNCrc32.m */; };
@@ -386,6 +387,8 @@
 		D0144642199F912E00D47DCA /* QBImagePickerGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QBImagePickerGroupCell.m; sourceTree = "<group>"; };
 		D0144643199F912E00D47DCA /* QBImagePickerThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QBImagePickerThumbnailView.h; sourceTree = "<group>"; };
 		D0144644199F912E00D47DCA /* QBImagePickerThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QBImagePickerThumbnailView.m; sourceTree = "<group>"; };
+		D01B3B241A04DCAB00C7BD10 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
+		D01B3B251A04DCAB00C7BD10 /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
 		D03CEA2A19FE2C290095C160 /* QiniuSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuSDK.h; sourceTree = "<group>"; };
 		D03CEA2B19FE2C290095C160 /* QNAsyncRun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNAsyncRun.h; sourceTree = "<group>"; };
 		D03CEA2C19FE2C290095C160 /* QNAsyncRun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNAsyncRun.m; sourceTree = "<group>"; };
@@ -965,6 +968,7 @@
 		B3C0AE9E1906662100CB4DFD /* libExt */ = {
 			isa = PBXGroup;
 			children = (
+				D01B3B221A04DCAB00C7BD10 /* SocketRocket */,
 				D057C19C19FE3CDA00C56A0D /* AFNetworking */,
 				D03CEA2919FE2C290095C160 /* QiniuSDK */,
 				D014462D199F912E00D47DCA /* QBImagePickerController */,
@@ -1114,6 +1118,15 @@
 				D0144644199F912E00D47DCA /* QBImagePickerThumbnailView.m */,
 			);
 			path = QBImagePickerController;
+			sourceTree = SOURCE_ROOT;
+		};
+		D01B3B221A04DCAB00C7BD10 /* SocketRocket */ = {
+			isa = PBXGroup;
+			children = (
+				D01B3B241A04DCAB00C7BD10 /* SRWebSocket.h */,
+				D01B3B251A04DCAB00C7BD10 /* SRWebSocket.m */,
+			);
+			path = SocketRocket;
 			sourceTree = SOURCE_ROOT;
 		};
 		D03CEA2919FE2C290095C160 /* QiniuSDK */ = {
@@ -1937,6 +1950,7 @@
 				B3C0AF3F190667C300CB4DFD /* FISoundDevice.m in Sources */,
 				D0606A7D193EFEDF00DC967C /* SHA512.m in Sources */,
 				D057C1B419FE3CDB00C56A0D /* AFSecurityPolicy.m in Sources */,
+				D01B3B261A04DCAB00C7BD10 /* SRWebSocket.m in Sources */,
 				B3C0AF3C190667C300CB4DFD /* FISampleFormat.m in Sources */,
 				D03CEA4C19FE2C290095C160 /* QNResponseInfo.m in Sources */,
 				D06748B71A00E30700C390DB /* CDataScanner_Extensions.m in Sources */,

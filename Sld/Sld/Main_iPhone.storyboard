@@ -1609,6 +1609,7 @@
                         <color key="selectedImageTintColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
+                        <segue destination="fhr-BW-any" kind="relationship" relationship="viewControllers" id="4cJ-3e-3tm"/>
                         <segue destination="Soe-Ac-Jl8" kind="relationship" relationship="viewControllers" id="Mny-nu-xa6"/>
                         <segue destination="aPS-xG-Dlb" kind="relationship" relationship="viewControllers" id="CYW-CN-J0A"/>
                         <segue destination="0JW-Sp-4K9" kind="relationship" relationship="viewControllers" id="OgS-G6-72W"/>
@@ -2923,6 +2924,33 @@
             </objects>
             <point key="canvasLocation" x="-2647.5" y="28.521126760563376"/>
         </scene>
+        <!--对战-->
+        <scene sceneID="uiL-Ey-PlS">
+            <objects>
+                <tableViewController id="fhr-BW-any" customClass="SldBattleController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="TmC-kB-e8W">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="0tW-ig-Uoq">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0tW-ig-Uoq" id="dVv-aa-7A7">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="fhr-BW-any" id="b28-At-4xE"/>
+                            <outlet property="delegate" destination="fhr-BW-any" id="n90-Ga-hMG"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="对战" image="otlBattle48.png" id="SnH-4X-Bqu"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Dv-MO-WCo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6813" y="-3054"/>
+        </scene>
         <!--最新-->
         <scene sceneID="9JO-zg-F3w">
             <objects>
@@ -3923,7 +3951,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DeR-97-E1B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6562.5" y="-3121.4788732394363"/>
+            <point key="canvasLocation" x="-5951" y="-3054"/>
         </scene>
         <!--最火-->
         <scene sceneID="ytn-2B-q9q">
@@ -4062,6 +4090,7 @@
         <image name="douban64.png" width="128" height="128"/>
         <image name="glyphicons_150_edit.png" width="24" height="21"/>
         <image name="otlBag48.png" width="24" height="24"/>
+        <image name="otlBattle48.png" width="24" height="24"/>
         <image name="otlController48.png" width="24" height="24"/>
         <image name="otlDisc48.png" width="24" height="24"/>
         <image name="otlFastForward.png" width="22" height="22"/>
@@ -4074,7 +4103,7 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="KZA-Pm-1f3"/>
+        <segue reference="kmF-Tr-PhZ"/>
         <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>
