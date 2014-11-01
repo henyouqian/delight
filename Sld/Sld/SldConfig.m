@@ -34,7 +34,7 @@ UIColor *_matchTimeLabelGreen = nil;
         inst.MOGO_KEY = @"8c0728f759464dcda07c81afb00d3bf5";
         inst.UMENG_SOCIAL_KEY = @"53aeb00356240bdcb8050c26";
         inst.WEIXIN_KEY = @"wxa959a211a5061fb6";
-        
+        inst.WEIXIN_SEC = @"b3e3e5593a736a3439529d881cf85a1e";
         
 //        inst.HOST = @"http://192.168.2.55:9998";
 //        inst.HOST = @"http://192.168.1.43:9998";
@@ -75,6 +75,14 @@ UIColor *_matchTimeLabelGreen = nil;
     NSString *umengSocialKey = [dict objectForKey:@"UmengSocialKey"];
     if (umengSocialKey) {
         self.UMENG_SOCIAL_KEY = umengSocialKey;
+    }
+    NSString *weixinKey = [dict objectForKey:@"WeiXinKey"];
+    if (weixinKey) {
+        self.WEIXIN_KEY = weixinKey;
+    }
+    NSString *weixinSec = [dict objectForKey:@"WeiXinSec"];
+    if (weixinSec) {
+        self.WEIXIN_SEC = weixinSec;
     }
 }
 

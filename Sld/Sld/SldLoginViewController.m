@@ -379,6 +379,10 @@ static NSString *SNS_DOUBAN = @"douban";
         return;
     }
     
+    //
+    PlayerSnsInfo *info = [PlayerSnsInfo getInstance];
+    [info clear];
+    
     NSDictionary *body = @{@"Username":email, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/register" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {

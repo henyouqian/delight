@@ -20,6 +20,7 @@
 
 @interface PlayerSnsInfo : NSObject
 + (instancetype)getInstance;
+- (void)clear;
 
 @property (nonatomic) NSString *nickName;
 @property (nonatomic) NSString *gender;

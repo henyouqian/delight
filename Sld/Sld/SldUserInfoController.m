@@ -89,7 +89,9 @@ static NSArray *_genderStrings;
         }
         
         if (snsInfo.teamName.length == 0) {
-            snsInfo.teamName = _gd.TEAM_NAMES[arc4random() % _gd.TEAM_NAMES.count];
+            int rd = arc4random();
+            int n = rd % _gd.TEAM_NAMES.count;
+            snsInfo.teamName = _gd.TEAM_NAMES[n];
         }
         _teamInput.text = snsInfo.teamName;
         
@@ -567,6 +569,14 @@ static PlayerSnsInfo *_playerSnsInfo = nil;
         _playerSnsInfo.customAvatarKey = @"";
     }
     return _playerSnsInfo;
+}
+
+- (void)clear {
+    _nickName = @"";
+    _gender = @"";
+    _teamName = @"";
+    _gravatarKey = @"";
+    _customAvatarKey = @"";
 }
 
 @end

@@ -485,7 +485,7 @@ NSDate *_gameBeginTime;
 }
 
 - (void)dealloc {
-    
+     [[AdMoGoInterstitialManager shareInstance] interstitialCancel];
 }
 
 static float lerpf(float a, float b, float t) {
@@ -1134,6 +1134,10 @@ static float lerpf(float a, float b, float t) {
                     [_gameController showUserAds];
                 } else {
                     [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+//                    SldConfig *conf = [SldConfig getInstance];
+//                    [[[AdMoGoInterstitialManager shareInstance]
+//                      adMogoVideoInterstitialByAppKey:conf.MOGO_KEY]
+//                     interstitialShow:YES];
                 }
             }
         }
