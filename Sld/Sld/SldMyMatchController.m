@@ -394,6 +394,8 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @property (nonatomic) NSString *coverBlurKey;
 @property (nonatomic) NSMutableArray *images;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) int totalSize;
+
 @end
 
 static const int COUPON_MIN = 0;
@@ -575,6 +577,7 @@ static const int COUPON_MAX = 10000;
         int i = 0;
         NSMutableArray *filePathes = [NSMutableArray array];
         NSMutableArray *fileKeys = [NSMutableArray array];
+        _totalSize = 0;
 
         for (ALAsset *asset in _assets) {
             NSString *fileName = [NSString stringWithFormat:@"%d.jpg", i];
@@ -604,8 +607,7 @@ static const int COUPON_MAX = 10000;
                     alert(str, nil);
                     return;
                 }
-                lwInfo("gifSize: %d", (int)size);
-                //free(buffer);
+                _totalSize += size;
             } else {
                 //resize
                 float l = MAX(image.size.width, image.size.height);
@@ -625,6 +627,8 @@ static const int COUPON_MAX = 10000;
                 //save
                 NSData *data = UIImageJPEGRepresentation(image, 0.85);
                 [data writeToFile:filePath atomically:YES];
+                
+                _totalSize += data.length;
                 
                 //key
                 key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
@@ -800,6 +804,7 @@ static const int COUPON_MAX = 10000;
     }
     
     SldHttpSession *session = [SldHttpSession defaultSession];
+    float fMb = (float)_totalSize/(1024.f*1024.f);
     NSDictionary *body = @{
         @"Title":_titleInput.text,
         @"Text":@"",
@@ -807,6 +812,7 @@ static const int COUPON_MAX = 10000;
         @"Cover":_coverKey,
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
+        @"SizeMb":@(fMb),
         @"RewardCoupon":@(_rewardCoupon),
         @"SliderNum":@(_sliderNum),
         @"BeginTimeStr":beginTimeStr,

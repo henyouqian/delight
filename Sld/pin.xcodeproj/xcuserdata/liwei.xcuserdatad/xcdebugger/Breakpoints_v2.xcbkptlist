@@ -20,12 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sld/SldMyMatchController.m"
-            timestampString = "436089523.825747"
+            timestampString = "436728467.230171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "761"
-            endingLineNumber = "761"
-            landmarkName = "-doPublish"
+            startingLineNumber = "808"
+            endingLineNumber = "808"
+            landmarkName = "-addUserPack"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

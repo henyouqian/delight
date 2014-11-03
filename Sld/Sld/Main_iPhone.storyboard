@@ -1609,12 +1609,12 @@
                         <color key="selectedImageTintColor" red="0.95686274510000002" green="0.29411764709999999" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
-                        <segue destination="fhr-BW-any" kind="relationship" relationship="viewControllers" id="4cJ-3e-3tm"/>
                         <segue destination="Soe-Ac-Jl8" kind="relationship" relationship="viewControllers" id="Mny-nu-xa6"/>
                         <segue destination="aPS-xG-Dlb" kind="relationship" relationship="viewControllers" id="CYW-CN-J0A"/>
                         <segue destination="0JW-Sp-4K9" kind="relationship" relationship="viewControllers" id="OgS-G6-72W"/>
                         <segue destination="skX-wS-jYW" kind="relationship" relationship="viewControllers" id="c6d-yD-feU"/>
                         <segue destination="EwM-v8-h84" kind="relationship" relationship="viewControllers" id="4In-c4-QEx"/>
+                        <segue destination="fhr-BW-any" kind="relationship" relationship="viewControllers" id="4cJ-3e-3tm"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kin-IP-XaP" userLabel="First Responder" sceneMemberID="firstResponder"/>
