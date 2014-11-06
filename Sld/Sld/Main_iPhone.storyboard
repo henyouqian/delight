@@ -2973,7 +2973,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qp8-YQ-Scn" customClass="SldAsyncImageView">
+                                        <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qp8-YQ-Scn" customClass="SldAsyncImageView">
                                             <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
                                             <color key="backgroundColor" red="0.84875882059999996" green="0.84236266650000002" blue="0.81648652040000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
@@ -4103,7 +4103,7 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kmF-Tr-PhZ"/>
+        <segue reference="KZA-Pm-1f3"/>
         <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -33,6 +33,10 @@ NSArray *_channels = nil;
 @end
 
 @implementation ChannelCell
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
+{
+    return layoutAttributes;
+}
 @end
 
 

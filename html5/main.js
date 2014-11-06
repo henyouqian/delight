@@ -28,6 +28,12 @@ var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
 var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"
 var MATCH_LIST_URL = "http://www.pintugame.com/"
+var WEBSOCKET_URL = "ws://127.0.0.1:8080/ws"
+
+function getUrlParam(name) {
+    var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
+    if (reg.test(location.href)) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
+};
 
 var cocos2dApp = cc.Application.extend({
     config:document['ccConfig'],
@@ -61,44 +67,55 @@ var cocos2dApp = cc.Application.extend({
         cc.AudioEngine.getInstance().init("mp3,ogg,wav");
 
         //load packs
-        function getUrlParam(name) {
-            var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
-            if (reg.test(location.href)) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
-        };
         //var key = parseInt(getUrlParam("key")) 
         var key = getUrlParam("key")
+        var battle = getUrlParam("battle")
 
         var app = this
         g_key = key
 
-        var body = {
-            "Key": key
-        }
-        
-        var url = HOST + "social/getPack"
-        $.post(url, JSON.stringify(body), function(resp){
-            var reses = []
-            g_imageUrls = []
-            g_socialPack = resp
-            var images = resp.Pack.Images
-            for (var i in images) {
-                var image = images[i]
-                var url = QINIU_HOST+image.Key
-                reses.push({src:url})
-                g_imageUrls.push(url)
+        if (battle == "") {
+            var body = {
+                "Key": key
             }
-            g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
-            reses.push({src:g_bgUrl})
+            
+            var url = HOST + "social/getPack"
+            $.post(url, JSON.stringify(body), function(resp){
+                var reses = []
+                g_imageUrls = []
+                g_socialPack = resp
+                var images = resp.Pack.Images
+                for (var i in images) {
+                    var image = images[i]
+                    var url = QINIU_HOST+image.Key
+                    reses.push({src:url})
+                    g_imageUrls.push(url)
+                }
+                g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
+                reses.push({src:g_bgUrl})
 
-            g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
+                g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
 
-            cc.LoaderScene.preload(reses, function () {
+                cc.LoaderScene.preload(reses, function () {
+                    director.replaceScene(new app.startScene());
+                }, app);
+
+            }, "json")
+        } else {
+            cc.LoaderScene.preload([], function () {
                 director.replaceScene(new app.startScene());
             }, app);
-
-        }, "json")
+        }
 
         return true;
     }
 });
-var myApp = new cocos2dApp(SliderScene);
+
+var g_app
+var g_isBattle = getUrlParam("battle")
+if (g_isBattle == "") {
+    g_app = new cocos2dApp(SliderScene);
+} else {
+    g_app = new cocos2dApp(BattleConnectScene);
+}
+

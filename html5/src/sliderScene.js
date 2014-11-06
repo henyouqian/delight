@@ -182,6 +182,8 @@ var SliderLayer = cc.Layer.extend({
         updateWeixin()
         
         //shuffle image idx
+        console.log(g_imageUrls)
+        
         for (var i = 0; i < g_imageUrls.length; i++) {
             this._imgShuffleIdxs.push(i)
         }
@@ -479,6 +481,12 @@ var SliderLayer = cc.Layer.extend({
         //
         this.reset(0)
 
+        //
+        if (g_conn) {
+            msg = {"Type":"ready"}
+            g_conn.send(JSON.stringify(msg))
+        }
+
         return true;
     },
     reset:function(imgIdx) {
@@ -709,9 +717,7 @@ var SliderLayer = cc.Layer.extend({
         if (this._isCompleted == false && complete == true) {
             
             if (this._imgIdx < g_imageUrls.length-1) {
-                // this.reset(this._imgIdx + 1)
-                this._btn.setVisible(true)
-                // cc.AudioEngine.getInstance().playEffect("res/success.mp3");
+                this.onPageFinish()
             } else {
                 this.onFinish()
             }
@@ -720,6 +726,14 @@ var SliderLayer = cc.Layer.extend({
     },
     onTouchesCancelled:function (touches, event) {
         console.log("onTouchesCancelled");
+    },
+    onPageFinish: function() {
+        // cc.AudioEngine.getInstance().playEffect("res/success.mp3");
+        this._btn.setVisible(true)
+        if (g_conn) {
+            msg = {"Type":"progress", "CompleteNum":this._imgIdx+1}
+            g_conn.send(JSON.stringify(msg))
+        }
     },
     onFinish: function () {
         //
@@ -791,4 +805,8 @@ var SliderScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
+
+g_procMap.start = function(msg) {
+    console.log("onStart")
+}
 

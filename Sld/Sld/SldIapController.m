@@ -142,6 +142,10 @@ static UIView *_hudView = nil;
 @end
 
 @implementation SldIapCell
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
+{
+    return layoutAttributes;
+}
 @end
 
 

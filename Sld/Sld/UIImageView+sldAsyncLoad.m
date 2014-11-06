@@ -288,6 +288,15 @@
                           toPath:localPath
                         withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
+//             //half
+//             UIImage *image = [UIImage imageWithContentsOfFile:localPath];
+//             image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(image.size.width*.5f, image.size.height*.5f)];
+//             
+//             //save
+//             NSData *dt = UIImageJPEGRepresentation(image, 0.85);
+//             [dt writeToFile:localPath atomically:YES];
+             
+             
              if (indicatorView) {
                  [indicatorView removeFromSuperview];
              }

@@ -50,7 +50,10 @@
 @end
 
 @implementation SldExchangeCell
-
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
+{
+    return layoutAttributes;
+}
 @end
 
 //===============================

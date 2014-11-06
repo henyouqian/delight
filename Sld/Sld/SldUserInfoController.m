@@ -456,7 +456,10 @@ static NSArray *_genderStrings;
 @end
 
 @implementation SldAvatarSelectCell
-
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
+{
+    return layoutAttributes;
+}
 @end
 
 

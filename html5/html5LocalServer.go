@@ -21,6 +21,6 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	port := 7777
-	glog.Infof("Server running: cpu=%d, port=%d", runtime.NumCPU(), port)
+	fmt.Printf("Server running: cpu=%d, port=%d", runtime.NumCPU(), port)
 	glog.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }

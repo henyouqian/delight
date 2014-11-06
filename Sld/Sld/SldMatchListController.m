@@ -17,7 +17,10 @@
 
 //=============================
 @implementation SldMatchListCell
-
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
+{
+    return layoutAttributes;
+}
 @end
 
 //=============================
@@ -162,9 +165,12 @@ static float _scrollY = -64;
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.rewardCoupon + match.extraCoupon];
-    
+//
     cell.match = match;
     [self refreshTimeLabel:cell];
+    
+    cell.layer.shouldRasterize = YES;
+    cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     return cell;
 }
