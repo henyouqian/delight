@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"sr",
+				"stringify"
+			],
+			[
+				"js",
+				"JSON"
+			],
+			[
+				"re",
+				"retry"
+			],
+			[
+				"pr",
+				"Printf	n int, err error ƒ"
+			],
+			[
 				"inl",
 				"inline-block"
 			],
@@ -467,15 +483,15 @@
 			"file": "main.js",
 			"settings":
 			{
-				"buffer_size": 3915,
+				"buffer_size": 4388,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "cocos2d.js",
+			"file": "src/battleConnectScene.js",
 			"settings":
 			{
-				"buffer_size": 3995,
+				"buffer_size": 5504,
 				"line_ending": "Windows"
 			}
 		},
@@ -483,7 +499,7 @@
 			"file": "src/sliderScene.js",
 			"settings":
 			{
-				"buffer_size": 27782,
+				"buffer_size": 28125,
 				"line_ending": "Windows"
 			}
 		},
@@ -496,18 +512,18 @@
 			}
 		},
 		{
-			"file": "matchList.js",
-			"settings":
-			{
-				"buffer_size": 1891,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "src/resource.js",
 			"settings":
 			{
 				"buffer_size": 618,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cocos2d.js",
+			"settings":
+			{
+				"buffer_size": 4021,
 				"line_ending": "Windows"
 			}
 		}
@@ -552,6 +568,9 @@
 	},
 	"file_history":
 	[
+		"/Users/liwei/Documents/projects/2014/delight/html5/html5LocalServer.go",
+		"/Users/liwei/Documents/projects/2014/delight/html5/cocos2d.js",
+		"/Users/liwei/Documents/projects/2014/delight/html5/matchList.js",
 		"/Users/liwei/Documents/projects/2014/SldServer/match/conf.json",
 		"/Users/liwei/Documents/projects/2014/SldServer/match/main.go",
 		"/Users/liwei/Desktop/aaaaaa.html",
@@ -626,6 +645,30 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"g_socialPack",
+			"slidernum",
+			"g_imageUrls",
+			"g_",
+			"battle",
+			"replaceScene",
+			"resp",
+			"new SliderScene",
+			"replaceScene",
+			"g_thumbUrl",
+			"g_socialPack",
+			"procm",
+			"g_conn",
+			"conn",
+			"myapp",
+			"myApp",
+			"app",
+			"director",
+			"addch",
+			"btn",
+			"HTML5_HOST",
+			".js",
+			"mode",
+			"SliderScene",
 			"document.location.href",
 			"MATCH_LIST_URL",
 			"document.location.href",
@@ -729,31 +772,7 @@
 			"lbKey",
 			"apiMatchPlayEnd",
 			"SECRET",
-			"MATCH_TRY_EXPIRE_SECONDS",
-			"MatchId",
-			"makeMatchLeaderboardRdsKey",
-			"listMine",
-			"Z_REWARD_MATCH",
-			"apiMatchMod",
-			"Z_REWARD_MATCH",
-			"apiMatchListRewardMatch",
-			"Z_REWARD_MATCH",
-			"ECARD_PROVIDERS",
-			"RechargeUrl",
-			"HelpText",
-			"apiListMyEcard",
-			"HttpCodeBadRequest",
-			"apiBuyEcard",
-			"PLAYER_COUPON",
-			"PLAYER_COUPON_CACHE",
-			"CouponCache",
-			"apiBuyEcard",
-			"buy",
-			"play",
-			"HGetStruct",
-			"getPlayerInfo",
-			"apiGetPlayerInfo",
-			"PLAYER_COUPON"
+			"MATCH_TRY_EXPIRE_SECONDS"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -799,8 +818,8 @@
 						"selection":
 						[
 							[
-								193,
-								193
+								1189,
+								1189
 							]
 						],
 						"settings":
@@ -810,7 +829,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 271.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -820,43 +839,15 @@
 					"file": "main.js",
 					"settings":
 					{
-						"buffer_size": 3915,
+						"buffer_size": 4388,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1595,
-								1595
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 3.0,
-						"translation.y": 273.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "cocos2d.js",
-					"settings":
-					{
-						"buffer_size": 3995,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1762,
-								1778
+								4213,
+								4213
 							]
 						],
 						"settings":
@@ -866,7 +857,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 500.0,
+						"translation.y": 665.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/battleConnectScene.js",
+					"settings":
+					{
+						"buffer_size": 5504,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4932,
+								4932
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3012.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -876,15 +895,15 @@
 					"file": "src/sliderScene.js",
 					"settings":
 					{
-						"buffer_size": 27782,
+						"buffer_size": 28125,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13249,
-								13249
+								5306,
+								5306
 							]
 						],
 						"settings":
@@ -894,7 +913,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7569.0,
+						"translation.y": 3558.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -911,41 +930,13 @@
 						"selection":
 						[
 							[
-								1381,
-								1381
+								68,
+								128
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 753.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "matchList.js",
-					"settings":
-					{
-						"buffer_size": 1891,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								306,
-								306
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -954,7 +945,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "src/resource.js",
 					"settings":
 					{
@@ -977,6 +968,34 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "cocos2d.js",
+					"settings":
+					{
+						"buffer_size": 4021,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1983,
+								1983
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 705.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

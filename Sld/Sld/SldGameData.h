@@ -41,6 +41,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSString *teamName;
 @property (nonatomic) NSString *gravatarKey;
 @property (nonatomic) NSString *customAvatarKey;
+@property (nonatomic) NSString *email;
 @property (nonatomic) int goldCoin;
 @property (nonatomic) float coupon;
 @property (nonatomic) float totalCoupon;

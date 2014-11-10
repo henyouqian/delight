@@ -17,6 +17,7 @@
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
+#import "SldMatchBriefController.h"
 
 BOOL g_needRefreshHotList = NO;
 
@@ -68,17 +69,17 @@ static float _scrollY = -64;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.tabBarController.navigationItem.title = self.tabBarItem.title;
-    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
-    
-    UIEdgeInsets insets = self.collectionView.contentInset;
-    insets.top = 64;
-    insets.bottom = 50;
-    
-    self.collectionView.contentInset = insets;
-    self.collectionView.scrollIndicatorInsets = insets;
-    
-    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
+//    self.tabBarController.navigationItem.title = self.tabBarItem.title;
+//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+//    
+//    UIEdgeInsets insets = self.collectionView.contentInset;
+//    insets.top = 64;
+//    insets.bottom = 50;
+//    
+//    self.collectionView.contentInset = insets;
+//    self.collectionView.scrollIndicatorInsets = insets;
+//    
+//    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
     
     [_refreshControl endRefreshing];
     
@@ -293,10 +294,17 @@ static float _scrollY = -64;
 //    }
 //}
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    SldMatchListCell *cell = sender;
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SldMatchListCell* cell = (SldMatchListCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    
+    //
     SldGameData *gd = [SldGameData getInstance];
     gd.match = cell.match;
+    
+    SldMatchBriefController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchBrief"];
+    [self.tabBarController.navigationController pushViewController:controller animated:YES];
+    self.tabBarController.navigationController.navigationBarHidden = NO;
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldGameData.h"
 #import "SldUtil.h"
+#import "SldStreamPlayer.h"
 
 @interface SldUserController ()
 @property (weak, nonatomic) IBOutlet UIImageView *avatarView;
@@ -27,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
 @property (weak, nonatomic) IBOutlet UILabel *idLabel;
 @property (nonatomic) int logoutNum;
+@property (nonatomic) UIView *discView;
 
 @end
 
@@ -53,6 +55,16 @@ static const int DAILLY_LOGOUT_NUM = 5;
         return;
     }
     
+    _discView = [self.navigationController.navigationBar.subviews objectAtIndex:2];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(rotateDisc)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -86,12 +98,14 @@ static const int DAILLY_LOGOUT_NUM = 5;
     
     NSString *title = [NSString stringWithFormat:@"注销（今日剩%d次）", DAILLY_LOGOUT_NUM-_logoutNum];
     [_logoutButton setTitle:title forState:UIControlStateNormal];
+    
+    [self rotateDisc];
 }
 
 - (NSString*)getTodayString {
     NSDate* now = getServerNow();
     NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];
+                             initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *comp =
     [gregorian components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear) fromDate:now];
     
@@ -162,7 +176,7 @@ static const int DAILLY_LOGOUT_NUM = 5;
 
 - (IBAction)onLogoutButton:(id)sender {
 #ifndef DEBUG
-    if (_logoutNum == DAILLY_LOGOUT_NUM) {
+    if (_logoutNum >= DAILLY_LOGOUT_NUM) {
         alert(@"今日注销次数已用完", nil);
         return;
     }
@@ -230,6 +244,21 @@ static const int DAILLY_LOGOUT_NUM = 5;
             return;
         }
         alert(@"清理完毕", nil);    }], nil] show];
+}
+
+- (void)rotateDisc {
+    if ([SldStreamPlayer defautPlayer].playing && ![SldStreamPlayer defautPlayer].paused) {
+        CABasicAnimation* rotationAnimation;
+        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+        rotationAnimation.duration = 2.f;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = 10000000;
+        
+        [_discView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    } else {
+        [_discView.layer removeAllAnimations];
+    }
 }
 
 @end

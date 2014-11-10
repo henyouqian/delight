@@ -21,7 +21,7 @@ static NSString *SNS_DOUBAN = @"douban";
 
 
 @interface SldLoginViewController ()
-@property (weak, nonatomic) IBOutlet UITextField *emailInput;
+@property (weak, nonatomic) IBOutlet UITextField *userNameInput;
 @property (weak, nonatomic) IBOutlet UITextField *passwordInput;
 @property (weak, nonatomic) IBOutlet UIButton *okButton;
 @property (weak, nonatomic) IBOutlet UIButton *offlineButton;
@@ -237,7 +237,7 @@ static NSString *SNS_DOUBAN = @"douban";
     [btnLayer setCornerRadius:5.0f];
     
     //
-    [_emailInput setDelegate:self];
+    [_userNameInput setDelegate:self];
     [self onChangeMode:_seg];
     
     //
@@ -261,12 +261,12 @@ static NSString *SNS_DOUBAN = @"douban";
             
             return;
         } else {
-            self.emailInput.text = username;
+            self.userNameInput.text = username;
             self.passwordInput.text = password;
             //self.emailInput.text = @"test@baidu.com";
             //self.passwordInput.text = @"123456";
             
-            if (self.emailInput.text.length && self.passwordInput.text.length) {
+            if (self.userNameInput.text.length && self.passwordInput.text.length) {
                 [self login];
             }
         }
@@ -274,17 +274,17 @@ static NSString *SNS_DOUBAN = @"douban";
 }
 
 - (void)login {
-    NSString *email = self.emailInput.text;
+    NSString *username = self.userNameInput.text;
     NSString *password = self.passwordInput.text;
-    if ([email length] == 0 || [password length] == 0) {
+    if ([username length] == 0 || [password length] == 0) {
         alert(@"请填写所有空格", nil);
         return;
     }
     
-    if (![SldUtil validateEmail:email]) {
-        alert(@"邮箱格式错误", nil);
-        return;
-    }
+//    if (![SldUtil validateEmail:email]) {
+//        alert(@"邮箱格式错误", nil);
+//        return;
+//    }
     
     UIAlertView *loginAlert = [[UIAlertView alloc] initWithTitle:@"登录中..."
                                                   message:nil
@@ -293,7 +293,7 @@ static NSString *SNS_DOUBAN = @"douban";
                                         otherButtonTitles:nil];
     [loginAlert show];
     
-    NSDictionary *body = @{@"Username":email, @"Password":password};
+    NSDictionary *body = @{@"Username":username, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/login" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [loginAlert dismissWithClickedButtonIndex:0 animated:NO];
@@ -311,7 +311,7 @@ static NSString *SNS_DOUBAN = @"douban";
         SldGameData *gameData = [SldGameData getInstance];
         
         //save to keychain
-        [SSKeychain setPassword:password forService:[SldConfig getInstance].KEYCHAIN_SERVICE account:email];
+        [SSKeychain setPassword:password forService:[SldConfig getInstance].KEYCHAIN_SERVICE account:username];
         
         //update game data
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
@@ -320,7 +320,7 @@ static NSString *SNS_DOUBAN = @"douban";
             return;
         }
         
-        gameData.userName = email;
+        gameData.userName = username;
         NSNumber *nUserId = [dict objectForKey:@"UserId"];
         if (nUserId) {
             gameData.userId = [nUserId unsignedLongLongValue];
@@ -368,22 +368,22 @@ static NSString *SNS_DOUBAN = @"douban";
 }
 
 - (void)signUp {
-    NSString *email = self.emailInput.text;
+    NSString *username = self.userNameInput.text;
     NSString *password = self.passwordInput.text;
-    if ([email length] == 0 || [password length] == 0) {
+    if ([username length] == 0 || [password length] == 0) {
         alert(@"Error", @"Fill the blank.");
         return;
     }
-    if (![SldUtil validateEmail:email]) {
-        alert(@"Email格式错误", nil);
-        return;
-    }
+//    if (![SldUtil validateEmail:email]) {
+//        alert(@"Email格式错误", nil);
+//        return;
+//    }
     
     //
     PlayerSnsInfo *info = [PlayerSnsInfo getInstance];
     [info clear];
     
-    NSDictionary *body = @{@"Username":email, @"Password":password};
+    NSDictionary *body = @{@"Username":username, @"Password":password};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/register" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
@@ -414,7 +414,7 @@ static NSString *SNS_DOUBAN = @"douban";
 
 -(BOOL)textFieldShouldReturn:(UITextField*)textField;
 {
-    if (textField == _emailInput) {
+    if (textField == _userNameInput) {
         [_passwordInput becomeFirstResponder];
     }
     return NO;
@@ -438,16 +438,16 @@ static NSString *SNS_DOUBAN = @"douban";
     SldHttpSession *session = [SldHttpSession defaultSession];
     
     if (_emailInput.text.length == 0) {
-        alert(@"请填写Email", nil);
+        alert(@"请填写用户名", nil);
         return;
     }
     
-    if (![SldUtil validateEmail:_emailInput.text]) {
-        alert(@"Email格式错误", nil);
-        return;
-    }
+//    if (![SldUtil validateEmail:_emailInput.text]) {
+//        alert(@"Email格式错误", nil);
+//        return;
+//    }
     
-    NSDictionary *body = @{@"Email":_emailInput.text};
+    NSDictionary *body = @{@"UserName":_emailInput.text};
     UIAlertView *alt = alertNoButton(@"邮件发送中...");
     [session postToApi:@"auth/forgotPassword" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [alt dismissWithClickedButtonIndex:0 animated:YES];
@@ -455,13 +455,15 @@ static NSString *SNS_DOUBAN = @"douban";
             NSString *err = getServerErrorType(data);
             if ([err compare:@"err_not_exist"] == 0) {
                 alert(@"账号不存在", nil);
+            } else if ([err compare:@"err_no_email"] == 0) {
+                alert(@"此账号没有关联邮箱", nil);
             } else {
                 alertHTTPError(error, data);
             }
             return;
         }
         
-        [[[UIAlertView alloc] initWithTitle:@"重设密码邮件已发送。如未收到，要么等等，要么垃圾箱找找，要么再发一遍试试"
+        [[[UIAlertView alloc] initWithTitle:@"重设密码邮件已发送。如未收到，请稍等，或者垃圾箱找找，或者再发一遍试试"
                                     message:@""
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"知道了" action:^{
             [self dismissViewControllerAnimated:YES completion:nil];

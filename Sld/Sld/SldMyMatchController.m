@@ -17,6 +17,7 @@
 #import "SldIapController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
+#import "SldMatchBriefController.h"
 
 static NSArray* _assets;
 static int _publishDelayHour = 0;
@@ -112,7 +113,8 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 }
 
 - (void)onBack {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)sliderNumValueChanged:(UISlider *)sender {
@@ -155,7 +157,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
         _header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"myMatchImagePickListHeader" forIndexPath:indexPath];
         
         //
-        _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7)];
+        _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7), @(8)];
         _sliderNum = 5;
         int numberOfSteps = ((float)[_sliderNumbers count] - 1);
         _header.sliderNumSlider.maximumValue = numberOfSteps;
@@ -243,7 +245,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             gd.gameMode = M_TEST;
             SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
             gd.matchSecret = nil;
-            [self.navigationController pushViewController:controller animated:YES];  
+            [self.navigationController pushViewController:controller animated:YES];
         });
     });
 }
@@ -843,7 +845,8 @@ static const int COUPON_MAX = 10000;
         [[[UIAlertView alloc] initWithTitle:@"发布成功！"
                                     message:nil
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
-            [self.navigationController popToViewController:_myMatchListController.tabBarController animated:YES];
+//            [self.navigationController popToViewController:_myMatchListController animated:YES];
+            [self.navigationController popToRootViewControllerAnimated:YES];
             [_myMatchListController refresh];
         }]
                            otherButtonItems:nil] show];
@@ -862,6 +865,7 @@ static const int COUPON_MAX = 10000;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) UINavigationController *naviCon;
 
 @end
 
@@ -879,13 +883,13 @@ static const int COUPON_MAX = 10000;
     _myMatchListController = self;
     _matches = [NSMutableArray array];
     
-    UIEdgeInsets insets = self.collectionView.contentInset;
-    insets.top = 64;
-    insets.bottom = 50;
-    
-    self.collectionView.contentInset = insets;
-    self.collectionView.scrollIndicatorInsets = insets;
-    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+//    UIEdgeInsets insets = self.collectionView.contentInset;
+//    insets.top = 64;
+//    insets.bottom = 50;
+//    
+//    self.collectionView.contentInset = insets;
+//    self.collectionView.scrollIndicatorInsets = insets;
+//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
     //refresh control
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -912,17 +916,17 @@ static float _scrollY = -64;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.tabBarController.navigationItem.title = self.tabBarItem.title;
-    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+//    self.tabBarController.navigationItem.title = self.tabBarItem.title;
+//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
     
-    UIEdgeInsets insets = self.collectionView.contentInset;
-    insets.top = 64;
-    insets.bottom = 50;
-    
-    self.collectionView.contentInset = insets;
-    self.collectionView.scrollIndicatorInsets = insets;
-    
-    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
+//    UIEdgeInsets insets = self.collectionView.contentInset;
+//    insets.top = 64;
+//    insets.bottom = 50;
+//    
+//    self.collectionView.contentInset = insets;
+//    self.collectionView.scrollIndicatorInsets = insets;
+//    
+//    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
     
     [_refreshControl endRefreshing];
     
@@ -1012,21 +1016,25 @@ static float _scrollY = -64;
     _imagePickerController.maximumNumberOfSelection = 12;
     _imagePickerController.title = @"选择4-12张图片";
     
-    [self.navigationController pushViewController:_imagePickerController animated:YES];
+//    [self.navigationController pushViewController:_imagePickerController animated:YES];
+    _naviCon = self.tabBarController.navigationController;
+    _naviCon.navigationBarHidden = NO;
+    [_naviCon pushViewController:_imagePickerController animated:YES];
 }
 
 - (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAssets:(NSArray *)assets {
-    [self.navigationController popToViewController:self.tabBarController animated:NO];
+//    [self.navigationController popToViewController:self animated:NO];
     
     SldMyMatchImagePickListController* vc = (SldMyMatchImagePickListController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"myUserPackEditVC"];
     
-    [self.navigationController pushViewController:vc animated:YES];
+    [_naviCon pushViewController:vc animated:YES];
     
     [vc setAssets:assets];
 }
 
 - (void)qb_imagePickerControllerDidCancel:(QBImagePickerController *)imagePickerController {
-    [self.navigationController popToViewController:self.tabBarController animated:YES];
+//    [self.navigationController popToViewController:self animated:YES];
+    [_naviCon popToRootViewControllerAnimated:YES];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -1065,11 +1073,26 @@ static float _scrollY = -64;
     return nil;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    SldMyMatchCell *cell = sender;
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SldMyMatchCell* cell = (SldMyMatchCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    
+    //
     SldGameData *gd = [SldGameData getInstance];
     gd.match = cell.match;
+    
+    SldMatchBriefController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchBrief"];
+    [self.tabBarController.navigationController pushViewController:controller animated:YES];
+    self.tabBarController.navigationController.navigationBarHidden = NO;
 }
+//
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    if (segue.identifier && [segue.identifier compare:@"cellSegue"] == 0) {
+//        SldMyMatchCell *cell = sender;
+//        SldGameData *gd = [SldGameData getInstance];
+//        gd.match = cell.match;
+//    }
+//}
 
 - (IBAction)onLoadMoreButton:(id)sender {
     if (_matches.count == 0) {

@@ -182,8 +182,6 @@ var SliderLayer = cc.Layer.extend({
         updateWeixin()
         
         //shuffle image idx
-        console.log(g_imageUrls)
-        
         for (var i = 0; i < g_imageUrls.length; i++) {
             this._imgShuffleIdxs.push(i)
         }

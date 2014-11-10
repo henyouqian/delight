@@ -21,8 +21,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameInput;
 @property (weak, nonatomic) IBOutlet UITextField *genderInput;
 @property (weak, nonatomic) IBOutlet UITextField *teamInput;
+@property (weak, nonatomic) IBOutlet UITextField *emailInput;
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+@property (weak, nonatomic) IBOutlet UITableViewCell *emailCell;
 @property (nonatomic) NSString *gravatarKey;
 @property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) UIAlertView *avatarUploadAlt;
@@ -71,7 +73,9 @@ static NSArray *_genderStrings;
         _nameInput.text = playerInfo.nickName;
         _genderInput.text = [_genderStrings objectAtIndex:playerInfo.gender];
         _teamInput.text = playerInfo.teamName;
+        _emailInput.text = playerInfo.email;
         _gravatarKey = playerInfo.gravatarKey;
+        
         if (!_gravatarKey) {
             _gravatarKey = @"";
         }
@@ -80,7 +84,12 @@ static NSArray *_genderStrings;
             _customAvatarKey = @"";
         }
     } else {
-        _nameInput.text = snsInfo.nickName;
+        if (snsInfo.nickName.length > 0) {
+            _nameInput.text = snsInfo.nickName;
+            _emailCell.hidden = YES;
+        } else {
+            _nameInput.text = _gd.userName;
+        }
         
         if (snsInfo.gender && ([snsInfo.gender compare:@"男"] == 0 || [snsInfo.gender compare:@"女"] == 0)) {
             _genderInput.text = snsInfo.gender;
@@ -316,14 +325,20 @@ static NSArray *_genderStrings;
 }
 
 - (void)save {
-    UIAlertView *alt = alertNoButton(@"保存中...");
-
     NSUInteger genderIdx = [_genderStrings indexOfObject:_genderInput.text];
     if (genderIdx > 2) {
         genderIdx = 2;
     }
+    
+    NSString *email = _emailInput.text;
+    if (email.length > 0 && ![SldUtil validateEmail:email]) {
+        alert(@"邮箱格式错误", nil);
+        return;
+    }
+    
+    UIAlertView *alt = alertNoButton(@"保存中...");
 
-    NSDictionary *body = @{@"NickName":_nameInput.text, @"TeamName":_teamInput.text, @"Gender":@(genderIdx), @"GravatarKey":_gravatarKey, @"CustomAvatarKey":_customAvatarKey};
+    NSDictionary *body = @{@"NickName":_nameInput.text, @"TeamName":_teamInput.text, @"Email":email, @"Gender":@(genderIdx), @"GravatarKey":_gravatarKey, @"CustomAvatarKey":_customAvatarKey};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"player/setInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [alt dismissWithClickedButtonIndex:0 animated:YES];

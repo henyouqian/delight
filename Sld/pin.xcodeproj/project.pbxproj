@@ -87,7 +87,6 @@
 		D014466B19A1167E00D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466619A1167E00D47DCA /* QBImagePickerController.strings */; };
 		D014466F19A1174600D47DCA /* QBImagePickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D014466D19A1174600D47DCA /* QBImagePickerController.strings */; };
 		D01B3B281A04DDE600C7BD10 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B3B271A04DDE600C7BD10 /* libicucore.dylib */; };
-		D01B3B2B1A04E4FF00C7BD10 /* SldBattleController.m in Sources */ = {isa = PBXBuildFile; fileRef = D01B3B2A1A04E4FF00C7BD10 /* SldBattleController.m */; };
 		D02F76BB197FFBE200E742F8 /* btnBgBlue90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */; };
 		D02F76BC197FFBE200E742F8 /* btnBgGreen90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */; };
 		D02F76BD197FFBE200E742F8 /* btnBgRed90h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */; };
@@ -248,6 +247,9 @@
 		D0D14B62195B3807009193E6 /* webview_bar_share.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B0B195B3807009193E6 /* webview_bar_share.png */; };
 		D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */; };
 		D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D14B6F195B6A83009193E6 /* NSData+Base64.m */; };
+		D0D5F93E1A10D25E00444BFA /* SldBattleController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D5F93D1A10D25E00444BFA /* SldBattleController.m */; };
+		D0D5F9401A11031600444BFA /* otlGrid48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D5F93F1A11031500444BFA /* otlGrid48@2x.png */; };
+		D0D5F9431A111C3100444BFA /* SldMatchHubController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D5F9421A111C3100444BFA /* SldMatchHubController.m */; };
 		D0F24A8119D5E95000A63C30 /* SldExchangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8019D5E95000A63C30 /* SldExchangeController.m */; };
 		D0F24A8419D5F21700A63C30 /* SldCouponCardController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8319D5F21700A63C30 /* SldCouponCardController.m */; };
 		D0F24A8A19E1177100A63C30 /* btnBgPurple90@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0F24A8919E1177100A63C30 /* btnBgPurple90@2x.png */; };
@@ -398,8 +400,6 @@
 		D014466719A1167E00D47DCA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = QBImagePickerController.strings; sourceTree = "<group>"; };
 		D014466E19A1174600D47DCA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = QBImagePickerController.strings; sourceTree = "<group>"; };
 		D01B3B271A04DDE600C7BD10 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		D01B3B291A04E4FF00C7BD10 /* SldBattleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleController.h; sourceTree = "<group>"; };
-		D01B3B2A1A04E4FF00C7BD10 /* SldBattleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleController.m; sourceTree = "<group>"; };
 		D02F76B7197FFBE200E742F8 /* btnBgBlue90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgBlue90h@2x.png"; sourceTree = "<group>"; };
 		D02F76B8197FFBE200E742F8 /* btnBgGreen90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgGreen90h@2x.png"; sourceTree = "<group>"; };
 		D02F76B9197FFBE200E742F8 /* btnBgRed90h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnBgRed90h@2x.png"; sourceTree = "<group>"; };
@@ -580,6 +580,11 @@
 		D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBalintimesO2OmobiAd.a; path = External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd/libBalintimesO2OmobiAd.a; sourceTree = "<group>"; };
 		D0D14B6E195B6A83009193E6 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D0D14B6F195B6A83009193E6 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		D0D5F93C1A10D25E00444BFA /* SldBattleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleController.h; sourceTree = "<group>"; };
+		D0D5F93D1A10D25E00444BFA /* SldBattleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleController.m; sourceTree = "<group>"; };
+		D0D5F93F1A11031500444BFA /* otlGrid48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlGrid48@2x.png"; sourceTree = "<group>"; };
+		D0D5F9411A111C3100444BFA /* SldMatchHubController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchHubController.h; sourceTree = "<group>"; };
+		D0D5F9421A111C3100444BFA /* SldMatchHubController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchHubController.m; sourceTree = "<group>"; };
 		D0F24A7F19D5E95000A63C30 /* SldExchangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldExchangeController.h; sourceTree = "<group>"; };
 		D0F24A8019D5E95000A63C30 /* SldExchangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldExchangeController.m; sourceTree = "<group>"; };
 		D0F24A8219D5F21700A63C30 /* SldCouponCardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldCouponCardController.h; sourceTree = "<group>"; };
@@ -862,8 +867,10 @@
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				D02F76C0198142AE00E742F8 /* SldPackTestController.h */,
 				D02F76C1198142AF00E742F8 /* SldPackTestController.m */,
-				D01B3B291A04E4FF00C7BD10 /* SldBattleController.h */,
-				D01B3B2A1A04E4FF00C7BD10 /* SldBattleController.m */,
+				D0D5F93C1A10D25E00444BFA /* SldBattleController.h */,
+				D0D5F93D1A10D25E00444BFA /* SldBattleController.m */,
+				D0D5F9411A111C3100444BFA /* SldMatchHubController.h */,
+				D0D5F9421A111C3100444BFA /* SldMatchHubController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -884,6 +891,7 @@
 				D09CF94E199CBE3900786FB1 /* tcWeibo64.png */,
 				D09CF948199CABFB00786FB1 /* douban64.png */,
 				D09CF94A199CABFB00786FB1 /* weibo64.png */,
+				D0D5F93F1A11031500444BFA /* otlGrid48@2x.png */,
 				D05912A619D29BCF009916AB /* otlBag48@2x.png */,
 				D05912A419D21307009916AB /* otlDisc48@2x.png */,
 				D0959EE419B842D000A64767 /* otlBattle48@2x.png */,
@@ -1360,6 +1368,7 @@
 				D007892F198ABFCA00945D50 /* otlChat@2x.png in Resources */,
 				D0A55615196EADD800369401 /* otlTimer@2x.png in Resources */,
 				D0A55613196EADD800369401 /* otlBattle@2x.png in Resources */,
+				D0D5F9401A11031600444BFA /* otlGrid48@2x.png in Resources */,
 				D0D14B16195B3807009193E6 /* adsmogo_close@2x.png in Resources */,
 				D057C1DB19FE625B00C56A0D /* UMSLoginViewController.xib in Resources */,
 				D0D14B55195B3807009193E6 /* safari.png in Resources */,
@@ -1501,11 +1510,12 @@
 				B31CBEA419089EA700621165 /* SldDb.m in Sources */,
 				B34D52B51923648100277EBC /* MarqueeLabel.m in Sources */,
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
+				D0D5F9431A111C3100444BFA /* SldMatchHubController.m in Sources */,
 				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
-				D01B3B2B1A04E4FF00C7BD10 /* SldBattleController.m in Sources */,
+				D0D5F93E1A10D25E00444BFA /* SldBattleController.m in Sources */,
 				D0667D6419514DD700AD9282 /* SldIapController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,

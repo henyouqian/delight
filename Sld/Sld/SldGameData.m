@@ -60,6 +60,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.teamName = [dict objectForKey:@"TeamName"];
     info.gravatarKey = [dict objectForKey:@"GravatarKey"];
     info.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
+    info.email = [dict objectForKey:@"Email"];
     info.goldCoin = [(NSNumber*)[dict objectForKey:@"GoldCoin"] intValue];
     info.coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] floatValue];
     info.totalCoupon = [(NSNumber*)[dict objectForKey:@"TotalCoupon"] floatValue];
