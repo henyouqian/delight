@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SldPlayedMatchListController : UICollectionViewController
-
++ (instancetype)getInst;
+- (void)onTabSelect;
 @end

@@ -140,6 +140,10 @@
 		D06748CE1A00E69D00C390DB /* DomobAdSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D06748CD1A00E69D00C390DB /* DomobAdSDKBundle.bundle */; };
 		D06FDB0D19AEE6C100ECBAEA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05E9967195CB1D5002A6B83 /* AdSupport.framework */; };
 		D07B0901199BDC470056D102 /* otlPickSide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D07B0900199BDC460056D102 /* otlPickSide@2x.png */; };
+		D08882F71A1216C8009C2F80 /* BarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882F41A1216C8009C2F80 /* BarItem.m */; };
+		D08882F81A1216C8009C2F80 /* CBStoreHouseRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882F61A1216C8009C2F80 /* CBStoreHouseRefreshControl.m */; };
+		D08882FA1A1217E6009C2F80 /* storehouse.plist in Resources */ = {isa = PBXBuildFile; fileRef = D08882F91A1217E6009C2F80 /* storehouse.plist */; };
+		D08882FD1A1286D0009C2F80 /* SldBattleLinkController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */; };
 		D0959EE319B8424800A64767 /* otlList48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE219B8424800A64767 /* otlList48@2x.png */; };
 		D0959EE619B842D000A64767 /* otlBattle48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE419B842D000A64767 /* otlBattle48@2x.png */; };
 		D0959EE719B842D000A64767 /* otlUser48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE519B842D000A64767 /* otlUser48@2x.png */; };
@@ -247,7 +251,7 @@
 		D0D14B62195B3807009193E6 /* webview_bar_share.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D14B0B195B3807009193E6 /* webview_bar_share.png */; };
 		D0D14B6D195B4EED009193E6 /* libBalintimesO2OmobiAd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */; };
 		D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D14B6F195B6A83009193E6 /* NSData+Base64.m */; };
-		D0D5F93E1A10D25E00444BFA /* SldBattleController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D5F93D1A10D25E00444BFA /* SldBattleController.m */; };
+		D0D5F93E1A10D25E00444BFA /* SldBattleSelectController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D5F93D1A10D25E00444BFA /* SldBattleSelectController.m */; };
 		D0D5F9401A11031600444BFA /* otlGrid48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D5F93F1A11031500444BFA /* otlGrid48@2x.png */; };
 		D0D5F9431A111C3100444BFA /* SldMatchHubController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D5F9421A111C3100444BFA /* SldMatchHubController.m */; };
 		D0F24A8119D5E95000A63C30 /* SldExchangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F24A8019D5E95000A63C30 /* SldExchangeController.m */; };
@@ -463,6 +467,13 @@
 		D06748CB1A00E67D00C390DB /* baidumobadsdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = baidumobadsdk.bundle; path = ../External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.2_SDK/lib/baidumobadsdk.bundle; sourceTree = "<group>"; };
 		D06748CD1A00E69D00C390DB /* DomobAdSDKBundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = DomobAdSDKBundle.bundle; path = External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_435/DomobAdSDK/DomobAdSDKBundle/DomobAdSDKBundle.bundle; sourceTree = SOURCE_ROOT; };
 		D07B0900199BDC460056D102 /* otlPickSide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlPickSide@2x.png"; sourceTree = "<group>"; };
+		D08882F31A1216C8009C2F80 /* BarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarItem.h; sourceTree = "<group>"; };
+		D08882F41A1216C8009C2F80 /* BarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarItem.m; sourceTree = "<group>"; };
+		D08882F51A1216C8009C2F80 /* CBStoreHouseRefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBStoreHouseRefreshControl.h; sourceTree = "<group>"; };
+		D08882F61A1216C8009C2F80 /* CBStoreHouseRefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBStoreHouseRefreshControl.m; sourceTree = "<group>"; };
+		D08882F91A1217E6009C2F80 /* storehouse.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = storehouse.plist; path = Sld/res/ui/storehouse.plist; sourceTree = SOURCE_ROOT; };
+		D08882FB1A1286D0009C2F80 /* SldBattleLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleLinkController.h; sourceTree = "<group>"; };
+		D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleLinkController.m; sourceTree = "<group>"; };
 		D0959EE219B8424800A64767 /* otlList48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlList48@2x.png"; sourceTree = "<group>"; };
 		D0959EE419B842D000A64767 /* otlBattle48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBattle48@2x.png"; sourceTree = "<group>"; };
 		D0959EE519B842D000A64767 /* otlUser48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlUser48@2x.png"; sourceTree = "<group>"; };
@@ -580,8 +591,8 @@
 		D0D14B6C195B4EED009193E6 /* libBalintimesO2OmobiAd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBalintimesO2OmobiAd.a; path = External/AdsMoGoLib/AdNetworkLibs/o2omobi_SDK_202/BalintimesO2OmobiAd/libBalintimesO2OmobiAd.a; sourceTree = "<group>"; };
 		D0D14B6E195B6A83009193E6 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D0D14B6F195B6A83009193E6 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
-		D0D5F93C1A10D25E00444BFA /* SldBattleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleController.h; sourceTree = "<group>"; };
-		D0D5F93D1A10D25E00444BFA /* SldBattleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleController.m; sourceTree = "<group>"; };
+		D0D5F93C1A10D25E00444BFA /* SldBattleSelectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleSelectController.h; sourceTree = "<group>"; };
+		D0D5F93D1A10D25E00444BFA /* SldBattleSelectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleSelectController.m; sourceTree = "<group>"; };
 		D0D5F93F1A11031500444BFA /* otlGrid48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlGrid48@2x.png"; sourceTree = "<group>"; };
 		D0D5F9411A111C3100444BFA /* SldMatchHubController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchHubController.h; sourceTree = "<group>"; };
 		D0D5F9421A111C3100444BFA /* SldMatchHubController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchHubController.m; sourceTree = "<group>"; };
@@ -798,6 +809,10 @@
 		B363AD671923D21C001CD6D6 /* thirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				D08882F31A1216C8009C2F80 /* BarItem.h */,
+				D08882F41A1216C8009C2F80 /* BarItem.m */,
+				D08882F51A1216C8009C2F80 /* CBStoreHouseRefreshControl.h */,
+				D08882F61A1216C8009C2F80 /* CBStoreHouseRefreshControl.m */,
 				D0C4EF8819A3290800D2F1D0 /* UIImage+ImageEffects.h */,
 				D0C4EF8919A3290800D2F1D0 /* UIImage+ImageEffects.m */,
 				D0D14B6E195B6A83009193E6 /* NSData+Base64.h */,
@@ -823,6 +838,8 @@
 			children = (
 				D05912AB19D34A00009916AB /* SldMainTabBarController.h */,
 				D05912AC19D34A00009916AB /* SldMainTabBarController.m */,
+				D0D5F9411A111C3100444BFA /* SldMatchHubController.h */,
+				D0D5F9421A111C3100444BFA /* SldMatchHubController.m */,
 				D0C4EFAC19A68FDC00D2F1D0 /* SldMatchListController.h */,
 				D0C4EFAD19A68FDD00D2F1D0 /* SldMatchListController.m */,
 				D05912AE19D3541B009916AB /* SldHotMatchListController.h */,
@@ -867,10 +884,10 @@
 				B31EE7E618F05BE60047E9FD /* SldGameController.m */,
 				D02F76C0198142AE00E742F8 /* SldPackTestController.h */,
 				D02F76C1198142AF00E742F8 /* SldPackTestController.m */,
-				D0D5F93C1A10D25E00444BFA /* SldBattleController.h */,
-				D0D5F93D1A10D25E00444BFA /* SldBattleController.m */,
-				D0D5F9411A111C3100444BFA /* SldMatchHubController.h */,
-				D0D5F9421A111C3100444BFA /* SldMatchHubController.m */,
+				D0D5F93C1A10D25E00444BFA /* SldBattleSelectController.h */,
+				D0D5F93D1A10D25E00444BFA /* SldBattleSelectController.m */,
+				D08882FB1A1286D0009C2F80 /* SldBattleLinkController.h */,
+				D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -887,6 +904,7 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D08882F91A1217E6009C2F80 /* storehouse.plist */,
 				D057C1DF19FEB5A000C56A0D /* qq64.png */,
 				D09CF94E199CBE3900786FB1 /* tcWeibo64.png */,
 				D09CF948199CABFB00786FB1 /* douban64.png */,
@@ -1337,6 +1355,7 @@
 				D014465419A06B6900D47DCA /* otlController48@2x.png in Resources */,
 				D05E995C195C7189002A6B83 /* coin0.png in Resources */,
 				B34D52B01921886000277EBC /* blackDisk90@2x.png in Resources */,
+				D08882FA1A1217E6009C2F80 /* storehouse.plist in Resources */,
 				D0D14B3F195B3807009193E6 /* webview_bar_back_grey_ipad@2x.png in Resources */,
 				D05912A719D29BCF009916AB /* otlBag48@2x.png in Resources */,
 				D0D14B50195B3807009193E6 /* webview_bar_refresh_ipad.png in Resources */,
@@ -1515,7 +1534,8 @@
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
-				D0D5F93E1A10D25E00444BFA /* SldBattleController.m in Sources */,
+				D08882F71A1216C8009C2F80 /* BarItem.m in Sources */,
+				D0D5F93E1A10D25E00444BFA /* SldBattleSelectController.m in Sources */,
 				D0667D6419514DD700AD9282 /* SldIapController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,
 				B39E4486191E9E6D00CBB247 /* SldUserController.m in Sources */,
@@ -1532,8 +1552,10 @@
 				D05912AD19D34A00009916AB /* SldMainTabBarController.m in Sources */,
 				D02F76C2198142AF00E742F8 /* SldPackTestController.m in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
+				D08882F81A1216C8009C2F80 /* CBStoreHouseRefreshControl.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */,
+				D08882FD1A1286D0009C2F80 /* SldBattleLinkController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 				D05912B019D3541B009916AB /* SldHotMatchListController.m in Sources */,

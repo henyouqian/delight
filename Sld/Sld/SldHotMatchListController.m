@@ -17,9 +17,9 @@
 #import "SldMyMatchController.h"
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
-#import "SldMatchBriefController.h"
+#import "CBStoreHouseRefreshControl.h"
 
-BOOL g_needRefreshHotList = NO;
+BOOL g_needRefreshHotList = YES;
 
 //=============================
 @interface SldHotMatchListController()
@@ -29,29 +29,43 @@ BOOL g_needRefreshHotList = NO;
 @property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) BOOL refreshOnce;
+@property (nonatomic) CBStoreHouseRefreshControl *storeHouseRefreshControl;
 
 @end
 
 @implementation SldHotMatchListController
 
+static SldHotMatchListController* _inst = nil;
+
++ (instancetype)getInst {
+    return _inst;
+}
+
 - (void)dealloc {
     [_secTimer invalidate];
+    _inst = nil;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _inst = self;
     _matches = [NSMutableArray array];
     _gd = [SldGameData getInstance];
+    _refreshOnce = NO;
     
     //refresh control
-    self.refreshControl = [[UIRefreshControl alloc] init];
+//    self.refreshControl = [[UIRefreshControl alloc] init];
+//    self.collectionView.alwaysBounceVertical = YES;
+//    [self.collectionView addSubview:self.refreshControl];
+//    [self.refreshControl addTarget:self action:@selector(refreshMatch) forControlEvents:UIControlEventValueChanged];
+    
     self.collectionView.alwaysBounceVertical = YES;
-    [self.collectionView addSubview:self.refreshControl];
-    [self.refreshControl addTarget:self action:@selector(refreshMatch) forControlEvents:UIControlEventValueChanged];
+    self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refreshMatch) plist:@"storehouse"];
     
     //
-    [self refreshMatch];
+//    [self refreshMatch];
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
@@ -69,24 +83,17 @@ static float _scrollY = -64;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    self.tabBarController.navigationItem.title = self.tabBarItem.title;
-//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
-//    
-//    UIEdgeInsets insets = self.collectionView.contentInset;
-//    insets.top = 64;
-//    insets.bottom = 50;
-//    
-//    self.collectionView.contentInset = insets;
-//    self.collectionView.scrollIndicatorInsets = insets;
-//    
-//    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
-    
     [_refreshControl endRefreshing];
     
-    //refesh
-    if (g_needRefreshHotList) {
-        [self refreshMatch];
-    }
+//    //refesh
+//    if (!self.view.hidden && g_needRefreshHotList) {
+//        [self refreshMatch];
+//    }
+    
+    CGFloat top = self.topLayoutGuide.length;
+    CGFloat bottom = self.bottomLayoutGuide.length;
+    UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
+    self.collectionView.contentInset = newInsets;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -108,6 +115,7 @@ static float _scrollY = -64;
     [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
         [_refreshControl endRefreshing];
+        [self.storeHouseRefreshControl finishingLoading];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -294,17 +302,47 @@ static float _scrollY = -64;
 //    }
 //}
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    SldMatchListCell* cell = (SldMatchListCell*)[collectionView cellForItemAtIndexPath:indexPath];
-    
-    //
+//- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    SldMatchListCell* cell = (SldMatchListCell*)[collectionView cellForItemAtIndexPath:indexPath];
+//    
+//    //
+//    SldGameData *gd = [SldGameData getInstance];
+//    gd.match = cell.match;
+//    
+//    SldMatchBriefController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchBrief"];
+//    [self.tabBarController.navigationController pushViewController:controller animated:YES];
+//    self.tabBarController.navigationController.navigationBarHidden = NO;
+//}
+
+//- (void) viewDidLayoutSubviews {
+//    CGFloat top = self.topLayoutGuide.length;
+//    CGFloat bottom = self.bottomLayoutGuide.length;
+//    UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
+//    self.collectionView.contentInset = newInsets;
+//}
+
+- (void)onTabSelect {
+    if (!_refreshOnce) {
+        _refreshOnce = YES;
+        [self refreshMatch];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    SldMatchListCell *cell = sender;
     SldGameData *gd = [SldGameData getInstance];
     gd.match = cell.match;
-    
-    SldMatchBriefController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchBrief"];
-    [self.tabBarController.navigationController pushViewController:controller animated:YES];
-    self.tabBarController.navigationController.navigationBarHidden = NO;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.storeHouseRefreshControl scrollViewDidScroll];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.storeHouseRefreshControl scrollViewDidEndDragging];
 }
 
 @end

@@ -250,6 +250,7 @@
     if (imageKey == nil || _loading) {
         return;
     }
+    self.image = nil;
     UIActivityIndicatorView *indicatorView = nil;
     if (showIndicator) {
         indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];

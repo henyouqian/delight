@@ -11,7 +11,8 @@
 #import "SldGameData.h"
 
 @interface SldMatchListController : UICollectionViewController
-
++ (instancetype)getInst;
+- (void)onTabSelect;
 @end
 
 //============================

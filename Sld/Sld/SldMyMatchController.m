@@ -18,6 +18,7 @@
 #import "MSWeakTimer.h"
 #import "SldConfig.h"
 #import "SldMatchBriefController.h"
+#import "CBStoreHouseRefreshControl.h"
 
 static NSArray* _assets;
 static int _publishDelayHour = 0;
@@ -862,10 +863,9 @@ static const int COUPON_MAX = 10000;
 @property (nonatomic) SldMyMatchFooter* footer;
 @property (nonatomic) SldMyMatchHeader* header;
 @property (nonatomic) QBImagePickerController *imagePickerController;
-@property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property (nonatomic) SldGameData *gd;
-@property (nonatomic) UINavigationController *naviCon;
+@property (nonatomic) CBStoreHouseRefreshControl *storeHouseRefreshControl;
 
 @end
 
@@ -883,19 +883,8 @@ static const int COUPON_MAX = 10000;
     _myMatchListController = self;
     _matches = [NSMutableArray array];
     
-//    UIEdgeInsets insets = self.collectionView.contentInset;
-//    insets.top = 64;
-//    insets.bottom = 50;
-//    
-//    self.collectionView.contentInset = insets;
-//    self.collectionView.scrollIndicatorInsets = insets;
-//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
-    
-    //refresh control
-    self.refreshControl = [[UIRefreshControl alloc] init];
     self.collectionView.alwaysBounceVertical = YES;
-    [self.collectionView addSubview:self.refreshControl];
-    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refresh) plist:@"storehouse"];
     
     //
     [self refresh];
@@ -927,8 +916,7 @@ static float _scrollY = -64;
 //    self.collectionView.scrollIndicatorInsets = insets;
 //    
 //    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
-    
-    [_refreshControl endRefreshing];
+
     
     //refesh
     if (_gd.playerInfo && _gd.needRefreshOwnerList) {
@@ -949,7 +937,7 @@ static float _scrollY = -64;
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/listMine" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
-        [_refreshControl endRefreshing];
+        [_storeHouseRefreshControl finishingLoading];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -1015,11 +1003,9 @@ static float _scrollY = -64;
     _imagePickerController.minimumNumberOfSelection = 4;
     _imagePickerController.maximumNumberOfSelection = 12;
     _imagePickerController.title = @"选择4-12张图片";
-    
-//    [self.navigationController pushViewController:_imagePickerController animated:YES];
-    _naviCon = self.tabBarController.navigationController;
-    _naviCon.navigationBarHidden = NO;
-    [_naviCon pushViewController:_imagePickerController animated:YES];
+ 
+    _imagePickerController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:_imagePickerController animated:YES];
 }
 
 - (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAssets:(NSArray *)assets {
@@ -1027,14 +1013,14 @@ static float _scrollY = -64;
     
     SldMyMatchImagePickListController* vc = (SldMyMatchImagePickListController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"myUserPackEditVC"];
     
-    [_naviCon pushViewController:vc animated:YES];
+    [self.navigationController pushViewController:vc animated:YES];
     
     [vc setAssets:assets];
 }
 
 - (void)qb_imagePickerControllerDidCancel:(QBImagePickerController *)imagePickerController {
 //    [self.navigationController popToViewController:self animated:YES];
-    [_naviCon popToRootViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -1134,6 +1120,16 @@ static float _scrollY = -64;
         }
         [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
     }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.storeHouseRefreshControl scrollViewDidScroll];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.storeHouseRefreshControl scrollViewDidEndDragging];
 }
 
 @end

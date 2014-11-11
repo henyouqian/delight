@@ -8,13 +8,18 @@
 
 #import "SldMatchHubController.h"
 #import "SldGameData.h"
-#import "SldLoginViewController.h"
+#import "SldMatchListController.h"
+#import "SldHotMatchListController.h"
+#import "SldPlayedMatchListController.h"
 
 @interface SldMatchHubController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
 @property (weak, nonatomic) IBOutlet UIView *latestView;
 @property (weak, nonatomic) IBOutlet UIView *hottestView;
 @property (weak, nonatomic) IBOutlet UIView *playedView;
+@property (nonatomic) SldMatchListController *latestVC;
+@property (nonatomic) SldHotMatchListController *hottestVC;
+@property (nonatomic) SldPlayedMatchListController *playedVC;
 @end
 
 @implementation SldMatchHubController
@@ -25,15 +30,20 @@
     _latestView.hidden = NO;
     _hottestView.hidden = YES;
     _playedView.hidden = YES;
+    
+    _latestVC = [SldMatchListController getInst];
+    _hottestVC = [SldHotMatchListController getInst];
+    _playedVC = [SldPlayedMatchListController getInst];
+    
+//    _latestVC.view.hidden = NO;
+//    _hottestVC.view.hidden = YES;
+//    _playedVC.view.hidden = YES;
+    
+//    [_latestVC onTabSelect];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    SldGameData *gd = [SldGameData getInstance];
-    if (!gd.online) {
-        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
-    }
 }
 
 - (IBAction)onSegChange:(id)sender {
@@ -42,10 +52,13 @@
     _playedView.hidden = YES;
     if (_seg.selectedSegmentIndex == 0) {
         _latestView.hidden = NO;
+        [_latestVC onTabSelect];
     } else if (_seg.selectedSegmentIndex == 1) {
         _hottestView.hidden = NO;
+        [_hottestVC onTabSelect];
     } else if (_seg.selectedSegmentIndex == 2) {
         _playedView.hidden = NO;
+        [_playedVC onTabSelect];
     }
 }
 

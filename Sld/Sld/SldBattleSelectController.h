@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldBattleController : UICollectionViewController
+@interface SldBattleSelectController : UICollectionViewController
 
 @end

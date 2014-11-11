@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface SldHotMatchListController : UICollectionViewController
-
++ (instancetype)getInst;
+- (void)onTabSelect;
 @end
 
 extern BOOL g_needRefreshHotList;

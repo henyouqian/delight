@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldBattleController.h"
+#import "SldBattleSelectController.h"
 
 
 @interface SldBattleCell : UICollectionViewCell
@@ -23,11 +23,11 @@
 
 
 //==================================
-@interface SldBattleController ()
+@interface SldBattleSelectController ()
 
 @end
 
-@implementation SldBattleController
+@implementation SldBattleSelectController
 
 static NSString * const reuseIdentifier = @"BattleCell";
 
