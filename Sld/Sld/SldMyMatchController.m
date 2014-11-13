@@ -1059,26 +1059,26 @@ static float _scrollY = -64;
     return nil;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    SldMyMatchCell* cell = (SldMyMatchCell*)[collectionView cellForItemAtIndexPath:indexPath];
-    
-    //
-    SldGameData *gd = [SldGameData getInstance];
-    gd.match = cell.match;
-    
-    SldMatchBriefController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchBrief"];
-    [self.tabBarController.navigationController pushViewController:controller animated:YES];
-    self.tabBarController.navigationController.navigationBarHidden = NO;
-}
-//
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if (segue.identifier && [segue.identifier compare:@"cellSegue"] == 0) {
-//        SldMyMatchCell *cell = sender;
-//        SldGameData *gd = [SldGameData getInstance];
-//        gd.match = cell.match;
-//    }
+//- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    SldMyMatchCell* cell = (SldMyMatchCell*)[collectionView cellForItemAtIndexPath:indexPath];
+//    
+//    //
+//    SldGameData *gd = [SldGameData getInstance];
+//    gd.match = cell.match;
+//    
+//    SldMatchBriefController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"matchBrief"];
+//    [self.tabBarController.navigationController pushViewController:controller animated:YES];
+//    self.tabBarController.navigationController.navigationBarHidden = NO;
 //}
+//
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (segue.identifier && [segue.identifier compare:@"cellSegue"] == 0) {
+        SldMyMatchCell *cell = sender;
+        SldGameData *gd = [SldGameData getInstance];
+        gd.match = cell.match;
+    }
+}
 
 - (IBAction)onLoadMoreButton:(id)sender {
     if (_matches.count == 0) {

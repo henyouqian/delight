@@ -1481,7 +1481,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2266" y="-2413"/>
+            <point key="canvasLocation" x="-2606" y="-1989"/>
         </scene>
         <!--Sld Advice Controller-->
         <scene sceneID="2yb-cK-pN1">
@@ -2426,6 +2426,7 @@
                                     <outlet property="playTimesLabel" destination="4uA-sV-8O6" id="3iW-iB-cpl"/>
                                     <outlet property="rewardNumLabel" destination="4uA-sV-8O6" id="CR0-tt-BRG"/>
                                     <outlet property="timeLabel" destination="3vi-Iw-F8c" id="KxV-4A-Skc"/>
+                                    <segue destination="Xho-hf-wAk" kind="show" identifier="cellSegue" id="8wM-VL-FwZ"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -2645,7 +2646,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0uX-Gp-QBx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2237" y="-3397"/>
+            <point key="canvasLocation" x="-1321" y="-3357"/>
         </scene>
         <!--设定-->
         <scene sceneID="dOk-CO-cdH">
@@ -4123,7 +4124,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-4594" y="-3397"/>
+            <point key="canvasLocation" x="-4533" y="-3464"/>
         </scene>
         <!--Sld Battle Link Controller-->
         <scene sceneID="g2G-nY-oNb">
@@ -4303,7 +4304,6 @@
         <!--Sld Hot Match List Controller-->
         <scene sceneID="ytn-2B-q9q">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DrY-26-WJ8" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="aPS-xG-Dlb" customClass="SldHotMatchListController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="5CT-Z3-jTO" customClass="SldCollectionView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
@@ -4430,6 +4430,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DrY-26-WJ8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-5740" y="-3498.5"/>
         </scene>
@@ -4511,6 +4512,27 @@
             </objects>
             <point key="canvasLocation" x="-6031" y="-386"/>
         </scene>
+        <!--Sld Battle Scene Controller-->
+        <scene sceneID="EY5-JU-KBK">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pth-cO-f8w" customClass="SldBattleSceneController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4yR-7k-m2r"/>
+                        <viewControllerLayoutGuide type="bottom" id="xcB-yo-42M"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uiq-yd-KBb" customClass="SKView">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="VeB-xl-vax"/>
+                    <keyCommands/>
+                    <nil key="simulatedTopBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nt8-4Y-K5L" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2461" y="-2693"/>
+        </scene>
     </scenes>
     <resources>
         <image name="blackDisk90.png" width="90" height="90"/>
@@ -4533,7 +4555,7 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="8wM-VL-FwZ"/>
         <segue reference="28D-cR-agb"/>
-        <segue reference="G3g-EF-nPd"/>
     </inferredMetricsTieBreakers>
 </document>

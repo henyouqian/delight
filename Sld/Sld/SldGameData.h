@@ -116,6 +116,8 @@ enum GameMode{
 @property (nonatomic) PlayerInfo *playerInfo;
 @property (nonatomic) Match *match;
 @property (nonatomic) NSString *matchSecret;
+@property (nonatomic) NSString *token;
+
 - (void)resetEvent;
 
 //player
@@ -155,6 +157,7 @@ enum GameMode{
 
 //etc
 @property (nonatomic) float ownerRewardProportion;
+@property (nonatomic) int sliderNum;
 
 
 @end

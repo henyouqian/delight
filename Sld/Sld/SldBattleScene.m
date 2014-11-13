@@ -1,11 +1,12 @@
 //
-//  SldGameScene.m
+//  SldBattleScene.m
 //  Sld
 //
 //  Created by Wei Li on 14-4-11.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
+#import "SldBattleScene.h"
 #import "SldGameScene.h"
 #import "SldUtil.h"
 #import "SldButton.h"
@@ -17,113 +18,93 @@
 #import "SldConfig.h"
 #import "nv-ios-digest/SHA1.h"
 
-//=========================================================
-@implementation Slider
+@interface SldBattleSceneController()
+
+@property (nonatomic) SldGameData *gd;
 @end
 
-//=========================================================
-@interface TimeBar : SKNode
--(instancetype)initWithChallengeSecs:(NSArray*)secs size:(CGSize)size;
--(void)update:(NSTimeInterval)timeFromStart;
-@property (nonatomic) SKSpriteNode *bar;
-@property (nonatomic) UIColor *greenColor;
-@property (nonatomic) UIColor *yellowColor;
-@property (nonatomic) UIColor *redColor;
-@property (nonatomic) float greenWidth;
-@property (nonatomic) float yellowWidth;
-@property (nonatomic) float redTime;
-@property (nonatomic) CGSize size;
-@property (nonatomic) int starNum;
+@implementation SldBattleSceneController
 
-@end
-
-@implementation TimeBar
--(instancetype)initWithChallengeSecs:(NSArray*)secs size:(CGSize)size {
-    if (self = [super init]) {
-        if (secs.count != 3) {
-            return self;
-        }
-        _size = size;
-        
-        int redSec = [(NSNumber*)[secs lastObject] intValue];
-        float redTime = (float)redSec;
-        int yellowSec = [(NSNumber*)[secs objectAtIndex:1] intValue];
-        float yellowTime = (float)yellowSec;
-        int greenSec = [(NSNumber*)[secs firstObject] intValue];
-        float greenTime = (float)greenSec;
-        
-        _redTime = redTime;
-        
-        int alpha = 80;
-        _redColor = makeUIColor(240, 78, 82, alpha);
-        _yellowColor = makeUIColor(255, 214, 91, alpha);
-        _greenColor = makeUIColor(52, 214, 125, alpha);
-        
-        SKSpriteNode* bar = [SKSpriteNode spriteNodeWithColor:_redColor size:size];
-        bar.anchorPoint = CGPointMake(0.f, 1.f);
-        [self addChild:bar];
-        
-        _yellowWidth = size.width*yellowTime/redTime;
-        bar = [SKSpriteNode spriteNodeWithColor:_yellowColor size:CGSizeMake(_yellowWidth, size.height)];
-        bar.anchorPoint = CGPointMake(0.f, 1.f);
-        [self addChild:bar];
-        
-        _greenWidth = size.width*greenTime/redTime;
-        bar = [SKSpriteNode spriteNodeWithColor:_greenColor size:CGSizeMake(_greenWidth, size.height)];
-        bar.anchorPoint = CGPointMake(0.f, 1.f);
-        [self addChild:bar];
-        
-        //
-        _bar = [SKSpriteNode spriteNodeWithColor:[_greenColor colorWithAlphaComponent:1.0] size:CGSizeMake(1.0, size.height)];
-        _bar.anchorPoint = CGPointMake(0.f, 1.f);
-        [_bar setXScale:0.0];
-        [self addChild:_bar];
-        
-        _starNum = 3;
-    }
-    return self;
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
--(void)update:(NSTimeInterval)timeFromStart {
-    float f = (float)timeFromStart / _redTime;
-    if (f > 1.0) {
-        f = 1.0;
-    }
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
-    float width = f * _size.width;
-    int starNum = 3;
+    _gd = [SldGameData getInstance];
     
-    UIColor *color = [_greenColor colorWithAlphaComponent:1.0];
-    if (f == 1.0) {
-        color = makeUIColor(130, 0, 5, 255);
-        starNum = 0;
-    } else if (width > _yellowWidth) {
-        color = [_redColor colorWithAlphaComponent:1.0];
-        starNum = 1;
-    } else if(width > _greenWidth) {
-        color = [_yellowColor colorWithAlphaComponent:1.0];
-        starNum = 2;
-    }
-
-    __block BOOL inAction = NO;
-    if (_starNum != starNum && !inAction) {
-        inAction = YES;
-        SKAction *action = [SKAction colorizeWithColor:color colorBlendFactor:1.0 duration:0.3];
-        [_bar runAction:action completion:^{
-            inAction = NO;
-        }];
-    }
-    //_bar.color = color;
+    // Configure the view.
+    SKView * skView = (SKView *)self.view;
+    //    skView.showsFPS = YES;
+    //    skView.showsNodeCount = YES;
     
-    [_bar setXScale:width];
-    _starNum = starNum;
+    // Create and configure the scene.
+    SldBattleScene* scene = [SldBattleScene sceneWithSize:skView.bounds.size controller:self];
+    scene.scaleMode = SKSceneScaleModeAspectFill;
+    scene.navigationController = self.navigationController;
+    
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillResignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+    // Present the scene.
+    [skView presentScene:scene];
 }
+
+- (void)applicationWillResignActive
+{
+    [(SKView *)self.view setPaused:YES];
+}
+
+- (void)applicationDidBecomeActive
+{
+    [(SKView *)self.view setPaused:NO];
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        return UIInterfaceOrientationMaskPortrait;
+    } else {
+        return UIInterfaceOrientationMaskPortrait;
+    }
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [super viewWillDisappear:animated];
+}
+
 
 @end
 
 //=========================================================
-@interface SldGameScene()
-@property (nonatomic) TimeBar *timeBar;
+@interface SldBattleScene()
 @property (nonatomic) NSMutableArray *uiRotateNodes;
 @property (nonatomic) SldButton *btnExit;
 @property (nonatomic) SldButton *btnYes;
@@ -188,19 +169,19 @@ static UIColor *BUTTON_COLOR_RED = nil;
 static UIColor *BUTTON_COLOR_GREEN = nil;
 
 
-@implementation SldGameScene
+@implementation SldBattleScene
 
 NSDate *_gameBeginTime;
 
 
-+ (instancetype)sceneWithSize:(CGSize)size controller:(SldGameController*)controller {
-    SldGameScene* inst = [[SldGameScene alloc] initWithSize:size controller:controller];
++ (instancetype)sceneWithSize:(CGSize)size controller:(SldBattleSceneController*)controller {
+    SldBattleScene* inst = [[SldBattleScene alloc] initWithSize:size controller:controller];
     return inst;
 }
 
-- (instancetype)initWithSize:(CGSize)size controller:(SldGameController*)controller {
+- (instancetype)initWithSize:(CGSize)size controller:(SldBattleSceneController*)controller {
     if (self = [super initWithSize:size]) {
-        _gameController = controller;
+        _controller = controller;
         
         _gd = [SldGameData getInstance];
         if (_gd.gameMode == M_MATCH) {
@@ -248,12 +229,6 @@ NSDate *_gameBeginTime;
         BUTTON_COLOR_GREEN = makeUIColor(76, 217, 100, 255);
         
         float buttonZ = 10.f;
-        
-        //time bar
-        _timeBar = [[TimeBar alloc] initWithChallengeSecs:@[@10, @20, @30] size:CGSizeMake(size.width, 3)];
-        [_timeBar setPosition:CGPointMake(0, size.height)];
-        _timeBar.zPosition = buttonZ;
-        //[self addChild:_timeBar];
         
         //exit button
         self.btnExit = [SldButton buttonWithImageNamed:BUTTON_BG];
@@ -904,7 +879,6 @@ static float lerpf(float a, float b, float t) {
     if (_gameRunning) {
         NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
         NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
-        [_timeBar update:dt];
         
         int t = (int)(dt*1000);
         _timerLabel.text = formatScore(-t);
@@ -1103,38 +1077,6 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onPackFinish {
-    //ads
-    if (M_TEST != _gd.gameMode) {
-        float rd = (float)(arc4random() % 100);
-        AdsConf *adsConf = _gd.playerInfo.adsConf;
-        if (rd/100.f < adsConf.showPercent) {
-            if (adsConf.delayPercent > 0 && adsConf.delaySec > 0) {
-                rd = (float)(arc4random() % 100)/100.f;
-                if (rd/100.f < adsConf.delayPercent) {
-                    self.btnExit.enabled = NO;
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, adsConf.delaySec * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        self.btnExit.enabled = YES;
-                        if (_gd.match.promoImage && _gd.match.promoImage.length) {
-                            [_gameController showUserAds];
-                        } else {
-                            [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
-                        }
-                    });
-                }
-            } else {
-                if (_gd.match.promoImage && _gd.match.promoImage.length) {
-                    [_gameController showUserAds];
-                } else {
-                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
-//                    SldConfig *conf = [SldConfig getInstance];
-//                    [[[AdMoGoInterstitialManager shareInstance]
-//                      adMogoVideoInterstitialByAppKey:conf.MOGO_KEY]
-//                     interstitialShow:YES];
-                }
-            }
-        }
-    }
-    
     //
     _packHasFinished = YES;
     _gameRunning = NO;
@@ -1370,7 +1312,7 @@ static BOOL _storeViewLoaded = NO;
         }
     ];
     
-    [_gameController presentViewController:storeProductViewContorller animated:YES completion:nil];
+    [_controller presentViewController:storeProductViewContorller animated:YES completion:nil];
 }
 
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {

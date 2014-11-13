@@ -45,6 +45,8 @@ NSString* formatInterval(int sec);
 + (NSString*)getKeyChainValueWithKey:(NSString*)key;
 
 + (UIColor*)getPinkColor;
+
++ (void)sendWithSocket:(SRWebSocket*)socket type:(NSString*)type data:(NSDictionary*)dict;
 @end
 
 @interface NSData (NSData_Conversion)
@@ -89,5 +91,6 @@ NSString* formatInterval(int sec);
 - (void)noMore;
 
 @end
+
 
 

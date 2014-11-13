@@ -133,6 +133,7 @@
 		D062EFF719864A8E004AD4A9 /* otlSmile48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */; };
 		D062EFF91988D61D004AD4A9 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D066849F1953548D00AD9282 /* libz.dylib */; };
 		D062EFFA1988D62B004AD4A9 /* liblibExt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C0AED3190666BF00CB4DFD /* liblibExt.a */; };
+		D06535A11A151F6900ED0617 /* SldBattleScene.m in Sources */ = {isa = PBXBuildFile; fileRef = D06535A01A151F6900ED0617 /* SldBattleScene.m */; };
 		D0667D6419514DD700AD9282 /* SldIapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0667D6319514DD700AD9282 /* SldIapController.m */; };
 		D0667D731952BE9000AD9282 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D721952BE9000AD9282 /* Social.framework */; };
 		D0667D771952BEC700AD9282 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0667D761952BEC700AD9282 /* EventKit.framework */; };
@@ -456,6 +457,8 @@
 		D062EFF219860BF2004AD4A9 /* otlTimer48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlTimer48@2x.png"; sourceTree = "<group>"; };
 		D062EFF4198634FD004AD4A9 /* otlStar48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlStar48@2x.png"; sourceTree = "<group>"; };
 		D062EFF619864A8E004AD4A9 /* otlSmile48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlSmile48@2x.png"; sourceTree = "<group>"; };
+		D065359F1A151F6900ED0617 /* SldBattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleScene.h; sourceTree = "<group>"; };
+		D06535A01A151F6900ED0617 /* SldBattleScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleScene.m; sourceTree = "<group>"; };
 		D0667D6219514DD700AD9282 /* SldIapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldIapController.h; sourceTree = "<group>"; };
 		D0667D6319514DD700AD9282 /* SldIapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldIapController.m; sourceTree = "<group>"; };
 		D0667D721952BE9000AD9282 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -897,6 +900,8 @@
 			children = (
 				B36C27D818F7D8A700E5A38A /* SldGameScene.h */,
 				B36C27D918F7D8A700E5A38A /* SldGameScene.m */,
+				D065359F1A151F6900ED0617 /* SldBattleScene.h */,
+				D06535A01A151F6900ED0617 /* SldBattleScene.m */,
 			);
 			name = scene;
 			sourceTree = "<group>";
@@ -1557,6 +1562,7 @@
 				D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */,
 				D08882FD1A1286D0009C2F80 /* SldBattleLinkController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
+				D06535A11A151F6900ED0617 /* SldBattleScene.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,
 				D05912B019D3541B009916AB /* SldHotMatchListController.m in Sources */,
 				B33DD3831921132A006B8ACD /* MMPickerView.m in Sources */,

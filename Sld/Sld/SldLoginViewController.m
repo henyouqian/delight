@@ -166,6 +166,7 @@ static NSString *SNS_DOUBAN = @"douban";
             
             //
             SldGameData *gameData = [SldGameData getInstance];
+            gameData.token = [dict objectForKey:@"Token"];
             gameData.userName = [dict objectForKey:@"UserName"];
             NSNumber *nUserId = [dict objectForKey:@"UserId"];
             if (nUserId) {
@@ -320,6 +321,7 @@ static NSString *SNS_DOUBAN = @"douban";
             return;
         }
         
+        gameData.token = [dict objectForKey:@"Token"];
         gameData.userName = username;
         NSNumber *nUserId = [dict objectForKey:@"UserId"];
         if (nUserId) {

@@ -9,6 +9,14 @@
 //#import "SldEventDetailViewController.h"
 #import "SldGameController.h"
 
+//============================
+@interface Slider : SKSpriteNode
+@property (nonatomic) NSUInteger idx;
+@property (nonatomic) UITouch *touch;
+@end
+
+
+//============================
 @interface SldGameScene : SKScene<SKStoreProductViewControllerDelegate>
 @property (weak, nonatomic) UINavigationController *navigationController;
 @property (weak, nonatomic) SldGameController *gameController;

@@ -208,6 +208,23 @@ NSString* formatInterval(int sec) {
     return makeUIColor(244, 75, 116, 255);
 }
 
++ (void)sendWithSocket:(SRWebSocket*)socket type:(NSString*)type data:(NSDictionary *)dict {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if (dict) {
+        md = [NSMutableDictionary dictionaryWithDictionary:dict];
+    }
+    
+    md[@"Type"] = type;
+    
+    NSError *error = nil;
+    NSData *dt = [NSJSONSerialization dataWithJSONObject:md options:0 error:&error];
+    if (error != nil) {
+        lwError("Json error: %@", [error localizedDescription]);
+        return;
+    }
+    [socket send:dt];
+}
+
 @end
 
 
