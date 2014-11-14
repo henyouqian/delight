@@ -11,7 +11,7 @@
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "SldConfig.h"
-#import "SldGameController.h"
+#import "SldBattleScene.h"
 
 
 @interface SldBattleLinkController ()
@@ -156,10 +156,18 @@
 }
 
 - (void)enterGame {
-    _gd.gameMode = M_PRACTICE;
-    _gd.autoPaging = NO;
-    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
-    [self.navigationController pushViewController:controller animated:YES];
+    int rd = arc4random() % _gd.packInfo.images.count;
+    NSString *imgKey = _gd.packInfo.images[rd];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        SldSprite *sprite = [SldSprite spriteWithPath:makeImagePath(imgKey) index:0];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _gd.autoPaging = YES;
+            SldBattleSceneController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"battleScene"];
+            controller.firstSprite = sprite;
+            controller.firstIndex = rd;
+            [self.navigationController pushViewController:controller animated:YES];
+        });
+    });
 }
 
 /*

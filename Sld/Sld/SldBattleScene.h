@@ -8,9 +8,12 @@
 
 //#import "SldEventDetailViewController.h"
 #import "SldGameController.h"
+#import "SldSprite.h"
 
 //==============================
 @interface SldBattleSceneController : UIViewController
+@property (nonatomic) SldSprite* firstSprite;
+@property (nonatomic) int firstIndex;
 @end
 
 //==============================
@@ -19,8 +22,7 @@
 @property (weak, nonatomic) SldBattleSceneController *controller;
 @property (nonatomic) uint32_t sliderNum;
 
-+ (instancetype)sceneWithSize:(CGSize)size controller:(SldBattleSceneController*)controller;
-- (instancetype)initWithSize:(CGSize)size controller:(SldBattleSceneController*)controller;
+- (instancetype)initWithSize:(CGSize)size controller:(SldBattleSceneController*)controller firstSprite:(SldSprite*)spt;
 
 @end
 

@@ -3172,7 +3172,7 @@
             </objects>
             <point key="canvasLocation" x="-1836" y="28"/>
         </scene>
-        <!--Sld Battle Select Controller-->
+        <!--对战-->
         <scene sceneID="t57-Vg-Q5r">
             <objects>
                 <collectionViewController id="oc6-aL-mJe" customClass="SldBattleSelectController" sceneMemberID="viewController">
@@ -3234,7 +3234,7 @@
                             <outlet property="delegate" destination="oc6-aL-mJe" id="bVD-Ue-be3"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="dI8-vc-e41"/>
+                    <navigationItem key="navigationItem" title="对战" id="dI8-vc-e41"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qF3-ph-ayH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3265,7 +3265,7 @@
                                     <subviews>
                                         <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qp8-YQ-Scn" customClass="SldAsyncImageView">
                                             <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
-                                            <color key="backgroundColor" red="0.2274509804" green="0.29803921570000003" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" red="0.2258859986033519" green="0.2258859986033519" blue="0.2258859986033519" alpha="1" colorSpace="calibratedRGB"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15小时" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGf-5b-MZS">
                                             <rect key="frame" x="58" y="0.0" width="48" height="16"/>
@@ -4135,24 +4135,79 @@
                         <viewControllerLayoutGuide type="bottom" id="mSB-xl-mew"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Tr2-PY-r0i">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RAt-ka-Hxl">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.91036325693130493" green="0.9137035608291626" blue="0.87832766771316528" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1IB-lN-Vv3">
+                                <rect key="frame" x="140" y="403" width="320" height="197"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehj-9Z-bXN">
+                                        <rect key="frame" x="10" y="3" width="50" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😄">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sl-LN-ng2">
+                                        <rect key="frame" x="60" y="3" width="50" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😍">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZj-cg-Ldc">
+                                        <rect key="frame" x="110" y="3" width="50" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😚">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-8q-exx">
+                                        <rect key="frame" x="160" y="3" width="50" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😝">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Npe-P7-Rth">
+                                        <rect key="frame" x="210" y="3" width="50" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😳">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ngB-5m-K6q">
+                                        <rect key="frame" x="260" y="3" width="50" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😂">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="BEV-g9-tHa"/>
+                                    <constraint firstAttribute="height" constant="197" id="iD7-S7-Kuq"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="mSB-xl-mew" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="bottom" id="HZv-0b-Mw6"/>
                             <constraint firstItem="RAt-ka-Hxl" firstAttribute="leading" secondItem="Tr2-PY-r0i" secondAttribute="leading" id="KcP-F3-GTa"/>
+                            <constraint firstAttribute="centerX" secondItem="1IB-lN-Vv3" secondAttribute="centerX" id="Ti8-YO-yP9"/>
                             <constraint firstAttribute="trailing" secondItem="RAt-ka-Hxl" secondAttribute="trailing" id="f4d-dD-Tbo"/>
                             <constraint firstItem="mSB-xl-mew" firstAttribute="top" secondItem="RAt-ka-Hxl" secondAttribute="bottom" id="ggD-YQ-I5q"/>
                             <constraint firstItem="RAt-ka-Hxl" firstAttribute="top" secondItem="Tr2-PY-r0i" secondAttribute="top" id="qsz-oA-d6b"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="outputTextView" destination="RAt-ka-Hxl" id="eTn-Zi-cOQ"/>
                     </connections>
@@ -4515,7 +4570,7 @@
         <!--Sld Battle Scene Controller-->
         <scene sceneID="EY5-JU-KBK">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pth-cO-f8w" customClass="SldBattleSceneController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="battleScene" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pth-cO-f8w" customClass="SldBattleSceneController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4yR-7k-m2r"/>
                         <viewControllerLayoutGuide type="bottom" id="xcB-yo-42M"/>
@@ -4555,7 +4610,7 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8wM-VL-FwZ"/>
+        <segue reference="hZh-70-BKV"/>
         <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>
