@@ -225,6 +225,11 @@
     [self loadAndEnterGame];
 }
 
+- (IBAction)onLikeButton:(id)sender {
+    UIButton *btn = sender;
+    [btn setTitleColor:makeUIColor(244, 75, 116, 255) forState:UIControlStateNormal];
+}
+
 - (IBAction)onMatchButton:(id)sender {
     MatchPlay *matchPlay = _gd.matchPlay;
     
@@ -401,7 +406,7 @@
                                                  appKey:nil
                                               shareText:text
                                              shareImage:image
-                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina,UMShareToTencent]
+                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina,UMShareToTencent, UMShareToDouban, UMShareToQzone]
                                                delegate:self];
         }]
                            otherButtonItems:nil] show];

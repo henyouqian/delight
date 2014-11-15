@@ -47,6 +47,8 @@ NSString* formatInterval(int sec);
 + (UIColor*)getPinkColor;
 
 + (void)sendWithSocket:(SRWebSocket*)socket type:(NSString*)type data:(NSDictionary*)dict;
+
++ (NSString *)genUUID;
 @end
 
 @interface NSData (NSData_Conversion)

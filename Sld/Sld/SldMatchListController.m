@@ -17,6 +17,7 @@
 #import "SldMatchBriefController.h"
 #import "SldLoginViewController.h"
 #import "CBStoreHouseRefreshControl.h"
+#import "SldUUIDLoginController.h"
 
 //=============================
 @implementation SldMatchListCell
@@ -66,11 +67,6 @@ static SldMatchListController* _inst = nil;
     _refreshOnce = NO;
     
     //refresh control
-//    self.refreshControl = [[UIRefreshControl alloc] init];
-//    self.collectionView.alwaysBounceVertical = YES;
-//    [self.collectionView addSubview:self.refreshControl];
-//    [self.refreshControl addTarget:self action:@selector(refreshMatch) forControlEvents:UIControlEventValueChanged];
-    
     self.collectionView.alwaysBounceVertical = YES;
     self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refreshMatch) plist:@"storehouse"];
     
@@ -91,35 +87,16 @@ static SldMatchListController* _inst = nil;
     }
 }
 
-static float _scrollY = -64;
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-//    self.tabBarController.navigationItem.title = self.tabBarItem.title;
-//    //[self.tabBarController.tabBar setSelectedImageTintColor:makeUIColor(84, 145, 153, 255)];
-//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
-//    
-//    UIEdgeInsets insets = self.collectionView.contentInset;
-//    insets.top = 64;
-//    insets.bottom = 50;
-//    
-//    self.collectionView.contentInset = insets;
-//    self.collectionView.scrollIndicatorInsets = insets;
-//    
-//    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
     
     [_refreshControl endRefreshing];
     
     if (!_gd.online) {
-        [SldLoginViewController createAndPresentWithCurrentController:self animated:YES];
+        [SldUUIDLoginController presentWithCurrentController:self animated:YES];
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    _scrollY = self.collectionView.contentOffset.y;
-}
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 {
@@ -266,14 +243,6 @@ static float _scrollY = -64;
         [self.collectionView insertItemsAtIndexPaths:insertIndexPathes];
     }];
 }
-
-
-//- (void) viewDidLayoutSubviews {
-//    CGFloat top = self.topLayoutGuide.length;
-//    CGFloat bottom = self.bottomLayoutGuide.length;
-//    UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
-//    self.collectionView.contentInset = newInsets;
-//}
 
 - (void)onTabSelect {
     if (!_refreshOnce) {

@@ -11,15 +11,18 @@
 #import "SldMatchListController.h"
 #import "SldHotMatchListController.h"
 #import "SldPlayedMatchListController.h"
+#import "SldLikeMatchListController.h"
 
 @interface SldMatchHubController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
 @property (weak, nonatomic) IBOutlet UIView *latestView;
 @property (weak, nonatomic) IBOutlet UIView *hottestView;
 @property (weak, nonatomic) IBOutlet UIView *playedView;
+@property (weak, nonatomic) IBOutlet UIView *likeView;
 @property (nonatomic) SldMatchListController *latestVC;
 @property (nonatomic) SldHotMatchListController *hottestVC;
 @property (nonatomic) SldPlayedMatchListController *playedVC;
+@property (nonatomic) SldLikeMatchListController *likeVC;
 @end
 
 @implementation SldMatchHubController
@@ -30,10 +33,12 @@
     _latestView.hidden = NO;
     _hottestView.hidden = YES;
     _playedView.hidden = YES;
+    _likeView.hidden = YES;
     
     _latestVC = [SldMatchListController getInst];
     _hottestVC = [SldHotMatchListController getInst];
     _playedVC = [SldPlayedMatchListController getInst];
+    _likeVC = [SldLikeMatchListController getInst];
     
 //    _latestVC.view.hidden = NO;
 //    _hottestVC.view.hidden = YES;
@@ -50,6 +55,7 @@
     _latestView.hidden = YES;
     _hottestView.hidden = YES;
     _playedView.hidden = YES;
+    _likeView.hidden = YES;
     if (_seg.selectedSegmentIndex == 0) {
         _latestView.hidden = NO;
         [_latestVC onTabSelect];
@@ -59,22 +65,10 @@
     } else if (_seg.selectedSegmentIndex == 2) {
         _playedView.hidden = NO;
         [_playedVC onTabSelect];
+    } else if (_seg.selectedSegmentIndex == 3) {
+        _likeView.hidden = NO;
+        [_likeVC onTabSelect];
     }
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

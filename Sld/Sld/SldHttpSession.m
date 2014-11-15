@@ -10,6 +10,7 @@
 #import "SldUtil.h"
 #import "SldConfig.h"
 #import "SldLoginViewController.h"
+#import "SldGameData.h"
 
 @interface SldHttpSession()
 @property (nonatomic) NSURLSession *session;
@@ -197,7 +198,11 @@ void alertHTTPError(NSError *error, NSData *data) {
                 [[[UIAlertView alloc] initWithTitle:@"账号异常，请重新登录。"
                                             message:nil
                                    cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
-                    [SldLoginViewController createAndPresentWithCurrentController:vc animated:NO];
+                    SldGameData *gd = [SldGameData getInstance];
+                    if (gd.online) {
+                        [SldLoginViewController createAndPresentWithCurrentController:vc animated:NO];
+                    }
+                    
                 }]
                                    otherButtonItems:nil] show];
                 

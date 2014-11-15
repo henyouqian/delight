@@ -32,6 +32,9 @@ static NSString *SNS_DOUBAN = @"douban";
 @implementation SldLoginViewController
 
 + (void)createAndPresentWithCurrentController:(UIViewController*)currController animated:(BOOL)animated{
+    SldGameData *gd = [SldGameData getInstance];
+    gd.online = NO;
+    
     UIStoryboard *storyboard = getStoryboard();
     SldLoginViewController* controller = (SldLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"login"];
     UIViewController *vc = currController.navigationController;

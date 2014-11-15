@@ -163,7 +163,8 @@ NSString* formatInterval(int sec) {
 }
 
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width {
-    NSString *url = [NSString stringWithFormat:@"http://www.gravatar.com/avatar/%@?d=identicon&s=%u", gravatarKey, (unsigned int)width*2];
+    SldConfig *conf = [SldConfig getInstance];
+    NSString *url = [NSString stringWithFormat:@"%@/%@?d=identicon&s=%u", conf.GRAVATAR_URL, gravatarKey, (unsigned int)width*2];
     return url;
 }
 
@@ -225,16 +226,21 @@ NSString* formatInterval(int sec) {
     [socket send:dt];
 }
 
++ (NSString *)genUUID
+{
+    CFUUIDRef theUUID = CFUUIDCreate(NULL);
+    CFStringRef string = CFUUIDCreateString(NULL, theUUID);
+    CFRelease(theUUID);
+    return (__bridge NSString *)string;
+}
+
 @end
 
 
 
 @implementation NSData (NSData_Conversion)
 
-- (NSString *)hexadecimalString
-{
-    /* Returns hexadecimal string of NSData. Empty string if data is empty.   */
-    
+- (NSString *)hexadecimalString {
     const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
     
     if (!dataBuffer)

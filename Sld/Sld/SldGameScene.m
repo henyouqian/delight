@@ -1117,7 +1117,7 @@ static float lerpf(float a, float b, float t) {
                         if (_gd.match.promoImage && _gd.match.promoImage.length) {
                             [_gameController showUserAds];
                         } else {
-                            [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                            [[AdMoGoInterstitialManager shareInstance] interstitialShow:NO];
                         }
                     });
                 }
@@ -1125,7 +1125,7 @@ static float lerpf(float a, float b, float t) {
                 if (_gd.match.promoImage && _gd.match.promoImage.length) {
                     [_gameController showUserAds];
                 } else {
-                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:YES];
+                    [[AdMoGoInterstitialManager shareInstance] interstitialShow:NO];
 //                    SldConfig *conf = [SldConfig getInstance];
 //                    [[[AdMoGoInterstitialManager shareInstance]
 //                      adMogoVideoInterstitialByAppKey:conf.MOGO_KEY]

@@ -17,6 +17,9 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "NSData+Base64.h"
 
+static int _idStart = 0;
+static int gravatarRandMax = 1000-16;
+
 @interface SldUserInfoController ()
 @property (weak, nonatomic) IBOutlet UITextField *nameInput;
 @property (weak, nonatomic) IBOutlet UITextField *genderInput;
@@ -69,6 +72,8 @@ static NSArray *_genderStrings;
     _genderStrings = @[@"女", @"男", @"保密"];
     PlayerSnsInfo *snsInfo = [PlayerSnsInfo getInstance];
     
+    _emailCell.hidden = YES;
+    
     if (playerInfo) {
         _nameInput.text = playerInfo.nickName;
         _genderInput.text = [_genderStrings objectAtIndex:playerInfo.gender];
@@ -110,7 +115,7 @@ static NSArray *_genderStrings;
             [_avatarImageView asyncLoadImageWithUrl:snsInfo.customAvatarKey showIndicator:NO completion:nil];
             _gravatarKey = @"";
         } else {
-            _gravatarKey = [NSString stringWithFormat:@"%u", arc4random() % UINT32_MAX];
+            _gravatarKey = [NSString stringWithFormat:@"%u", arc4random() % gravatarRandMax];
         }
         
 //        _customAvatarKey = info.customAvatarKey;
@@ -483,15 +488,13 @@ static NSArray *_genderStrings;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @end
 
-static UInt32 _idStart = 0;
-
 @implementation SldAvatarSelectController
 - (void)viewDidLoad {
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     
     if (_idStart == 0) {
-        _idStart = arc4random() % UINT32_MAX;
+        _idStart = arc4random() % gravatarRandMax;
     }
 }
 
@@ -515,7 +518,7 @@ static UInt32 _idStart = 0;
 
 - (IBAction)onChangeAvatarSet:(id)sender {
     [[SldHttpSession defaultSession] cancelAllTask];
-    _idStart = arc4random() % UINT32_MAX;
+    _idStart = arc4random() % gravatarRandMax;
     [self deselectAll];
     [_collectionView reloadData];
 }
@@ -540,7 +543,7 @@ static UInt32 _idStart = 0;
     SldAvatarSelectCell *cell = (SldAvatarSelectCell*)[collectionView dequeueReusableCellWithReuseIdentifier:@"selectGravatarCell" forIndexPath:indexPath];
     
     cell.imageView.image = nil;
-    NSString *key = [NSString stringWithFormat:@"%lu", _idStart+ indexPath.row];
+    NSString *key = [NSString stringWithFormat:@"%d", _idStart+ indexPath.row];
     NSString *url = [SldUtil makeGravatarUrlWithKey:key width:64];
     [cell.imageView asyncLoadImageWithUrl:url showIndicator:YES completion:nil];
     
@@ -555,7 +558,7 @@ static UInt32 _idStart = 0;
     } else {
         [self deselectAll];
         cell.highlightView.hidden = NO;
-        NSString *key = [NSString stringWithFormat:@"%lu", _idStart+ indexPath.row];
+        NSString *key = [NSString stringWithFormat:@"%d", _idStart+ indexPath.row];
         NSString *url = [SldUtil makeGravatarUrlWithKey:key width:64];
         [_userInfoController setGravartarWithKey:key url:url];
         return YES;

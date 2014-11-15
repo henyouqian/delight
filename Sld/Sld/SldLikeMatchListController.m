@@ -1,12 +1,12 @@
 //
-//  SldHotMatchListController.m
+//  SldLikeMatchListController.m
 //  pin
 //
 //  Created by 李炜 on 14-8-16.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldHotMatchListController.h"
+#import "SldLikeMatchListController.h"
 #import "SldMatchListController.h"
 #import "SldUtil.h"
 #import "SldGameData.h"
@@ -17,7 +17,7 @@
 #import "CBStoreHouseRefreshControl.h"
 
 //=============================
-@interface SldHotMatchListController()
+@interface SldLikeMatchListController()
 
 @property (nonatomic) NSMutableArray *matches;
 @property (nonatomic) SldMatchListFooter *footer;
@@ -28,9 +28,9 @@
 
 @end
 
-@implementation SldHotMatchListController
+@implementation SldLikeMatchListController
 
-static SldHotMatchListController* _inst = nil;
+static SldLikeMatchListController* _inst = nil;
 
 + (instancetype)getInst {
     return _inst;
@@ -64,8 +64,6 @@ static SldHotMatchListController* _inst = nil;
     }
 }
 
-static float _scrollY = -64;
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -73,11 +71,6 @@ static float _scrollY = -64;
     CGFloat bottom = self.bottomLayoutGuide.length;
     UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
     self.collectionView.contentInset = newInsets;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    _scrollY = self.collectionView.contentOffset.y;
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
@@ -88,9 +81,9 @@ static float _scrollY = -64;
 - (void)refreshMatch {
     _footer.loadMoreButton.enabled = NO;
     
-    NSDictionary *body = @{@"StartId":@(0), @"CouponSum":@(-1), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId":@(0), @"LastScore":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"match/listLike" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
         [self.storeHouseRefreshControl finishingLoading];
         if (error) {

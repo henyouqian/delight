@@ -36,6 +36,8 @@ UIColor *_matchTimeLabelGreen = nil;
         inst.WEIXIN_KEY = @"wxa959a211a5061fb6";
         inst.WEIXIN_SEC = @"b3e3e5593a736a3439529d881cf85a1e";
         
+        inst.GRAVATAR_URL = @"http://en.gravatar.com/avatar";
+        
         inst.HOST = @"http://192.168.2.55:9998";
 //        inst.HOST = @"http://192.168.1.43:9998";
 //        inst.HOST = @"http://sld.pintugame.com";
@@ -83,6 +85,11 @@ UIColor *_matchTimeLabelGreen = nil;
     NSString *weixinSec = [dict objectForKey:@"WeiXinSec"];
     if (weixinSec) {
         self.WEIXIN_SEC = weixinSec;
+    }
+    
+    NSString *gravatarUrl = [dict objectForKey:@"GravatarUrl"];
+    if (gravatarUrl) {
+        self.GRAVATAR_URL = gravatarUrl;
     }
 }
 
