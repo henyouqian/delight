@@ -37,6 +37,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
 @property (weak, nonatomic) IBOutlet UIButton *reportButton;
+@property (weak, nonatomic) IBOutlet UIButton *likeButton;
 
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) MSWeakTimer *secTimer;
@@ -75,6 +76,7 @@
     _rewardButton.enabled = NO;
     _rankButton.enabled = NO;
     _reviewButton.enabled = NO;
+    _likeButton.enabled = NO;
     
     //
     [self onSecTimer];
@@ -179,6 +181,9 @@
         _practiceButton.enabled = YES;
         _rewardButton.enabled = YES;
         _rankButton.enabled = YES;
+        _likeButton.enabled = YES;
+        
+        [self setLikeButtonHighlight:_gd.matchPlay.like];
         
         [self refreshUI];
     }];
@@ -226,8 +231,36 @@
 }
 
 - (IBAction)onLikeButton:(id)sender {
-    UIButton *btn = sender;
-    [btn setTitleColor:makeUIColor(244, 75, 116, 255) forState:UIControlStateNormal];
+    _likeButton.userInteractionEnabled = NO;
+    NSString *postUrl = nil;
+    if (_gd.matchPlay.like) {
+        [self setLikeButtonHighlight:NO];
+        postUrl = @"match/unlike";
+    } else {
+        [self setLikeButtonHighlight:YES];
+        postUrl = @"match/like";
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"MatchId":@(_gd.match.id)};
+    [session postToApi:postUrl body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _likeButton.userInteractionEnabled = YES;
+        if (error) {
+            [self setLikeButtonHighlight:_gd.matchPlay.like];
+            alertHTTPError(error, data);
+            return;
+        }
+        _gd.needRefreshLikeList = YES;
+        _gd.matchPlay.like = !_gd.matchPlay.like;
+    }];
+}
+
+- (void)setLikeButtonHighlight:(BOOL)highlight {
+    if (highlight) {
+        [_likeButton setTitleColor:makeUIColor(244, 75, 116, 255) forState:UIControlStateNormal];
+    } else {
+        [_likeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)onMatchButton:(id)sender {

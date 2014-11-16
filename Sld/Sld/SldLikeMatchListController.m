@@ -25,6 +25,7 @@
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) BOOL refreshOnce;
 @property (nonatomic) CBStoreHouseRefreshControl *storeHouseRefreshControl;
+@property (nonatomic) UInt64 lastScore;
 
 @end
 
@@ -48,6 +49,7 @@ static SldLikeMatchListController* _inst = nil;
     _matches = [NSMutableArray array];
     _gd = [SldGameData getInstance];
     _refreshOnce = NO;
+    _lastScore = 0;
     
     //refresh control
     self.collectionView.alwaysBounceVertical = YES;
@@ -71,6 +73,10 @@ static SldLikeMatchListController* _inst = nil;
     CGFloat bottom = self.bottomLayoutGuide.length;
     UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
     self.collectionView.contentInset = newInsets;
+    
+//    if (_gd.needRefreshLikeList) {
+//        [self refreshMatch];
+//    }
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
@@ -91,6 +97,7 @@ static SldLikeMatchListController* _inst = nil;
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        _lastScore = [[dict objectForKey:@"LastScore"] longLongValue];
         NSArray *array = dict[@"Matches"];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
@@ -182,12 +189,9 @@ static SldLikeMatchListController* _inst = nil;
     _footer.loadMoreButton.enabled = NO;
     
     Match* lastMatch = [_matches lastObject];
-    
-    int lastCouponSum = lastMatch.rewardCoupon + lastMatch.extraCoupon;
-    
-    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"CouponSum":@(lastCouponSum), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"LastScore":@(_lastScore), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"match/listLike" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_footer.spin stopAnimating];
         _footer.loadMoreButton.enabled = YES;
         if (error) {
@@ -195,6 +199,7 @@ static SldLikeMatchListController* _inst = nil;
             return;
         }
         NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        _lastScore = [[dict objectForKey:@"LastScore"] longLongValue];
         NSArray *array = dict[@"Matches"];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);

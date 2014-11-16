@@ -93,6 +93,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int tries;
 @property (nonatomic) int myRank;
 @property (nonatomic) int rankNum;
+@property (nonatomic) BOOL like;
 @property (nonatomic) NSString *team;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
@@ -154,6 +155,7 @@ enum GameMode{
 @property (nonatomic) MatchPlay *matchPlay;
 @property (nonatomic) BOOL needRefreshPlayedList;
 @property (nonatomic) BOOL needRefreshOwnerList;
+@property (nonatomic) BOOL needRefreshLikeList;
 
 //etc
 @property (nonatomic) float ownerRewardProportion;

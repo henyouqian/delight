@@ -131,6 +131,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _myRank = [(NSNumber*)dict[@"MyRank"] intValue];
         _rankNum = [(NSNumber*)dict[@"RankNum"] intValue];
         _team = dict[@"Team"];
+        _like = [dict[@"Like"] boolValue];
     }
     return self;
 }
