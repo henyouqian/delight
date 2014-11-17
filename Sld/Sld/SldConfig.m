@@ -38,6 +38,8 @@ UIColor *_matchTimeLabelGreen = nil;
         
         inst.GRAVATAR_URL = @"http://en.gravatar.com/avatar";
         
+        inst.WEB_SOCKET_URL = @"ws://192.168.2.55:9977/ws";
+        
         inst.HOST = @"http://192.168.2.55:9998";
 //        inst.HOST = @"http://192.168.1.43:9998";
 //        inst.HOST = @"http://sld.pintugame.com";
@@ -90,6 +92,11 @@ UIColor *_matchTimeLabelGreen = nil;
     NSString *gravatarUrl = [dict objectForKey:@"GravatarUrl"];
     if (gravatarUrl) {
         self.GRAVATAR_URL = gravatarUrl;
+    }
+    
+    NSString *websocketUrl = [dict objectForKey:@"WebSocketUrl"];
+    if (websocketUrl) {
+        self.WEB_SOCKET_URL = websocketUrl;
     }
 }
 

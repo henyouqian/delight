@@ -111,6 +111,7 @@ static __weak SldRewardListController *_inst = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshCouponUI) name:@"couponCacheChange" object:nil];
 }
 
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -280,8 +281,6 @@ static __weak SldRewardListController *_inst = nil;
         _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
         _gd.playerInfo.couponCache = 0;
         
-        [SldTradeController getInstance].tabBarItem.badgeValue = nil;
-        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
     }];
 }
@@ -289,6 +288,10 @@ static __weak SldRewardListController *_inst = nil;
 - (void)refreshCouponUI {
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    if (_gd.playerInfo.couponCache < 0.01) {
+        [SldTradeController getInstance].navigationController.tabBarItem.badgeValue = nil;
+    }
 }
 
 @end

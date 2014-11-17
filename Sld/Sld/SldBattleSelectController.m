@@ -7,9 +7,15 @@
 //
 
 #import "SldBattleSelectController.h"
+#import "SldGameData.h"
+#import "SldUtil.h"
 
 
 @interface SldBattleCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *enterFeeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *playerNumLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *coinImage;
 
 @end
 
@@ -18,6 +24,20 @@
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
     return layoutAttributes;
 }
+
+@end
+
+//===============================
+@interface SldBattleSelectHeader : UICollectionReusableView
+@property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
+@property (weak, nonatomic) IBOutlet UILabel *heartLabel;
+@property (weak, nonatomic) IBOutlet UILabel *coinLabel;
+@property (weak, nonatomic) IBOutlet UILabel *winNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *totalRewardLabel;
+
+@end
+
+@implementation SldBattleSelectHeader
 
 @end
 
@@ -76,7 +96,14 @@ static NSString * const reuseIdentifier = @"BattleCell";
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionHeader) {
-        UICollectionReusableView *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"battelHeader" forIndexPath:indexPath];
+        SldBattleSelectHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"battelHeader" forIndexPath:indexPath];
+        
+        SldGameData *gd = [SldGameData getInstance];
+        PlayerInfo *playerInfo = gd.playerInfo;
+        [SldUtil loadAvatar:header.userAvatarView gravatarKey:playerInfo.gravatarKey customAvatarKey:playerInfo.customAvatarKey];
+        
+        header.coinLabel.text = [NSString stringWithFormat:@"%d", gd.playerInfo.goldCoin];
+        
         return header;
     }
     return nil;

@@ -28,6 +28,7 @@ extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
 @property (nonatomic) NSString *WEIXIN_KEY;
 @property (nonatomic) NSString *WEIXIN_SEC;
 @property (nonatomic) NSString *GRAVATAR_URL;
+@property (nonatomic) NSString *WEB_SOCKET_URL;
 
 @end
 

@@ -83,11 +83,11 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
         }
         
-//        NSString *str = nil;
-//        if (_gd.playerInfo.couponCache >= 0.01) {
-//            str = @"奖";
-//        }
-//        [(UIViewController *)[self.viewControllers objectAtIndex:4] tabBarItem].badgeValue = str;
+        NSString *str = nil;
+        if (_gd.playerInfo.couponCache >= 0.01) {
+            str = @"奖";
+        }
+        [(UIViewController *)[self.viewControllers objectAtIndex:3] tabBarItem].badgeValue = str;
     }];
 }
 

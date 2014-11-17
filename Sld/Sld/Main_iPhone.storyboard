@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Sld Game Controller-->
@@ -542,7 +543,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle=" " id="obJ-td-8nR">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="lgO-uY-lqb">
+                                    <tableViewCell hidden="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="lgO-uY-lqb">
                                         <rect key="frame" x="0.0" y="440" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lgO-uY-lqb" id="n4I-W9-Plh">
@@ -1111,7 +1112,7 @@
                                     <constraint firstAttribute="height" constant="60" id="YU9-rt-VaD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -2659,7 +2660,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XEa-Zb-QPG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2689" y="-1904"/>
+            <point key="canvasLocation" x="-3461" y="-1928"/>
         </scene>
         <!--Sld Match Promo Web Controller-->
         <scene sceneID="Wsa-Gu-qU9">
@@ -3245,7 +3246,7 @@
                             <inset key="sectionInset" minX="30" minY="10" maxX="30" maxY="10"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BattleCell" id="C0u-D0-hkv">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BattleCell" id="C0u-D0-hkv" customClass="SldBattleCell">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -3316,12 +3317,16 @@
                                     <constraint firstAttribute="bottom" secondItem="coj-dy-PsC" secondAttribute="bottom" id="l1f-Im-DA9"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="coinImage" destination="mDN-5G-CRc" id="IHS-oW-AgT"/>
+                                    <outlet property="enterFeeLabel" destination="TZp-Mi-Rdi" id="YxE-a9-Kq5"/>
+                                    <outlet property="playerNumLabel" destination="Bc5-b4-bIw" id="Ud0-WH-uRy"/>
+                                    <outlet property="rewardLabel" destination="2nt-bA-Tg2" id="T7k-OU-KG3"/>
                                     <segue destination="VDo-HA-FAn" kind="show" id="ueD-wT-icA"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="battelHeader" id="nDV-DS-mqT">
-                            <rect key="frame" x="0.0" y="64" width="600" height="50"/>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="battelHeader" id="nDV-DS-mqT" customClass="SldBattleSelectHeader">
+                            <rect key="frame" x="0.0" y="64" width="600" height="142"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Imn-dC-c9g">
@@ -3352,7 +3357,7 @@
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="胜利场数：12345" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0pv-I9-Imx">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="胜利：12345🚲" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0pv-I9-Imx">
                                     <rect key="frame" x="15" y="95" width="149" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="149" id="Tnu-oE-MUa"/>
@@ -3386,14 +3391,26 @@
                                         <constraint firstAttribute="width" constant="20" id="c0z-3M-uza"/>
                                     </constraints>
                                 </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbY-2e-iES">
+                                    <rect key="frame" x="230" y="58" width="58" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="Pgf-BJ-ifv"/>
+                                        <constraint firstAttribute="width" constant="58" id="tQd-NO-CYn"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                             <color key="backgroundColor" red="0.94412082429999999" green="0.94627881049999996" blue="0.91640651230000003" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="0pv-I9-Imx" firstAttribute="top" secondItem="Imn-dC-c9g" secondAttribute="bottom" constant="8" id="642-mg-NNW"/>
                                 <constraint firstItem="xhA-6h-lSw" firstAttribute="leading" secondItem="Imn-dC-c9g" secondAttribute="trailing" constant="24" id="6dJ-cG-vlA"/>
                                 <constraint firstItem="Imn-dC-c9g" firstAttribute="leading" secondItem="nDV-DS-mqT" secondAttribute="leading" constant="15" id="6tK-aH-QhI"/>
+                                <constraint firstItem="bbY-2e-iES" firstAttribute="top" secondItem="DsT-XJ-XaM" secondAttribute="bottom" constant="8" id="Bhw-OS-lXk"/>
                                 <constraint firstItem="Srj-1Q-ueR" firstAttribute="leading" secondItem="nDV-DS-mqT" secondAttribute="leading" id="EAL-bR-3aq"/>
                                 <constraint firstItem="xhA-6h-lSw" firstAttribute="top" secondItem="DsT-XJ-XaM" secondAttribute="bottom" constant="8" id="FVd-gB-9JC"/>
+                                <constraint firstItem="bbY-2e-iES" firstAttribute="leading" secondItem="m9S-YV-t1u" secondAttribute="trailing" constant="18" id="GL7-1N-PuZ"/>
                                 <constraint firstAttribute="bottom" secondItem="Srj-1Q-ueR" secondAttribute="bottom" id="JJ3-L6-Rev"/>
                                 <constraint firstAttribute="trailing" secondItem="Srj-1Q-ueR" secondAttribute="trailing" id="Sde-HN-cZL"/>
                                 <constraint firstItem="DsT-XJ-XaM" firstAttribute="top" secondItem="nDV-DS-mqT" secondAttribute="top" constant="23" id="UqV-pC-vPB"/>
@@ -3405,6 +3422,13 @@
                                 <constraint firstItem="m9S-YV-t1u" firstAttribute="top" secondItem="DsT-XJ-XaM" secondAttribute="bottom" constant="8" id="o54-Yc-bF8"/>
                                 <constraint firstItem="DsT-XJ-XaM" firstAttribute="leading" secondItem="Imn-dC-c9g" secondAttribute="trailing" constant="24" id="wLX-Nx-U3Q"/>
                             </constraints>
+                            <connections>
+                                <outlet property="coinLabel" destination="m9S-YV-t1u" id="NMZ-8o-QrI"/>
+                                <outlet property="heartLabel" destination="DsT-XJ-XaM" id="cTQ-nk-P0d"/>
+                                <outlet property="totalRewardLabel" destination="I4i-SR-g70" id="Bu2-rW-lTy"/>
+                                <outlet property="userAvatarView" destination="Imn-dC-c9g" id="e72-bw-ngE"/>
+                                <outlet property="winNumLabel" destination="0pv-I9-Imx" id="IuU-qq-I0a"/>
+                            </connections>
                         </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="oc6-aL-mJe" id="h9C-vb-Qpb"/>
@@ -4333,78 +4357,397 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RAt-ka-Hxl">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" red="0.91036325693130493" green="0.9137035608291626" blue="0.87832766771316528" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1IB-lN-Vv3">
-                                <rect key="frame" x="140" y="403" width="320" height="197"/>
+                                <rect key="frame" x="140" y="415" width="320" height="185"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehj-9Z-bXN">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ehj-9Z-bXN">
                                         <rect key="frame" x="10" y="3" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="ONk-Gl-Wqi"/>
+                                            <constraint firstAttribute="height" constant="50" id="XKD-eq-BZf"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <state key="normal" title="😄">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="Yr9-GK-5M8"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sl-LN-ng2">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sl-LN-ng2">
                                         <rect key="frame" x="60" y="3" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Wkp-to-zIR"/>
+                                            <constraint firstAttribute="width" constant="50" id="foN-4D-Kop"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <state key="normal" title="😍">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="y5h-dc-fxy"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZj-cg-Ldc">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZj-cg-Ldc">
                                         <rect key="frame" x="110" y="3" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="U7i-BP-KNv"/>
+                                            <constraint firstAttribute="height" constant="50" id="lWd-HY-RUo"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <state key="normal" title="😚">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="vaJ-CM-tfy"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-8q-exx">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-8q-exx">
                                         <rect key="frame" x="160" y="3" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="f9T-1q-8K6"/>
+                                            <constraint firstAttribute="width" constant="50" id="hhh-cj-SdP"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <state key="normal" title="😝">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="QJb-cc-Lx7"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Npe-P7-Rth">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Npe-P7-Rth">
                                         <rect key="frame" x="210" y="3" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="JQB-8I-QPz"/>
+                                            <constraint firstAttribute="width" constant="50" id="QQq-Qv-aWp"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <state key="normal" title="😳">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="1hT-yY-0hJ"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ngB-5m-K6q">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ngB-5m-K6q">
                                         <rect key="frame" x="260" y="3" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="cCQ-u0-2ct"/>
+                                            <constraint firstAttribute="width" constant="50" id="mRa-q6-UGh"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <state key="normal" title="😂">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ScQ-au-z0m"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQE-nc-W0X">
+                                        <rect key="frame" x="10" y="58" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Ezl-hd-ooo"/>
+                                            <constraint firstAttribute="width" constant="50" id="s8g-88-cWK"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😭">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="3zY-qK-5fd"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oh1-tY-afc">
+                                        <rect key="frame" x="60" y="58" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="Tqu-Qn-CgH"/>
+                                            <constraint firstAttribute="height" constant="50" id="iHd-um-3bt"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😓">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="KH3-7l-Rab"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vec-BY-7wx">
+                                        <rect key="frame" x="110" y="58" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="i2e-00-4eF"/>
+                                            <constraint firstAttribute="height" constant="50" id="tSo-AW-v3m"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😱">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="1iO-9h-Zdn"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wes-Is-GQt">
+                                        <rect key="frame" x="160" y="58" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="ZZb-hz-KAq"/>
+                                            <constraint firstAttribute="height" constant="50" id="nF0-ah-1rW"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😤">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="aRq-Zl-qwt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K6Y-ZY-46R">
+                                        <rect key="frame" x="210" y="58" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="1as-H4-TT9"/>
+                                            <constraint firstAttribute="height" constant="50" id="9VI-Al-B5M"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😎">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="TLD-jD-dwM"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jR3-tA-W1W">
+                                        <rect key="frame" x="260" y="58" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="U51-aD-Fqk"/>
+                                            <constraint firstAttribute="height" constant="50" id="XjY-VK-Fao"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="😵">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ZCA-97-e9d"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bgf-h3-vzw">
+                                        <rect key="frame" x="10" y="113" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="wte-un-B26"/>
+                                            <constraint firstAttribute="height" constant="50" id="xpL-uT-gaQ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="👍">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="hYM-0W-r9v"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ISr-7A-MmL">
+                                        <rect key="frame" x="60" y="113" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="FbQ-lx-kDb"/>
+                                            <constraint firstAttribute="height" constant="50" id="fK6-yo-0Xp"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="💪">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ORz-5e-uoj"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="peJ-hU-gn0">
+                                        <rect key="frame" x="110" y="113" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="6dx-Fb-5FK"/>
+                                            <constraint firstAttribute="width" constant="50" id="oqG-dS-ZAM"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="💅">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="1se-xL-O1E"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idw-7G-aK6">
+                                        <rect key="frame" x="160" y="113" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="azV-Qo-vdM"/>
+                                            <constraint firstAttribute="height" constant="50" id="mvi-l4-sYu"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="❤️">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="tkj-qG-aNo"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRq-Xg-0CJ">
+                                        <rect key="frame" x="210" y="113" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="GwL-eV-Cky"/>
+                                            <constraint firstAttribute="height" constant="50" id="Ms5-F4-W0U"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="💵">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="H7a-pL-gor"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="65Z-Ty-7Fm">
+                                        <rect key="frame" x="260" y="113" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="4eM-7i-OMs"/>
+                                            <constraint firstAttribute="width" constant="50" id="uCi-da-r5d"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="💸">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="nKG-RO-qNc"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="Vec-BY-7wx" firstAttribute="leading" secondItem="Oh1-tY-afc" secondAttribute="trailing" id="2n5-B7-QW2"/>
+                                    <constraint firstItem="Bgf-h3-vzw" firstAttribute="leading" secondItem="1IB-lN-Vv3" secondAttribute="leading" constant="10" id="3el-SX-MAv"/>
+                                    <constraint firstItem="Npe-P7-Rth" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="top" constant="3" id="47Q-9H-zsJ"/>
+                                    <constraint firstItem="ISr-7A-MmL" firstAttribute="leading" secondItem="Bgf-h3-vzw" secondAttribute="trailing" id="4hc-1G-GAL"/>
+                                    <constraint firstItem="uRq-Xg-0CJ" firstAttribute="leading" secondItem="idw-7G-aK6" secondAttribute="trailing" id="99C-LB-QWr"/>
+                                    <constraint firstItem="Oh1-tY-afc" firstAttribute="leading" secondItem="fQE-nc-W0X" secondAttribute="trailing" id="9fr-CM-hkl"/>
+                                    <constraint firstItem="0sl-LN-ng2" firstAttribute="leading" secondItem="Ehj-9Z-bXN" secondAttribute="trailing" id="AHx-ak-TbS"/>
                                     <constraint firstAttribute="width" constant="320" id="BEV-g9-tHa"/>
-                                    <constraint firstAttribute="height" constant="197" id="iD7-S7-Kuq"/>
+                                    <constraint firstItem="fQE-nc-W0X" firstAttribute="leading" secondItem="1IB-lN-Vv3" secondAttribute="leading" constant="10" id="CKL-Cg-rXC"/>
+                                    <constraint firstItem="65Z-Ty-7Fm" firstAttribute="top" secondItem="jR3-tA-W1W" secondAttribute="bottom" constant="5" id="DhF-bF-zye"/>
+                                    <constraint firstItem="ngB-5m-K6q" firstAttribute="leading" secondItem="Npe-P7-Rth" secondAttribute="trailing" id="Fwd-vh-h0s"/>
+                                    <constraint firstItem="Ehj-9Z-bXN" firstAttribute="leading" secondItem="1IB-lN-Vv3" secondAttribute="leading" constant="10" id="GRh-BB-2G7"/>
+                                    <constraint firstItem="ISr-7A-MmL" firstAttribute="top" secondItem="Oh1-tY-afc" secondAttribute="bottom" constant="5" id="GbD-5E-LgL"/>
+                                    <constraint firstItem="peJ-hU-gn0" firstAttribute="top" secondItem="Vec-BY-7wx" secondAttribute="bottom" constant="5" id="Gse-Xc-yJI"/>
+                                    <constraint firstItem="ZZj-cg-Ldc" firstAttribute="leading" secondItem="0sl-LN-ng2" secondAttribute="trailing" id="IQJ-67-Mh4"/>
+                                    <constraint firstItem="Wes-Is-GQt" firstAttribute="top" secondItem="6Zr-8q-exx" secondAttribute="bottom" constant="5" id="IaC-ww-Bm2"/>
+                                    <constraint firstItem="jR3-tA-W1W" firstAttribute="leading" secondItem="K6Y-ZY-46R" secondAttribute="trailing" id="Lv9-li-yOD"/>
+                                    <constraint firstItem="K6Y-ZY-46R" firstAttribute="leading" secondItem="Wes-Is-GQt" secondAttribute="trailing" id="N0G-pE-ybP"/>
+                                    <constraint firstItem="jR3-tA-W1W" firstAttribute="top" secondItem="ngB-5m-K6q" secondAttribute="bottom" constant="5" id="OK2-TS-tZA"/>
+                                    <constraint firstItem="65Z-Ty-7Fm" firstAttribute="leading" secondItem="uRq-Xg-0CJ" secondAttribute="trailing" id="PdO-yL-AUb"/>
+                                    <constraint firstItem="idw-7G-aK6" firstAttribute="top" secondItem="Wes-Is-GQt" secondAttribute="bottom" constant="5" id="Xlw-uj-Zq9"/>
+                                    <constraint firstItem="Wes-Is-GQt" firstAttribute="leading" secondItem="Vec-BY-7wx" secondAttribute="trailing" id="ZzN-U2-SvB"/>
+                                    <constraint firstItem="peJ-hU-gn0" firstAttribute="leading" secondItem="ISr-7A-MmL" secondAttribute="trailing" id="aWc-hT-54T"/>
+                                    <constraint firstItem="Bgf-h3-vzw" firstAttribute="top" secondItem="fQE-nc-W0X" secondAttribute="bottom" constant="5" id="an5-0o-wPh"/>
+                                    <constraint firstItem="K6Y-ZY-46R" firstAttribute="top" secondItem="Npe-P7-Rth" secondAttribute="bottom" constant="5" id="bXp-BK-NJm"/>
+                                    <constraint firstItem="6Zr-8q-exx" firstAttribute="leading" secondItem="ZZj-cg-Ldc" secondAttribute="trailing" id="fm1-Kf-4lR"/>
+                                    <constraint firstItem="ngB-5m-K6q" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="top" constant="3" id="hyf-mu-3AZ"/>
+                                    <constraint firstItem="Oh1-tY-afc" firstAttribute="top" secondItem="0sl-LN-ng2" secondAttribute="bottom" constant="5" id="i6E-PO-cHk"/>
+                                    <constraint firstAttribute="height" constant="185" id="iD7-S7-Kuq"/>
+                                    <constraint firstItem="fQE-nc-W0X" firstAttribute="top" secondItem="Ehj-9Z-bXN" secondAttribute="bottom" constant="5" id="jEQ-oX-Baa"/>
+                                    <constraint firstItem="uRq-Xg-0CJ" firstAttribute="top" secondItem="K6Y-ZY-46R" secondAttribute="bottom" constant="5" id="lhK-kU-Kky"/>
+                                    <constraint firstItem="6Zr-8q-exx" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="top" constant="3" id="lvO-7d-78T"/>
+                                    <constraint firstItem="ZZj-cg-Ldc" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="top" constant="3" id="mTy-X7-THv"/>
+                                    <constraint firstItem="Npe-P7-Rth" firstAttribute="leading" secondItem="6Zr-8q-exx" secondAttribute="trailing" id="mUk-cA-pj2"/>
+                                    <constraint firstItem="Ehj-9Z-bXN" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="top" constant="3" id="sS8-BG-cuO"/>
+                                    <constraint firstItem="0sl-LN-ng2" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="top" constant="3" id="tPS-uZ-dxT"/>
+                                    <constraint firstItem="Vec-BY-7wx" firstAttribute="top" secondItem="ZZj-cg-Ldc" secondAttribute="bottom" constant="5" id="vzF-fn-w8O"/>
+                                    <constraint firstItem="idw-7G-aK6" firstAttribute="leading" secondItem="peJ-hU-gn0" secondAttribute="trailing" id="yCZ-5r-p1M"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4B6-Ca-Xwj">
+                                <rect key="frame" x="140" y="64" width="320" height="191"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8tQ-lI-1Rd">
+                                        <rect key="frame" x="128" y="18" width="64" height="64"/>
+                                        <color key="backgroundColor" red="0.64543858350000005" green="0.76745859039999997" blue="0.82644465779999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="64" id="749-Br-QYg"/>
+                                            <constraint firstAttribute="height" constant="64" id="W1r-UY-6cF"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Somebody" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Fk-kh-x0x">
+                                        <rect key="frame" x="19" y="90" width="282" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="f1J-fe-ko0"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="浙江" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cN-am-Za3">
+                                        <rect key="frame" x="50" y="116" width="220" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="zGr-DG-d8M"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🚀" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yRj-nG-apl">
+                                        <rect key="frame" x="50" y="138" width="220" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Xvm-zW-JJg"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="yRj-nG-apl" secondAttribute="trailing" constant="50" id="2WA-Wf-uiy"/>
+                                    <constraint firstItem="yRj-nG-apl" firstAttribute="leading" secondItem="4B6-Ca-Xwj" secondAttribute="leading" constant="50" id="4FQ-F8-cmh"/>
+                                    <constraint firstItem="1Fk-kh-x0x" firstAttribute="leading" secondItem="4B6-Ca-Xwj" secondAttribute="leading" constant="19" id="7cg-ZQ-SmZ"/>
+                                    <constraint firstItem="1Fk-kh-x0x" firstAttribute="top" secondItem="8tQ-lI-1Rd" secondAttribute="bottom" constant="8" id="FbE-J9-rTg"/>
+                                    <constraint firstItem="8cN-am-Za3" firstAttribute="leading" secondItem="4B6-Ca-Xwj" secondAttribute="leading" constant="50" id="NyD-WC-6YC"/>
+                                    <constraint firstAttribute="height" constant="191" id="OVB-TO-iJa"/>
+                                    <constraint firstItem="8tQ-lI-1Rd" firstAttribute="top" secondItem="4B6-Ca-Xwj" secondAttribute="top" constant="18" id="Pf9-3a-8Gf"/>
+                                    <constraint firstAttribute="centerX" secondItem="8tQ-lI-1Rd" secondAttribute="centerX" id="UGH-zA-ZGU"/>
+                                    <constraint firstAttribute="width" constant="320" id="Xgg-Py-xVB"/>
+                                    <constraint firstItem="yRj-nG-apl" firstAttribute="top" secondItem="8cN-am-Za3" secondAttribute="bottom" constant="2" id="lSv-m5-fka"/>
+                                    <constraint firstAttribute="trailing" secondItem="1Fk-kh-x0x" secondAttribute="trailing" constant="19" id="odD-Lk-XUj"/>
+                                    <constraint firstAttribute="trailing" secondItem="8cN-am-Za3" secondAttribute="trailing" constant="50" id="ohV-lx-RN4"/>
+                                    <constraint firstItem="8cN-am-Za3" firstAttribute="top" secondItem="1Fk-kh-x0x" secondAttribute="bottom" constant="5" id="qOR-mS-MxQ"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gqU-oi-hrS">
+                                <rect key="frame" x="0.0" y="321" width="600" height="26"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqU-j7-1uN">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="26"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.91036325689999997" green="0.91370356080000004" blue="0.87832766770000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="gqU-j7-1uN" secondAttribute="bottom" id="5l9-ea-0gF"/>
+                                    <constraint firstItem="gqU-j7-1uN" firstAttribute="leading" secondItem="gqU-oi-hrS" secondAttribute="leading" id="CAB-mV-b3g"/>
+                                    <constraint firstAttribute="trailing" secondItem="gqU-j7-1uN" secondAttribute="trailing" id="USW-nQ-ted"/>
+                                    <constraint firstItem="gqU-j7-1uN" firstAttribute="top" secondItem="gqU-oi-hrS" secondAttribute="top" id="vB9-iY-5Ah"/>
+                                    <constraint firstAttribute="height" constant="26" id="x67-Sv-WCI"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="4B6-Ca-Xwj" secondAttribute="centerX" id="GI1-DD-I6u"/>
                             <constraint firstItem="mSB-xl-mew" firstAttribute="top" secondItem="1IB-lN-Vv3" secondAttribute="bottom" id="HZv-0b-Mw6"/>
-                            <constraint firstItem="RAt-ka-Hxl" firstAttribute="leading" secondItem="Tr2-PY-r0i" secondAttribute="leading" id="KcP-F3-GTa"/>
+                            <constraint firstAttribute="trailing" secondItem="gqU-oi-hrS" secondAttribute="trailing" id="SBZ-je-tSo"/>
                             <constraint firstAttribute="centerX" secondItem="1IB-lN-Vv3" secondAttribute="centerX" id="Ti8-YO-yP9"/>
-                            <constraint firstAttribute="trailing" secondItem="RAt-ka-Hxl" secondAttribute="trailing" id="f4d-dD-Tbo"/>
-                            <constraint firstItem="mSB-xl-mew" firstAttribute="top" secondItem="RAt-ka-Hxl" secondAttribute="bottom" id="ggD-YQ-I5q"/>
-                            <constraint firstItem="RAt-ka-Hxl" firstAttribute="top" secondItem="Tr2-PY-r0i" secondAttribute="top" id="qsz-oA-d6b"/>
+                            <constraint firstItem="gqU-oi-hrS" firstAttribute="leading" secondItem="Tr2-PY-r0i" secondAttribute="leading" id="hoR-vP-hwF"/>
+                            <constraint firstItem="4B6-Ca-Xwj" firstAttribute="top" secondItem="JBx-pm-msv" secondAttribute="bottom" id="rP0-s3-Zjk"/>
+                            <constraint firstAttribute="centerY" secondItem="gqU-oi-hrS" secondAttribute="centerY" multiplier="0.9" id="wSa-4N-Amk"/>
                         </constraints>
                     </view>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="outputTextView" destination="RAt-ka-Hxl" id="eTn-Zi-cOQ"/>
+                        <outlet property="emojiView" destination="1IB-lN-Vv3" id="tQz-rG-yKc"/>
+                        <outlet property="foeView" destination="4B6-Ca-Xwj" id="O9f-QX-HIy"/>
+                        <outlet property="lvLabel" destination="yRj-nG-apl" id="VMp-HC-OZg"/>
+                        <outlet property="outputLabel" destination="gqU-j7-1uN" id="NwY-IJ-kcu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PNo-f9-1s5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -4693,6 +5036,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KRk-nP-rw5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

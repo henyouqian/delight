@@ -16,10 +16,16 @@
 
 @interface SldBattleLinkController ()
 
-@property (weak, nonatomic) IBOutlet UITextView *outputTextView;
+@property (weak, nonatomic) IBOutlet UILabel *outputLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lvLabel;
+@property (weak, nonatomic) IBOutlet UIView *foeView;
+@property (weak, nonatomic) IBOutlet UIView *emojiView;
 @property (nonatomic) SRWebSocket *webSocket;
 @property (nonatomic) NSDictionary *procDict;
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) NSDate *date;
+@property (nonatomic) NSDate *lastEmojiTime;
+@property (nonatomic) FISound *sndPop;
 @end
 
 @implementation SldBattleLinkController
@@ -29,8 +35,12 @@
     
     _gd = [SldGameData getInstance];
     
+    _foeView.hidden = YES;
+    _emojiView.hidden = YES;
+    
     //socket rocket
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://192.168.2.55:9977/ws"]]];
+    SldConfig* conf = [SldConfig getInstance];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:conf.WEB_SOCKET_URL]]];
     _webSocket.delegate = self;
     
     [_webSocket open];
@@ -38,7 +48,25 @@
     _procDict = @{
         @"pairing":[NSValue valueWithPointer:@selector(onPairing:)],
         @"paired":[NSValue valueWithPointer:@selector(onPaired:)],
+        @"talk":[NSValue valueWithPointer:@selector(onTalk:)],
     };
+    
+    //outputLabel animation
+    [UIView animateKeyframesWithDuration:2.0 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat | UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
+            _outputLabel.alpha = 1.f;
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+            _outputLabel.alpha = 0.5f;
+        }];
+    } completion:nil];
+    
+    //
+    FISoundEngine *engine = [FISoundEngine sharedEngine];
+    _sndPop = [engine soundNamed:@"audio/pop.wav" maxPolyphony:4 error:nil];
+    
+    _lastEmojiTime = [NSDate dateWithTimeIntervalSinceNow:-100.0];
+    
 }
 
 - (void)dealloc {
@@ -89,15 +117,41 @@
 
 - (void)onPairing: (NSDictionary*)msg{
     lwInfo("onPairing");
-    _outputTextView.text = @"Pairing...";
+    _outputLabel.text = @"配对中...";
 }
 
 - (void)onPaired: (NSDictionary*)msg{
     lwInfo("onPaired");
     
+    _date = [NSDate dateWithTimeIntervalSinceNow:0];
+    
+    _foeView.hidden = NO;
+    _emojiView.hidden = NO;
+    
+    _foeView.alpha = 0.f;
+    _emojiView.alpha = 0.f;
+    CGRect foeFrame1 = _foeView.frame;
+    CGRect emojiFrame1 = _emojiView.frame;
+    CGRect foeFrame2 = _foeView.frame;
+    CGRect emojiFrame2 = _emojiView.frame;
+    
+    foeFrame2.origin.y -= 40;
+    emojiFrame2.origin.y += 40;
+    _foeView.frame = foeFrame2;
+    _emojiView.frame = emojiFrame2;
+    
+    [UIView animateWithDuration:0.6 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            _foeView.alpha = 1.f;
+            _emojiView.alpha = 1.f;
+        
+            _foeView.frame = foeFrame1;
+            _emojiView.frame = emojiFrame1;
+        } completion:nil];
+    
+    //
     _gd.packInfo = [PackInfo packWithDictionary:[msg objectForKey:@"Pack"]];
     _gd.sliderNum = [[msg objectForKey:@"SliderNum"] intValue];
-    _outputTextView.text = [NSString stringWithFormat:@"Paird:%@", _gd.packInfo];
+    _outputLabel.text = @"配对成功";
     
     NSArray *imageKeys = _gd.packInfo.images;
     __block int localNum = 0;
@@ -114,16 +168,12 @@
     
     if (localNum == totalNum) {
         lwInfo("already downloaded");
-        [self enterGame];
+        [self onReady];
         return;
     } else if (localNum < totalNum) {
-        NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"图集下载中..."
-                                                        message:msg
-                                                       delegate:self
-                                              cancelButtonTitle:@"取消"
-                                              otherButtonTitles:nil];
-        [alert show];
+        NSString *msg = [NSString stringWithFormat:@"图集下载中...%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
+        
+        _outputLabel.text = msg;
         
         //download
         SldHttpSession *session = [SldHttpSession defaultSession];
@@ -137,22 +187,25 @@
                  {
                      if (error) {
                          lwError("Download error: %@", error.localizedDescription);
-                         [alert dismissWithClickedButtonIndex:0 animated:YES];
-                         return;
                      }
                      localNum++;
-                     [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
+                     
+                     NSString *msg = [NSString stringWithFormat:@"图集下载中...%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
+                     _outputLabel.text = msg;
                      
                      //download complete
                      if (localNum == totalNum) {
-                         [alert dismissWithClickedButtonIndex:0 animated:YES];
                          lwInfo("downloaded");
-                         [self enterGame];
+                         [self onReady];
                      }
                  }];
             }
         }
     }
+}
+
+- (void)onReady {
+    _outputLabel.text = @"准备完毕，请稍候";
 }
 
 - (void)enterGame {
@@ -168,6 +221,50 @@
             [self.navigationController pushViewController:controller animated:YES];
         });
     });
+}
+
+- (void)onTalk: (NSDictionary*)msg{
+    _outputLabel.text = msg[@"Text"];
+}
+
+- (IBAction)onEmoji:(id)sender {
+    UIButton *btn = sender;
+    
+    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
+    if ([now timeIntervalSinceDate:_lastEmojiTime] > 0.15) {
+        NSDictionary *msg = @{@"Text":btn.titleLabel.text};
+        [SldUtil sendWithSocket:_webSocket type:@"talk" data:msg];
+    }else {
+        lwInfo("too fast");
+    }
+    _lastEmojiTime = now;
+    
+    
+    float x = arc4random() % 10 + 10;
+    static float lastY = 9999;
+    float y;
+    do {
+        y = arc4random() % ((int)_foeView.frame.size.height-20) + 10;
+    } while (ABS(y-lastY) < 20.0);
+    lastY = y;
+    
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 50, 50)];
+    lbl.text = btn.titleLabel.text;
+
+    [_foeView addSubview:lbl];
+    
+    lbl.font = [lbl.font fontWithSize:36];
+    lbl.alpha = 1.4;
+    [UIView animateWithDuration:1.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        lbl.alpha = 0;
+        CGRect rect = lbl.frame;
+        rect.origin.x += 100;
+        lbl.frame = rect;
+    } completion:^(BOOL finished) {
+        [lbl removeFromSuperview];
+    }];
+    
+    [_sndPop play];
 }
 
 /*
