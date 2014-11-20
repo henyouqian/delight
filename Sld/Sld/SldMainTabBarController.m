@@ -65,7 +65,7 @@
         return;
     }
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"player/getCouponCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"player/getPrizeCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -77,14 +77,14 @@
             return;
         }
         
-        float old = _gd.playerInfo.couponCache;
-        _gd.playerInfo.couponCache = [(NSNumber*)dict[@"CouponCache"] floatValue];
-        if (old != _gd.playerInfo.couponCache) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
+        int old = _gd.playerInfo.prizeCache;
+        _gd.playerInfo.prizeCache = [(NSNumber*)dict[@"PrizeCache"] floatValue];
+        if (old != _gd.playerInfo.prizeCache) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"prizeCacheChange" object:nil];
         }
         
         NSString *str = nil;
-        if (_gd.playerInfo.couponCache >= 0.01) {
+        if (_gd.playerInfo.prizeCache > 0) {
             str = @"奖";
         }
         [(UIViewController *)[self.viewControllers objectAtIndex:3] tabBarItem].badgeValue = str;

@@ -12,7 +12,7 @@
 
 
 @interface SldBattleCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *enterFeeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playerNumLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *coinImage;
@@ -33,7 +33,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *heartLabel;
 @property (weak, nonatomic) IBOutlet UILabel *coinLabel;
 @property (weak, nonatomic) IBOutlet UILabel *winNumLabel;
-@property (weak, nonatomic) IBOutlet UILabel *totalRewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *totalPrizeLabel;
 
 @end
 

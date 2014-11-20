@@ -1,12 +1,12 @@
 //
-//  SldCouponCardController.m
+//  SldECardController.m
 //  pin
 //
 //  Created by 李炜 on 14-9-27.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldCouponCardController.h"
+#import "SldECardController.h"
 #import "SldHttpSession.h"
 
 //============================
@@ -16,7 +16,7 @@
     if (self = [super init]) {
         _Id = [(NSNumber*)dict[@"Id"] longLongValue];
         _TypeKey = dict[@"TypeKey"];
-        _CouponCode = dict[@"CouponCode"];
+        _Code = dict[@"Code"];
         _ExpireDate = dict[@"ExpireDate"];
         _GenDate = dict[@"GenDate"];
         _UserGetDate = dict[@"UserGetDate"];
@@ -45,16 +45,16 @@ static SldEcard *_selectedEcard = nil;
 @end
 
 //============================
-static __weak SldCouponCardController *_inst = nil;
+static __weak SldECardController *_inst = nil;
 static int _fetchLimit = 30;
 
-@interface SldCouponCardController ()
+@interface SldECardController ()
 @property (nonatomic) NSMutableArray *ecards;
 @property (nonatomic) SldLoadMoreCell *loadMoreCell;
 @property (nonatomic) SInt64 lastScore;
 @end
 
-@implementation SldCouponCardController
+@implementation SldECardController
 
 + (instancetype)getInstance {
     return _inst;
@@ -224,7 +224,7 @@ static int _fetchLimit = 30;
     [super viewDidLoad];
     
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = _selectedEcard.CouponCode;
+    pasteboard.string = _selectedEcard.Code;
     
     [_helpTextView setText:_selectedEcard.HelpText];
 }

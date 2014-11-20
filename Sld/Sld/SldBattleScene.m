@@ -755,32 +755,9 @@ static float lerpf(float a, float b, float t) {
     CGPoint pt = [touch locationInNode: self.scene];
     SKNode *node = [_sliderParent nodeAtPoint:pt];
     
-    //curtain
-    float dur = .3f;
-    if (self.inCurtain /*&& (node == self.curtainTop || node == self.curtainBottom || node == self.curtainBelt || node == self.curtainLabel)*/) {
-//        self.inCurtain = NO;
-//        SKAction *left = [SKAction moveToX:-self.size.width*2.5f duration:.8f];
-//        if (_beltRotate) {
-//            left = [SKAction moveToY:self.size.height*2.5f duration:.8f];
-//        }
-//        left.timingMode = SKActionTimingEaseOut;
-//        [self.curtainBelt runAction:left completion:^{
-//            SKAction *up = [SKAction moveToY:self.size.height duration:dur];
-//            up.timingMode = SKActionTimingEaseIn;
-//            [self.curtainTop runAction:up];
-//            
-//            SKAction *down = [SKAction moveToY:0.f duration:dur];
-//            down.timingMode = SKActionTimingEaseIn;
-//            [self.curtainBottom runAction:down completion:^{
-//                //game begin
-//                _gameBeginTime = [NSDate dateWithTimeIntervalSinceNow:0];
-//                _gameRunning = YES;
-//            }];
-//        }];
-    }
     
     //slider
-    else if (node && [node isKindOfClass:[Slider class]]) {
+    if (!_inCurtain && node && [node isKindOfClass:[Slider class]]) {
         Slider *slider = (Slider*)node;
         [slider removeAllActions];
         slider.touch = touch;

@@ -171,7 +171,7 @@ static float _scrollY = -64;
     SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"matchListCell" forIndexPath:indexPath];
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
-    cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.rewardCoupon + match.extraCoupon];
+    cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
     cell.match = match;
     [self refreshTimeLabel:cell];
     

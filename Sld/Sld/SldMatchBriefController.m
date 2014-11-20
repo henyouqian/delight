@@ -22,7 +22,7 @@
 @interface SldMatchBriefController ()
 @property (weak, nonatomic) IBOutlet UIButton *practiceButton;
 @property (weak, nonatomic) IBOutlet UIButton *matchButton;
-@property (weak, nonatomic) IBOutlet UIButton *rewardButton;
+@property (weak, nonatomic) IBOutlet UIButton *prizeButton;
 @property (weak, nonatomic) IBOutlet UIButton *rankButton;
 @property (weak, nonatomic) IBOutlet UIButton *reviewButton;
 
@@ -33,7 +33,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *ownerLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
 @property (weak, nonatomic) IBOutlet UIButton *reportButton;
@@ -73,7 +73,7 @@
     //button disable
     _practiceButton.enabled = NO;
     _matchButton.enabled = NO;
-    _rewardButton.enabled = NO;
+    _prizeButton.enabled = NO;
     _rankButton.enabled = NO;
     _reviewButton.enabled = NO;
     _likeButton.enabled = NO;
@@ -173,13 +173,13 @@
         
         _gd.matchPlay = [[MatchPlay alloc] initWithDict:dict];
         
-        //reward
-        _gd.match.extraCoupon = _gd.matchPlay.extraCoupon;
+        //prize
+        _gd.match.extraPrize = _gd.matchPlay.extraPrize;
         _gd.match.playTimes = _gd.matchPlay.playTimes;
         
         //buttons
         _practiceButton.enabled = YES;
-        _rewardButton.enabled = YES;
+        _prizeButton.enabled = YES;
         _rankButton.enabled = YES;
         _likeButton.enabled = YES;
         
@@ -191,12 +191,12 @@
 }
 
 - (void)refreshUI {
-    //reward
+    //prize
     Match *match = _gd.match;
-    if (match.extraCoupon == 0) {
-        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", match.rewardCoupon];
+    if (match.extraPrize == 0) {
+        _prizeLabel.text = [NSString stringWithFormat:@"比赛奖金：%d", match.prize];
     } else {
-        _rewardLabel.text = [NSString stringWithFormat:@"比赛奖金：%d+%d", match.rewardCoupon, match.extraCoupon];
+        _prizeLabel.text = [NSString stringWithFormat:@"比赛奖金：%d+%d", match.prize, match.extraPrize];
     }
     
     //title

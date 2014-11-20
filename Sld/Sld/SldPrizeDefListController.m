@@ -1,18 +1,18 @@
 //
-//  SldRewardDefListController.m
+//  SldPrizeDefListController.m
 //  pin
 //
 //  Created by 李炜 on 14-9-7.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldRewardDefListController.h"
+#import "SldPrizeDefListController.h"
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyMatchController.h"
 
 //===========================
-@interface SldRewardDefListImgCell : UITableViewCell
+@interface SldPrizeDefListImgCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *promoImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *maskImageView;
@@ -20,27 +20,27 @@
 
 @end
 
-@implementation SldRewardDefListImgCell
+@implementation SldPrizeDefListImgCell
 
 @end
 
 //===========================
-@interface SldRewardDefListRankCell : UITableViewCell
+@interface SldPrizeDefListRankCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
-@property (weak, nonatomic) IBOutlet UILabel *rewardLabel;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 
 @end
 
-@implementation SldRewardDefListRankCell
+@implementation SldPrizeDefListRankCell
 
 @end
 
 //===========================
-@interface SldRewardDefListController ()
+@interface SldPrizeDefListController ()
 @property (nonatomic) SldGameData* gd;
 @end
 
-@implementation SldRewardDefListController
+@implementation SldPrizeDefListController
 
 - (void)viewDidLoad
 {
@@ -66,7 +66,7 @@
     } else if (section == 1) {
         return 1;
     } else if (section == 2) {
-        return _gd.match.rankRewardProportions.count+1;
+        return _gd.match.rankPrizeProportions.count+1;
     }
     return 0;
 }
@@ -74,7 +74,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        SldRewardDefListImgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rewardDefListImgCell" forIndexPath:indexPath];
+        SldPrizeDefListImgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"prizeDefListImgCell" forIndexPath:indexPath];
         NSString *imgKey = _gd.match.promoImage;
         if (imgKey.length) {
             [cell.promoImageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
@@ -93,29 +93,29 @@
         
         return cell;
     } else if (indexPath.section == 1) {
-        SldRewardDefListRankCell *cell = (SldRewardDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardDefListDescCell" forIndexPath:indexPath];
+        SldPrizeDefListRankCell *cell = (SldPrizeDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"prizeDefListDescCell" forIndexPath:indexPath];
         return cell;
     } else if (indexPath.section == 2) {
-        SldRewardDefListRankCell *cell = (SldRewardDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"rewardDefListRankCell" forIndexPath:indexPath];
+        SldPrizeDefListRankCell *cell = (SldPrizeDefListRankCell*)[tableView dequeueReusableCellWithIdentifier:@"prizeDefListRankCell" forIndexPath:indexPath];
         
-        float couponSum = (float)(_gd.match.rewardCoupon + _gd.match.extraCoupon);
+        int prizeSum = _gd.match.prize + _gd.match.extraPrize;
         
-        float minRankCoupon = [(NSNumber*)[_gd.match.rankRewardProportions lastObject] floatValue] * couponSum;
+        float minRankPrize = [(NSNumber*)[_gd.match.rankPrizeProportions lastObject] floatValue] * prizeSum;
         
-        if (indexPath.row == _gd.match.rankRewardProportions.count) {
-            int oneCouponNum = (int)(_gd.match.oneCoinRewardProportion * couponSum);
-            if (oneCouponNum > 1 && minRankCoupon > 1.0f) {
-                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row+1, indexPath.row+oneCouponNum];
-                cell.rewardLabel.text = @"1奖金";
+        if (indexPath.row == _gd.match.rankPrizeProportions.count) {
+            int minPrizeNum = (int)(_gd.match.minPrizeProportion * prizeSum);
+            if (minPrizeNum > 1 && minRankPrize > 1.0f) {
+                cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row+1, indexPath.row+minPrizeNum];
+                cell.prizeLabel.text = @"1奖金";
             } else {
                 cell.rankLabel.text = @"暂无";
-                cell.rewardLabel.text = @"1奖金";
+                cell.prizeLabel.text = @"1奖金";
             }
         } else {
             cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", indexPath.row+1];
-            float prop = [(NSNumber*)_gd.match.rankRewardProportions[indexPath.row] floatValue];
-            float coupon = prop * couponSum;
-            cell.rewardLabel.text = [NSString stringWithFormat:@"%.2f奖金", coupon];
+            float prop = [(NSNumber*)_gd.match.rankPrizeProportions[indexPath.row] floatValue];
+            int prize = (int)(prop * prizeSum);
+            cell.prizeLabel.text = [NSString stringWithFormat:@"%.d奖金", prize];
         }
         
         return cell;

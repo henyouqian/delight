@@ -62,12 +62,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.customAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
     info.email = [dict objectForKey:@"Email"];
     info.goldCoin = [(NSNumber*)[dict objectForKey:@"GoldCoin"] intValue];
-    info.coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] floatValue];
-    info.totalCoupon = [(NSNumber*)[dict objectForKey:@"TotalCoupon"] floatValue];
-    info.couponCache = [(NSNumber*)[dict objectForKey:@"CouponCache"] floatValue];
+    info.prize = [(NSNumber*)[dict objectForKey:@"Prize"] floatValue];
+    info.totalPrize = [(NSNumber*)[dict objectForKey:@"TotalPrize"] floatValue];
+    info.prizeCache = [(NSNumber*)[dict objectForKey:@"PrizeCache"] floatValue];
     info.betCloseBeforeEndSec = [(NSNumber*)[dict objectForKey:@"BetCloseBeforeEndSec"] intValue];
-    info.currChallengeId = [(NSNumber*)[dict objectForKey:@"CurrChallengeId"] intValue];
-    info.rateReward = [(NSNumber*)[dict objectForKey:@"RateReward"] intValue];
     
     NSDictionary *adsConf = [dict objectForKey:@"AdsConf"];
     info.adsConf = [[AdsConf alloc] init];
@@ -75,7 +73,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.adsConf.delayPercent = [(NSNumber*)[adsConf objectForKey:@"DelayPercent"] floatValue];
     info.adsConf.delaySec = [(NSNumber*)[adsConf objectForKey:@"DelaySec"] floatValue];
     
-    gd.ownerRewardProportion = [(NSNumber*)[dict objectForKey:@"OwnerRewardProportion"] floatValue];
+    gd.ownerPrizeProportion = [(NSNumber*)[dict objectForKey:@"OwnerPrizeProportion"] floatValue];
     return info;
 }
 
@@ -91,22 +89,21 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _ownerId = [(NSNumber*)[dict objectForKey:@"OwnerId"] longLongValue];
         _ownerName = [dict objectForKey:@"OwnerName"];
         _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];
-        _rewardCoupon = [(NSNumber*)[dict objectForKey:@"RewardCoupon"] intValue];
+        _prize = [(NSNumber*)[dict objectForKey:@"Prize"] intValue];
         _thumb = [dict objectForKey:@"Thumb"];
         _title = [dict objectForKey:@"Title"];
         _playTimes = [(NSNumber*)[dict objectForKey:@"PlayTimes"] intValue];
-        _extraCoupon = [(NSNumber*)[dict objectForKey:@"ExtraCoupon"] intValue];
+        _extraPrize = [(NSNumber*)[dict objectForKey:@"ExtraPrize"] intValue];
         _beginTime = [(NSNumber*)[dict objectForKey:@"BeginTime"] longLongValue];
         _endTime = [(NSNumber*)[dict objectForKey:@"EndTime"] longLongValue];
         _hasResult = [(NSNumber*)[dict objectForKey:@"HasResult"] longLongValue];
-        _rankRewardProportions = [dict objectForKey:@"RankRewardProportions"];
-        if ((NSNull*)_rankRewardProportions == [NSNull null]) {
-            _rankRewardProportions = nil;
+        _rankPrizeProportions = [dict objectForKey:@"RankPrizeProportions"];
+        if ((NSNull*)_rankPrizeProportions == [NSNull null]) {
+            _rankPrizeProportions = nil;
         }
-        _luckyRewardProportion = [(NSNumber*)[dict objectForKey:@"LuckyRewardProportion"] floatValue];
-        _oneCoinRewardProportion = [(NSNumber*)[dict objectForKey:@"OneCoinRewardProportion"] floatValue];
-        _ownerRewardProportion = [(NSNumber*)[dict objectForKey:@"OwnerRewardProportion"] floatValue];
-        _challengeSeconds = [(NSNumber*)[dict objectForKey:@"ChallengeSeconds"] intValue];
+        _luckyPrizeProportion = [(NSNumber*)[dict objectForKey:@"LuckyPrizeProportion"] floatValue];
+        _minPrizeProportion = [(NSNumber*)[dict objectForKey:@"MinPrizeProportion"] floatValue];
+        _ownerPrizeProportion = [(NSNumber*)[dict objectForKey:@"OwnerPrizeProportion"] floatValue];
         _promoUrl = [dict objectForKey:@"PromoUrl"];
         _promoImage = [dict objectForKey:@"PromoImage"];
         _isPrivate = [(NSNumber*)[dict objectForKey:@"Private"] boolValue];
@@ -123,7 +120,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
         _playTimes = [(NSNumber*)dict[@"PlayTimes"] intValue];
-        _extraCoupon = [(NSNumber*)dict[@"ExtraCoupon"] intValue];
+        _extraPrize = [(NSNumber*)dict[@"ExtraPrize"] intValue];
         _highScore = [(NSNumber*)dict[@"HighScore"] intValue];
         _finalRank = [(NSNumber*)dict[@"FinalRank"] intValue];
         _freeTries = [(NSNumber*)dict[@"FreeTries"] intValue];

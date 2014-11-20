@@ -200,16 +200,16 @@
             </objects>
             <point key="canvasLocation" x="-6935" y="-1169"/>
         </scene>
-        <!--Sld Reward List Controller-->
+        <!--Sld Prize List Controller-->
         <scene sceneID="e9y-7P-vPx">
             <objects>
-                <tableViewController id="VkF-K5-zTO" customClass="SldRewardListController" sceneMemberID="viewController">
+                <tableViewController id="VkF-K5-zTO" customClass="SldPrizeListController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="60" sectionHeaderHeight="10" sectionFooterHeight="10" id="Wu2-Aa-gJo">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchGetCouponCacheCell" rowHeight="85" id="ybP-Vm-yhf" customClass="SldGetCouponCacheCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchGetPrizeCacheCell" rowHeight="85" id="ybP-Vm-yhf" customClass="SldGetPrizeCacheCell">
                                 <rect key="frame" x="0.0" y="55" width="320" height="85"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ybP-Vm-yhf" id="z4y-HC-S5Y">
@@ -230,7 +230,7 @@
                                                 <rect key="frame" x="14" y="37" width="292" height="43"/>
                                             </variation>
                                             <connections>
-                                                <action selector="onGetRewardButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="Xub-9M-UC7"/>
+                                                <action selector="onGetPrizeButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="TQf-pg-JgI"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="现有奖金：1234567" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DhF-bR-xce">
@@ -256,11 +256,11 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="couponLabel" destination="DhF-bR-xce" id="QAo-fB-O69"/>
-                                    <outlet property="getRewardButton" destination="W5v-mG-cz0" id="3zI-5U-fzK"/>
+                                    <outlet property="getPrizeButton" destination="W5v-mG-cz0" id="fSH-2e-oFm"/>
+                                    <outlet property="prizeLabel" destination="DhF-bR-xce" id="wQt-6y-9fs"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchRewardCell" rowHeight="60" id="nm8-2e-PiE" customClass="SldRewardCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchPrizeCell" rowHeight="60" id="nm8-2e-PiE" customClass="SldPrizeCell">
                                 <rect key="frame" x="0.0" y="140" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nm8-2e-PiE" id="J47-lj-2Rr">
@@ -318,13 +318,13 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="couponLabel" destination="xve-Me-9yl" id="V6J-MT-AZj"/>
+                                    <outlet property="prizeLabel" destination="xve-Me-9yl" id="So6-Pr-OwP"/>
                                     <outlet property="rankLabel" destination="TrP-c8-qHS" id="8h9-qy-eCX"/>
                                     <outlet property="reasonLabel" destination="l8C-cq-Zqi" id="hhZ-uH-TPg"/>
                                     <outlet property="thumbView" destination="Ao4-HS-gW9" id="vkE-M6-30d"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="moreRewardCell" id="dLG-e3-NQx" customClass="SldMoreRewardCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="morePrizeCell" id="dLG-e3-NQx" customClass="SldMorePrizeCell">
                                 <rect key="frame" x="0.0" y="200" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dLG-e3-NQx" id="nmR-Dn-4CB">
@@ -345,7 +345,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
                                             </variation>
                                             <connections>
-                                                <action selector="onMoreRewardButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="46d-4n-wvx"/>
+                                                <action selector="onMorePrizeButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="Ex6-UK-WCI"/>
                                             </connections>
                                         </button>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="DLN-BV-XyL">
@@ -593,14 +593,14 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="avatarView" destination="FB4-PD-5iM" id="pcg-0A-uvJ"/>
-                        <outlet property="couponLabel" destination="lei-TU-WB4" id="TWS-ZG-oTf"/>
                         <outlet property="genderLabel" destination="MMG-cc-23n" id="PnU-vW-Sh5"/>
                         <outlet property="goldCoinLabel" destination="2LP-oi-Ekp" id="YXG-kb-l6S"/>
                         <outlet property="idLabel" destination="aHM-PU-r1m" id="PS2-gi-BPz"/>
                         <outlet property="logoutButton" destination="ChJ-Ez-hbx" id="tiF-pa-WW6"/>
                         <outlet property="nickNameLabel" destination="BZN-FC-JW3" id="gX1-56-oaC"/>
+                        <outlet property="prizeLabel" destination="lei-TU-WB4" id="FNV-PP-sf0"/>
                         <outlet property="teamLabel" destination="du4-rS-KnV" id="6Yd-ZZ-ZuU"/>
-                        <outlet property="totalCouponLabel" destination="VpN-01-Vdl" id="LSR-m2-yRS"/>
+                        <outlet property="totalPrizeLabel" destination="VpN-01-Vdl" id="8d8-Yt-tHB"/>
                         <outlet property="userInfoCell" destination="jgW-GC-fXD" id="FBT-C2-gDz"/>
                     </connections>
                 </tableViewController>
@@ -1912,7 +1912,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zdh-hr-qj3" userLabel="reward">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zdh-hr-qj3" userLabel="prize">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <variation key="widthClass=regular" fixedFrame="YES">
@@ -1997,7 +1997,7 @@
                         <outlet property="buyView" destination="nu4-5Z-8gv" id="Fs9-8X-sMN"/>
                         <outlet property="cardView" destination="H2W-Fg-VdH" id="yeT-9q-FJ5"/>
                         <outlet property="exchangeView" destination="ewa-da-RUm" id="X6p-of-km2"/>
-                        <outlet property="rewardView" destination="Zdh-hr-qj3" id="u00-pO-ywN"/>
+                        <outlet property="prizeView" destination="Zdh-hr-qj3" id="bP2-2l-QJH"/>
                         <outlet property="seg" destination="yrd-8q-dRZ" id="OoT-rd-TYu"/>
                     </connections>
                 </viewController>
@@ -2099,10 +2099,10 @@
             </objects>
             <point key="canvasLocation" x="-4219" y="-597.5"/>
         </scene>
-        <!--Sld Coupon Card Controller-->
+        <!--SldE Card Controller-->
         <scene sceneID="04O-DO-UIE">
             <objects>
-                <tableViewController id="TqF-dg-F0F" customClass="SldCouponCardController" sceneMemberID="viewController">
+                <tableViewController id="TqF-dg-F0F" customClass="SldECardController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="62" sectionHeaderHeight="22" sectionFooterHeight="22" id="tuQ-P4-iGs">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2186,7 +2186,7 @@
                                             </variation>
                                             <connections>
                                                 <action selector="onLoadMore:" destination="TqF-dg-F0F" eventType="touchUpInside" id="R6H-rp-jxc"/>
-                                                <action selector="onMoreRewardButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="OZP-yb-STD"/>
+                                                <action selector="onMorePrizeButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="JZ7-YZ-npK"/>
                                             </connections>
                                         </button>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="51R-0v-xpo">
@@ -2407,7 +2407,7 @@
                                         <rect key="frame" x="33" y="43" width="90" height="30"/>
                                     </variation>
                                     <connections>
-                                        <action selector="onGetRewardButton:" destination="09h-z3-Vbs" eventType="touchUpInside" id="Wzv-gD-qIF"/>
+                                        <action selector="onGetPrizeButton:" destination="09h-z3-Vbs" eventType="touchUpInside" id="TlC-gR-RSm"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -2421,8 +2421,8 @@
                                 <constraint firstAttribute="trailing" secondItem="qeM-P1-LIZ" secondAttribute="trailing" constant="33" id="fqB-SP-bmx"/>
                             </constraints>
                             <connections>
-                                <outlet property="couponLabel" destination="lYj-Qh-0a0" id="FvP-1b-bg8"/>
-                                <outlet property="getRewardButton" destination="qeM-P1-LIZ" id="wWE-Wh-d6L"/>
+                                <outlet property="getPrizeButton" destination="qeM-P1-LIZ" id="l2s-aL-9Sx"/>
+                                <outlet property="prizeLabel" destination="lYj-Qh-0a0" id="JMi-N7-Hwr"/>
                             </connections>
                         </collectionReusableView>
                         <connections>
@@ -2483,7 +2483,7 @@
                                 <connections>
                                     <outlet property="imageView" destination="x9O-qA-nyV" id="dUE-Gt-kTl"/>
                                     <outlet property="playTimesLabel" destination="4uA-sV-8O6" id="3iW-iB-cpl"/>
-                                    <outlet property="rewardNumLabel" destination="4uA-sV-8O6" id="CR0-tt-BRG"/>
+                                    <outlet property="prizeLabel" destination="4uA-sV-8O6" id="Uxp-TI-tfx"/>
                                     <outlet property="timeLabel" destination="3vi-Iw-F8c" id="KxV-4A-Skc"/>
                                     <segue destination="Xho-hf-wAk" kind="show" identifier="cellSegue" id="8wM-VL-FwZ"/>
                                 </connections>
@@ -2705,7 +2705,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0uX-Gp-QBx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1321" y="-3357"/>
+            <point key="canvasLocation" x="-1493" y="-2903"/>
         </scene>
         <!--设定-->
         <scene sceneID="dOk-CO-cdH">
@@ -2728,12 +2728,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="10" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EG9-8k-oM9">
-                                <rect key="frame" x="18" y="535" width="284" height="31"/>
-                                <variation key="widthClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="18" y="535" width="284" height="31"/>
-                                </variation>
-                            </slider>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="标题:（可选）" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u0i-9A-0sL">
                                 <rect key="frame" x="20" y="212" width="180" height="21"/>
                                 <constraints>
@@ -2754,38 +2748,6 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="延时发布：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WTZ-OR-xmH">
-                                <rect key="frame" x="20" y="398" width="258" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="定价：1金币" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xth-Fn-3c3">
-                                <rect key="frame" x="20" y="482" width="180" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="24" translatesAutoresizingMaskIntoConstraints="NO" id="FiS-7C-Hcj">
-                                <rect key="frame" x="18" y="427" width="284" height="31"/>
-                                <variation key="widthClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="18" y="427" width="284" height="31"/>
-                                </variation>
-                            </slider>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="需要支付222金币（现有44金币）" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BcC-kE-A8h">
-                                <rect key="frame" x="20" y="511" width="258" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <stepper hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="DFP-bu-wfN">
-                                <rect key="frame" x="206" y="478" width="94" height="29"/>
-                                <variation key="widthClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="206" y="478" width="94" height="29"/>
-                                </variation>
-                                <connections>
-                                    <action selector="onStepperValueChanged:" destination="ewK-rt-HVl" eventType="valueChanged" id="T05-6Z-jtA"/>
-                                </connections>
-                            </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提供多少金币作为奖励:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hxu-0f-jrE">
                                 <rect key="frame" x="20" y="79" width="286" height="21"/>
                                 <constraints>
@@ -2868,16 +2830,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="couponDescLabel" destination="Rp3-y4-HfM" id="F1M-gr-vdF"/>
-                        <outlet property="couponInput" destination="ggT-Yo-qpR" id="u1w-sh-mZI"/>
-                        <outlet property="couponLabel" destination="9qV-4Q-Cb3" id="8H5-Ae-bzL"/>
-                        <outlet property="goldCoinLabel" destination="BcC-kE-A8h" id="off-YN-F6N"/>
-                        <outlet property="priceLable" destination="Xth-Fn-3c3" id="aVC-LB-eUf"/>
+                        <outlet property="coinDescLabel" destination="Rp3-y4-HfM" id="bTX-x0-jCu"/>
+                        <outlet property="coinInput" destination="ggT-Yo-qpR" id="TmH-9C-DzL"/>
+                        <outlet property="coinLabel" destination="9qV-4Q-Cb3" id="qnB-0t-AVH"/>
                         <outlet property="privateSwitch" destination="gBq-dM-VKe" id="gLN-v4-fp1"/>
-                        <outlet property="publishDelayLabel" destination="WTZ-OR-xmH" id="og8-0g-k7S"/>
-                        <outlet property="publishDelaySlider" destination="FiS-7C-Hcj" id="JUP-Bq-tn0"/>
-                        <outlet property="slider" destination="EG9-8k-oM9" id="ud8-Go-89p"/>
-                        <outlet property="stepper" destination="DFP-bu-wfN" id="QLD-n1-R9Y"/>
                         <outlet property="titleInput" destination="e7H-4G-f8s" id="9Bm-WX-HRs"/>
                     </connections>
                 </viewController>
@@ -2888,7 +2844,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1300" y="-2544"/>
+            <point key="canvasLocation" x="-1560" y="-1928"/>
         </scene>
         <!--Sld Comment Controller-->
         <scene sceneID="GQG-5l-QtS">
@@ -3320,7 +3276,7 @@
                                     <outlet property="coinImage" destination="mDN-5G-CRc" id="IHS-oW-AgT"/>
                                     <outlet property="enterFeeLabel" destination="TZp-Mi-Rdi" id="YxE-a9-Kq5"/>
                                     <outlet property="playerNumLabel" destination="Bc5-b4-bIw" id="Ud0-WH-uRy"/>
-                                    <outlet property="rewardLabel" destination="2nt-bA-Tg2" id="T7k-OU-KG3"/>
+                                    <outlet property="prizeLabel" destination="2nt-bA-Tg2" id="BxH-ta-fMl"/>
                                     <segue destination="VDo-HA-FAn" kind="show" id="ueD-wT-icA"/>
                                 </connections>
                             </collectionViewCell>
@@ -3425,7 +3381,7 @@
                             <connections>
                                 <outlet property="coinLabel" destination="m9S-YV-t1u" id="NMZ-8o-QrI"/>
                                 <outlet property="heartLabel" destination="DsT-XJ-XaM" id="cTQ-nk-P0d"/>
-                                <outlet property="totalRewardLabel" destination="I4i-SR-g70" id="Bu2-rW-lTy"/>
+                                <outlet property="totalPrizeLabel" destination="I4i-SR-g70" id="hsO-7n-xYA"/>
                                 <outlet property="userAvatarView" destination="Imn-dC-c9g" id="e72-bw-ngE"/>
                                 <outlet property="winNumLabel" destination="0pv-I9-Imx" id="IuU-qq-I0a"/>
                             </connections>
@@ -3513,7 +3469,7 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="imageView" destination="Qp8-YQ-Scn" id="smi-Zj-Lba"/>
-                                    <outlet property="rewardNumLabel" destination="xFh-RA-fJa" id="xMg-I0-RVe"/>
+                                    <outlet property="prizeLabel" destination="xFh-RA-fJa" id="xFx-Pf-rWX"/>
                                     <outlet property="timeLebel" destination="dGf-5b-MZS" id="Jid-d0-XG6"/>
                                     <segue destination="Xho-hf-wAk" kind="show" id="hZh-70-BKV"/>
                                 </connections>
@@ -3863,12 +3819,12 @@
                         <outlet property="matchTimeLabel" destination="ABG-Pp-vWX" id="zSH-MK-fh2"/>
                         <outlet property="ownerLabel" destination="96s-U3-OOd" id="GLO-MM-rZo"/>
                         <outlet property="practiceButton" destination="Sl0-PV-xdg" id="Jti-LT-zui"/>
+                        <outlet property="prizeButton" destination="fzZ-AM-Lsu" id="UfF-S8-2Og"/>
+                        <outlet property="prizeLabel" destination="Zmi-DX-524" id="gFv-fH-V2k"/>
                         <outlet property="rankButton" destination="SvF-Lb-DjB" id="pdc-qV-BHe"/>
                         <outlet property="rankLabel" destination="lfv-Pu-Rh4" id="Ezp-HX-GAl"/>
                         <outlet property="reportButton" destination="cry-XW-XX7" id="KHS-O5-4Jg"/>
                         <outlet property="reviewButton" destination="rWJ-Ba-Pwo" id="CLE-2M-3i3"/>
-                        <outlet property="rewardButton" destination="fzZ-AM-Lsu" id="HdT-d3-aqN"/>
-                        <outlet property="rewardLabel" destination="Zmi-DX-524" id="IHw-qe-gqV"/>
                         <outlet property="titleLabel" destination="xjE-Hb-U2d" id="XdS-FJ-4vA"/>
                         <outlet property="tryNumLabel" destination="Dcd-x6-BhL" id="vxj-rX-v0Q"/>
                     </connections>
@@ -3877,16 +3833,16 @@
             </objects>
             <point key="canvasLocation" x="-4815" y="-4573"/>
         </scene>
-        <!--Sld Reward Def List Controller-->
+        <!--Sld Prize Def List Controller-->
         <scene sceneID="QCD-HL-DuR">
             <objects>
-                <tableViewController id="3q1-2s-ku5" customClass="SldRewardDefListController" sceneMemberID="viewController">
+                <tableViewController id="3q1-2s-ku5" customClass="SldPrizeDefListController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="300" sectionHeaderHeight="22" sectionFooterHeight="22" id="Iz6-Ye-pRB">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="rewardDefListImgCell" rowHeight="324" id="ubC-1y-ghv" customClass="SldRewardDefListImgCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="prizeDefListImgCell" rowHeight="324" id="ubC-1y-ghv" customClass="SldPrizeDefListImgCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="324"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ubC-1y-ghv" id="zF4-sW-xGv">
@@ -3923,7 +3879,7 @@
                                     <outlet property="promoImageView" destination="pma-PJ-Ugb" id="JUK-o2-5l1"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="rewardDefListDescCell" rowHeight="74" id="ZDz-K3-fw9">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="prizeDefListDescCell" rowHeight="74" id="ZDz-K3-fw9">
                                 <rect key="frame" x="0.0" y="410" width="320" height="74"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZDz-K3-fw9" id="dmV-kg-KaG">
@@ -3940,7 +3896,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.95955141129999999" green="0.95184295220000004" blue="0.92409419719999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="rewardDefListRankCell" rowHeight="48" id="pdW-3b-Yrb" customClass="SldRewardDefListRankCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="prizeDefListRankCell" rowHeight="48" id="pdW-3b-Yrb" customClass="SldPrizeDefListRankCell">
                                 <rect key="frame" x="0.0" y="484" width="320" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pdW-3b-Yrb" id="WEH-45-mZW">
@@ -3963,8 +3919,8 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.95955141129999999" green="0.95184295220000004" blue="0.92409419719999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
+                                    <outlet property="prizeLabel" destination="Rzv-ln-ox1" id="GsD-Mn-4Pq"/>
                                     <outlet property="rankLabel" destination="JVu-Ha-M3Y" id="g43-uQ-tb1"/>
-                                    <outlet property="rewardLabel" destination="Rzv-ln-ox1" id="dn9-ng-1wL"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -4825,7 +4781,7 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="imageView" destination="vOB-wU-xmr" id="nQs-5b-Wic"/>
-                                    <outlet property="rewardNumLabel" destination="cO8-bx-374" id="M6h-gH-OAG"/>
+                                    <outlet property="prizeLabel" destination="cO8-bx-374" id="kq3-E8-9PB"/>
                                     <outlet property="timeLebel" destination="x8s-J7-BE0" id="iN6-0X-99B"/>
                                     <segue destination="Xho-hf-wAk" kind="show" id="02I-tI-UvT"/>
                                 </connections>
@@ -4965,7 +4921,7 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="imageView" destination="ITE-ik-xGm" id="p03-yY-5To"/>
-                                    <outlet property="rewardNumLabel" destination="wD3-YI-c6h" id="e8w-CZ-P42"/>
+                                    <outlet property="prizeLabel" destination="wD3-YI-c6h" id="sDB-w5-bIJ"/>
                                     <outlet property="timeLebel" destination="rPc-Ud-TCL" id="Pr6-ar-jsV"/>
                                     <segue destination="Xho-hf-wAk" kind="show" id="G3g-EF-nPd"/>
                                 </connections>
@@ -5199,7 +5155,7 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="imageView" destination="2CY-jp-MmA" id="Igo-Xv-xWG"/>
-                                    <outlet property="rewardNumLabel" destination="0Yg-zD-r7p" id="Zkh-ii-MDm"/>
+                                    <outlet property="prizeLabel" destination="0Yg-zD-r7p" id="Rlg-8n-8tB"/>
                                     <outlet property="timeLebel" destination="lc7-LR-STs" id="Ajj-de-gt7"/>
                                     <segue destination="Xho-hf-wAk" kind="show" id="Kot-XL-OVA"/>
                                 </connections>

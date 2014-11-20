@@ -43,13 +43,11 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSString *customAvatarKey;
 @property (nonatomic) NSString *email;
 @property (nonatomic) int goldCoin;
-@property (nonatomic) float coupon;
-@property (nonatomic) float totalCoupon;
-@property (nonatomic) float couponCache;
+@property (nonatomic) int prize;
+@property (nonatomic) int totalPrize;
+@property (nonatomic) int prizeCache;
 @property (nonatomic) int betCloseBeforeEndSec;
 @property (nonatomic) AdsConf *adsConf;
-@property (nonatomic) int currChallengeId;
-@property (nonatomic) int rateReward;
 
 + (instancetype)playerWithDictionary:(NSDictionary*)dict;
 @end
@@ -62,19 +60,18 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) SInt64 ownerId;
 @property (nonatomic) NSString *ownerName;
 @property (nonatomic) int sliderNum;
-@property (nonatomic) int rewardCoupon;
+@property (nonatomic) int prize;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *title;
 @property (nonatomic) int playTimes;
-@property (nonatomic) int extraCoupon;
+@property (nonatomic) int extraPrize;
 @property (nonatomic) SInt64 beginTime;
 @property (nonatomic) SInt64 endTime;
 @property (nonatomic) BOOL hasResult;
-@property (nonatomic) NSArray *rankRewardProportions;
-@property (nonatomic) float luckyRewardProportion;
-@property (nonatomic) float oneCoinRewardProportion;
-@property (nonatomic) float ownerRewardProportion;
-@property (nonatomic) int challengeSeconds;
+@property (nonatomic) NSArray *rankPrizeProportions;
+@property (nonatomic) float luckyPrizeProportion;
+@property (nonatomic) float minPrizeProportion;
+@property (nonatomic) float ownerPrizeProportion;
 @property (nonatomic) NSString *promoUrl;
 @property (nonatomic) NSString *promoImage;
 @property (nonatomic) BOOL isPrivate;
@@ -86,7 +83,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @interface MatchPlay : NSObject
 
 @property (nonatomic) int playTimes;
-@property (nonatomic) int extraCoupon;
+@property (nonatomic) int extraPrize;
 @property (nonatomic) int highScore;
 @property (nonatomic) int finalRank;
 @property (nonatomic) int freeTries;
@@ -158,7 +155,7 @@ enum GameMode{
 @property (nonatomic) BOOL needRefreshLikeList;
 
 //etc
-@property (nonatomic) float ownerRewardProportion;
+@property (nonatomic) float ownerPrizeProportion;
 @property (nonatomic) int sliderNum;
 
 

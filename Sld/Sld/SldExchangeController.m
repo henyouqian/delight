@@ -13,7 +13,7 @@
 #import "SldHttpSession.h"
 #import "SldUtil.h"
 #import "SldTradeController.h"
-#import "SldCouponCardController.h"
+#import "SldECardController.h"
 
 //===============================
 @interface SldEcardType : NSObject
@@ -21,7 +21,7 @@
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *provider;
 @property (nonatomic) NSString *thumb;
-@property (nonatomic) int couponPrice;
+@property (nonatomic) int needPrize;
 @property (nonatomic) int num;
 @end
 
@@ -33,7 +33,7 @@
         _name = dict[@"Name"];
         _provider = dict[@"Provider"];
         _thumb = dict[@"Thumb"];
-        _couponPrice = [(NSNumber*)dict[@"CouponPrice"] intValue];
+        _needPrize = [(NSNumber*)dict[@"NeedPrize"] intValue];
         _num = [(NSNumber*)dict[@"Num"] intValue];
     }
     
@@ -58,8 +58,8 @@
 
 //===============================
 @interface SldExchangeHeader : UICollectionReusableView
-@property (weak, nonatomic) IBOutlet UIButton *getRewardButton;
-@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
+@property (weak, nonatomic) IBOutlet UIButton *getPrizeButton;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @end
 
 @implementation SldExchangeHeader
@@ -95,7 +95,7 @@
     
     //login notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshCouponUI) name:@"couponCacheChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshPrizeUI) name:@"prizeCacheChange" object:nil];
 }
 
 - (void)dealloc {
@@ -106,7 +106,7 @@
     [self refresh];
 }
 
-- (void)refreshCouponUI {
+- (void)refreshPrizeUI {
     [self.collectionView reloadData];
 }
 
@@ -157,11 +157,11 @@
     if (cardType) {
         cell.titleLabel.text = cardType.name;
         if (cardType.num == 0) {
-            [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换(兑完补货中)", cardType.couponPrice] forState:UIControlStateNormal];
+            [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换(兑完补货中)", cardType.needPrize] forState:UIControlStateNormal];
             cell.buyButton.enabled = NO;
             cell.buyButton.backgroundColor = [UIColor grayColor];
         } else {
-            [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换", cardType.couponPrice] forState:UIControlStateNormal];
+            [cell.buyButton setTitle:[NSString stringWithFormat:@"使用%d奖金兑换", cardType.needPrize] forState:UIControlStateNormal];
             cell.buyButton.enabled = YES;
             cell.buyButton.backgroundColor = [SldUtil getPinkColor];
         }
@@ -174,25 +174,25 @@
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionHeader) {
         SldExchangeHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"exchangeHeader" forIndexPath:indexPath];
-        header.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%.2f", _gd.playerInfo.coupon];
-        NSString *title = [NSString stringWithFormat:@"可领取奖金：%.2f", _gd.playerInfo.couponCache];
-        [header.getRewardButton setTitle:title forState:UIControlStateNormal];
-        [header.getRewardButton setTitle:title forState:UIControlStateDisabled];
-        if (_gd.playerInfo.couponCache < 0.01) {
-            header.getRewardButton.enabled = NO;
-            header.getRewardButton.backgroundColor = [UIColor grayColor];
+        header.prizeLabel.text = [NSString stringWithFormat:@"现有奖金：%d", _gd.playerInfo.prize];
+        NSString *title = [NSString stringWithFormat:@"可领取奖金：%d", _gd.playerInfo.prizeCache];
+        [header.getPrizeButton setTitle:title forState:UIControlStateNormal];
+        [header.getPrizeButton setTitle:title forState:UIControlStateDisabled];
+        if (_gd.playerInfo.prizeCache == 0) {
+            header.getPrizeButton.enabled = NO;
+            header.getPrizeButton.backgroundColor = [UIColor grayColor];
         } else {
-            header.getRewardButton.enabled = YES;
-            header.getRewardButton.backgroundColor = [SldUtil getPinkColor];
+            header.getPrizeButton.enabled = YES;
+            header.getPrizeButton.backgroundColor = [SldUtil getPinkColor];
         }
         return header;
     }
     return nil;
 }
 
-- (IBAction)onGetRewardButton:(id)sender {
+- (IBAction)onGetPrizeButton:(id)sender {
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"player/addCouponFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"player/addPrizeFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -204,13 +204,13 @@
             return;
         }
         
-        _gd.playerInfo.coupon = [(NSNumber*)dict[@"Coupon"] floatValue];
-        _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
-        _gd.playerInfo.couponCache = 0;
+        _gd.playerInfo.prize = [(NSNumber*)dict[@"Prize"] floatValue];
+        _gd.playerInfo.totalPrize = [(NSNumber*)dict[@"TotalPrize"] floatValue];
+        _gd.playerInfo.prizeCache = 0;
         
         [SldTradeController getInstance].tabBarItem.badgeValue = nil;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"prizeCacheChange" object:nil];
     }];
 }
 
@@ -220,7 +220,7 @@
     
     
     SldEcardType *cardType = _ecardTypes[indexPath.row];
-    if (_gd.playerInfo.coupon < (float)cardType.couponPrice) {
+    if (_gd.playerInfo.prize < cardType.needPrize) {
         alert(@"奖金不足。", nil);
         return;
     }
@@ -254,11 +254,11 @@
             
             NSDictionary *ecardDict = dict[@"Ecard"];
             SldEcard *ecard = [[SldEcard alloc] initWithDict:ecardDict];
-            [[SldCouponCardController getInstance] addEcard:ecard];
+            [[SldECardController getInstance] addEcard:ecard];
             alert(@"兑换成功，请至“已兑”界面查看。", nil);
             
-            _gd.playerInfo.coupon = [(NSNumber*)dict[@"PlayerCoupon"] floatValue];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
+            _gd.playerInfo.prize = [(NSNumber*)dict[@"PlayerPrize"] floatValue];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"prizeCacheChange" object:nil];
         }];
     }], nil] show];
 }

@@ -35,7 +35,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @interface SldMyMatchCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *playTimesLabel;
-@property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (nonatomic) Match* match;
 @end
@@ -378,20 +378,13 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @end
 
 //=============================
-@interface SldMyMatchSettingsController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
-@property (weak, nonatomic) IBOutlet UISlider *slider;
-@property (weak, nonatomic) IBOutlet UILabel *priceLable;
-@property (weak, nonatomic) IBOutlet UILabel *goldCoinLabel;
+@interface SldMyMatchSettingsController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
-@property (weak, nonatomic) IBOutlet UILabel *publishDelayLabel;
-@property (weak, nonatomic) IBOutlet UISlider *publishDelaySlider;
-@property (weak, nonatomic) IBOutlet UIStepper *stepper;
-@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
-@property (weak, nonatomic) IBOutlet UITextField *couponInput;
-@property (weak, nonatomic) IBOutlet UILabel *couponDescLabel;
+@property (weak, nonatomic) IBOutlet UILabel *coinLabel;
+@property (weak, nonatomic) IBOutlet UITextField *coinInput;
+@property (weak, nonatomic) IBOutlet UILabel *coinDescLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *privateSwitch;
 
-@property (nonatomic) int rewardCoupon;
 @property (nonatomic) NSArray *numbers;
 
 @property (nonatomic) QNUploadManager *upManager;
@@ -404,11 +397,9 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @property (nonatomic) NSMutableArray *images;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) int totalSize;
+@property (nonatomic) int coinForPrize;
 
 @end
-
-static const int COUPON_MIN = 0;
-static const int COUPON_MAX = 10000;
 
 @implementation SldMyMatchSettingsController
 
@@ -418,99 +409,19 @@ static const int COUPON_MAX = 10000;
     _gd = [SldGameData getInstance];
     _titleInput.delegate = self;
     
-    //coupon slider
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:50];
-    for (int i = 0; i < 101; i++) {
-        [array addObject:@(i*100)];
-    }
-    _numbers = [NSArray arrayWithArray:array];
-    _rewardCoupon = COUPON_MIN;
-    NSInteger numberOfSteps = ((float)[_numbers count] - 1);
-    _slider.maximumValue = numberOfSteps;
-    _slider.minimumValue = 0;
-    _slider.continuous = YES;
-    _slider.value = 0;
-    [_slider addTarget:self
-               action:@selector(valueChanged:)
-     forControlEvents:UIControlEventValueChanged];
-    
-    [self valueChanged:_slider];
-    
     //
-    _stepper.maximumValue = COUPON_MAX;
-    _stepper.minimumValue = COUPON_MIN;
-    _stepper.value = COUPON_MIN;
-    _stepper.stepValue = 100;
-    
-    //publish delay slider
-    _publishDelayHour = 0;
-    _publishDelaySlider.minimumValue = 0;
-    _publishDelaySlider.maximumValue = 24;
-    _publishDelaySlider.continuous = YES;
-    _publishDelaySlider.value = 0;
-    
-    [_publishDelaySlider addTarget:self
-                action:@selector(publishDelayChanged:)
-      forControlEvents:UIControlEventValueChanged];
-    [self publishDelayChanged:_publishDelaySlider];
-    
-    //
-    _couponDescLabel.text = [NSString stringWithFormat:@"注：总奖金的%d%%将作为奖金返还给你，总奖金包括你提供的奖金以及玩家在此游戏中消耗的金币所新增的奖金。", (int)(_gd.ownerRewardProportion*100)];
+    _coinDescLabel.text = [NSString stringWithFormat:@"注：总奖金的%d%%将作为奖金返还给你，总奖金包括你提供的奖金以及玩家在此游戏中消耗的金币所新增的奖金。", (int)(_gd.ownerPrizeProportion*100)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     //
-    _couponLabel.text = [NSString stringWithFormat:@"（现有%d金币）", _gd.playerInfo.goldCoin];
+    _coinLabel.text = [NSString stringWithFormat:@"（现有%d金币）", _gd.playerInfo.goldCoin];
 }
 
 - (IBAction)onTouch:(id)sender {
     [self.view endEditing:YES];
-}
-
-//- (IBAction)couponEditEnd:(id)sender {
-//    int n = [_couponInput.text intValue];
-//    n = n / 100 * 100;
-//    if (n < 0) {
-//        n = 0;
-//    }
-//    _couponInput.text = [NSString stringWithFormat:@"%d", n];
-//}
-
-- (void)valueChanged:(UISlider *)sender {
-    NSUInteger index = (NSUInteger)(_slider.value + 0.5);
-    [_slider setValue:index animated:NO];
-    NSNumber *number = _numbers[index];
-    
-    _rewardCoupon = [number intValue];
-    _stepper.value = _rewardCoupon;
-    
-    [self updateCouponLabel];
-}
-
-- (IBAction)onStepperValueChanged:(id)sender {
-    _rewardCoupon = _stepper.value;
-    _slider.value = [_numbers indexOfObject:@(_rewardCoupon)];
-
-    [self updateCouponLabel];
-}
-
-- (void)updateCouponLabel {
-    _priceLable.text = [NSString stringWithFormat:@"提供奖金数量：%d", _rewardCoupon];
-    
-    SldGameData *gd = [SldGameData getInstance];
-    _goldCoinLabel.text = [NSString stringWithFormat:@"需要支付%d金币（现有%d金币）", _rewardCoupon, gd.playerInfo.goldCoin];
-}
-
-- (void)publishDelayChanged:(UISlider *)sender {
-    _publishDelayHour = (int)(sender.value + 0.5);
-    [sender setValue:_publishDelayHour animated:NO];
-    if (_publishDelayHour == 0) {
-        _publishDelayLabel.text = [NSString stringWithFormat:@"延时发布：%d小时（即时发布）", _publishDelayHour];
-    } else {
-        _publishDelayLabel.text = [NSString stringWithFormat:@"延时发布：%d小时", _publishDelayHour];
-    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -540,21 +451,16 @@ static const int COUPON_MAX = 10000;
 }
 
 - (IBAction)onPublish:(id)sender {
-    //
-    _rewardCoupon = [_couponInput.text intValue];
-//    if (_rewardCoupon % 100 != 0) {
-//        alert(@"奖励必须为0或者100的倍数", nil);
-//        return;
-//    }
+    _coinForPrize = [_coinInput.text intValue];
     
-    if (_rewardCoupon < 0) {
-        _rewardCoupon = 0;
+    if (_coinForPrize < 0) {
+        _coinForPrize = 0;
     }
     
-    //check coupon
+    //check prize
     SldGameData *gd = [SldGameData getInstance];
-    if (gd.playerInfo.goldCoin < _rewardCoupon) {
-        NSString *msg = [NSString stringWithFormat:@"需要%d金币，我拥有%d金币。去商店购买更多金币吗？", _rewardCoupon, gd.playerInfo.goldCoin];
+    if (gd.playerInfo.goldCoin < _coinForPrize) {
+        NSString *msg = [NSString stringWithFormat:@"需要%d金币，我拥有%d金币。去商店购买更多金币吗？", _coinForPrize, gd.playerInfo.goldCoin];
         [[[UIAlertView alloc] initWithTitle:@"金币不足"
                                     message:msg
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
@@ -822,7 +728,7 @@ static const int COUPON_MAX = 10000;
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
         @"SizeMb":@(fMb),
-        @"RewardCoupon":@(_rewardCoupon),
+        @"GoldCoinForPrize":@(_coinForPrize),
         @"SliderNum":@(_sliderNum),
         @"BeginTimeStr":beginTimeStr,
         @"ChallengeSeconds":@(_challengeSec),
@@ -840,7 +746,7 @@ static const int COUPON_MAX = 10000;
         
         [_alt dismissWithClickedButtonIndex:0 animated:YES];
         
-        _gd.playerInfo.goldCoin -= _rewardCoupon;
+        _gd.playerInfo.goldCoin -= _coinForPrize;
         
         //
         [[[UIAlertView alloc] initWithTitle:@"发布成功！"
@@ -1036,10 +942,10 @@ static float _scrollY = -64;
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.playTimesLabel.text = [NSString stringWithFormat:@"%d", match.playTimes];
-    if (match.extraCoupon == 0) {
-        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.rewardCoupon];
+    if (match.extraPrize == 0) {
+        cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize];
     } else {
-        cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.rewardCoupon, match.extraCoupon];
+        cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d+%d", match.prize, match.extraPrize];
     }
     cell.match = match;
     

@@ -88,7 +88,7 @@ static float _scrollY = -64;
 - (void)refreshMatch {
     _footer.loadMoreButton.enabled = NO;
     
-    NSDictionary *body = @{@"StartId":@(0), @"CouponSum":@(-1), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId":@(0), @"PrizeSum":@(-1), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
@@ -146,7 +146,7 @@ static float _scrollY = -64;
     SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"matchListCell" forIndexPath:indexPath];
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
-    cell.rewardNumLabel.text = [NSString stringWithFormat:@"奖金：%d", match.rewardCoupon + match.extraCoupon];
+    cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
     
     cell.match = match;
     [self refreshTimeLabel:cell];
@@ -190,9 +190,9 @@ static float _scrollY = -64;
     
     Match* lastMatch = [_matches lastObject];
     
-    int lastCouponSum = lastMatch.rewardCoupon + lastMatch.extraCoupon;
+    int lastPrizeSum = lastMatch.prize + lastMatch.extraPrize;
     
-    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"CouponSum":@(lastCouponSum), @"Limit": @(MATCH_FETCH_LIMIT)};
+    NSDictionary *body = @{@"StartId": @(lastMatch.id), @"PrizeSum":@(lastPrizeSum), @"Limit": @(MATCH_FETCH_LIMIT)};
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"match/listHot" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         [_footer.spin stopAnimating];

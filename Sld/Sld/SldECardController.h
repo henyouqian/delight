@@ -1,5 +1,5 @@
 //
-//  SldCouponCardController.h
+//  SldECardController.h
 //  pin
 //
 //  Created by 李炜 on 14-9-27.
@@ -12,7 +12,7 @@
 @interface SldEcard : NSObject
 @property (nonatomic) SInt64 Id;
 @property (nonatomic) NSString *TypeKey;
-@property (nonatomic) NSString *CouponCode;
+@property (nonatomic) NSString *Code;
 @property (nonatomic) NSString *ExpireDate;
 @property (nonatomic) NSString *GenDate;
 @property (nonatomic) NSString *UserGetDate;
@@ -24,7 +24,7 @@
 @end
 
 //============================
-@interface SldCouponCardController : UITableViewController
+@interface SldECardController : UITableViewController
 
 + (instancetype)getInstance;
 - (void)addEcard:(SldEcard*)ecard;

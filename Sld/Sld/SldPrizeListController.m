@@ -1,70 +1,70 @@
 //
-//  SldRewardListController.m
+//  SldPrizeListController.m
 //  pin
 //
 //  Created by 李炜 on 14-9-26.
 //  Copyright (c) 2014年 Wei Li. All rights reserved.
 //
 
-#import "SldRewardListController.h"
+#import "SldPrizeListController.h"
 #import "SldHttpSession.h"
 #import "SldGameData.h"
 #import "SldTradeController.h"
 #import "UIImageView+sldAsyncLoad.h"
 
-static const int REWARD_LIST_FETCH_LIMIT = 30;
+static const int PRIZE_LIST_FETCH_LIMIT = 30;
 
 //=================
-@interface SldGetCouponCacheCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
-@property (weak, nonatomic) IBOutlet UIButton *getRewardButton;
+@interface SldGetPrizeCacheCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
+@property (weak, nonatomic) IBOutlet UIButton *getPrizeButton;
 @end
 
-@implementation SldGetCouponCacheCell
+@implementation SldGetPrizeCacheCell
 @end
 
 //=================
-@interface SldRewardCell : UITableViewCell
+@interface SldPrizeCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *thumbView;
 @property (weak, nonatomic) IBOutlet UILabel *reasonLabel;
-@property (weak, nonatomic) IBOutlet UILabel *couponLabel;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 
 @end
 
-@implementation SldRewardCell
+@implementation SldPrizeCell
 @end
 
 //=================
-@interface SldMoreRewardCell : UITableViewCell
+@interface SldMorePrizeCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spin;
 @property (weak, nonatomic) IBOutlet UIButton *moreButton;
 
 @end
 
-@implementation SldMoreRewardCell
+@implementation SldMorePrizeCell
 @end
 
 //=================
-@interface SldRewardRecord : NSObject
+@interface SldPrizeRecord : NSObject
 @property (nonatomic) SInt64 selfId;
 @property (nonatomic) SInt64 matchId;
 @property (nonatomic) NSString *thumb;
 @property (nonatomic) NSString *reason;
-@property (nonatomic) float coupon;
+@property (nonatomic) int prize;
 @property (nonatomic) int rank;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end
 
-@implementation SldRewardRecord
+@implementation SldPrizeRecord
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
         _selfId = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
         _matchId = [(NSNumber*)[dict objectForKey:@"MatchId"] longLongValue];
         _thumb = [dict objectForKey:@"Thumb"];
         _reason = [dict objectForKey:@"Reason"];
-        _coupon = [(NSNumber*)[dict objectForKey:@"Coupon"] floatValue];
+        _prize = [(NSNumber*)[dict objectForKey:@"Prize"] floatValue];
         _rank = [(NSNumber*)[dict objectForKey:@"Rank"] intValue];
     }
     return self;
@@ -73,17 +73,17 @@ static const int REWARD_LIST_FETCH_LIMIT = 30;
 
 
 //================================
-static __weak SldRewardListController *_inst = nil;
+static __weak SldPrizeListController *_inst = nil;
 
-@interface SldRewardListController ()
+@interface SldPrizeListController ()
 
-@property (nonatomic) NSMutableArray *rewardRecords;
+@property (nonatomic) NSMutableArray *prizeRecords;
 @property (nonatomic) SldGameData *gd;
-@property (nonatomic) SldMoreRewardCell *moreRewardCell;
+@property (nonatomic) SldMorePrizeCell *morePrizeCell;
 
 @end
 
-@implementation SldRewardListController
+@implementation SldPrizeListController
 
 + (instancetype)getInstence {
     return _inst;
@@ -97,7 +97,7 @@ static __weak SldRewardListController *_inst = nil;
     
     _gd = [SldGameData getInstance];
     
-    _rewardRecords = [NSMutableArray array];
+    _prizeRecords = [NSMutableArray array];
     
     //refresh control
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -108,7 +108,7 @@ static __weak SldRewardListController *_inst = nil;
     
     //login notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogin) name:@"login" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshCouponUI) name:@"couponCacheChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshPrizeUI) name:@"prizeCacheChange" object:nil];
 }
 
 
@@ -126,45 +126,45 @@ static __weak SldRewardListController *_inst = nil;
 }
 
 - (void)fetchWithStartId:(SInt64)startId {
-    _moreRewardCell.moreButton.enabled = NO;
+    _morePrizeCell.moreButton.enabled = NO;
     SldHttpSession *session = [SldHttpSession defaultSession];
-    NSDictionary *body = @{@"StartId":@(startId), @"Limit":@(REWARD_LIST_FETCH_LIMIT)};
-    [session postToApi:@"player/listMyReward" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        _moreRewardCell.moreButton.enabled = YES;
+    NSDictionary *body = @{@"StartId":@(startId), @"Limit":@(PRIZE_LIST_FETCH_LIMIT)};
+    [session postToApi:@"player/listMyPrize" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        _morePrizeCell.moreButton.enabled = YES;
         [self.refreshControl endRefreshing];
-        [_moreRewardCell.spin stopAnimating];
+        [_morePrizeCell.spin stopAnimating];
         
         if (error) {
             alertHTTPError(error, data);
             return;
         }
         
-        NSArray *jsRewardRecords = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSArray *jsPrizeRecords = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);
             return;
         }
         
-        if (jsRewardRecords.count < REWARD_LIST_FETCH_LIMIT) {
-            [_moreRewardCell.moreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
-            _moreRewardCell.moreButton.enabled = NO;
+        if (jsPrizeRecords.count < PRIZE_LIST_FETCH_LIMIT) {
+            [_morePrizeCell.moreButton setTitle:@"后面没有了" forState:UIControlStateNormal];
+            _morePrizeCell.moreButton.enabled = NO;
         } else {
-            [_moreRewardCell.moreButton setTitle:@"更多" forState:UIControlStateNormal];
-            _moreRewardCell.moreButton.enabled = YES;
+            [_morePrizeCell.moreButton setTitle:@"更多" forState:UIControlStateNormal];
+            _morePrizeCell.moreButton.enabled = YES;
         }
         
         if (startId == 0) {
-            [_rewardRecords removeAllObjects];
+            [_prizeRecords removeAllObjects];
         }
         
         NSMutableArray *insetIndexPathes = [NSMutableArray array];
         
-        for (NSDictionary *jsRecord in jsRewardRecords) {
-            SldRewardRecord *record = [[SldRewardRecord alloc] initWithDict:jsRecord];
+        for (NSDictionary *jsRecord in jsPrizeRecords) {
+            SldPrizeRecord *record = [[SldPrizeRecord alloc] initWithDict:jsRecord];
             
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_rewardRecords.count inSection:1];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_prizeRecords.count inSection:1];
             
-            [_rewardRecords addObject:record];
+            [_prizeRecords addObject:record];
             [insetIndexPathes addObject:indexPath];
         }
         
@@ -181,11 +181,11 @@ static __weak SldRewardListController *_inst = nil;
     [self fetchWithStartId:0];
 }
 
-- (IBAction)onMoreRewardButton:(id)sender {
-    if (_rewardRecords.count) {
-        [_moreRewardCell.spin startAnimating];
-        _moreRewardCell.hidden = NO;
-        SldRewardRecord *record = [_rewardRecords lastObject];
+- (IBAction)onMorePrizeButton:(id)sender {
+    if (_prizeRecords.count) {
+        [_morePrizeCell.spin startAnimating];
+        _morePrizeCell.hidden = NO;
+        SldPrizeRecord *record = [_prizeRecords lastObject];
         [self fetchWithStartId:record.selfId];
     }
 }
@@ -202,7 +202,7 @@ static __weak SldRewardListController *_inst = nil;
     if (section == 0) {
         return 1;
     } else if (section == 1) {
-        return _rewardRecords.count;
+        return _prizeRecords.count;
     } else if (section == 2) {
         return 1;
     }
@@ -213,27 +213,27 @@ static __weak SldRewardListController *_inst = nil;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        SldGetCouponCacheCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchGetCouponCacheCell" forIndexPath:indexPath];
-        float couponCache = _gd.playerInfo.couponCache;
+        SldGetPrizeCacheCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchGetPrizeCacheCell" forIndexPath:indexPath];
+        int prizeCache = _gd.playerInfo.prizeCache;
         
-        cell.couponLabel.text = [NSString stringWithFormat:@"现有奖金：%.2f", _gd.playerInfo.coupon];
+        cell.prizeLabel.text = [NSString stringWithFormat:@"现有奖金：%d", _gd.playerInfo.prize];
         
-        NSString *title = [NSString stringWithFormat:@"可领取奖金：%.2f", couponCache];
-        [cell.getRewardButton setTitle:title forState:UIControlStateNormal];
-        [cell.getRewardButton setTitle:title forState:UIControlStateDisabled];
-        if (couponCache > 0) {
-            cell.getRewardButton.enabled = YES;
-            cell.getRewardButton.backgroundColor = makeUIColor(244, 75, 116, 255);
+        NSString *title = [NSString stringWithFormat:@"可领取奖金：%d", prizeCache];
+        [cell.getPrizeButton setTitle:title forState:UIControlStateNormal];
+        [cell.getPrizeButton setTitle:title forState:UIControlStateDisabled];
+        if (prizeCache > 0) {
+            cell.getPrizeButton.enabled = YES;
+            cell.getPrizeButton.backgroundColor = makeUIColor(244, 75, 116, 255);
         } else {
-            cell.getRewardButton.enabled = NO;
-            cell.getRewardButton.backgroundColor = [UIColor grayColor];
+            cell.getPrizeButton.enabled = NO;
+            cell.getPrizeButton.backgroundColor = [UIColor grayColor];
         }
         return cell;
     } else if (indexPath.section == 1) {
-        SldRewardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchRewardCell" forIndexPath:indexPath];
-        SldRewardRecord *record = _rewardRecords[indexPath.row];
+        SldPrizeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"matchPrizeCell" forIndexPath:indexPath];
+        SldPrizeRecord *record = _prizeRecords[indexPath.row];
         cell.reasonLabel.text = record.reason;
-        cell.couponLabel.text = [NSString stringWithFormat:@"奖金：%.2f", record.coupon];
+        cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", record.prize];
         if (record.rank != 0) {
             cell.rankLabel.text = [NSString stringWithFormat:@"排名：%d", record.rank];
             cell.rankLabel.hidden = NO;
@@ -243,9 +243,9 @@ static __weak SldRewardListController *_inst = nil;
         [cell.thumbView asyncLoadUploadedImageWithKey:record.thumb showIndicator:NO completion:nil];
         return cell;
     } else if (indexPath.section == 2) {
-        SldMoreRewardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"moreRewardCell" forIndexPath:indexPath];
+        SldMorePrizeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"morePrizeCell" forIndexPath:indexPath];
         
-        _moreRewardCell = cell;
+        _morePrizeCell = cell;
         return cell;
     }
     
@@ -263,9 +263,9 @@ static __weak SldRewardListController *_inst = nil;
     return 0;
 }
 
-- (IBAction)onGetRewardButton:(id)sender {
+- (IBAction)onGetPrizeButton:(id)sender {
     SldHttpSession *session = [SldHttpSession defaultSession];
-    [session postToApi:@"player/addCouponFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    [session postToApi:@"player/addPrizeFromCache" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -277,19 +277,19 @@ static __weak SldRewardListController *_inst = nil;
             return;
         }
         
-        _gd.playerInfo.coupon = [(NSNumber*)dict[@"Coupon"] floatValue];
-        _gd.playerInfo.totalCoupon = [(NSNumber*)dict[@"TotalCoupon"] floatValue];
-        _gd.playerInfo.couponCache = 0;
+        _gd.playerInfo.prize = [(NSNumber*)dict[@"Prize"] floatValue];
+        _gd.playerInfo.totalPrize = [(NSNumber*)dict[@"TotalPrize"] floatValue];
+        _gd.playerInfo.prizeCache = 0;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"couponCacheChange" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"prizeCacheChange" object:nil];
     }];
 }
 
-- (void)refreshCouponUI {
+- (void)refreshPrizeUI {
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
     
-    if (_gd.playerInfo.couponCache < 0.01) {
+    if (_gd.playerInfo.prizeCache == 0) {
         [SldTradeController getInstance].navigationController.tabBarItem.badgeValue = nil;
     }
 }

@@ -1,5 +1,5 @@
 //
-//  SldRewardDefListController.h
+//  SldPrizeDefListController.h
 //  pin
 //
 //  Created by 李炜 on 14-9-7.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldRewardDefListController : UITableViewController
+@interface SldPrizeDefListController : UITableViewController
 
 @end

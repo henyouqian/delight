@@ -19,7 +19,7 @@
 @interface SldMatchListCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *rewardNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLebel;
 @property (nonatomic) Match* match;
 

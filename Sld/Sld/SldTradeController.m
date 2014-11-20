@@ -10,7 +10,7 @@
 
 @interface SldTradeController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *seg;
-@property (weak, nonatomic) IBOutlet UIView *rewardView;
+@property (weak, nonatomic) IBOutlet UIView *prizeView;
 @property (weak, nonatomic) IBOutlet UIView *buyView;
 @property (weak, nonatomic) IBOutlet UIView *exchangeView;
 @property (weak, nonatomic) IBOutlet UIView *cardView;
@@ -42,12 +42,12 @@ static __weak SldTradeController *_inst = nil;
 }
 
 - (IBAction)onSegChange:(id)sender {
-    _rewardView.hidden = YES;
+    _prizeView.hidden = YES;
     _buyView.hidden = YES;
     _exchangeView.hidden = YES;
     _cardView.hidden = YES;
     if (_seg.selectedSegmentIndex == 0) {
-        _rewardView.hidden = NO;
+        _prizeView.hidden = NO;
     } else if (_seg.selectedSegmentIndex == 1) {
         _buyView.hidden = NO;
     } else if (_seg.selectedSegmentIndex == 2) {

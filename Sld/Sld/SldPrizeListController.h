@@ -1,5 +1,5 @@
 //
-//  SldRewardListController.h
+//  SldPrizeListController.h
 //  pin
 //
 //  Created by 李炜 on 14-9-26.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldRewardListController : UITableViewController
+@interface SldPrizeListController : UITableViewController
 
 + (instancetype)getInstence;
 
