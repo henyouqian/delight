@@ -46,6 +46,7 @@
     [_webSocket open];
     
     _procDict = @{
+        @"foeDisconnect":[NSValue valueWithPointer:@selector(onFoeDisconnect:)],
         @"pairing":[NSValue valueWithPointer:@selector(onPairing:)],
         @"paired":[NSValue valueWithPointer:@selector(onPaired:)],
         @"talk":[NSValue valueWithPointer:@selector(onTalk:)],
@@ -114,6 +115,12 @@
         [self performSelector:aSel withObject:msg];
     }
 }
+
+- (void)onFoeDisconnect: (NSDictionary*)msg{
+    //fixme
+    lwInfo("onFoeDisconnect");
+}
+
 
 - (void)onPairing: (NSDictionary*)msg{
     lwInfo("onPairing");
@@ -224,10 +231,36 @@
 }
 
 - (void)onTalk: (NSDictionary*)msg{
-    _outputLabel.text = msg[@"Text"];
+    NSString *text = msg[@"Text"];
+    
+    float x = _foeView.frame.size.width - arc4random() % 10 - 50;
+    static float lastY = 9999;
+    float y;
+    do {
+        y = arc4random() % ((int)_foeView.frame.size.height-20) + 10;
+    } while (ABS(y-lastY) < 20.0);
+    lastY = y;
+    
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 50, 50)];
+    lbl.text = text;
+    
+    [_foeView addSubview:lbl];
+    
+    lbl.font = [lbl.font fontWithSize:36];
+    lbl.alpha = 1.4;
+    [UIView animateWithDuration:1.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        lbl.alpha = 0;
+        CGRect rect = lbl.frame;
+        rect.origin.x -= 100;
+        lbl.frame = rect;
+    } completion:^(BOOL finished) {
+        [lbl removeFromSuperview];
+    }];
+    
+    [_sndPop play];
 }
 
-- (IBAction)onEmoji:(id)sender {
+- (IBAction)onEmojiButton:(id)sender {
     UIButton *btn = sender;
     
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];

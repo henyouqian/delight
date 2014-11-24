@@ -87,7 +87,9 @@
         if (_gd.playerInfo.prizeCache > 0) {
             str = @"奖";
         }
-        [(UIViewController *)[self.viewControllers objectAtIndex:3] tabBarItem].badgeValue = str;
+        
+        //distcheck
+        [(UIViewController *)[self.viewControllers objectAtIndex:2] tabBarItem].badgeValue = str;
     }];
 }
 

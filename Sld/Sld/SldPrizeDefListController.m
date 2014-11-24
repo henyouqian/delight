@@ -11,6 +11,8 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyMatchController.h"
 
+static const int MIN_PRICE = 100;
+
 //===========================
 @interface SldPrizeDefListImgCell : UITableViewCell
 
@@ -100,16 +102,16 @@
         
         int prizeSum = _gd.match.prize + _gd.match.extraPrize;
         
-        float minRankPrize = [(NSNumber*)[_gd.match.rankPrizeProportions lastObject] floatValue] * prizeSum;
+        float lastRankPrize = [(NSNumber*)[_gd.match.rankPrizeProportions lastObject] floatValue] * prizeSum;
         
         if (indexPath.row == _gd.match.rankPrizeProportions.count) {
-            int minPrizeNum = (int)(_gd.match.minPrizeProportion * prizeSum);
-            if (minPrizeNum > 1 && minRankPrize > 1.0f) {
+            int minPrizeNum = (int)(_gd.match.minPrizeProportion * prizeSum)/MIN_PRICE;
+            if (minPrizeNum > 1 && (int)lastRankPrize >= MIN_PRICE) {
                 cell.rankLabel.text = [NSString stringWithFormat:@"第%d名-第%d名", indexPath.row+1, indexPath.row+minPrizeNum];
-                cell.prizeLabel.text = @"1奖金";
+                cell.prizeLabel.text = [NSString stringWithFormat:@"%d奖金", MIN_PRICE];
             } else {
                 cell.rankLabel.text = @"暂无";
-                cell.prizeLabel.text = @"1奖金";
+                cell.prizeLabel.text = [NSString stringWithFormat:@"%d奖金", MIN_PRICE];
             }
         } else {
             cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", indexPath.row+1];

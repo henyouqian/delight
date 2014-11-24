@@ -10,6 +10,7 @@
 #import "SldUtil.h"
 #import "SldConfig.h"
 #import "SldLoginViewController.h"
+#import "SldUUIDLoginController.h"
 #import "SldGameData.h"
 
 @interface SldHttpSession()
@@ -200,7 +201,8 @@ void alertHTTPError(NSError *error, NSData *data) {
                                    cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
                     SldGameData *gd = [SldGameData getInstance];
                     if (gd.online) {
-                        [SldLoginViewController createAndPresentWithCurrentController:vc animated:NO];
+                        //[SldLoginViewController createAndPresentWithCurrentController:vc animated:NO];
+                        [SldUUIDLoginController presentWithCurrentController:vc animated:YES];
                     }
                     
                 }]

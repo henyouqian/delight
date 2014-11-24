@@ -1026,11 +1026,11 @@
         <!--商店-->
         <scene sceneID="2Fm-S2-9ts">
             <objects>
-                <collectionViewController storyboardIdentifier="iapController" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UIZ-Rl-nno" customClass="SldIapController" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="iapController" autoresizesArchivedViewToFullSize="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UIZ-Rl-nno" customClass="SldIapController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="qIF-we-boL">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.95955141129999999" green="0.95184295220000004" blue="0.92409419719999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="0.0" id="aCA-ft-Zn4">
                             <size key="itemSize" width="153" height="160"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1890,7 +1890,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="cQq-v6-OdV" kind="relationship" relationship="viewControllers" id="arL-gN-CDR"/>
-                        <segue destination="khx-Dn-Ax9" kind="relationship" relationship="viewControllers" id="tji-6n-nY0"/>
                         <segue destination="i3H-LH-9Oh" kind="relationship" relationship="viewControllers" id="UeJ-Yn-HSC"/>
                         <segue destination="dbj-qv-uRK" kind="relationship" relationship="viewControllers" id="usp-jy-ynR"/>
                         <segue destination="8ef-dj-P92" kind="relationship" relationship="viewControllers" id="lnr-Yq-Nlb"/>
@@ -2228,7 +2227,7 @@
         <!--充值说明-->
         <scene sceneID="mEZ-XQ-gxK">
             <objects>
-                <viewController id="hGC-iY-xce" customClass="SldRechargeController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="hGC-iY-xce" customClass="SldRechargeController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lKD-t8-nbd"/>
                         <viewControllerLayoutGuide type="bottom" id="jtr-aY-TLB"/>
@@ -2748,16 +2747,6 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提供多少金币作为奖励:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hxu-0f-jrE">
-                                <rect key="frame" x="20" y="79" width="286" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="6Te-NY-VeR"/>
-                                    <constraint firstAttribute="width" constant="286" id="iIr-Yq-e89"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="（现有12345金币）" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qV-4Q-Cb3">
                                 <rect key="frame" x="128" y="112" width="178" height="21"/>
                                 <constraints>
@@ -2797,6 +2786,16 @@
                                     <rect key="frame" x="20" y="323" width="51" height="31"/>
                                 </variation>
                             </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提供多少金币作为奖金 (1金币＝100奖金):" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hxu-0f-jrE">
+                                <rect key="frame" x="20" y="79" width="296" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="6Te-NY-VeR"/>
+                                    <constraint firstAttribute="width" constant="296" id="iIr-Yq-e89"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.95955141129032262" green="0.95184295217439907" blue="0.92409419715714625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -3192,7 +3191,7 @@
             <objects>
                 <collectionViewController id="oc6-aL-mJe" customClass="SldBattleSelectController" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ZSo-Lo-bvs">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="ckD-6c-8de">
@@ -4327,7 +4326,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="Yr9-GK-5M8"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="FPf-RF-Nw3"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sl-LN-ng2">
@@ -4341,7 +4340,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="y5h-dc-fxy"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="vyd-cf-z5t"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZj-cg-Ldc">
@@ -4355,7 +4354,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="vaJ-CM-tfy"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="tYa-y3-HMD"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-8q-exx">
@@ -4369,7 +4368,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="QJb-cc-Lx7"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="dQg-H8-OvN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Npe-P7-Rth">
@@ -4383,7 +4382,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="1hT-yY-0hJ"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="mQy-l2-rnp"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ngB-5m-K6q">
@@ -4397,7 +4396,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ScQ-au-z0m"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="o47-3d-BEM"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQE-nc-W0X">
@@ -4411,7 +4410,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="3zY-qK-5fd"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="Pjw-CZ-Tgo"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oh1-tY-afc">
@@ -4425,7 +4424,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="KH3-7l-Rab"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="fwa-Bf-t7K"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vec-BY-7wx">
@@ -4439,7 +4438,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="1iO-9h-Zdn"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="EQi-yV-z1g"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wes-Is-GQt">
@@ -4453,7 +4452,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="aRq-Zl-qwt"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="QM9-SA-HBL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K6Y-ZY-46R">
@@ -4467,7 +4466,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="TLD-jD-dwM"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="Atv-wN-jmw"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jR3-tA-W1W">
@@ -4481,7 +4480,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ZCA-97-e9d"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="HAo-td-3Nu"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bgf-h3-vzw">
@@ -4495,7 +4494,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="hYM-0W-r9v"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ool-34-lfp"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ISr-7A-MmL">
@@ -4509,7 +4508,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="ORz-5e-uoj"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="jTc-Lb-Kdq"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="peJ-hU-gn0">
@@ -4523,7 +4522,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="1se-xL-O1E"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="sqD-ih-5yW"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="idw-7G-aK6">
@@ -4537,7 +4536,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="tkj-qG-aNo"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="lC3-RJ-ttu"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRq-Xg-0CJ">
@@ -4551,7 +4550,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="H7a-pL-gor"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="5Xi-lL-1sP"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="65Z-Ty-7Fm">
@@ -4565,7 +4564,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onEmoji:" destination="VDo-HA-FAn" eventType="touchUpInside" id="nKG-RO-qNc"/>
+                                            <action selector="onEmojiButton:" destination="VDo-HA-FAn" eventType="touchUpInside" id="xpA-Ft-Sbs"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -5260,7 +5259,7 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="02I-tI-UvT"/>
+        <segue reference="Kot-XL-OVA"/>
         <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>

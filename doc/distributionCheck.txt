@@ -1,0 +1,6 @@
+* 搜索distcheck
+* targets->pin
+	Build +1
+
+//itunesconnect==================
+* iap enable

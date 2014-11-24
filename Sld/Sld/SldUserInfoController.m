@@ -33,6 +33,7 @@ static int gravatarRandMax = 1000-16;
 @property (nonatomic) UIAlertView *avatarUploadAlt;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) BOOL needUploadCustomAvatar;
+@property (nonatomic) BOOL newPlayer;
 @end
 
 static NSArray *_genderStrings;
@@ -49,16 +50,8 @@ static NSArray *_genderStrings;
     }
     [srcController presentViewController:navVc animated:YES completion:nil];
     userInfoVc.cancelButton.enabled = cancelable;
+    userInfoVc.newPlayer = cancelable;
 }
-
-//- (id)initWithStyle:(UITableViewStyle)style
-//{
-//    self = [super initWithStyle:style];
-//    if (self) {
-//        // Custom initialization
-//    }
-//    return self;
-//}
 
 - (void)viewDidLoad
 {
@@ -89,12 +82,12 @@ static NSArray *_genderStrings;
             _customAvatarKey = @"";
         }
     } else {
-        if (snsInfo.nickName.length > 0) {
-            _nameInput.text = snsInfo.nickName;
-            _emailCell.hidden = YES;
-        } else {
-            _nameInput.text = _gd.userName;
-        }
+//        if (snsInfo.nickName.length > 0) {
+//            _nameInput.text = snsInfo.nickName;
+//            _emailCell.hidden = YES;
+//        } else {
+//            _nameInput.text = _gd.userName;
+//        }
         
         if (snsInfo.gender && ([snsInfo.gender compare:@"男"] == 0 || [snsInfo.gender compare:@"女"] == 0)) {
             _genderInput.text = snsInfo.gender;

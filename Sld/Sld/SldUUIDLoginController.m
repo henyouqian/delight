@@ -47,6 +47,12 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+//    del all account
+//    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
+//    for (NSDictionary *acc in accounts) {
+//        [SSKeychain deletePasswordForService:KEYCHAIN_SERVICE account:acc[@"acct"]];
+//    }
+    
     NSString *key = [SSKeychain passwordForService:KEYCHAIN_SERVICE account:LOCAL_ACCOUNT];
     NSString *type = @"uuid";
     
@@ -56,15 +62,7 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1";
         key = [SldUtil genUUID];
     }
     
-//    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
-//    if ([accounts count]) {
-//        key = accounts[0][@"acct"];
-//        
-//    } else {
-//        key = [SldUtil genUUID];
-//    }
-    
-//    //fixme
+    //distcheck
 //    NSArray *users = @[@"7F2EB1DC-921A-4415-8A01-778255ABC1B8",
 //                       @"C7F7CE83-FD9E-4F35-B230-179E27825CF9",
 //                       @"49BE1E72-A581-4170-9C3C-AEC38E3BB5A1",
@@ -72,7 +70,6 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1";
 //                       @"43DF2717-1407-4D0A-822C-38275B22617A"];
 ////    key = users[1]; //yaya
 //    key = users[3]; //uuid
-////    key = users[0];
     
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/getSnsSecret" body:nil completionHandler:^(NSData *data, NSURLResponse *resp, NSError *error) {
@@ -117,6 +114,7 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1";
             if (nUserId) {
                 gameData.userId = [nUserId unsignedLongLongValue];
             }
+            gameData.userName = [dict objectForKey:@"UserName"];
             NSNumber *nNow = [dict objectForKey:@"Now"];
             if (nNow) {
                 setServerNow([nNow longLongValue]);

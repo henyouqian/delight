@@ -61,8 +61,6 @@
     _gd = [SldGameData getInstance];
     _gd.matchPlay = nil;
     
-    _ownerLabel.hidden = YES;
-    
     lwInfo("matchId: %lld", _gd.match.id);
     
     //timer
@@ -220,6 +218,8 @@
     if (_gd.match.ownerName && _gd.match.ownerName.length > 0) {
         _ownerLabel.text = [NSString stringWithFormat:@"发布者：%@", _gd.match.ownerName];
         _ownerLabel.hidden = NO;
+    } else {
+        _ownerLabel.hidden = YES;
     }
 }
 
@@ -312,7 +312,19 @@
     NSDictionary *body = @{@"MatchId":@(_gd.match.id)};
     [session postToApi:@"match/playBegin" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            alertHTTPError(error, data);
+            NSError *jsonErr = nil;
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonErr];
+            if (jsonErr) {
+                alert(@"Json error", [jsonErr localizedDescription]);
+                return;
+            }
+            NSString *errorType = [dict objectForKey:@"Error"];
+            if ([errorType compare:@"err_end_soon"] == 0){
+                alert(@"比赛临近结束，已停止成绩提交。", nil);
+            } else {
+                alertHTTPError(error, data);
+            }
+            
             return;
         }
         
