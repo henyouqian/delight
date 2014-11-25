@@ -17,15 +17,20 @@
 @interface SldBattleLinkController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *outputLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lvLabel;
+
 @property (weak, nonatomic) IBOutlet UIView *foeView;
 @property (weak, nonatomic) IBOutlet UIView *emojiView;
+@property (weak, nonatomic) IBOutlet UIImageView *foeThumbView;
+@property (weak, nonatomic) IBOutlet UILabel *foeNameLable;
+@property (weak, nonatomic) IBOutlet UILabel *foeTeamLabel;
+@property (weak, nonatomic) IBOutlet UILabel *foeLvLabel;
 @property (nonatomic) SRWebSocket *webSocket;
 @property (nonatomic) NSDictionary *procDict;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSDate *date;
 @property (nonatomic) NSDate *lastEmojiTime;
 @property (nonatomic) FISound *sndPop;
+@property (nonatomic) NSString *secret;
 @end
 
 @implementation SldBattleLinkController
@@ -42,6 +47,7 @@
     SldConfig* conf = [SldConfig getInstance];
     _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:conf.WEB_SOCKET_URL]]];
     _webSocket.delegate = self;
+    _gd.webSocket = _webSocket;
     
     [_webSocket open];
     
@@ -50,6 +56,7 @@
         @"pairing":[NSValue valueWithPointer:@selector(onPairing:)],
         @"paired":[NSValue valueWithPointer:@selector(onPaired:)],
         @"talk":[NSValue valueWithPointer:@selector(onTalk:)],
+        @"start":[NSValue valueWithPointer:@selector(onStart:)],
     };
     
     //outputLabel animation
@@ -89,10 +96,21 @@
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     lwInfo(@"socketRocket error: %@", [error localizedDescription]);
+    [[[UIAlertView alloc] initWithTitle:@"连接不成功"
+                                message:nil
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }]
+                       otherButtonItems:nil] show];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    lwInfo(@"socketRocket close");
+    [[[UIAlertView alloc] initWithTitle:@"连接已断开"
+                                message:nil
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }]
+                       otherButtonItems:nil] show];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
@@ -109,6 +127,10 @@
     }
     
     NSString *type = [msg objectForKey:@"Type"];
+    if ([type compare:@"err"] == 0) {
+        alert(@"ws error", [msg objectForKey:@"String"]);
+        return;
+    }
     NSValue *selVal = [_procDict objectForKey:type];
     if (selVal) {
         SEL aSel = [selVal pointerValue];
@@ -117,8 +139,12 @@
 }
 
 - (void)onFoeDisconnect: (NSDictionary*)msg{
-    //fixme
-    lwInfo("onFoeDisconnect");
+    [[[UIAlertView alloc] initWithTitle:@"对手已离开"
+                                message:nil
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }]
+                       otherButtonItems:nil] show];
 }
 
 
@@ -159,6 +185,15 @@
     _gd.packInfo = [PackInfo packWithDictionary:[msg objectForKey:@"Pack"]];
     _gd.sliderNum = [[msg objectForKey:@"SliderNum"] intValue];
     _outputLabel.text = @"配对成功";
+    _secret = [msg objectForKey:@"Secret"];
+    
+    //foe player
+    NSDictionary *foePlayer = [msg objectForKey:@"FoePlayer"];
+    
+    //update ui
+    _foeNameLable.text = [foePlayer objectForKey:@"NickName"];
+    _foeTeamLabel.text = [foePlayer objectForKey:@"TeamName"];
+    [SldUtil loadAvatar:_foeThumbView gravatarKey:foePlayer[@"GravatarKey"] customAvatarKey:foePlayer[@"CustomAvatarKey"]];
     
     NSArray *imageKeys = _gd.packInfo.images;
     __block int localNum = 0;
@@ -175,7 +210,7 @@
     
     if (localNum == totalNum) {
         lwInfo("already downloaded");
-        [self onReady];
+        [self ready];
         return;
     } else if (localNum < totalNum) {
         NSString *msg = [NSString stringWithFormat:@"图集下载中...%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
@@ -203,7 +238,7 @@
                      //download complete
                      if (localNum == totalNum) {
                          lwInfo("downloaded");
-                         [self onReady];
+                         [self ready];
                      }
                  }];
             }
@@ -211,8 +246,9 @@
     }
 }
 
-- (void)onReady {
-    _outputLabel.text = @"准备完毕，请稍候";
+- (void)ready {
+    _outputLabel.text = @"对手准备中，请稍候";
+    [SldUtil sendWithSocket:_webSocket type:@"ready" data:nil];
 }
 
 - (void)enterGame {
@@ -258,6 +294,18 @@
     }];
     
     [_sndPop play];
+}
+
+- (void)onStart: (NSDictionary*)msg{
+    NSTimeInterval dt = -[_date timeIntervalSinceNow];
+    double waitTime = 5.0;
+    if (dt > waitTime) {
+        [self enterGame];
+    } else {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (waitTime - dt) * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self enterGame];
+        });
+    }
 }
 
 - (IBAction)onEmojiButton:(id)sender {

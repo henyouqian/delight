@@ -54,6 +54,8 @@ static NSString * const reuseIdentifier = @"BattleCell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
 //    self.tabBarController.navigationItem.title = self.tabBarItem.title;
 //    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
 //    

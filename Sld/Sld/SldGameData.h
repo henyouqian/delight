@@ -158,7 +158,7 @@ enum GameMode{
 @property (nonatomic) float ownerPrizeProportion;
 @property (nonatomic) int sliderNum;
 
-
+@property (nonatomic) SRWebSocket *webSocket;
 @end
 
 

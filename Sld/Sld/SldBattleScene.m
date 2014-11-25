@@ -91,16 +91,9 @@ static SKView * _skView = nil;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     [super viewWillAppear:animated];
 }
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
-    [super viewWillDisappear:animated];
-}
-
 
 @end
 
@@ -129,6 +122,7 @@ static SKView * _skView = nil;
 @property (nonatomic) SKSpriteNode *curtainBelt;
 @property (nonatomic) SKLabelNode *curtainLabel;
 @property (nonatomic) SKLabelNode *loadingLabel;
+@property (nonatomic) SKLabelNode *loadingShadowLabel;
 @property (nonatomic) BOOL inCurtain;
 @property (nonatomic) SKLabelNode *timerLabel;
 @property (nonatomic) SKSpriteNode *timerBg;
@@ -139,6 +133,7 @@ static SKView * _skView = nil;
 @property (nonatomic) BOOL beltRotate;
 
 @property (nonatomic) SldGameData *gd;
+@property (nonatomic) NSDictionary *procDict;
 
 
 @property (nonatomic) float targetW;
@@ -281,7 +276,13 @@ NSDate *_gameBeginTime;
         [self.loadingLabel setText:@""];
         [self.loadingLabel setFontSize:100];
         [self.loadingLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
-//        [self.loadingLabel setPosition:CGPointMake(0, 50)];
+
+        self.loadingShadowLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+        [self.loadingShadowLabel setFontColor:[UIColor blackColor]];
+        [self.loadingShadowLabel setText:@""];
+        [self.loadingShadowLabel setFontSize:100];
+        [self.loadingShadowLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+        [self.loadingShadowLabel setPosition:CGPointMake(2, -2)];
         
         
         //belt and rotate
@@ -299,6 +300,7 @@ NSDate *_gameBeginTime;
         [self addChild:self.curtainBelt];
         [self.curtainBelt setZPosition:9];
         [self.curtainBelt addChild:self.curtainLabel];
+        [self.curtainBelt addChild:self.loadingShadowLabel];
         [self.curtainBelt addChild:self.loadingLabel];
         
         //load image
@@ -334,17 +336,73 @@ NSDate *_gameBeginTime;
             _timerLabel.position = CGPointMake(30, 0);
         }
         
-//        //timer shadow
-//        SKLabelNode *timerShadow = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
-//        [self.timerLabel setFontColor:[UIColor whiteColor]];
-//        [self.timerLabel setFontSize:30];
-//        [self.timerLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeTop];
-//        [self.timerLabel setPosition:CGPointMake(self.size.width*.5f, self.size.height-30.f)];
-//        [self.timerLabel setText:@"00:35.127"];
-//        [self.timerLabel setZPosition:1.f];
+        //web socket
+        _gd.webSocket.delegate = self;
+        
+        _procDict = @{
+            @"foeDisconnect":[NSValue valueWithPointer:@selector(onFoeDisconnect:)],
+            @"foeFinish":[NSValue valueWithPointer:@selector(onFoeFinish:)],
+            @"result":[NSValue valueWithPointer:@selector(onResult:)],
+        };
         
     }
     return self;
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
+    lwInfo(@"socketRocket error: %@", [error localizedDescription]);
+    [[[UIAlertView alloc] initWithTitle:@"连接不成功"
+                                message:nil
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }]
+                       otherButtonItems:nil] show];
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+    [[[UIAlertView alloc] initWithTitle:@"连接已断开"
+                                message:nil
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }]
+                       otherButtonItems:nil] show];
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
+    NSError *jsonErr;
+    NSData* data = message;
+    if ([message isKindOfClass:[NSString class]]) {
+        data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    NSDictionary *msg = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonErr];
+    if (jsonErr) {
+        alert(@"Json error", [jsonErr localizedDescription]);
+        return;
+    }
+    
+    NSString *type = [msg objectForKey:@"Type"];
+    if ([type compare:@"err"] == 0) {
+        alert(@"ws error", [msg objectForKey:@"String"]);
+        return;
+    }
+    NSValue *selVal = [_procDict objectForKey:type];
+    if (selVal) {
+        SEL aSel = [selVal pointerValue];
+        [self performSelector:aSel withObject:msg];
+    }
+}
+
+- (void)onFoeDisconnect: (NSDictionary*)msg{
+    lwInfo("onFoeDisconnect");
+}
+
+- (void)onFoeFinish: (NSDictionary*)msg{
+    lwInfo("onFoeFinish");
+}
+
+- (void)onResult: (NSDictionary*)msg{
+    lwInfo("onResult");
 }
 
 - (void)loadLastBlurSprite {
@@ -675,15 +733,19 @@ static float lerpf(float a, float b, float t) {
         SKAction *aWait = [SKAction waitForDuration:1.0];
         SKAction *aSec3 = [SKAction runBlock:^{
             _loadingLabel.text = @"3";
+            _loadingShadowLabel.text = @"3";
         }];
         SKAction *aSec2 = [SKAction runBlock:^{
             _loadingLabel.text = @"2";
+            _loadingShadowLabel.text = @"2";
         }];
         SKAction *aSec1 = [SKAction runBlock:^{
             _loadingLabel.text = @"1";
+            _loadingShadowLabel.text = @"1";
         }];
         SKAction *aSec0 = [SKAction runBlock:^{
             _loadingLabel.text = @"";
+            _loadingShadowLabel.text = @"";
         }];
         SKAction *aSeq = [SKAction sequence:@[aWait, aSec3, aWait, aSec2, aWait, aSec1, aWait, aSec0]];
         
@@ -876,6 +938,9 @@ static float lerpf(float a, float b, float t) {
 #pragma mark -
 - (void)onImageFinish:(BOOL)rotate {
     [self nextImage];
+    
+    NSDictionary *msg = @{@"CompleteNum":@(_imgIdx)};
+    [SldUtil sendWithSocket:_gd.webSocket type:@"progress" data:msg];
 }
 
 - (void)onPackFinish {
@@ -887,7 +952,10 @@ static float lerpf(float a, float b, float t) {
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     NSTimeInterval dt = [now timeIntervalSinceDate:_gameBeginTime];
     int score = -(int)(dt*1000);
-    _gd.recentScore = score;
+    
+    //web socket
+    NSDictionary *msg = @{@"Msec":@(-score)};
+    [SldUtil sendWithSocket:_gd.webSocket type:@"finish" data:msg];
     
     //show blured image and cover
     [self addChild:_lastImageBlurSprite];
@@ -953,7 +1021,9 @@ static float lerpf(float a, float b, float t) {
     SKAction *seq = [SKAction sequence:@[appear, delay]];
     
     [completeLabel runAction:seq completion:^{
-        [self.navigationController popViewControllerAnimated:YES];
+        UIViewController* vc = [getStoryboard() instantiateViewControllerWithIdentifier:@"battleResultController"];
+//        [self.controller presentViewController:vc animated:YES completion:nil];
+        [self.navigationController pushViewController:vc animated:YES];
     }];
 }
 
