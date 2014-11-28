@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SldEmojiController.h"
 
 @interface SldBattleLinkController : UIViewController <SRWebSocketDelegate>
-
+@property (nonatomic) NSString *roomName;
 @end

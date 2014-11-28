@@ -8,6 +8,7 @@
 
 #import "SldBattleScene.h"
 #import "SldGameScene.h"
+#import "SldBattleResultController.h"
 #import "SldUtil.h"
 #import "SldButton.h"
 #import "SldStreamPlayer.h"
@@ -124,8 +125,10 @@ static SKView * _skView = nil;
 @property (nonatomic) SKLabelNode *loadingLabel;
 @property (nonatomic) SKLabelNode *loadingShadowLabel;
 @property (nonatomic) BOOL inCurtain;
-@property (nonatomic) SKLabelNode *timerLabel;
 @property (nonatomic) SKSpriteNode *timerBg;
+@property (nonatomic) SKLabelNode *timerLabel;
+@property (nonatomic) SKLabelNode *scoreLabel;
+@property (nonatomic) SKLabelNode *scoreShadowLabel;
 @property (nonatomic) BOOL packHasFinished;
 @property (nonatomic) SKSpriteNode *lastImageBlurSprite;
 @property (nonatomic) SKSpriteNode *lastImageCover;
@@ -135,9 +138,10 @@ static SKView * _skView = nil;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSDictionary *procDict;
 
-
 @property (nonatomic) float targetW;
 @property (nonatomic) float targetH;
+
+@property (nonatomic) int foeScore;
 
 @end
 
@@ -169,6 +173,7 @@ NSDate *_gameBeginTime;
         _isLoaded = NO;
         _needRotate = NO;
         _gameRunning = NO;
+        _foeScore = 0;
         
         _sprites = [NSMutableArray arrayWithCapacity:3];
         if (_gd.match) {
@@ -278,7 +283,7 @@ NSDate *_gameBeginTime;
         [self.loadingLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
 
         self.loadingShadowLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
-        [self.loadingShadowLabel setFontColor:[UIColor blackColor]];
+        [self.loadingShadowLabel setFontColor:[UIColor colorWithRed:.1 green:.1 blue:.1 alpha:1.0]];
         [self.loadingShadowLabel setText:@""];
         [self.loadingShadowLabel setFontSize:100];
         [self.loadingShadowLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
@@ -326,14 +331,41 @@ NSDate *_gameBeginTime;
         [self.timerLabel setText:@"0:00.000"];
         [self.timerLabel setZPosition:1.f];
         [self.timerLabel setUserInteractionEnabled:NO];
-        [_timerBg addChild:self.timerLabel];
+//        [_timerBg addChild:self.timerLabel];
         
+        //score shadow label
+        NSString *scoreString = @"0    :    0";
+//        self.scoreShadowLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+//        [self.scoreShadowLabel setFontColor:[UIColor blackColor]];
+//        [self.scoreShadowLabel setFontSize:20];
+//        [self.scoreShadowLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+//        [self.scoreShadowLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+//        [self.scoreShadowLabel setPosition:CGPointMake(self.size.width*.5, 30)];
+//        [self.scoreShadowLabel setText:scoreString];
+//        [self.scoreShadowLabel setZPosition:1.f];
+//        [self.scoreShadowLabel setUserInteractionEnabled:NO];
+//        [self addChild:self.scoreShadowLabel];
+        
+        //score label
+        self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+        [self.scoreLabel setFontColor:[UIColor whiteColor]];
+        [self.scoreLabel setFontSize:20];
+        [self.scoreLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+        [self.scoreLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+        [self.scoreLabel setPosition:CGPointMake(-60, 0)];
+        [self.scoreLabel setText:scoreString];
+        [self.scoreLabel setZPosition:1.f];
+        [self.scoreLabel setUserInteractionEnabled:NO];
+        [self.timerBg addChild:self.scoreLabel];
+        
+        //
         if (_beltRotate) {
             _timerBg.zRotation = -M_PI_2;
             _timerBg.anchorPoint = CGPointMake(0, 0.5);
             _timerBg.position = CGPointMake(self.size.width-17, self.size.height);
             _timerBg.size = CGSizeMake(135, 25);
             _timerLabel.position = CGPointMake(30, 0);
+            _scoreLabel.position = CGPointMake(70, 0);
         }
         
         //web socket
@@ -342,6 +374,7 @@ NSDate *_gameBeginTime;
         _procDict = @{
             @"foeDisconnect":[NSValue valueWithPointer:@selector(onFoeDisconnect:)],
             @"foeFinish":[NSValue valueWithPointer:@selector(onFoeFinish:)],
+            @"progress":[NSValue valueWithPointer:@selector(onProgress:)],
             @"result":[NSValue valueWithPointer:@selector(onResult:)],
         };
         
@@ -395,6 +428,18 @@ NSDate *_gameBeginTime;
 
 - (void)onFoeDisconnect: (NSDictionary*)msg{
     lwInfo("onFoeDisconnect");
+    //fixme
+    [[[UIAlertView alloc] initWithTitle:@"对手已离开"
+                                message:nil
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }]
+                       otherButtonItems:nil] show];
+}
+
+- (void)onProgress: (NSDictionary*)msg{
+    _foeScore = [(NSNumber*)msg[@"CompleteNum"] intValue];
+    _scoreLabel.text = [NSString stringWithFormat:@"%d    :    %d", _imgIdx, _foeScore];
 }
 
 - (void)onFoeFinish: (NSDictionary*)msg{
@@ -402,7 +447,9 @@ NSDate *_gameBeginTime;
 }
 
 - (void)onResult: (NSDictionary*)msg{
-    lwInfo("onResult");
+    SldBattleResultController* vc = [getStoryboard() instantiateViewControllerWithIdentifier:@"battleResultController"];
+    vc.resultDict = msg;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)loadLastBlurSprite {
@@ -941,6 +988,8 @@ static float lerpf(float a, float b, float t) {
     
     NSDictionary *msg = @{@"CompleteNum":@(_imgIdx)};
     [SldUtil sendWithSocket:_gd.webSocket type:@"progress" data:msg];
+    
+    _scoreLabel.text = [NSString stringWithFormat:@"%d    :    %d", _imgIdx, _foeScore];
 }
 
 - (void)onPackFinish {
@@ -991,7 +1040,6 @@ static float lerpf(float a, float b, float t) {
     //complete label
     SKLabelNode *completeLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
     [completeLabel setFontColor:makeUIColor(255, 197, 131, 255)];
-    [completeLabel setText:@"COMPLETE"];
     [completeLabel setFontSize:32];
     [completeLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
     [completeLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
@@ -1006,25 +1054,32 @@ static float lerpf(float a, float b, float t) {
     [completeLabel setPosition:pos];
     
     //complete label action
-    //dur = .4f;
-    completeLabel.xScale = 0.f;
-    completeLabel.yScale = 2.f;
+//    completeLabel.xScale = 0.f;
+//    completeLabel.yScale = 2.f;
+    
+    
+    completeLabel.alpha = 0;
     
     completeLabel.text = formatScore(score);
     SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         float t = QuarticEaseOut(elapsedTime/dur);
-        [node setYScale:lerpf(0.f, 1.f, t)];
-        [node setXScale:2.0-lerpf(0.f, 1.f, t)];
+//        [node setYScale:lerpf(0.f, 1.f, t)];
+//        [node setXScale:2.0-lerpf(0.f, 1.f, t)];
+        
+        [node setAlpha:lerpf(0.f, 1.f, t)];
     }];
     
-    SKAction *delay = [SKAction waitForDuration:1.0];
-    SKAction *seq = [SKAction sequence:@[appear, delay]];
+    [completeLabel runAction:appear];
     
-    [completeLabel runAction:seq completion:^{
-        UIViewController* vc = [getStoryboard() instantiateViewControllerWithIdentifier:@"battleResultController"];
-//        [self.controller presentViewController:vc animated:YES completion:nil];
-        [self.navigationController pushViewController:vc animated:YES];
-    }];
+    //
+    SKLabelNode *waitLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+    [waitLabel setFontColor:makeUIColor(255, 197, 131, 255)];
+    [waitLabel setFontSize:20];
+    [waitLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
+    [waitLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
+    [waitLabel setText:@"等待比赛结果，请稍候..."];
+    [waitLabel setPosition:CGPointMake(0, -40)];
+    [completeLabel addChild:waitLabel];
 }
 
 - (void)onNextImageWithRotate:(BOOL)rotate {

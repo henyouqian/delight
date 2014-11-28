@@ -27,7 +27,7 @@
 @property (nonatomic) SRWebSocket *webSocket;
 @property (nonatomic) NSDictionary *procDict;
 @property (nonatomic) SldGameData *gd;
-@property (nonatomic) NSDate *date;
+//@property (nonatomic) NSDate *date;
 @property (nonatomic) NSDate *lastEmojiTime;
 @property (nonatomic) FISound *sndPop;
 @property (nonatomic) NSString *secret;
@@ -74,7 +74,6 @@
     _sndPop = [engine soundNamed:@"audio/pop.wav" maxPolyphony:4 error:nil];
     
     _lastEmojiTime = [NSDate dateWithTimeIntervalSinceNow:-100.0];
-    
 }
 
 - (void)dealloc {
@@ -82,15 +81,22 @@
     [_webSocket close];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that  can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEmoji:) name:NOTIF_EMOJI object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     lwInfo(@"socketRocket open");
     
-    NSDictionary *msg = @{@"Token":_gd.token};
+    NSDictionary *msg = @{@"Token":_gd.token, @"RoomName":_roomName};
     [SldUtil sendWithSocket:_webSocket type:@"authPair" data:msg];
 }
 
@@ -128,7 +134,7 @@
     
     NSString *type = [msg objectForKey:@"Type"];
     if ([type compare:@"err"] == 0) {
-        alert(@"ws error", [msg objectForKey:@"String"]);
+        [self wsError:[msg objectForKey:@"String"]];
         return;
     }
     NSValue *selVal = [_procDict objectForKey:type];
@@ -138,15 +144,27 @@
     }
 }
 
+- (void)wsError:(NSString *)error {
+    if ([error compare:@"err_timeout"] == 0) {
+        [self quit:@"服务器无响应，请重新进入"];
+    } else {
+        NSString *str = [NSString stringWithFormat:@"ws错误：%@", error];
+        [self quit:str];
+    }
+}
+
 - (void)onFoeDisconnect: (NSDictionary*)msg{
-    [[[UIAlertView alloc] initWithTitle:@"对手已离开"
+    [self quit:@"对手已离开"];
+}
+
+- (void)quit:(NSString*)alertMsg{
+    [[[UIAlertView alloc] initWithTitle:alertMsg
                                 message:nil
                        cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
         [self.navigationController popToRootViewControllerAnimated:YES];
     }]
                        otherButtonItems:nil] show];
 }
-
 
 - (void)onPairing: (NSDictionary*)msg{
     lwInfo("onPairing");
@@ -156,7 +174,9 @@
 - (void)onPaired: (NSDictionary*)msg{
     lwInfo("onPaired");
     
-    _date = [NSDate dateWithTimeIntervalSinceNow:0];
+    [self.navigationController setNavigationBarHidden:YES];
+    
+//    _date = [NSDate dateWithTimeIntervalSinceNow:0];
     
     _foeView.hidden = NO;
     _emojiView.hidden = NO;
@@ -274,7 +294,7 @@
     float y;
     do {
         y = arc4random() % ((int)_foeView.frame.size.height-20) + 10;
-    } while (ABS(y-lastY) < 20.0);
+    } while (ABS(y-lastY) < 40.0);
     lastY = y;
     
     UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 50, 50)];
@@ -297,43 +317,34 @@
 }
 
 - (void)onStart: (NSDictionary*)msg{
-    NSTimeInterval dt = -[_date timeIntervalSinceNow];
-    double waitTime = 5.0;
-    if (dt > waitTime) {
-        [self enterGame];
-    } else {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (waitTime - dt) * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [self enterGame];
-        });
-    }
+    [self enterGame];
 }
 
-- (IBAction)onEmojiButton:(id)sender {
-    UIButton *btn = sender;
-    
+- (void)onEmoji:(NSNotification*)notif {
+    NSString *text = notif.object;
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
     if ([now timeIntervalSinceDate:_lastEmojiTime] > 0.15) {
-        NSDictionary *msg = @{@"Text":btn.titleLabel.text};
+        NSDictionary *msg = @{@"Text":text};
         [SldUtil sendWithSocket:_webSocket type:@"talk" data:msg];
     }else {
         lwInfo("too fast");
     }
     _lastEmojiTime = now;
-    
-    
+
+
     float x = arc4random() % 10 + 10;
     static float lastY = 9999;
     float y;
     do {
         y = arc4random() % ((int)_foeView.frame.size.height-20) + 10;
-    } while (ABS(y-lastY) < 20.0);
+    } while (ABS(y-lastY) < 40.0);
     lastY = y;
-    
+
     UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 50, 50)];
-    lbl.text = btn.titleLabel.text;
+    lbl.text = text;
 
     [_foeView addSubview:lbl];
-    
+
     lbl.font = [lbl.font fontWithSize:36];
     lbl.alpha = 1.4;
     [UIView animateWithDuration:1.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -347,6 +358,46 @@
     
     [_sndPop play];
 }
+
+//- (IBAction)onEmojiButton:(id)sender {
+//    UIButton *btn = sender;
+//    
+//    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
+//    if ([now timeIntervalSinceDate:_lastEmojiTime] > 0.15) {
+//        NSDictionary *msg = @{@"Text":btn.titleLabel.text};
+//        [SldUtil sendWithSocket:_webSocket type:@"talk" data:msg];
+//    }else {
+//        lwInfo("too fast");
+//    }
+//    _lastEmojiTime = now;
+//    
+//    
+//    float x = arc4random() % 10 + 10;
+//    static float lastY = 9999;
+//    float y;
+//    do {
+//        y = arc4random() % ((int)_foeView.frame.size.height-20) + 10;
+//    } while (ABS(y-lastY) < 20.0);
+//    lastY = y;
+//    
+//    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 50, 50)];
+//    lbl.text = btn.titleLabel.text;
+//
+//    [_foeView addSubview:lbl];
+//    
+//    lbl.font = [lbl.font fontWithSize:36];
+//    lbl.alpha = 1.4;
+//    [UIView animateWithDuration:1.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+//        lbl.alpha = 0;
+//        CGRect rect = lbl.frame;
+//        rect.origin.x += 100;
+//        lbl.frame = rect;
+//    } completion:^(BOOL finished) {
+//        [lbl removeFromSuperview];
+//    }];
+//    
+//    [_sndPop play];
+//}
 
 /*
 #pragma mark - Navigation

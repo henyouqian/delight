@@ -100,6 +100,7 @@
 		D03252B8195F064F00D9620C /* libFlurry_5.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */; };
 		D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */; };
 		D0511D231A24D57800993047 /* SldBattleResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0511D221A24D57800993047 /* SldBattleResultController.m */; };
+		D0511D261A270CCA00993047 /* SldEmojiController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0511D251A270CCA00993047 /* SldEmojiController.m */; };
 		D057C1D419FE625B00C56A0D /* UMSocialLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D057C1BA19FE625B00C56A0D /* UMSocialLocalizable.strings */; };
 		D057C1D519FE625B00C56A0D /* libUMSocial_Sdk_4.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D057C1C819FE625B00C56A0D /* libUMSocial_Sdk_4.2.a */; };
 		D057C1D619FE625B00C56A0D /* UMSCommentDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D057C1CA19FE625B00C56A0D /* UMSCommentDetailController.xib */; };
@@ -425,6 +426,8 @@
 		D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_5.1.0.a; path = External/Flurry/libFlurry_5.1.0.a; sourceTree = "<group>"; };
 		D0511D211A24D57800993047 /* SldBattleResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleResultController.h; sourceTree = "<group>"; };
 		D0511D221A24D57800993047 /* SldBattleResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleResultController.m; sourceTree = "<group>"; };
+		D0511D241A270CCA00993047 /* SldEmojiController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEmojiController.h; sourceTree = "<group>"; };
+		D0511D251A270CCA00993047 /* SldEmojiController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldEmojiController.m; sourceTree = "<group>"; };
 		D057C1BB19FE625B00C56A0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/UMSocialLocalizable.strings; sourceTree = "<group>"; };
 		D057C1C819FE625B00C56A0D /* libUMSocial_Sdk_4.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMSocial_Sdk_4.2.a; sourceTree = "<group>"; };
 		D057C1CA19FE625B00C56A0D /* UMSCommentDetailController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UMSCommentDetailController.xib; sourceTree = "<group>"; };
@@ -904,6 +907,8 @@
 				D0D5F93D1A10D25E00444BFA /* SldBattleSelectController.m */,
 				D08882FB1A1286D0009C2F80 /* SldBattleLinkController.h */,
 				D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */,
+				D0511D241A270CCA00993047 /* SldEmojiController.h */,
+				D0511D251A270CCA00993047 /* SldEmojiController.m */,
 				D06535A41A1756E900ED0617 /* SldUUIDLoginController.h */,
 				D06535A51A1756E900ED0617 /* SldUUIDLoginController.m */,
 				D0511D211A24D57800993047 /* SldBattleResultController.h */,
@@ -1560,6 +1565,7 @@
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
 				D06535A61A1756E900ED0617 /* SldUUIDLoginController.m in Sources */,
 				D08882F71A1216C8009C2F80 /* BarItem.m in Sources */,
+				D0511D261A270CCA00993047 /* SldEmojiController.m in Sources */,
 				D0D5F93E1A10D25E00444BFA /* SldBattleSelectController.m in Sources */,
 				D0667D6419514DD700AD9282 /* SldIapController.m in Sources */,
 				B39E452819201C1A00CBB247 /* UIImageView+sldAsyncLoad.m in Sources */,

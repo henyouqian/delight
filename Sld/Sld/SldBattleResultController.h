@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SldBattleResultController : UIViewController
-
+@interface SldBattleResultController : UIViewController <SRWebSocketDelegate>
+@property (nonatomic) NSDictionary *resultDict;
 @end
