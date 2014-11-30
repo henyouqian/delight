@@ -138,6 +138,7 @@ enum GameMode{
 @property (nonatomic) NSString *userName;
 @property (nonatomic) BOOL online;
 @property (nonatomic) NSMutableArray* PLAYER_BATTLE_LEVELS;
+@property (nonatomic) NSString *BATTLE_HELP_TEXT;
 - (NSString*)getPlayerBattleLevelTitle;
 
 @property (nonatomic) enum GameMode gameMode;

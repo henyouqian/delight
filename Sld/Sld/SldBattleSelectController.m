@@ -264,8 +264,10 @@ static NSString * const reuseIdentifier = @"BattleCell";
     
     SldGameData *gd = [SldGameData getInstance];
     NSMutableString *text = [NSMutableString string];
+    
+    [text appendString:gd.BATTLE_HELP_TEXT];
     for (PlayerBattleLevel *lvData in gd.PLAYER_BATTLE_LEVELS) {
-        [text appendFormat:@"积分%d －> %@\n", lvData.StartPoint, lvData.Title];
+        [text appendFormat:@"   积分%d －> %@\n", lvData.StartPoint, lvData.Title];
     }
     _textView.text = text;
 }

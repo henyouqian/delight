@@ -78,6 +78,18 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.BattlePoint = [(NSNumber*)[dict objectForKey:@"BattlePoint"] intValue];
     info.BattleWinStreak = [(NSNumber*)[dict objectForKey:@"BattleWinStreak"] intValue];
     info.BattleWinStreakMax = [(NSNumber*)[dict objectForKey:@"BattleWinStreakMax"] intValue];
+    
+    //update player battle levels
+    gd.PLAYER_BATTLE_LEVELS = [NSMutableArray array];
+    NSArray *playerBattleLevelArray = dict[@"BattleLevels"];
+    for (NSDictionary *levelDict in playerBattleLevelArray) {
+        PlayerBattleLevel *level = [[PlayerBattleLevel alloc] initWithDict:levelDict];
+        [gd.PLAYER_BATTLE_LEVELS addObject:level];
+    }
+    
+    //
+    gd.BATTLE_HELP_TEXT = [dict objectForKey:@"BattleHelpText"];
+    
     return info;
 }
 
