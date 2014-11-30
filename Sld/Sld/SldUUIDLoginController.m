@@ -138,6 +138,14 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1";
                     
                     gameData.playerInfo = [PlayerInfo playerWithDictionary:dict];
                     
+                    //update player battle levels
+                    gameData.PLAYER_BATTLE_LEVELS = [NSMutableArray array];
+                    NSArray *playerBattleLevelArray = dict[@"BattleLevels"];
+                    for (NSDictionary *levelDict in playerBattleLevelArray) {
+                        PlayerBattleLevel *level = [[PlayerBattleLevel alloc] initWithDict:levelDict];
+                        [gameData.PLAYER_BATTLE_LEVELS addObject:level];
+                    }
+                    
                     //update client conf
                     NSDictionary *confDict = [dict objectForKey:@"ClientConf"];
                     [conf updateWithDict:confDict];

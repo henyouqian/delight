@@ -82,24 +82,30 @@
         _emojiView.frame = emojiFrame1;
     } completion:nil];
     
+    //
+    int rewardCoin = [(NSNumber*)_resultDict[@"RewardCoin"] intValue];
+    
     //resultLabel
     _resultLabel.text = @"???";
     NSString *result = _resultDict[@"Result"];
+    BOOL isWin = NO;
     if ([result compare:@"win"] == 0) {
         _resultLabel.text = @"赢了";
+        isWin = YES;
         
-        CGRect frame1 = _rewardCoinLabel.frame;
-        CGRect frame0 = _rewardCoinLabel.frame;
-        frame0.origin.y -= 30;
-        _rewardCoinLabel.frame = frame0;
-        _rewardCoinLabel.alpha = 0;
-        [UIView animateWithDuration:0.4 delay:1.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            _rewardCoinLabel.alpha = 1.f;
-            _rewardCoinLabel.frame = frame1;
-        } completion:^(BOOL finished){
-            [_sndCollectCoin play];
-        }];
-
+        if (rewardCoin > 0) {
+            CGRect frame1 = _rewardCoinLabel.frame;
+            CGRect frame0 = _rewardCoinLabel.frame;
+            frame0.origin.y -= 30;
+            _rewardCoinLabel.frame = frame0;
+            _rewardCoinLabel.alpha = 0;
+            [UIView animateWithDuration:0.4 delay:1.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                _rewardCoinLabel.alpha = 1.f;
+                _rewardCoinLabel.frame = frame1;
+            } completion:^(BOOL finished){
+                [_sndCollectCoin play];
+            }];
+        }
     } else if ([result compare:@"lose"] == 0) {
         _resultLabel.text = @"输了";
     } else if ([result compare:@"draw"] == 0) {
@@ -120,17 +126,24 @@
         foeStr = formatScore(-foeMsec);
     }
     
+    if (myMsec <= 0 && isWin) {
+        foeStr = @"  已断线  ";
+    }
+    
     _scoreLabel.text = [NSString stringWithFormat:@"%@   vs   %@", myStr, foeStr];
     
     //rewardCoinLabel
-    int rewardCoin = [(NSNumber*)_resultDict[@"RewardCoin"] intValue];
     if (rewardCoin > 0) {
         _rewardCoinLabel.text = [NSString stringWithFormat:@"获得%d金币", rewardCoin];
     } else if (rewardCoin < 0){
         _rewardCoinLabel.text = [NSString stringWithFormat:@"输了%d金币", -rewardCoin];
+    } else {
+        _rewardCoinLabel.text = @"";
     }
     
-    lwInfo(@"%@", _resultDict);
+    //update coin ui
+    int totalCoin = [(NSNumber*)_resultDict[@"TotalCoin"] intValue];
+    _gd.playerInfo.goldCoin = totalCoin;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

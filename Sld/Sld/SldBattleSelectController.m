@@ -15,6 +15,7 @@
 
 @interface SldBattleRoom : UICollectionViewCell
 @property (nonatomic) NSString *Name;
+@property (nonatomic) NSString *Title;
 @property (nonatomic) int BetCoin;
 @property (nonatomic) int PlayerNum;
 - (instancetype)initWithDict:(NSDictionary*)dict;
@@ -24,6 +25,7 @@
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
         _Name = dict[@"Name"];
+        _Title = dict[@"Title"];
         _BetCoin = [(NSNumber*)dict[@"BetCoin"] intValue];
         _PlayerNum = [(NSNumber*)dict[@"PlayerNum"] intValue];
     }
@@ -33,8 +35,8 @@
 
 //===============================
 @interface SldBattleCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *playerNumLabel;
 //@property (weak, nonatomic) IBOutlet UIImageView *coinImage;
 @property (nonatomic) SldBattleRoom *room;
 @end
@@ -52,8 +54,11 @@
 @property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
 @property (weak, nonatomic) IBOutlet UILabel *heartLabel;
 @property (weak, nonatomic) IBOutlet UILabel *coinLabel;
-@property (weak, nonatomic) IBOutlet UILabel *winNumLabel;
-@property (weak, nonatomic) IBOutlet UILabel *totalPrizeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pointLabel;
+@property (weak, nonatomic) IBOutlet UILabel *levelupLabel;
+@property (weak, nonatomic) IBOutlet UILabel *winStreakLabel;
+@property (weak, nonatomic) IBOutlet UILabel *winStreakMaxLabel;
 
 @end
 
@@ -114,25 +119,28 @@ static NSString * const reuseIdentifier = @"BattleCell";
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    SldBattleCell *cell = sender;
-    SldGameData *gd = [SldGameData getInstance];
-    if (cell.room.BetCoin > gd.playerInfo.goldCoin ) {
-        [[[UIAlertView alloc] initWithTitle:@"金币不足"
-                                    message:@"去商店购买更多金币吗？"
-                           cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
-            // Handle "Cancel"
-        }]
-                           otherButtonItems:[RIButtonItem itemWithLabel:@"去商店" action:^{
-            SldIapController* vc = (SldIapController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"iapController"];
-            [self.navigationController pushViewController:vc animated:YES];
-        }], nil] show];
-        return NO;
+    if (identifier && [identifier compare:@"cellSegue"] == 0) {
+        SldBattleCell *cell = sender;
+        SldGameData *gd = [SldGameData getInstance];
+        if (cell.room.BetCoin > gd.playerInfo.goldCoin ) {
+            [[[UIAlertView alloc] initWithTitle:@"金币不足"
+                                        message:@"去商店购买更多金币吗？"
+                               cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+                // Handle "Cancel"
+            }]
+                               otherButtonItems:[RIButtonItem itemWithLabel:@"去商店" action:^{
+                SldIapController* vc = (SldIapController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"iapController"];
+                [self.navigationController pushViewController:vc animated:YES];
+            }], nil] show];
+            return NO;
+        }
+        return YES;
     }
     return YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier compare:@"cellSegue"] == 0) {
+    if (segue.identifier && [segue.identifier compare:@"cellSegue"] == 0) {
         SldBattleLinkController *vc = [segue destinationViewController];
         SldBattleCell *cell = sender;
         vc.roomName = cell.room.Name;
@@ -155,13 +163,13 @@ static NSString * const reuseIdentifier = @"BattleCell";
     
     SldBattleRoom *room = [_rooms objectAtIndex:indexPath.row];
     if (room) {
+        cell.titleLabel.text = room.Title;
         if (room.BetCoin == 0) {
-            cell.prizeLabel.text = [NSString stringWithFormat:@"练习场"];
+            cell.prizeLabel.text = [NSString stringWithFormat:@"消耗1♥︎"];
         } else {
-            cell.prizeLabel.text = [NSString stringWithFormat:@"%d金币", room.BetCoin];
+            cell.prizeLabel.text = [NSString stringWithFormat:@"输赢%d金币", room.BetCoin];
         }
         
-        cell.playerNumLabel.text = [NSString stringWithFormat:@"正在玩：%d", room.PlayerNum];
         cell.room = room;
         
         float hue = 200.0/360.0 - 0.16 * indexPath.row;
@@ -183,6 +191,26 @@ static NSString * const reuseIdentifier = @"BattleCell";
         [SldUtil loadAvatar:header.userAvatarView gravatarKey:playerInfo.gravatarKey customAvatarKey:playerInfo.customAvatarKey];
         
         header.coinLabel.text = [NSString stringWithFormat:@"%d", gd.playerInfo.goldCoin];
+        
+        NSString *levelTitle = [gd getPlayerBattleLevelTitle];
+        header.levelLabel.text = [NSString stringWithFormat:@"等级：%@", levelTitle];
+        
+        header.pointLabel.text = [NSString stringWithFormat:@"积分：%d", gd.playerInfo.BattlePoint];
+        
+        header.winStreakLabel.text = [NSString stringWithFormat:@"连胜：%d", gd.playerInfo.BattleWinStreak];
+        
+        header.winStreakMaxLabel.text = [NSString stringWithFormat:@"最长连胜：%d", gd.playerInfo.BattleWinStreakMax];
+        
+        //
+        int battlePoint = gd.playerInfo.BattlePoint;
+        int levelupPoint = 0;
+        for (PlayerBattleLevel *lvData in gd.PLAYER_BATTLE_LEVELS) {
+            if (lvData.StartPoint > battlePoint) {
+                levelupPoint = lvData.StartPoint - battlePoint;
+                break;
+            }
+        }
+        header.levelupLabel.text = [NSString stringWithFormat:@"升级还需：%d", levelupPoint];
         
         return header;
     }
@@ -219,5 +247,27 @@ static NSString * const reuseIdentifier = @"BattleCell";
 	
 }
 */
+
+@end
+
+//==================================
+@interface SldBattleSelectHelpController : UIViewController
+
+@property (weak, nonatomic) IBOutlet UITextView *textView;
+
+@end
+
+@implementation SldBattleSelectHelpController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    SldGameData *gd = [SldGameData getInstance];
+    NSMutableString *text = [NSMutableString string];
+    for (PlayerBattleLevel *lvData in gd.PLAYER_BATTLE_LEVELS) {
+        [text appendFormat:@"积分%d －> %@\n", lvData.StartPoint, lvData.Title];
+    }
+    _textView.text = text;
+}
 
 @end

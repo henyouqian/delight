@@ -428,13 +428,6 @@ NSDate *_gameBeginTime;
 
 - (void)onFoeDisconnect: (NSDictionary*)msg{
     lwInfo("onFoeDisconnect");
-    //fixme
-    [[[UIAlertView alloc] initWithTitle:@"对手已离开"
-                                message:nil
-                       cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }]
-                       otherButtonItems:nil] show];
 }
 
 - (void)onProgress: (NSDictionary*)msg{
@@ -1037,39 +1030,46 @@ static float lerpf(float a, float b, float t) {
     }];
     [_lastImageBlurSprite runAction:action];
     
+    //label parent node
+    SKNode *labelParent = [SKNode node];
+    CGPoint pos = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
+    if (_needRotate) {
+        labelParent.zRotation = -M_PI_2;
+        pos.x += 25;
+    } else {
+        pos.y += 25;
+    }
+    [labelParent setPosition:pos];
+    [_lastImageCover addChild:labelParent];
+    
     //complete label
     SKLabelNode *completeLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
     [completeLabel setFontColor:makeUIColor(255, 197, 131, 255)];
     [completeLabel setFontSize:32];
     [completeLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
     [completeLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
-    [_lastImageCover addChild:completeLabel];
-    CGPoint pos = CGPointMake(self.view.frame.size.width*.5f, self.view.frame.size.height*.5f);
-    if (_needRotate) {
-        completeLabel.zRotation = -M_PI_2;
-        pos.x += 25;
-    } else {
-        pos.y += 25;
-    }
-    [completeLabel setPosition:pos];
-    
-    //complete label action
-//    completeLabel.xScale = 0.f;
-//    completeLabel.yScale = 2.f;
+    [completeLabel setPosition:CGPointMake(0, 20)];
+    [labelParent addChild:completeLabel];
     
     
-    completeLabel.alpha = 0;
+    //labelParent label action
+    labelParent.xScale = 0.f;
+    labelParent.yScale = 2.f;
+    
+    
+//    labelParent.alpha = 0;
     
     completeLabel.text = formatScore(score);
+    dur = 0.4;
     SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
         float t = QuarticEaseOut(elapsedTime/dur);
-//        [node setYScale:lerpf(0.f, 1.f, t)];
-//        [node setXScale:2.0-lerpf(0.f, 1.f, t)];
+        [node setYScale:lerpf(0.f, 1.f, t)];
+        [node setXScale:2.0-lerpf(0.f, 1.f, t)];
         
-        [node setAlpha:lerpf(0.f, 1.f, t)];
+//        [node setAlpha:lerpf(0.f, 1.f, t)];
     }];
     
-    [completeLabel runAction:appear];
+    [labelParent runAction:appear];
     
     //
     SKLabelNode *waitLabel = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
@@ -1078,8 +1078,8 @@ static float lerpf(float a, float b, float t) {
     [waitLabel setVerticalAlignmentMode:SKLabelVerticalAlignmentModeCenter];
     [waitLabel setHorizontalAlignmentMode:SKLabelHorizontalAlignmentModeCenter];
     [waitLabel setText:@"等待比赛结果，请稍候..."];
-    [waitLabel setPosition:CGPointMake(0, -40)];
-    [completeLabel addChild:waitLabel];
+    [waitLabel setPosition:CGPointMake(0, -20)];
+    [labelParent addChild:waitLabel];
 }
 
 - (void)onNextImageWithRotate:(BOOL)rotate {

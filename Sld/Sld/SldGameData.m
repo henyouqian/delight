@@ -74,6 +74,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.adsConf.delaySec = [(NSNumber*)[adsConf objectForKey:@"DelaySec"] floatValue];
     
     gd.ownerPrizeProportion = [(NSNumber*)[dict objectForKey:@"OwnerPrizeProportion"] floatValue];
+    
+    info.BattlePoint = [(NSNumber*)[dict objectForKey:@"BattlePoint"] intValue];
+    info.BattleWinStreak = [(NSNumber*)[dict objectForKey:@"BattleWinStreak"] intValue];
+    info.BattleWinStreakMax = [(NSNumber*)[dict objectForKey:@"BattleWinStreakMax"] intValue];
     return info;
 }
 
@@ -129,6 +133,20 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _rankNum = [(NSNumber*)dict[@"RankNum"] intValue];
         _team = dict[@"Team"];
         _like = [dict[@"Like"] boolValue];
+    }
+    return self;
+}
+
+@end
+
+//========================
+@implementation PlayerBattleLevel
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _Level = [(NSNumber*)dict[@"Level"] intValue];
+        _Title = dict[@"Title"];
+        _StartPoint = [(NSNumber*)dict[@"StartPoint"] intValue];
     }
     return self;
 }
@@ -213,6 +231,15 @@ static SldGameData *g_inst = nil;
             completion(_packInfo);
         }
     }];
+}
+
+- (NSString*)getPlayerBattleLevelTitle {
+    for (PlayerBattleLevel *lvData in _PLAYER_BATTLE_LEVELS) {
+        if (_playerInfo.BattlePoint >= lvData.StartPoint) {
+            return lvData.Title;
+        }
+    }
+    return @"⁉️";
 }
 
 

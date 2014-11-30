@@ -49,6 +49,10 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int betCloseBeforeEndSec;
 @property (nonatomic) AdsConf *adsConf;
 
+@property (nonatomic) int BattlePoint;
+@property (nonatomic) int BattleWinStreak;
+@property (nonatomic) int BattleWinStreakMax;
+
 + (instancetype)playerWithDictionary:(NSDictionary*)dict;
 @end
 
@@ -98,6 +102,17 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @end
 
 //=================
+@interface PlayerBattleLevel : NSObject
+
+@property (nonatomic) int Level;
+@property (nonatomic) NSString *Title;
+@property (nonatomic) int StartPoint;
+
+- (instancetype)initWithDict:(NSDictionary*)dict;
+
+@end
+
+//=================
 enum GameMode{
     M_TEST,
     M_PRACTICE,
@@ -122,7 +137,8 @@ enum GameMode{
 @property (nonatomic) SInt64 userId;
 @property (nonatomic) NSString *userName;
 @property (nonatomic) BOOL online;
-
+@property (nonatomic) NSMutableArray* PLAYER_BATTLE_LEVELS;
+- (NSString*)getPlayerBattleLevelTitle;
 
 @property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) BOOL autoPaging;
