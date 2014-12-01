@@ -12,7 +12,6 @@
 #import "SldGameData.h"
 #import "SldHttpSession.h"
 #import "UIImageView+sldAsyncLoad.h"
-#import "MSWeakTimer.h"
 #import "SldConfig.h"
 #import "CBStoreHouseRefreshControl.h"
 

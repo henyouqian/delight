@@ -84,6 +84,14 @@
     
     //
     int rewardCoin = [(NSNumber*)_resultDict[@"RewardCoin"] intValue];
+    int battlePoint = [(NSNumber*)_resultDict[@"BattlePoint"] intValue];
+    int battlePointAdd = [(NSNumber*)_resultDict[@"BattlePointAdd"] intValue];
+    int winStreak = [(NSNumber*)_resultDict[@"WinStreak"] intValue];
+    int winStreakMax = [(NSNumber*)_resultDict[@"WinstreakMax"] intValue];
+    
+    _gd.playerInfo.BattlePoint = battlePoint;
+    _gd.playerInfo.BattleWinStreak = winStreak;
+    _gd.playerInfo.BattleWinStreakMax = winStreakMax;
     
     //resultLabel
     _resultLabel.text = @"???";

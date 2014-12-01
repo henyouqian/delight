@@ -15,7 +15,6 @@
 #import "UIImage+ImageEffects.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyMatchController.h"
-#import "MSWeakTimer.h"
 #import "SldConfig.h"
 #import "CBStoreHouseRefreshControl.h"
 

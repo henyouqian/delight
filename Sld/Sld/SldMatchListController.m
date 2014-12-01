@@ -12,7 +12,6 @@
 #import "SldHttpSession.h"
 #import "UIImage+ImageEffects.h"
 #import "SldMyMatchController.h"
-#import "MSWeakTimer.h"
 #import "SldConfig.h"
 #import "SldMatchBriefController.h"
 #import "SldLoginViewController.h"

@@ -52,8 +52,12 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int BattlePoint;
 @property (nonatomic) int BattleWinStreak;
 @property (nonatomic) int BattleWinStreakMax;
+@property (nonatomic) SInt64 BattleHeartZeroTime;
+@property (nonatomic) int BattleHeartAddSec;
 
 + (instancetype)playerWithDictionary:(NSDictionary*)dict;
+- (int)getHeartNum;
+- (NSString*)getHeartTime;
 @end
 
 
@@ -139,7 +143,9 @@ enum GameMode{
 @property (nonatomic) BOOL online;
 @property (nonatomic) NSMutableArray* PLAYER_BATTLE_LEVELS;
 @property (nonatomic) NSString *BATTLE_HELP_TEXT;
+
 - (NSString*)getPlayerBattleLevelTitle;
+- (NSString*)getPlayerBattleLevelTitleWithPoint:(int)point;
 
 @property (nonatomic) enum GameMode gameMode;
 @property (nonatomic) BOOL autoPaging;

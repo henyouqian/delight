@@ -27,6 +27,7 @@ UIStoryboard* getStoryboard();
 
 void setServerNow(SInt64 now);
 NSDate* getServerNow();
+UInt64 getServerNowSec();
 
 NSString* sha256(NSString* data, NSString *salt);
 

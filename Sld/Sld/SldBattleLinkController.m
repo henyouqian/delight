@@ -206,6 +206,7 @@
     _gd.sliderNum = [[msg objectForKey:@"SliderNum"] intValue];
     _outputLabel.text = @"配对成功";
     _secret = [msg objectForKey:@"Secret"];
+    _gd.playerInfo.BattleHeartZeroTime = [(NSNumber*)[msg objectForKey:@"HeartZeroTime"] longLongValue];
     
     //foe player
     NSDictionary *foePlayer = [msg objectForKey:@"FoePlayer"];
@@ -214,6 +215,8 @@
     _foeNameLable.text = [foePlayer objectForKey:@"NickName"];
     _foeTeamLabel.text = [foePlayer objectForKey:@"TeamName"];
     [SldUtil loadAvatar:_foeThumbView gravatarKey:foePlayer[@"GravatarKey"] customAvatarKey:foePlayer[@"CustomAvatarKey"]];
+    int battlePoint = [(NSNumber*)[foePlayer objectForKey:@"BattlePoint"] intValue];
+    _foeLvLabel.text = [_gd getPlayerBattleLevelTitleWithPoint:battlePoint];
     
     NSArray *imageKeys = _gd.packInfo.images;
     __block int localNum = 0;

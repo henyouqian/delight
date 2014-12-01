@@ -104,6 +104,11 @@ NSDate *getServerNow() {
     return now;
 }
 
+UInt64 getServerNowSec() {
+    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:serverTimeCorrect];
+    return (UInt64)[now timeIntervalSince1970];
+}
+
 NSString* sha256(NSString* data, NSString *salt) {
     if (salt == nil) {
         salt = @"";

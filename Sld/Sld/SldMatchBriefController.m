@@ -13,7 +13,6 @@
 #import "SldGameController.h"
 #import "SldIapController.h"
 #import "SldUtil.h"
-#import "MSWeakTimer.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldMyMatchController.h"
 

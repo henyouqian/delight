@@ -3317,13 +3317,13 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="coj-dy-PsC">
                                             <rect key="frame" x="0.0" y="88" width="120" height="32"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="输赢5金币" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bc5-b4-bIw">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="输赢5金币" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bc5-b4-bIw">
                                                     <rect key="frame" x="10" y="7" width="100" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="QBF-6G-PLu"/>
                                                         <constraint firstAttribute="width" constant="100" id="z1W-s5-IxF"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -3395,10 +3395,10 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="等级：🚲" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbY-2e-iES">
-                                    <rect key="frame" x="90" y="51" width="89" height="21"/>
+                                    <rect key="frame" x="90" y="51" width="96" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="Pgf-BJ-ifv"/>
-                                        <constraint firstAttribute="width" constant="89" id="tQd-NO-CYn"/>
+                                        <constraint firstAttribute="width" constant="96" id="tQd-NO-CYn"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -3489,6 +3489,7 @@
                             <connections>
                                 <outlet property="coinLabel" destination="m9S-YV-t1u" id="NMZ-8o-QrI"/>
                                 <outlet property="heartLabel" destination="DsT-XJ-XaM" id="cTQ-nk-P0d"/>
+                                <outlet property="heartTimeLabel" destination="Z0s-9S-Xnt" id="l4b-5u-5Xd"/>
                                 <outlet property="levelLabel" destination="bbY-2e-iES" id="B5D-h4-QaP"/>
                                 <outlet property="levelupLabel" destination="I4i-SR-g70" id="IyU-Xc-KOL"/>
                                 <outlet property="pointLabel" destination="0pv-I9-Imx" id="xX8-Fk-QYe"/>
@@ -4238,7 +4239,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
@@ -5478,8 +5479,8 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="28D-cR-agb"/>
+        <segue reference="Bsz-cY-Efb"/>
         <segue reference="Kot-XL-OVA"/>
-        <segue reference="xlZ-7G-8KU"/>
+        <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>

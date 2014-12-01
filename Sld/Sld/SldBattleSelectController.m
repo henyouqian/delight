@@ -59,6 +59,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *levelupLabel;
 @property (weak, nonatomic) IBOutlet UILabel *winStreakLabel;
 @property (weak, nonatomic) IBOutlet UILabel *winStreakMaxLabel;
+@property (weak, nonatomic) IBOutlet UILabel *heartTimeLabel;
 
 @end
 
@@ -72,6 +73,9 @@
 
 @property (nonatomic) NSMutableArray *rooms;
 @property (nonatomic) NSDate *lastUpdateTime;
+@property (nonatomic) SldBattleSelectHeader *header;
+@property (nonatomic) MSWeakTimer *secTimer;
+
 
 @end
 
@@ -79,6 +83,13 @@
 
 static NSString * const reuseIdentifier = @"BattleCell";
 
+- (void)viewDidLoad {
+    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(updateHeart) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+}
+
+- (void)dealloc {
+    [_secTimer invalidate];
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -134,6 +145,9 @@ static NSString * const reuseIdentifier = @"BattleCell";
             }], nil] show];
             return NO;
         }
+        if (cell.room.BetCoin == 0 && [gd.playerInfo getHeartNum]==0) {
+            alert(@"♥︎不足，请等待", nil);
+        }
         return YES;
     }
     return YES;
@@ -184,22 +198,25 @@ static NSString * const reuseIdentifier = @"BattleCell";
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (kind == UICollectionElementKindSectionHeader) {
-        SldBattleSelectHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"battelHeader" forIndexPath:indexPath];
+        _header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"battelHeader" forIndexPath:indexPath];
         
         SldGameData *gd = [SldGameData getInstance];
         PlayerInfo *playerInfo = gd.playerInfo;
-        [SldUtil loadAvatar:header.userAvatarView gravatarKey:playerInfo.gravatarKey customAvatarKey:playerInfo.customAvatarKey];
+        [SldUtil loadAvatar:_header.userAvatarView gravatarKey:playerInfo.gravatarKey customAvatarKey:playerInfo.customAvatarKey];
         
-        header.coinLabel.text = [NSString stringWithFormat:@"%d", gd.playerInfo.goldCoin];
+        _header.coinLabel.text = [NSString stringWithFormat:@"%d", gd.playerInfo.goldCoin];
         
         NSString *levelTitle = [gd getPlayerBattleLevelTitle];
-        header.levelLabel.text = [NSString stringWithFormat:@"等级：%@", levelTitle];
+        _header.levelLabel.text = [NSString stringWithFormat:@"等级：%@", levelTitle];
         
-        header.pointLabel.text = [NSString stringWithFormat:@"积分：%d", gd.playerInfo.BattlePoint];
+        _header.pointLabel.text = [NSString stringWithFormat:@"积分：%d", gd.playerInfo.BattlePoint];
         
-        header.winStreakLabel.text = [NSString stringWithFormat:@"连胜：%d", gd.playerInfo.BattleWinStreak];
+        _header.winStreakLabel.text = [NSString stringWithFormat:@"连胜：%d", gd.playerInfo.BattleWinStreak];
         
-        header.winStreakMaxLabel.text = [NSString stringWithFormat:@"最长连胜：%d", gd.playerInfo.BattleWinStreakMax];
+        _header.winStreakMaxLabel.text = [NSString stringWithFormat:@"最长连胜：%d", gd.playerInfo.BattleWinStreakMax];
+        
+        //heart
+        [self updateHeart];
         
         //
         int battlePoint = gd.playerInfo.BattlePoint;
@@ -210,11 +227,44 @@ static NSString * const reuseIdentifier = @"BattleCell";
                 break;
             }
         }
-        header.levelupLabel.text = [NSString stringWithFormat:@"升级还需：%d", levelupPoint];
+        _header.levelupLabel.text = [NSString stringWithFormat:@"升级还需：%d", levelupPoint];
         
-        return header;
+        return _header;
     }
     return nil;
+}
+
+- (void)updateHeart {
+    if (!_header) {
+        return;
+    }
+    SldGameData *gd = [SldGameData getInstance];
+    NSArray *heartArray = @[
+                            @"♡♡♡♡♡♡♡♡♡♡",
+                            @"♥︎♡♡♡♡♡♡♡♡♡",
+                            @"♥︎♥︎♡♡♡♡♡♡♡♡",
+                            @"♥︎♥︎♥︎♡♡♡♡♡♡♡",
+                            @"♥︎♥︎♥︎♥︎♡♡♡♡♡♡",
+                            @"♥︎♥︎♥︎♥︎♥︎♡♡♡♡♡",
+                            @"♥︎♥︎♥︎♥︎♥︎♥︎♡♡♡♡",
+                            @"♥︎♥︎♥︎♥︎♥︎♥︎♥︎♡♡♡",
+                            @"♥︎♥︎♥︎♥︎♥︎♥︎♥︎♥︎♡♡",
+                            @"♥︎♥︎♥︎♥︎♥︎♥︎♥︎♥︎♥︎♡",
+                            @"♥︎♥︎♥︎♥︎♥︎♥︎♥︎♥︎♥︎♥︎",
+                            ];
+    int heartNum = [gd.playerInfo getHeartNum];
+    if (heartNum >= heartArray.count || heartNum < 0) {
+        _header.heartLabel.text = @"???";
+        _header.heartTimeLabel.text = @"";
+        return;
+    }
+    
+    _header.heartLabel.text = heartArray[heartNum];
+    if (heartNum == 10) {
+        _header.heartTimeLabel.text = @"";
+    } else {
+        _header.heartTimeLabel.text = [gd.playerInfo getHeartTime];
+    }
 }
 
 #pragma mark <UICollectionViewDelegate>
@@ -267,9 +317,12 @@ static NSString * const reuseIdentifier = @"BattleCell";
     
     [text appendString:gd.BATTLE_HELP_TEXT];
     for (PlayerBattleLevel *lvData in gd.PLAYER_BATTLE_LEVELS) {
-        [text appendFormat:@"   积分%d －> %@\n", lvData.StartPoint, lvData.Title];
+        [text appendFormat:@"     积分%d －> %@\n", lvData.StartPoint, lvData.Title];
     }
     _textView.text = text;
+    
+    [_textView layoutIfNeeded];
+    [_textView setContentOffset:CGPointZero];
 }
 
 @end

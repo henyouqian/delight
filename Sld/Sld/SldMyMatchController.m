@@ -15,7 +15,6 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldGameController.h"
 #import "SldIapController.h"
-#import "MSWeakTimer.h"
 #import "SldConfig.h"
 #import "SldMatchBriefController.h"
 #import "CBStoreHouseRefreshControl.h"

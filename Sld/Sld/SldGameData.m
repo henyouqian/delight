@@ -78,6 +78,8 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     info.BattlePoint = [(NSNumber*)[dict objectForKey:@"BattlePoint"] intValue];
     info.BattleWinStreak = [(NSNumber*)[dict objectForKey:@"BattleWinStreak"] intValue];
     info.BattleWinStreakMax = [(NSNumber*)[dict objectForKey:@"BattleWinStreakMax"] intValue];
+    info.BattleHeartZeroTime = [(NSNumber*)[dict objectForKey:@"BattleHeartZeroTime"] longLongValue];
+    info.BattleHeartAddSec = [(NSNumber*)[dict objectForKey:@"BattleHeartAddSec"] intValue];
     
     //update player battle levels
     gd.PLAYER_BATTLE_LEVELS = [NSMutableArray array];
@@ -91,6 +93,24 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     gd.BATTLE_HELP_TEXT = [dict objectForKey:@"BattleHelpText"];
     
     return info;
+}
+
+- (int)getHeartNum {
+    int dt = (int)(getServerNowSec() - _BattleHeartZeroTime);
+    int heartNum = dt / _BattleHeartAddSec;
+    if (heartNum > 10) {
+        return 10;
+    }
+    return heartNum;
+}
+
+- (NSString*)getHeartTime {
+    int dt = (int)(getServerNowSec() - _BattleHeartZeroTime);
+    int t = dt % _BattleHeartAddSec;
+    t = _BattleHeartAddSec - t;
+    int m = t / 60;
+    int s = t % 60;
+    return [NSString stringWithFormat:@"%d:%02d", m, s];
 }
 
 @end
@@ -246,14 +266,28 @@ static SldGameData *g_inst = nil;
 }
 
 - (NSString*)getPlayerBattleLevelTitle {
+    NSString *title = @"⁉️";
     for (PlayerBattleLevel *lvData in _PLAYER_BATTLE_LEVELS) {
         if (_playerInfo.BattlePoint >= lvData.StartPoint) {
-            return lvData.Title;
+            title = lvData.Title;
+        } else {
+            break;
         }
     }
-    return @"⁉️";
+    return title;
 }
 
+- (NSString*)getPlayerBattleLevelTitleWithPoint:(int)point {
+    NSString *title = @"⁉️";
+    for (PlayerBattleLevel *lvData in _PLAYER_BATTLE_LEVELS) {
+        if (point >= lvData.StartPoint) {
+            title = lvData.Title;
+        } else {
+            break;
+        }
+    }
+    return title;
+}
 
 @end
 

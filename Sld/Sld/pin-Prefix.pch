@@ -36,6 +36,7 @@
     #import "AdsMoGoLib/AdsMoGoSDK/AdMoGoInterstitialManager.h"
     #import "QiniuSDK/QiniuSDK.h"
     #import "Flurry/Flurry.h"
+    #import "MSWeakTimer.h"
     #import "umeng_ios_social/UMSocial_Sdk_4.2/Header/UMSocial.h"
     #import "umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Wechat/UMSocialWechatHandler.h"
     #import "umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/Sina/UMSocialSinaHandler.h"
