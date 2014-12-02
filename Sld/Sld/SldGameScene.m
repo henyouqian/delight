@@ -166,6 +166,9 @@
 @property (nonatomic) float targetW;
 @property (nonatomic) float targetH;
 
+@property (nonatomic) int smile;
+@property (nonatomic) int rd;
+
 @end
 
 static float BUTTON_ALPHA = .7f;
@@ -351,6 +354,9 @@ NSDate *_gameBeginTime;
         [self addChild:self.highlightDot];
         [self.dots addObject:self.highlightDot];
         _packHasFinished = NO;
+        
+        //
+        _rd = arc4random() % 99999;
         
         //curtain
         self.inCurtain = YES;
@@ -949,6 +955,9 @@ static float lerpf(float a, float b, float t) {
                 //game begin
                 _gameBeginTime = [NSDate dateWithTimeIntervalSinceNow:0];
                 _gameRunning = YES;
+                
+                NSTimeInterval intv = [_gameBeginTime timeIntervalSince1970];
+                [SldUtil secureSetDouble:intv withKey:@"BeginTime"];
             }];
         }];
         
@@ -1060,6 +1069,7 @@ static float lerpf(float a, float b, float t) {
                 
                 if (self.imgIdx == [self.files count]-1) {
                     [self.sndFinish play];
+                    _smile = [self.files count] + _rd;
                     [self onPackFinish];
                 } else {
                     [self.sndSuccess play];
@@ -1077,9 +1087,24 @@ static float lerpf(float a, float b, float t) {
     [self touchesEnded:touches withEvent:event];
 }
 
+- (BOOL)checkSliderNum {
+    if (_gd.gameMode == M_MATCH) {
+        int sliderNum = [SldUtil secureGetIntWithKey:@"SliderNum"];
+        if (sliderNum != _sliderNum) {
+            alert(@"cheating", nil);
+            return NO;
+        }
+    }
+    return YES;
+}
+
 
 #pragma mark -
 - (void)onImageFinish:(BOOL)rotate {
+    if ([self checkSliderNum] == NO) {
+        return;
+    }
+    
     if (_gd.autoPaging) {
         [self nextImage];
     } else {
@@ -1103,6 +1128,16 @@ static float lerpf(float a, float b, float t) {
 }
 
 - (void)onPackFinish {
+    //check cheating
+    if (_imgIdx != self.files.count-1 || _smile != (self.files.count + _rd)) {
+        alert(@"cheating", nil);
+        return;
+    }
+    
+    if ([self checkSliderNum] == NO) {
+        return;
+    }
+    
     //ads
     if (M_TEST != _gd.gameMode) {
         float rd = (float)(arc4random() % 100);
@@ -1140,6 +1175,14 @@ static float lerpf(float a, float b, float t) {
     _gameRunning = NO;
     [_btnExit setBackgroundColor:BUTTON_COLOR_RED];
     [_btnExit setFontColor:[UIColor whiteColor]];
+    
+    
+    //check cheating
+    NSTimeInterval intv = [SldUtil secureGetDoubleWithKey:@"BeginTime"];
+    if ([_gameBeginTime timeIntervalSince1970] != intv) {
+        alert(@"cheating", nil);
+        return;
+    }
     
     //score
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];

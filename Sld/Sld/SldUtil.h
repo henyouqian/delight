@@ -50,6 +50,14 @@ NSString* formatInterval(int sec);
 + (void)sendWithSocket:(SRWebSocket*)socket type:(NSString*)type data:(NSDictionary*)dict;
 
 + (NSString *)genUUID;
+
++ (void)secureSetString:(NSString*)str withKey:(NSString*)key;
++ (NSString*)secureGetStringWithKey:(NSString*)key;
++ (void)secureSetInt:(int)value withKey:(NSString*)key;
++ (int)secureGetIntWithKey:(NSString*)key;
++ (void)secureSetDouble:(double)value withKey:(NSString*)key;
++ (double)secureGetDoubleWithKey:(NSString*)key;
+
 @end
 
 @interface NSData (NSData_Conversion)

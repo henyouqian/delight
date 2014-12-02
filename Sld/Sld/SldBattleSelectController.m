@@ -147,6 +147,7 @@ static NSString * const reuseIdentifier = @"BattleCell";
         }
         if (cell.room.BetCoin == 0 && [gd.playerInfo getHeartNum]==0) {
             alert(@"♥︎不足，请等待", nil);
+            return NO;
         }
         return YES;
     }

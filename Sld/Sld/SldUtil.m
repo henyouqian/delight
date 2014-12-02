@@ -239,6 +239,43 @@ NSString* formatInterval(int sec) {
     return (__bridge NSString *)string;
 }
 
+static NSString *SECURE_SERVICE = @"SECURE_SERVICE";
+
++ (void)secureSetString:(NSString*)str withKey:(NSString*)key {
+    [SSKeychain setPassword:str forService:SECURE_SERVICE account:key];
+}
+
++ (NSString*)secureGetStringWithKey:(NSString*)key {
+    NSString *value = [SSKeychain passwordForService:SECURE_SERVICE account:key];
+    return value;
+}
+
++ (void)secureSetInt:(int)value withKey:(NSString*)key {
+    NSString *str = [NSString stringWithFormat:@"%d", value];
+    [SldUtil secureSetString:str withKey:key];
+}
+
++ (int)secureGetIntWithKey:(NSString*)key {
+    NSString *str = [SldUtil secureGetStringWithKey:key];
+    if (!str) {
+        return 0;
+    }
+    return [str intValue];
+}
+
++ (void)secureSetDouble:(double)value withKey:(NSString*)key {
+    NSString *str = [NSString stringWithFormat:@"%f", value];
+    [SldUtil secureSetString:str withKey:key];
+}
+
++ (double)secureGetDoubleWithKey:(NSString*)key {
+    NSString *str = [SldUtil secureGetStringWithKey:key];
+    if (!str) {
+        return 0;
+    }
+    return [str doubleValue];
+}
+
 @end
 
 

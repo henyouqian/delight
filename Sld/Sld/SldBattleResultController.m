@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rewardCoinLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pointLabel;
 
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) NSDictionary *procDict;
@@ -97,6 +98,7 @@
     _resultLabel.text = @"???";
     NSString *result = _resultDict[@"Result"];
     BOOL isWin = NO;
+    _pointLabel.text = @"";
     if ([result compare:@"win"] == 0) {
         _resultLabel.text = @"赢了";
         isWin = YES;
@@ -114,6 +116,13 @@
                 [_sndCollectCoin play];
             }];
         }
+        
+        if (battlePointAdd == winStreak) {
+            _pointLabel.text = [NSString stringWithFormat:@"获得%d积分", battlePointAdd];
+        } else {
+            _pointLabel.text = [NSString stringWithFormat:@"获得%d积分(连胜%d+终结对手连胜%d)", battlePointAdd, winStreak, battlePointAdd-winStreak];
+        }
+        
     } else if ([result compare:@"lose"] == 0) {
         _resultLabel.text = @"输了";
     } else if ([result compare:@"draw"] == 0) {

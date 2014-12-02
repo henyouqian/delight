@@ -339,6 +339,9 @@
         _gd.gameMode = M_MATCH;
         _gd.autoPaging = [(NSNumber*)dict[@"AutoPaging"] boolValue];
         
+        int sliderNum = [(NSNumber*)dict[@"SliderNum"] intValue];
+        [SldUtil secureSetInt:sliderNum withKey:@"SliderNum"];
+        
         [self loadAndEnterGame];
     }];
 }

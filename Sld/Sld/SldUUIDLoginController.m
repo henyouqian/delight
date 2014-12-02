@@ -15,7 +15,9 @@
 #import "SldConfig.h"
 
 static NSString *KEYCHAIN_SERVICE = @"uuidLoginKeychain";
-static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1";
+//distcheck
+static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for distribution
+//static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT2";
 
 @interface SldUUIDLoginController ()
 
