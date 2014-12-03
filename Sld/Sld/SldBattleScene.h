@@ -20,7 +20,6 @@
 @interface SldBattleScene : SKScene<SKStoreProductViewControllerDelegate, SRWebSocketDelegate>
 @property (weak, nonatomic) UINavigationController *navigationController;
 @property (weak, nonatomic) SldBattleSceneController *controller;
-@property (nonatomic) uint32_t sliderNum;
 
 - (instancetype)initWithSize:(CGSize)size controller:(SldBattleSceneController*)controller firstSprite:(SldSprite*)spt;
 

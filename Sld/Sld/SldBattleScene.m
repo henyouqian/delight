@@ -142,6 +142,7 @@ static SKView * _skView = nil;
 @property (nonatomic) float targetH;
 
 @property (nonatomic) int foeScore;
+@property (nonatomic) int sliderNum;
 
 @end
 
@@ -176,11 +177,7 @@ NSDate *_gameBeginTime;
         _foeScore = 0;
         
         _sprites = [NSMutableArray arrayWithCapacity:3];
-        if (_gd.match) {
-            _sliderNum = _gd.match.sliderNum;
-        } else {
-            _sliderNum = _gd.sliderNum;
-        }
+        _sliderNum = _gd.sliderNum;
         
         _sliderParent = [SKNode node];
         [self.scene addChild:self.sliderParent];
@@ -508,7 +505,6 @@ static float lerpf(float a, float b, float t) {
             break;
         }
         NSString *file = self.files[loadImgIdx];
-        lwInfo(@"loadImgIdx:%d", loadImgIdx);
         [self.sprites addObject:[NSNumber numberWithUnsignedInteger:loadImgIdx]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             SldSprite *sprite = [SldSprite spriteWithPath:file index:loadImgIdx];
@@ -555,18 +551,25 @@ static float lerpf(float a, float b, float t) {
         [self.highlightDot runAction:action];
     }
     
-    
-    
-    //    if ([self.sprites count] >= 1) {
-    //        self.imgIdx++;
-    //    }
-    
-    
     if ([self.sprites count] >= 2 && [self.sprites[1] isKindOfClass:[SldSprite class]]) {
         [self setupSprite:self.sprites[1]];
+        [self loadImage];
+    } else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (1) {
+                if ([self.sprites count] >= 2 && [self.sprites[1] isKindOfClass:[SldSprite class]]) {
+                    break;
+                } else {
+                    usleep(10000);
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setupSprite:self.sprites[1]];
+                [self loadImage];
+            });
+        });
     }
-    
-    [self loadImage];
 }
 
 - (NSMutableArray*)shuffle:(NSUInteger)num more:(BOOL)more {

@@ -658,18 +658,25 @@ static float lerpf(float a, float b, float t) {
         [self.highlightDot runAction:action];
     }
     
-    
-    
-    //    if ([self.sprites count] >= 1) {
-    //        self.imgIdx++;
-    //    }
-    
-    
     if ([self.sprites count] >= 2 && [self.sprites[1] isKindOfClass:[SldSprite class]]) {
         [self setupSprite:self.sprites[1]];
+        [self loadImage];
+    } else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (1) {
+                if ([self.sprites count] >= 2 && [self.sprites[1] isKindOfClass:[SldSprite class]]) {
+                    break;
+                } else {
+                    usleep(10000);
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setupSprite:self.sprites[1]];
+                [self loadImage];
+            });
+        });
     }
-    
-    [self loadImage];
 }
 
 - (NSMutableArray*)shuffle:(NSUInteger)num more:(BOOL)more {

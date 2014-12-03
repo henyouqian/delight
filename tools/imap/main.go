@@ -39,11 +39,17 @@ const (
 
 	AMAZON_EMAIL    = "gc-orders@gc.email.amazon.cn"
 	PROVIDER_AMAZON = "amazon"
+
+	ADMIN_ACCOUNT  = "henyouqian@gmail.com"
+	ADMIN_PASSWORD = "Nmmgb808313"
+	SLD_SERVER_URL = "http://localhost:9998/"
+	// SLD_SERVER_URL = "http://sld.pintugame.com/"
+
 )
 
 type Ecard struct {
 	Provider string
-	Price    float32
+	RmbPrice float32
 	Code     string
 }
 
@@ -64,10 +70,9 @@ func main() {
 	flag.Parse()
 
 	//
-	_conf.UserName = "henyouqian@gmail.com"
-	_conf.Password = "Nmmgb808313"
-	// _conf.ServerHost = "http://sld.pintugame.com"
-	_conf.ServerHost = "http://localhost:9998/"
+	_conf.UserName = ADMIN_ACCOUNT
+	_conf.Password = ADMIN_PASSWORD
+	_conf.ServerHost = SLD_SERVER_URL
 
 	glog.Info("starting..........")
 	// imap.DefaultLogger = log.New(os.Stdout, "", 0)
@@ -101,6 +106,8 @@ func main() {
 	c.Select(MBox, false)
 	msgId := int(c.Mailbox.Messages)
 	batchNum := 4
+
+	glog.Info(msgId)
 
 	ecards := make([]Ecard, 0)
 
@@ -183,13 +190,13 @@ func main() {
 						strs := strings.Split(str, "Claim code ")
 						code := strs[1]
 						n := strings.Index(code, "\n")
-						code = code[0:n]
+						code = code[0 : n-1]
 
 						// expireIdx := strings.Index(str, yen)
 
 						var ecard Ecard
 						ecard.Provider = PROVIDER_AMAZON
-						ecard.Price = float32(price)
+						ecard.RmbPrice = float32(price)
 						ecard.Code = code
 						ecardsBuff = append(ecardsBuff, ecard)
 					}
@@ -216,24 +223,33 @@ func main() {
 		}
 	}
 
-	//just for test
-	ecards = []Ecard{
-		{PROVIDER_AMAZON, 10, "5"},
-		{PROVIDER_AMAZON, 10, "6"},
-		{PROVIDER_AMAZON, 10, "7"},
-	}
+	// //just for test
+	// ecards = []Ecard{
+	// 	{PROVIDER_AMAZON, 10, "5"},
+	// 	{PROVIDER_AMAZON, 10, "6"},
+	// 	{PROVIDER_AMAZON, 10, "7"},
+	// }
+
+	//print
+	js, err := json.MarshalIndent(ecards, "", "\t")
+	checkErr(err)
+	glog.Info(string(js))
+
+	return
 
 	//add to server
 	if len(ecards) > 0 {
 		loginSldServer()
 	}
 	for _, ecard := range ecards {
-		glog.Info(ecard.Code)
+		glog.Info(ecard)
+
+		continue
 
 		body := map[string]interface{}{
-			"Provider":   ecard.Provider,
-			"RmbPrice":   ecard.Price,
-			"CouponCode": ecard.Code,
+			"Provider": ecard.Provider,
+			"RmbPrice": ecard.RmbPrice,
+			"Code":     ecard.Code,
 		}
 
 		js, err := json.Marshal(body)
