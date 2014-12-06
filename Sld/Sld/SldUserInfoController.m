@@ -114,8 +114,18 @@ static NSArray *_genderStrings;
 //        _customAvatarKey = info.customAvatarKey;
     }
     
+    if (_gravatarKey.length == 0 && _customAvatarKey.length == 0) {
+        _gravatarKey = [NSString stringWithFormat:@"%u", arc4random() % gravatarRandMax];
+    }
+    
     if (!_needUploadCustomAvatar) {
         [SldUtil loadAvatar:_avatarImageView gravatarKey:_gravatarKey customAvatarKey:_customAvatarKey];
+    }
+    
+    if (_teamInput.text.length == 0) {
+        int rd = arc4random();
+        int n = rd % _gd.TEAM_NAMES.count;
+        _teamInput.text = _gd.TEAM_NAMES[n];
     }
     
     if (_nameInput.text == nil || _nameInput.text.length == 0) {

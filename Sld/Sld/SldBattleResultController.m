@@ -90,6 +90,15 @@
     int winStreak = [(NSNumber*)_resultDict[@"WinStreak"] intValue];
     int winStreakMax = [(NSNumber*)_resultDict[@"WinstreakMax"] intValue];
     
+    //levelup?
+    NSString *lvTitle1 = [_gd getPlayerBattleLevelTitle];
+    NSString *lvTitle2 = [_gd getPlayerBattleLevelTitleWithPoint:battlePoint];
+    if ([lvTitle1 compare:lvTitle2] != 0) {
+        NSString *str = [NSString stringWithFormat:@"升级啦！%@ -> %@", lvTitle1, lvTitle2];
+        alert(str, nil);
+    }
+    
+    //
     _gd.playerInfo.BattlePoint = battlePoint;
     _gd.playerInfo.BattleWinStreak = winStreak;
     _gd.playerInfo.BattleWinStreakMax = winStreakMax;

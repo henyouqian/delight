@@ -70,8 +70,9 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
 //                       @"49BE1E72-A581-4170-9C3C-AEC38E3BB5A1",
 //                       @"9DA924BB-6327-4C8A-BA4D-B010765478CD",
 //                       @"43DF2717-1407-4D0A-822C-38275B22617A"];
-////    key = users[1]; //yaya
-//    key = users[3]; //uuid
+
+//#define FAKEUSER
+//    key = @"9DA924BB-6327-4C8A-BA4D-B010765478CD111";
     
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/getSnsSecret" body:nil completionHandler:^(NSData *data, NSURLResponse *resp, NSError *error) {
@@ -107,7 +108,9 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
             }
             
             //save to keychain
-            [SSKeychain setPassword:key forService:KEYCHAIN_SERVICE account:LOCAL_ACCOUNT];
+#ifndef FAKEUSER
+                [SSKeychain setPassword:key forService:KEYCHAIN_SERVICE account:LOCAL_ACCOUNT];
+#endif
             
             //
             SldGameData *gameData = [SldGameData getInstance];

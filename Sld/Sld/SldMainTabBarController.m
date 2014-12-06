@@ -60,7 +60,7 @@
 }
 
 - (void)onMinTimer {
-    if (!_gd.online) {
+    if (!_gd.online || _gd.playerInfo.nickName.length == 0) {
         return;
     }
     SldHttpSession *session = [SldHttpSession defaultSession];

@@ -63,8 +63,6 @@ static SldHotMatchListController* _inst = nil;
     }
 }
 
-static float _scrollY = -64;
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -72,11 +70,6 @@ static float _scrollY = -64;
     CGFloat bottom = self.bottomLayoutGuide.length;
     UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
     self.collectionView.contentInset = newInsets;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    _scrollY = self.collectionView.contentOffset.y;
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView

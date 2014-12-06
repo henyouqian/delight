@@ -106,6 +106,8 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
     
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"取消发布" style:UIBarButtonItemStylePlain target:self action:@selector(onBack)];
     self.navigationItem.leftBarButtonItem = backButton;
+    
+    _sliderNum = 5;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -158,12 +160,12 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
         
         //
         _sliderNumbers = @[@(3), @(4), @(5), @(6), @(7), @(8)];
-        _sliderNum = 5;
+        //_sliderNum = 5;
         int numberOfSteps = ((float)[_sliderNumbers count] - 1);
         _header.sliderNumSlider.maximumValue = numberOfSteps;
         _header.sliderNumSlider.minimumValue = 0;
         _header.sliderNumSlider.continuous = YES;
-        _header.sliderNumSlider.value = 2;
+        _header.sliderNumSlider.value = [_sliderNumbers indexOfObject:@(_sliderNum)];
         [_header.sliderNumSlider addTarget:self
                              action:@selector(sliderNumValueChanged:)
                    forControlEvents:UIControlEventValueChanged];
@@ -771,19 +773,36 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) CBStoreHouseRefreshControl *storeHouseRefreshControl;
+@property (nonatomic) BOOL refreshOnce;
 
 @end
 
 @implementation SldMyMatchListController
 
+static SldMyMatchListController* _inst = nil;
+
++ (instancetype)getInst {
+    return _inst;
+}
+
+- (void)onTabSelect {
+    if (!_refreshOnce) {
+        _refreshOnce = YES;
+        [self refresh];
+    }
+}
+
 - (void)dealloc {
     [_secTimer invalidate];
+    _inst = nil;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _inst = self;
     _gd = [SldGameData getInstance];
+    _refreshOnce = NO;
     
     _myMatchListController = self;
     _matches = [NSMutableArray array];
@@ -792,7 +811,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
     self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refresh) plist:@"storehouse"];
     
     //
-    [self refresh];
+//    [self refresh];
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
@@ -804,34 +823,18 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
         [self refreshTimeLabel:cell];
     }
 }
-
-static float _scrollY = -64;
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    self.tabBarController.navigationItem.title = self.tabBarItem.title;
-//    self.tabBarController.automaticallyAdjustsScrollViewInsets = NO;
+    CGFloat top = self.topLayoutGuide.length;
+    CGFloat bottom = self.bottomLayoutGuide.length;
+    UIEdgeInsets newInsets = UIEdgeInsetsMake(top+64, 0, bottom, 0);
+    self.collectionView.contentInset = newInsets;
     
-//    UIEdgeInsets insets = self.collectionView.contentInset;
-//    insets.top = 64;
-//    insets.bottom = 50;
-//    
-//    self.collectionView.contentInset = insets;
-//    self.collectionView.scrollIndicatorInsets = insets;
-//    
-//    self.collectionView.contentOffset = CGPointMake(0, _scrollY);
-
-    
-    //refesh
-    if (_gd.playerInfo && _gd.needRefreshOwnerList) {
-        [self refresh];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    _scrollY = self.collectionView.contentOffset.y;
+//    //refesh
+//    if (_gd.playerInfo && _gd.needRefreshOwnerList) {
+//        [self refresh];
+//    }
 }
 
 - (void)refresh {

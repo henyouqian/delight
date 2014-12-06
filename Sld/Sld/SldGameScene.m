@@ -1098,7 +1098,7 @@ static float lerpf(float a, float b, float t) {
     if (_gd.gameMode == M_MATCH) {
         int sliderNum = [SldUtil secureGetIntWithKey:@"SliderNum"];
         if (sliderNum != _sliderNum) {
-            alert(@"cheating", nil);
+            alert(@"cheating slider num", nil);
             return NO;
         }
     }
@@ -1136,8 +1136,8 @@ static float lerpf(float a, float b, float t) {
 
 - (void)onPackFinish {
     //check cheating
-    if (_imgIdx != self.files.count-1 || _smile != (self.files.count + _rd)) {
-        alert(@"cheating", nil);
+    if (_smile != (self.files.count + _rd)) {
+        alert(@"cheating pack finish", nil);
         return;
     }
     
@@ -1187,7 +1187,7 @@ static float lerpf(float a, float b, float t) {
     //check cheating
     NSTimeInterval intv = [SldUtil secureGetDoubleWithKey:@"BeginTime"];
     if ([_gameBeginTime timeIntervalSince1970] != intv) {
-        alert(@"cheating", nil);
+        alert(@"cheating begin time", nil);
         return;
     }
     

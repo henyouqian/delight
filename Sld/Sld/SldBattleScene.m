@@ -999,7 +999,11 @@ static float lerpf(float a, float b, float t) {
     int score = -(int)(dt*1000);
     
     //web socket
-    NSDictionary *msg = @{@"Msec":@(-score)};
+    int msec = -score;
+    NSString *checksum = [NSString stringWithFormat:@"%@+%d9d7a", _gd.matchSecret, msec+8703];
+    checksum = [SldUtil sha1WithString:checksum];
+    
+    NSDictionary *msg = @{@"Msec":@(msec), @"checksum":checksum};
     [SldUtil sendWithSocket:_gd.webSocket type:@"finish" data:msg];
     
     //show blured image and cover

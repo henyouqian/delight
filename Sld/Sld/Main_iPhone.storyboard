@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ZaF-Nn-xfe">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -1792,6 +1793,12 @@
                                             <segue destination="Tlg-Zu-rIA" kind="embed" id="v06-hg-po0"/>
                                         </connections>
                                     </containerView>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I0k-xM-7kq" userLabel="mine">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                                        <connections>
+                                            <segue destination="skX-wS-jYW" kind="embed" id="i74-X2-uuJ"/>
+                                        </connections>
+                                    </containerView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1807,8 +1814,12 @@
                                     <constraint firstAttribute="bottom" secondItem="Lx3-nq-YLO" secondAttribute="bottom" id="Mpv-K7-2FB"/>
                                     <constraint firstAttribute="trailing" secondItem="7PY-id-SJm" secondAttribute="trailing" id="QNI-47-RvJ"/>
                                     <constraint firstAttribute="trailing" secondItem="jar-0W-sVH" secondAttribute="trailing" id="Txd-2I-bxX"/>
+                                    <constraint firstItem="I0k-xM-7kq" firstAttribute="leading" secondItem="Ayc-ay-OIw" secondAttribute="leading" id="WIa-kc-CtK"/>
+                                    <constraint firstAttribute="trailing" secondItem="I0k-xM-7kq" secondAttribute="trailing" id="XWE-6e-O75"/>
                                     <constraint firstAttribute="bottom" secondItem="jar-0W-sVH" secondAttribute="bottom" id="Zlb-To-1Ni"/>
+                                    <constraint firstAttribute="bottom" secondItem="I0k-xM-7kq" secondAttribute="bottom" id="dAh-8a-MWp"/>
                                     <constraint firstAttribute="trailing" secondItem="wGp-UD-kmh" secondAttribute="trailing" id="eGb-dp-ya9"/>
+                                    <constraint firstItem="I0k-xM-7kq" firstAttribute="top" secondItem="Ayc-ay-OIw" secondAttribute="top" id="eHl-jW-cSL"/>
                                     <constraint firstItem="jar-0W-sVH" firstAttribute="leading" secondItem="Ayc-ay-OIw" secondAttribute="leading" id="lMO-xp-6f3"/>
                                     <constraint firstItem="wGp-UD-kmh" firstAttribute="top" secondItem="Ayc-ay-OIw" secondAttribute="top" id="nyu-ae-Fdt"/>
                                 </constraints>
@@ -1833,13 +1844,14 @@
                     <navigationItem key="navigationItem" id="Rwa-HP-uNu">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="AOP-Gf-A6d">
-                            <rect key="frame" x="180" y="7" width="240" height="30"/>
+                            <rect key="frame" x="160" y="6" width="280" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="最新"/>
                                 <segment title="最火"/>
                                 <segment title="已玩"/>
                                 <segment title="喜欢"/>
+                                <segment title="发布"/>
                             </segments>
                             <color key="tintColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -1851,13 +1863,14 @@
                         <outlet property="hottestView" destination="jar-0W-sVH" id="qxu-FK-AbG"/>
                         <outlet property="latestView" destination="7PY-id-SJm" id="Q6m-dh-Df8"/>
                         <outlet property="likeView" destination="wGp-UD-kmh" id="6mr-cb-5CN"/>
+                        <outlet property="myView" destination="I0k-xM-7kq" id="vPB-T6-YKt"/>
                         <outlet property="playedView" destination="Lx3-nq-YLO" id="dyY-0Y-P5y"/>
                         <outlet property="seg" destination="AOP-Gf-A6d" id="dx5-Ma-PRb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RBd-tx-tj5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6659" y="-3124"/>
+            <point key="canvasLocation" x="-6637" y="-3124.5"/>
         </scene>
         <!--Sld Nevigation Controller-->
         <scene sceneID="erP-9r-D9c">
@@ -1890,10 +1903,9 @@
                     </tabBar>
                     <connections>
                         <segue destination="cQq-v6-OdV" kind="relationship" relationship="viewControllers" id="arL-gN-CDR"/>
-                        <segue destination="i3H-LH-9Oh" kind="relationship" relationship="viewControllers" id="UeJ-Yn-HSC"/>
+                        <segue destination="khx-Dn-Ax9" kind="relationship" relationship="viewControllers" id="U9Y-sd-i4y"/>
                         <segue destination="dbj-qv-uRK" kind="relationship" relationship="viewControllers" id="usp-jy-ynR"/>
                         <segue destination="8ef-dj-P92" kind="relationship" relationship="viewControllers" id="lnr-Yq-Nlb"/>
-                        <segue destination="khx-Dn-Ax9" kind="relationship" relationship="viewControllers" id="U9Y-sd-i4y"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kin-IP-XaP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2440,7 +2452,7 @@
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="skX-wS-jYW" customClass="SldMyMatchListController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="w8F-AC-tDW" customClass="SldCollectionView">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.1462323589" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="RlS-7Q-p6H">
@@ -2494,9 +2506,9 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kwy-Qs-e4f">
-                                    <rect key="frame" x="46" y="0.0" width="508" height="60"/>
+                                    <rect key="frame" x="10" y="0.0" width="580" height="60"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <state key="normal" title="发布我的游戏">
+                                    <state key="normal" title="发布我的比赛">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
@@ -2508,9 +2520,9 @@
                             <color key="backgroundColor" red="0.44412118909758408" green="0.69579422903737931" blue="0.72637348790322576" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="Kwy-Qs-e4f" secondAttribute="bottom" id="Imh-s2-sbY"/>
-                                <constraint firstItem="Kwy-Qs-e4f" firstAttribute="leading" secondItem="df7-0r-Pbq" secondAttribute="leading" constant="46" id="Wtg-L3-Uox"/>
+                                <constraint firstItem="Kwy-Qs-e4f" firstAttribute="leading" secondItem="df7-0r-Pbq" secondAttribute="leading" constant="10" id="Wtg-L3-Uox"/>
                                 <constraint firstItem="Kwy-Qs-e4f" firstAttribute="top" secondItem="df7-0r-Pbq" secondAttribute="top" id="smK-xv-Wwm"/>
-                                <constraint firstAttribute="trailing" secondItem="Kwy-Qs-e4f" secondAttribute="trailing" constant="46" id="u0S-Kh-IAs"/>
+                                <constraint firstAttribute="trailing" secondItem="Kwy-Qs-e4f" secondAttribute="trailing" constant="10" id="u0S-Kh-IAs"/>
                             </constraints>
                         </collectionReusableView>
                         <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="myMatchListFooter" id="ADr-NQ-ZLM" customClass="SldMyMatchFooter">
@@ -2518,7 +2530,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="KKo-xz-RNN">
-                                    <rect key="frame" x="110" y="25" width="20" height="20"/>
+                                    <rect key="frame" x="255" y="25" width="20" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="20" id="LdR-q8-NnA"/>
                                         <constraint firstAttribute="height" constant="20" id="qDM-7g-evT"/>
@@ -2540,10 +2552,16 @@
                                 <constraint firstAttribute="trailing" secondItem="MdI-Xk-7EC" secondAttribute="trailing" id="7ls-TO-dXU"/>
                                 <constraint firstItem="MdI-Xk-7EC" firstAttribute="top" secondItem="ADr-NQ-ZLM" secondAttribute="top" id="KI9-OB-aWr"/>
                                 <constraint firstAttribute="centerY" secondItem="KKo-xz-RNN" secondAttribute="centerY" id="Sw0-6e-cgn"/>
+                                <constraint firstAttribute="centerX" secondItem="KKo-xz-RNN" secondAttribute="centerX" constant="35" id="VZn-01-xlZ"/>
                                 <constraint firstItem="MdI-Xk-7EC" firstAttribute="leading" secondItem="ADr-NQ-ZLM" secondAttribute="leading" id="Ydh-ed-XwK"/>
                                 <constraint firstItem="KKo-xz-RNN" firstAttribute="leading" secondItem="ADr-NQ-ZLM" secondAttribute="leading" constant="110" id="Zrf-VB-SpT"/>
                                 <constraint firstAttribute="bottom" secondItem="MdI-Xk-7EC" secondAttribute="bottom" id="rfi-rJ-O74"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="Zrf-VB-SpT"/>
+                                </mask>
+                            </variation>
                             <connections>
                                 <outlet property="loadMoreButton" destination="MdI-Xk-7EC" id="VsX-c3-fKl"/>
                                 <outlet property="spin" destination="KKo-xz-RNN" id="9ED-iw-ENB"/>
@@ -2560,7 +2578,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74e-hj-LlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4371" y="-1956"/>
+            <point key="canvasLocation" x="-5547" y="-1973.5"/>
         </scene>
         <!--已选图片-->
         <scene sceneID="Gqq-cx-hxs">
@@ -4913,26 +4931,6 @@
             </objects>
             <point key="canvasLocation" x="-7383" y="-3124"/>
         </scene>
-        <!--我的-->
-        <scene sceneID="5Tb-g6-sNK">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="i3H-LH-9Oh" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="我的" image="otlSmile48.png" id="lJL-FW-OQn"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XTH-pv-cg3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="skX-wS-jYW" kind="relationship" relationship="rootViewController" id="KRD-yZ-S9q"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4dC-t0-Xtt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-5183" y="-1956"/>
-        </scene>
         <!--账号-->
         <scene sceneID="4Mb-VD-uhu">
             <objects>
@@ -5467,6 +5465,24 @@
             </objects>
             <point key="canvasLocation" x="-2578" y="-2642"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="IlW-KI-dQ0">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Z2b-9t-GHO" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="US1-pc-h2V"/>
+                        <viewControllerLayoutGuide type="bottom" id="fGX-ua-z2k"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="je7-7i-iWR">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="krP-Co-a5q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
     </scenes>
     <resources>
         <image name="blackDisk90.png" width="90" height="90"/>
@@ -5484,15 +5500,14 @@
         <image name="otlDisc48.png" width="24" height="24"/>
         <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlGrid48.png" width="24" height="24"/>
-        <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlUser48.png" width="24" height="24"/>
         <image name="qq64.png" width="128" height="128"/>
         <image name="thumbDarker2.png" width="256" height="51"/>
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Kot-XL-OVA"/>
+        <segue reference="8wM-VL-FwZ"/>
+        <segue reference="Bsz-cY-Efb"/>
         <segue reference="28D-cR-agb"/>
-        <segue reference="xlZ-7G-8KU"/>
     </inferredMetricsTieBreakers>
 </document>

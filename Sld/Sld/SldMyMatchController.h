@@ -10,6 +10,8 @@
 
 @interface SldMyMatchListController : UICollectionViewController <QBImagePickerControllerDelegate>
 
++ (instancetype)getInst;
+- (void)onTabSelect;
 - (void)refresh;
 
 @end

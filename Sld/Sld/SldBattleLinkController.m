@@ -30,7 +30,6 @@
 //@property (nonatomic) NSDate *date;
 @property (nonatomic) NSDate *lastEmojiTime;
 @property (nonatomic) FISound *sndPop;
-@property (nonatomic) NSString *secret;
 @end
 
 @implementation SldBattleLinkController
@@ -205,7 +204,7 @@
     _gd.packInfo = [PackInfo packWithDictionary:[msg objectForKey:@"Pack"]];
     _gd.sliderNum = [[msg objectForKey:@"SliderNum"] intValue];
     _outputLabel.text = @"配对成功";
-    _secret = [msg objectForKey:@"Secret"];
+    _gd.matchSecret = [msg objectForKey:@"Secret"];
     _gd.playerInfo.BattleHeartZeroTime = [(NSNumber*)[msg objectForKey:@"HeartZeroTime"] longLongValue];
     
     //foe player
