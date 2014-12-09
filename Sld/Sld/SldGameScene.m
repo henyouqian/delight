@@ -1185,10 +1185,12 @@ static float lerpf(float a, float b, float t) {
     
     
     //check cheating
-    NSTimeInterval intv = [SldUtil secureGetDoubleWithKey:@"BeginTime"];
-    if ([_gameBeginTime timeIntervalSince1970] != intv) {
-        alert(@"cheating begin time", nil);
-        return;
+    if (_gd.gameMode == M_MATCH) {
+        NSTimeInterval intv = [SldUtil secureGetDoubleWithKey:@"BeginTime"];
+        if ([_gameBeginTime timeIntervalSince1970] != intv) {
+            alert(@"cheating begin time", nil);
+            return;
+        }
     }
     
     //score

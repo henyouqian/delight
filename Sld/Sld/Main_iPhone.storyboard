@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ZaF-Nn-xfe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ZaF-Nn-xfe">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -22,7 +22,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cTi-Vt-aD4" userLabel="userAdsView">
                                 <rect key="frame" x="150" y="150" width="300" height="300"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TMK-LO-U7s">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TMK-LO-U7s">
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                         <variation key="widthClass=regular" fixedFrame="YES">
                                             <rect key="frame" x="-150" y="-150" width="0.0" height="0.0"/>
                                         </variation>
@@ -69,6 +70,10 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="300" id="1Sz-Or-ElX"/>
+                                    <constraint firstItem="TMK-LO-U7s" firstAttribute="leading" secondItem="cTi-Vt-aD4" secondAttribute="leading" id="AZ0-kz-qsl"/>
+                                    <constraint firstAttribute="trailing" secondItem="TMK-LO-U7s" secondAttribute="trailing" id="QEL-YZ-rQh"/>
+                                    <constraint firstAttribute="bottom" secondItem="TMK-LO-U7s" secondAttribute="bottom" id="a5C-UH-jk5"/>
+                                    <constraint firstItem="TMK-LO-U7s" firstAttribute="top" secondItem="cTi-Vt-aD4" secondAttribute="top" id="fCx-bX-K9D"/>
                                     <constraint firstAttribute="width" constant="300" id="zBA-a1-d30"/>
                                 </constraints>
                             </view>
