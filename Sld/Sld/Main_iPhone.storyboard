@@ -1534,7 +1534,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2606" y="-1989"/>
+            <point key="canvasLocation" x="-1794" y="-1989"/>
         </scene>
         <!--Sld Advice Controller-->
         <scene sceneID="2yb-cK-pN1">
@@ -1798,12 +1798,6 @@
                                             <segue destination="Tlg-Zu-rIA" kind="embed" id="v06-hg-po0"/>
                                         </connections>
                                     </containerView>
-                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I0k-xM-7kq" userLabel="mine">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
-                                        <connections>
-                                            <segue destination="skX-wS-jYW" kind="embed" id="i74-X2-uuJ"/>
-                                        </connections>
-                                    </containerView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1819,12 +1813,8 @@
                                     <constraint firstAttribute="bottom" secondItem="Lx3-nq-YLO" secondAttribute="bottom" id="Mpv-K7-2FB"/>
                                     <constraint firstAttribute="trailing" secondItem="7PY-id-SJm" secondAttribute="trailing" id="QNI-47-RvJ"/>
                                     <constraint firstAttribute="trailing" secondItem="jar-0W-sVH" secondAttribute="trailing" id="Txd-2I-bxX"/>
-                                    <constraint firstItem="I0k-xM-7kq" firstAttribute="leading" secondItem="Ayc-ay-OIw" secondAttribute="leading" id="WIa-kc-CtK"/>
-                                    <constraint firstAttribute="trailing" secondItem="I0k-xM-7kq" secondAttribute="trailing" id="XWE-6e-O75"/>
                                     <constraint firstAttribute="bottom" secondItem="jar-0W-sVH" secondAttribute="bottom" id="Zlb-To-1Ni"/>
-                                    <constraint firstAttribute="bottom" secondItem="I0k-xM-7kq" secondAttribute="bottom" id="dAh-8a-MWp"/>
                                     <constraint firstAttribute="trailing" secondItem="wGp-UD-kmh" secondAttribute="trailing" id="eGb-dp-ya9"/>
-                                    <constraint firstItem="I0k-xM-7kq" firstAttribute="top" secondItem="Ayc-ay-OIw" secondAttribute="top" id="eHl-jW-cSL"/>
                                     <constraint firstItem="jar-0W-sVH" firstAttribute="leading" secondItem="Ayc-ay-OIw" secondAttribute="leading" id="lMO-xp-6f3"/>
                                     <constraint firstItem="wGp-UD-kmh" firstAttribute="top" secondItem="Ayc-ay-OIw" secondAttribute="top" id="nyu-ae-Fdt"/>
                                 </constraints>
@@ -1856,7 +1846,6 @@
                                 <segment title="最火"/>
                                 <segment title="已玩"/>
                                 <segment title="喜欢"/>
-                                <segment title="发布"/>
                             </segments>
                             <color key="tintColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -1868,7 +1857,6 @@
                         <outlet property="hottestView" destination="jar-0W-sVH" id="qxu-FK-AbG"/>
                         <outlet property="latestView" destination="7PY-id-SJm" id="Q6m-dh-Df8"/>
                         <outlet property="likeView" destination="wGp-UD-kmh" id="6mr-cb-5CN"/>
-                        <outlet property="myView" destination="I0k-xM-7kq" id="vPB-T6-YKt"/>
                         <outlet property="playedView" destination="Lx3-nq-YLO" id="dyY-0Y-P5y"/>
                         <outlet property="seg" destination="AOP-Gf-A6d" id="dx5-Ma-PRb"/>
                     </connections>
@@ -1876,20 +1864,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RBd-tx-tj5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-6637" y="-3124.5"/>
-        </scene>
-        <!--Sld Nevigation Controller-->
-        <scene sceneID="erP-9r-D9c">
-            <objects>
-                <navigationController definesPresentationContext="YES" id="QQC-Jn-OIJ" customClass="SldNevigationController" sceneMemberID="viewController">
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kH0-He-kwT">
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="0.33000000000000002" green="0.56849999999999989" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </navigationBar>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lMS-UE-4C1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-7247" y="-1962"/>
         </scene>
         <!--Sld Main Tab Bar Controller-->
         <scene sceneID="3Cy-BK-rxr">
@@ -1908,7 +1882,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="cQq-v6-OdV" kind="relationship" relationship="viewControllers" id="arL-gN-CDR"/>
-                        <segue destination="khx-Dn-Ax9" kind="relationship" relationship="viewControllers" id="U9Y-sd-i4y"/>
+                        <segue destination="LAx-Iz-RUR" kind="relationship" relationship="viewControllers" id="GRz-bh-qqI"/>
                         <segue destination="dbj-qv-uRK" kind="relationship" relationship="viewControllers" id="usp-jy-ynR"/>
                         <segue destination="8ef-dj-P92" kind="relationship" relationship="viewControllers" id="lnr-Yq-Nlb"/>
                     </connections>
@@ -2457,7 +2431,7 @@
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="skX-wS-jYW" customClass="SldMyMatchListController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="w8F-AC-tDW" customClass="SldCollectionView">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.1462323589" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="RlS-7Q-p6H">
@@ -2578,12 +2552,18 @@
                         </connections>
                     </collectionView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="我的" id="eV5-CY-xk8"/>
+                    <navigationItem key="navigationItem" title="我的" id="eV5-CY-xk8">
+                        <barButtonItem key="rightBarButtonItem" title="分享" id="ZTv-JS-euN">
+                            <connections>
+                                <action selector="onShareButton:" destination="skX-wS-jYW" id="kaA-4W-Y7f"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74e-hj-LlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5547" y="-1973.5"/>
+            <point key="canvasLocation" x="-3587" y="-1954"/>
         </scene>
         <!--已选图片-->
         <scene sceneID="Gqq-cx-hxs">
@@ -2683,7 +2663,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XEa-Zb-QPG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3461" y="-1928"/>
+            <point key="canvasLocation" x="-2649" y="-1928"/>
         </scene>
         <!--Sld Battle Result Controller-->
         <scene sceneID="Q6A-d2-E12">
@@ -2972,7 +2952,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1560" y="-1928"/>
+            <point key="canvasLocation" x="-748" y="-1928"/>
         </scene>
         <!--Sld Comment Controller-->
         <scene sceneID="GQG-5l-QtS">
@@ -3320,7 +3300,7 @@
             <objects>
                 <collectionViewController id="oc6-aL-mJe" customClass="SldBattleSelectController" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ZSo-Lo-bvs">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="ckD-6c-8de">
@@ -5488,6 +5468,26 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="krP-Co-a5q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
+        <!--我的-->
+        <scene sceneID="aMm-oB-BiR">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LAx-Iz-RUR" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="我的" image="otlSmile48.png" id="hug-sD-lkZ"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2CN-2D-W8z">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.33000000000000002" green="0.56850000000000001" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="skX-wS-jYW" kind="relationship" relationship="rootViewController" id="k5D-R4-INa"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RwG-B0-R9T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4399" y="-1954"/>
+        </scene>
     </scenes>
     <resources>
         <image name="blackDisk90.png" width="90" height="90"/>
@@ -5505,6 +5505,7 @@
         <image name="otlDisc48.png" width="24" height="24"/>
         <image name="otlFastForward.png" width="22" height="22"/>
         <image name="otlGrid48.png" width="24" height="24"/>
+        <image name="otlSmile48.png" width="24" height="24"/>
         <image name="otlUser48.png" width="24" height="24"/>
         <image name="qq64.png" width="128" height="128"/>
         <image name="thumbDarker2.png" width="256" height="51"/>

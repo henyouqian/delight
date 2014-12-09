@@ -29,6 +29,7 @@ UIColor *_matchTimeLabelGreen = nil;
         inst.KEYCHAIN_KV = @"com.liwei.Sld.KV";
         inst.STORE_ID = @"923531990";
         
+        inst.USER_HOME_URL = @"http://www.pintugame.com/user.html";
         inst.HTML5_URL = @"http://pintuhtml5.qiniudn.com/index.html";
         inst.FLURRY_KEY = @"2P9DTVNTFZS8YBZ36QBZ";
         inst.MOGO_KEY = @"8c0728f759464dcda07c81afb00d3bf5";
@@ -64,6 +65,10 @@ UIColor *_matchTimeLabelGreen = nil;
     NSString *storeId = [dict objectForKey:@"StoreId"];
     if (storeId) {
         self.STORE_ID = storeId;
+    }
+    NSString *userHomeUrl = [dict objectForKey:@"UserHomeUrl"];
+    if (userHomeUrl) {
+        self.USER_HOME_URL = userHomeUrl;
     }
     NSString *html5Url = [dict objectForKey:@"Html5Url"];
     if (html5Url) {

@@ -811,7 +811,7 @@ static SldMyMatchListController* _inst = nil;
     self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refresh) plist:@"storehouse"];
     
     //
-//    [self refresh];
+    [self refresh];
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
@@ -828,7 +828,7 @@ static SldMyMatchListController* _inst = nil;
     
     CGFloat top = self.topLayoutGuide.length;
     CGFloat bottom = self.bottomLayoutGuide.length;
-    UIEdgeInsets newInsets = UIEdgeInsetsMake(top+64, 0, bottom, 0);
+    UIEdgeInsets newInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
     self.collectionView.contentInset = newInsets;
     
 //    //refesh
@@ -1038,6 +1038,41 @@ static SldMyMatchListController* _inst = nil;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     [self.storeHouseRefreshControl scrollViewDidEndDragging];
+}
+
+- (IBAction)onShareButton:(id)sender {
+    if (_matches.count == 0) {
+        alert(@"暂时没有什么可分享的，先发布一个图集试试吧。", nil);
+        return;
+    }
+    
+    Match *match = _matches[0];
+    NSString *path = makeImagePath(match.thumb);
+    UIImage *image = [UIImage imageWithContentsOfFile:path];
+    NSString *url = [NSString stringWithFormat:@"%@?u=%lld", [SldConfig getInstance].USER_HOME_URL, _gd.playerInfo.userId];
+    
+    [[[UIAlertView alloc] initWithTitle:    @"把我的所有图集生成网页分享给朋友（注意，包括私密发布的图集）"
+                                message:    nil
+                       cancelButtonItem:    [RIButtonItem itemWithLabel:@"取消" action:nil]
+                       otherButtonItems:    [RIButtonItem itemWithLabel:@"拷贝链接地址" action:^{
+                                                UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                                                pasteboard.string = url;
+                                            }],
+                                            [RIButtonItem itemWithLabel:@"分享到社交平台" action:^{
+                                                NSString *weixinText = [NSString stringWithFormat:@"我创建的所有拼图都在这儿啦。"];
+                                                UMSocialData *umData = [UMSocialData defaultData];
+                                                umData.extConfig.title = @"";
+                                                umData.extConfig.wechatSessionData.url = url;
+                                                umData.extConfig.wechatSessionData.shareText = weixinText;
+                                                NSString *text = [NSString stringWithFormat:@"%@\n%@", weixinText, url];
+                                                [UMSocialSnsService presentSnsIconSheetView:self
+                                                                                     appKey:nil
+                                                                                  shareText:text
+                                                                                 shareImage:image
+                                                                            shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina,UMShareToTencent, UMShareToDouban, UMShareToQzone]
+                                                                                   delegate:nil];
+                                            }],
+    nil] show];
 }
 
 @end
