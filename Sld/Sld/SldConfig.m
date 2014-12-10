@@ -47,7 +47,7 @@ UIColor *_matchTimeLabelGreen = nil;
 //        inst.HOST = @"http://sld.pintugame.com";
         
         _matchTimeLabelGreen = makeUIColor(71, 186, 43, 180);
-        _matchTimeLabelRed = makeUIColor(60, 60, 60, 120);
+        _matchTimeLabelRed = makeUIColor(40, 40, 40, 120);
     });
     
     return inst;

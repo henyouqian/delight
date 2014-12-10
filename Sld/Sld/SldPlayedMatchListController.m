@@ -171,6 +171,12 @@ static float _scrollY = -64;
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
+    if (match.prize + match.extraPrize == 0) {
+        cell.prizeLabel.text = @"";
+        cell.darker.hidden = YES;
+    } else {
+        cell.darker.hidden = NO;
+    }
     cell.match = match;
     [self refreshTimeLabel:cell];
     

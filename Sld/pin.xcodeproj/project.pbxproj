@@ -150,6 +150,8 @@
 		D08882F81A1216C8009C2F80 /* CBStoreHouseRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882F61A1216C8009C2F80 /* CBStoreHouseRefreshControl.m */; };
 		D08882FA1A1217E6009C2F80 /* storehouse.plist in Resources */ = {isa = PBXBuildFile; fileRef = D08882F91A1217E6009C2F80 /* storehouse.plist */; };
 		D08882FD1A1286D0009C2F80 /* SldBattleLinkController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */; };
+		D08E8A521A3752BA00FFA4DC /* SldMatchPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */; };
+		D08E8A551A38238300FFA4DC /* DKScrollingTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08E8A541A38238300FFA4DC /* DKScrollingTabController.m */; };
 		D0959EE319B8424800A64767 /* otlList48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE219B8424800A64767 /* otlList48@2x.png */; };
 		D0959EE619B842D000A64767 /* otlBattle48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE419B842D000A64767 /* otlBattle48@2x.png */; };
 		D0959EE719B842D000A64767 /* otlUser48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE519B842D000A64767 /* otlUser48@2x.png */; };
@@ -491,6 +493,10 @@
 		D08882F91A1217E6009C2F80 /* storehouse.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = storehouse.plist; path = Sld/res/ui/storehouse.plist; sourceTree = SOURCE_ROOT; };
 		D08882FB1A1286D0009C2F80 /* SldBattleLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleLinkController.h; sourceTree = "<group>"; };
 		D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleLinkController.m; sourceTree = "<group>"; };
+		D08E8A501A3752BA00FFA4DC /* SldMatchPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPageController.h; sourceTree = "<group>"; };
+		D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPageController.m; sourceTree = "<group>"; };
+		D08E8A531A38238300FFA4DC /* DKScrollingTabController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKScrollingTabController.h; sourceTree = "<group>"; };
+		D08E8A541A38238300FFA4DC /* DKScrollingTabController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKScrollingTabController.m; sourceTree = "<group>"; };
 		D0959EE219B8424800A64767 /* otlList48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlList48@2x.png"; sourceTree = "<group>"; };
 		D0959EE419B842D000A64767 /* otlBattle48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlBattle48@2x.png"; sourceTree = "<group>"; };
 		D0959EE519B842D000A64767 /* otlUser48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "otlUser48@2x.png"; sourceTree = "<group>"; };
@@ -826,6 +832,8 @@
 		B363AD671923D21C001CD6D6 /* thirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				D08E8A531A38238300FFA4DC /* DKScrollingTabController.h */,
+				D08E8A541A38238300FFA4DC /* DKScrollingTabController.m */,
 				D08882F31A1216C8009C2F80 /* BarItem.h */,
 				D08882F41A1216C8009C2F80 /* BarItem.m */,
 				D08882F51A1216C8009C2F80 /* CBStoreHouseRefreshControl.h */,
@@ -913,6 +921,8 @@
 				D06535A51A1756E900ED0617 /* SldUUIDLoginController.m */,
 				D0511D211A24D57800993047 /* SldBattleResultController.h */,
 				D0511D221A24D57800993047 /* SldBattleResultController.m */,
+				D08E8A501A3752BA00FFA4DC /* SldMatchPageController.h */,
+				D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -1587,7 +1597,9 @@
 				D08882F81A1216C8009C2F80 /* CBStoreHouseRefreshControl.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,
 				D0D14B70195B6A83009193E6 /* NSData+Base64.m in Sources */,
+				D08E8A521A3752BA00FFA4DC /* SldMatchPageController.m in Sources */,
 				D08882FD1A1286D0009C2F80 /* SldBattleLinkController.m in Sources */,
+				D08E8A551A38238300FFA4DC /* DKScrollingTabController.m in Sources */,
 				B3691E3D190284DF0055C419 /* SldHttpSession.m in Sources */,
 				D06535A11A151F6900ED0617 /* SldBattleScene.m in Sources */,
 				B31EE7DA18F05BE60047E9FD /* main.m in Sources */,

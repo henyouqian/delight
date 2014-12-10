@@ -26,10 +26,12 @@
 @property (atomic) NSString *localPath;
 @property (atomic) NSURLSessionDownloadTask *task;
 
-- (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion;
-- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asyncLoadLocalImageWithPath:(NSString*)localPath anim:(BOOL)anim thumbSize:(int)thumbSize completion:(void (^)(void))completion;
+- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator anim:(BOOL)anim thumbSize:(int)thumbSize completion:(void (^)(void))completion;
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 - (void)asyncLoadUploadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+
+- (void)asyncLoadUploadImageNoAnimWithKey:(NSString*)imageKey thumbSize:(int)thumbSize showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 - (void)releaseImage;

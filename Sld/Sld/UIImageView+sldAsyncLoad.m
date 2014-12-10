@@ -183,7 +183,7 @@
 
 @implementation SldAsyncImageView
 
-- (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion{
+- (void)asyncLoadLocalImageWithPath:(NSString*)localPath anim:(BOOL)anim thumbSize:(int)thumbSize completion:(void (^)(void))completion{
     if (localPath == nil) {
         lwError("localPath == nil");
         return;
@@ -195,7 +195,7 @@
     _localPath = localPath;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL isGif = [[[localPath pathExtension] lowercaseString] compare:@"gif"] == 0;
-        if (isGif) {
+        if (isGif && anim) {
             NSURL *url = [NSURL fileURLWithPath:localPath];
             
             NSMutableArray* frames = [UIImage imageArrayWithAnimatedGIFURL:url];
@@ -225,7 +225,40 @@
                 }
             });
         } else {
-            UIImage *image = [UIImage imageWithContentsOfFile:localPath];
+            UIImage *image = nil;
+            if (thumbSize > 0) {
+                int size = thumbSize;
+                if ( thumbSize > 256 ) {
+                    size = 256;
+                }
+                float fSize = (float)size;
+                NSString *path = [NSString stringWithFormat:@"%@_thumb%d", localPath, size];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                    image = [UIImage imageWithContentsOfFile:path];
+                } else {
+                    image = [UIImage imageWithContentsOfFile:localPath];
+                    float s = MIN(image.size.width, image.size.height);
+                    float scale = fSize/s;
+                    float w = image.size.width * scale;
+                    float h = image.size.height * scale;
+                    image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+                    CGRect cropRect = CGRectMake(0, 0, fSize, fSize);
+                    if (image.size.width >= image.size.height) {
+                        cropRect.origin.x = w*0.5-fSize*0.5;
+                    } else {
+                        cropRect.origin.y = h*0.5-fSize*0.5;
+                    }
+                    
+                    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
+                    image = [UIImage imageWithCGImage:imageRef];
+                    
+                    //thumb save
+                    NSData *data = UIImageJPEGRepresentation(image, 0.85);
+                    [data writeToFile:path atomically:YES];
+                }
+            } else {
+                image = [UIImage imageWithContentsOfFile:localPath];
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([_localPath compare:localPath] != 0) {
                     return;
@@ -246,7 +279,7 @@
     });
 }
 
-- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString *)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString *)host showIndicator:(BOOL)showIndicator anim:(BOOL)anim thumbSize:(int)thumbSize completion:(void (^)(void))completion {
     if (imageKey == nil || _loading) {
         return;
     }
@@ -268,7 +301,7 @@
     NSString* localPath = makeImagePath(imageKey);
     //local
     if ([[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
-        [self asyncLoadLocalImageWithPath:localPath completion:^{
+        [self asyncLoadLocalImageWithPath:localPath anim:anim thumbSize:thumbSize completion:^{
             if (indicatorView) {
                 [indicatorView removeFromSuperview];
             }
@@ -326,8 +359,13 @@
 //    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].DATA_HOST showIndicator:showIndicator completion:completion];
     [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];
 }
+
 - (void)asyncLoadUploadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];
+}
+
+- (void)asyncLoadUploadImageNoAnimWithKey:(NSString*)imageKey thumbSize:(int)thumbSize showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator anim:NO thumbSize:thumbSize completion:completion];
 }
 
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {

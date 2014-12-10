@@ -122,6 +122,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     if (self = [super init]) {
         _id = [(NSNumber*)[dict objectForKey:@"Id"] longLongValue];
         _packId = [(NSNumber*)[dict objectForKey:@"PackId"] longLongValue];
+        _imageNum = [(NSNumber*)[dict objectForKey:@"ImageNum"] intValue];
         _ownerId = [(NSNumber*)[dict objectForKey:@"OwnerId"] longLongValue];
         _ownerName = [dict objectForKey:@"OwnerName"];
         _sliderNum = [(NSNumber*)[dict objectForKey:@"SliderNum"] intValue];

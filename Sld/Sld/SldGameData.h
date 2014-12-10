@@ -65,6 +65,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @interface Match : NSObject
 @property (nonatomic) SInt64 id;
 @property (nonatomic) SInt64 packId;
+@property (nonatomic) int imageNum;
 @property (nonatomic) SInt64 ownerId;
 @property (nonatomic) NSString *ownerName;
 @property (nonatomic) int sliderNum;

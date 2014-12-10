@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLebel;
 @property (nonatomic) Match* match;
+@property (weak, nonatomic) IBOutlet UIImageView *darker;
 
 @end
 

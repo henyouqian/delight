@@ -164,9 +164,21 @@ static SldMatchListController* _inst = nil;
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
+    [cell.timeLebel.layer setAffineTransform:CGAffineTransformMakeRotation(M_PI_4)];
+    if (match.prize + match.extraPrize == 0) {
+        cell.prizeLabel.text = @"";
+        cell.darker.hidden = YES;
+    } else {
+        cell.darker.hidden = NO;
+    }
 //
     cell.match = match;
     [self refreshTimeLabel:cell];
+    
+    if (cell.timeLebel.hidden) {
+        cell.prizeLabel.text = @"";
+        cell.darker.hidden = YES;
+    }
     
     cell.layer.shouldRasterize = YES;
     cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
@@ -179,10 +191,13 @@ static SldMatchListController* _inst = nil;
     NSDate *now = getServerNow();
     NSTimeInterval endIntv = [endTime timeIntervalSinceDate:now];
     if (endIntv <= 0) {
+        cell.timeLebel.hidden = YES;
+        
         cell.timeLebel.text = @"已结束";
         cell.timeLebel.backgroundColor = _matchTimeLabelRed;
-        cell.timeLebel.alpha = 200;
+        cell.timeLebel.alpha = 230;
     } else {
+        cell.timeLebel.hidden = NO;
         cell.timeLebel.backgroundColor = _matchTimeLabelGreen;
         if (endIntv > 3600) {
             cell.timeLebel.text = [NSString stringWithFormat:@"%d小时", (int)endIntv/3600];
