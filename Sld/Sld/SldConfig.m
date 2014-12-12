@@ -10,7 +10,7 @@
 #import "SldUtil.h"
 
 NSUInteger const LOCAL_SCORE_COUNT_LIMIT = 10;
-const int MATCH_FETCH_LIMIT = 30;
+const int MATCH_FETCH_LIMIT = 6;
 
 UIColor *_matchTimeLabelRed = nil;
 UIColor *_matchTimeLabelGreen = nil;

@@ -38,6 +38,11 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         packInfo.text = packInfo.title;
     }
     
+    NSDictionary *authorDict = [dict objectForKey:@"Author"];
+    if (authorDict) {
+        packInfo.author = [PlayerInfo playerWithDictionary:authorDict];
+    }
+    
     return packInfo;
 }
 @end

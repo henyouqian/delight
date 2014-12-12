@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SldMatchPageController : UITableViewController
-
+- (void)openPhotoBrowser:(int)imageIndex;
 @end

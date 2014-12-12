@@ -150,6 +150,8 @@
 		D08882F81A1216C8009C2F80 /* CBStoreHouseRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882F61A1216C8009C2F80 /* CBStoreHouseRefreshControl.m */; };
 		D08882FA1A1217E6009C2F80 /* storehouse.plist in Resources */ = {isa = PBXBuildFile; fileRef = D08882F91A1217E6009C2F80 /* storehouse.plist */; };
 		D08882FD1A1286D0009C2F80 /* SldBattleLinkController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */; };
+		D08C43E91A3A379400945C93 /* SldUserPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08C43E81A3A379400945C93 /* SldUserPageController.m */; };
+		D08C43EB1A3B50F100945C93 /* packBG.png in Resources */ = {isa = PBXBuildFile; fileRef = D08C43EA1A3B50F000945C93 /* packBG.png */; };
 		D08E8A521A3752BA00FFA4DC /* SldMatchPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */; };
 		D08E8A551A38238300FFA4DC /* DKScrollingTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08E8A541A38238300FFA4DC /* DKScrollingTabController.m */; };
 		D0959EE319B8424800A64767 /* otlList48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0959EE219B8424800A64767 /* otlList48@2x.png */; };
@@ -493,6 +495,9 @@
 		D08882F91A1217E6009C2F80 /* storehouse.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = storehouse.plist; path = Sld/res/ui/storehouse.plist; sourceTree = SOURCE_ROOT; };
 		D08882FB1A1286D0009C2F80 /* SldBattleLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleLinkController.h; sourceTree = "<group>"; };
 		D08882FC1A1286D0009C2F80 /* SldBattleLinkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleLinkController.m; sourceTree = "<group>"; };
+		D08C43E71A3A379400945C93 /* SldUserPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldUserPageController.h; sourceTree = "<group>"; };
+		D08C43E81A3A379400945C93 /* SldUserPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldUserPageController.m; sourceTree = "<group>"; };
+		D08C43EA1A3B50F000945C93 /* packBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = packBG.png; sourceTree = "<group>"; };
 		D08E8A501A3752BA00FFA4DC /* SldMatchPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchPageController.h; sourceTree = "<group>"; };
 		D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchPageController.m; sourceTree = "<group>"; };
 		D08E8A531A38238300FFA4DC /* DKScrollingTabController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKScrollingTabController.h; sourceTree = "<group>"; };
@@ -923,6 +928,8 @@
 				D0511D221A24D57800993047 /* SldBattleResultController.m */,
 				D08E8A501A3752BA00FFA4DC /* SldMatchPageController.h */,
 				D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */,
+				D08C43E71A3A379400945C93 /* SldUserPageController.h */,
+				D08C43E81A3A379400945C93 /* SldUserPageController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -941,6 +948,7 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D08C43EA1A3B50F000945C93 /* packBG.png */,
 				D06535AA1A19175400ED0617 /* goldCoin.png */,
 				D08882F91A1217E6009C2F80 /* storehouse.plist */,
 				D057C1DF19FEB5A000C56A0D /* qq64.png */,
@@ -1529,6 +1537,7 @@
 				D05E995F195C7189002A6B83 /* coin3.png in Resources */,
 				D0959EE719B842D000A64767 /* otlUser48@2x.png in Resources */,
 				D062EFEF19857F22004AD4A9 /* otlPublish@2x.png in Resources */,
+				D08C43EB1A3B50F100945C93 /* packBG.png in Resources */,
 				D0D14B4A195B3807009193E6 /* webview_bar_back_ipad.png in Resources */,
 				D062EFF5198634FD004AD4A9 /* otlStar48@2x.png in Resources */,
 				D0D14B2C195B3807009193E6 /* safari@2x.png in Resources */,
@@ -1570,6 +1579,7 @@
 				B36DACD5190EC36500435EF4 /* TouchPriority.m in Sources */,
 				D0D5F9431A111C3100444BFA /* SldMatchHubController.m in Sources */,
 				B39E4470191BEDB600CBB247 /* SldCommentController.m in Sources */,
+				D08C43E91A3A379400945C93 /* SldUserPageController.m in Sources */,
 				B38110461914D8F30093F321 /* GameKitHelper.m in Sources */,
 				B34D52A71921695B00277EBC /* SldUserInfoController.m in Sources */,
 				B3D054611910084C00CEFCBE /* SldMusicViewController.m in Sources */,
@@ -1798,7 +1808,7 @@
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.2_SDK/lib",
 					"$(PROJECT_DIR)/External/AdsMoGoLib/AdNetworkLibs/DoMob_SDK_435/DomobAdSDK",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lstdc++",

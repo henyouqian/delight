@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern const UInt32 DEFUALT_SLIDER_NUM;
+@class PlayerInfo;
 
 //=================
 @interface PackInfo : NSObject
@@ -20,6 +21,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSString *coverBlur;
 @property (nonatomic) NSMutableArray *images;
 @property (nonatomic) SInt64 timeUnix;
+@property (nonatomic) PlayerInfo *author;
 
 + (instancetype)packWithDictionary:(NSDictionary*)dict;
 @end

@@ -45,4 +45,5 @@
 //    #import "umeng_ios_social/UMSocial_Sdk_Extra_Frameworks/TencentWeibo/UMSocialTencentWeiboHandler.h"
     #import "QBImagePickerController/QBImagePickerController.h"
     #import "SocketRocket/SRWebSocket.h"
+    #import "CBStoreHouseRefreshControl.h"
 #endif
