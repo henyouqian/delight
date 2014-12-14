@@ -20,7 +20,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *foeView;
 @property (weak, nonatomic) IBOutlet UIView *emojiView;
-@property (weak, nonatomic) IBOutlet UIImageView *foeThumbView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *foeThumbView;
 @property (weak, nonatomic) IBOutlet UILabel *foeNameLable;
 @property (weak, nonatomic) IBOutlet UILabel *foeTeamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *foeLvLabel;

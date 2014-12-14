@@ -25,7 +25,7 @@ static int gravatarRandMax = 1000-16;
 @property (weak, nonatomic) IBOutlet UITextField *genderInput;
 @property (weak, nonatomic) IBOutlet UITextField *teamInput;
 @property (weak, nonatomic) IBOutlet UITextField *emailInput;
-@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 @property (weak, nonatomic) IBOutlet UITableViewCell *emailCell;
 @property (nonatomic) NSString *gravatarKey;
@@ -473,7 +473,7 @@ static NSArray *_genderStrings;
 @end
 
 @interface SldAvatarSelectCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIView *highlightView;
 
 @end

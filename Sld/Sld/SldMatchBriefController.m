@@ -97,7 +97,7 @@
 - (void)loadBackground{
     NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
     
-    [_bgImageView asyncLoadUploadedImageWithKey:bgKey showIndicator:NO completion:^{
+    [_bgImageView asLoadUploadedImageWithKey:bgKey showIndicator:NO completion:^{
         _bgImageView.alpha = 0.0;
         [UIView animateWithDuration:1.f animations:^{
             _bgImageView.alpha = 1.0;
@@ -490,7 +490,7 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *titleInput;
 @property (weak, nonatomic) IBOutlet UITextField *urlInput;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *imageView;
 @property (weak, nonatomic) IBOutlet UISwitch *privateSwitch;
 
 @property (nonatomic) UIImage *promoImage;
@@ -514,7 +514,7 @@
     //fill ui
     _titleInput.text = _gd.match.title;
     _urlInput.text = _gd.match.promoUrl;
-    [_imageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
+    [_imageView asyncLoadUploadImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
     _privateSwitch.on = _gd.match.isPrivate;
 }
 

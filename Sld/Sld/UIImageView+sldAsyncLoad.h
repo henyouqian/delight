@@ -10,11 +10,11 @@
 
 @interface UIImageView (sldAsyncLoad)
 
-- (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion;
-- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
-- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
-- (void)asyncLoadUploadedImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
-- (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion;
+- (void)asLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asLoadUploadedImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 
 @end
 
@@ -25,6 +25,7 @@
 @property (atomic) NSString *serverUrl;
 @property (atomic) NSString *localPath;
 @property (atomic) NSURLSessionDownloadTask *task;
+@property (atomic) NSString *key;
 
 - (void)asyncLoadLocalImageWithPath:(NSString*)localPath anim:(BOOL)anim thumbSize:(int)thumbSize completion:(void (^)(void))completion;
 - (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator anim:(BOOL)anim thumbSize:(int)thumbSize completion:(void (^)(void))completion;

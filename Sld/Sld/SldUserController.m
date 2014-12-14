@@ -17,7 +17,7 @@
 #import "SldStreamPlayer.h"
 
 @interface SldUserController ()
-@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;

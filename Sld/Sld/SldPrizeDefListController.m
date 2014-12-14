@@ -79,7 +79,7 @@ static const int MIN_PRICE = 100;
         SldPrizeDefListImgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"prizeDefListImgCell" forIndexPath:indexPath];
         NSString *imgKey = _gd.match.promoImage;
         if (imgKey.length) {
-            [cell.promoImageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
+            [cell.promoImageView asLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
 //            cell.hidden = NO;
         } else {
 //            cell.hidden = YES;

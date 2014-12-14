@@ -8,6 +8,8 @@
 
 //#import "DMInterstitialAdController.h"
 
+@class SldAsyncImageView;
+
 NSString* getResFullPath(NSString* fileName);
 NSString* makeDocPath(NSString* path);
 NSString* makeTempPath(NSString* fileName);
@@ -40,7 +42,7 @@ NSString* formatInterval(int sec);
 + (NSString*)makeGravatarUrlWithKey:(NSString*)gravatarKey width:(UInt32)width;
 + (BOOL)validateEmail:(NSString *) candidate;
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
-+ (void)loadAvatar:(UIImageView*)imageView gravatarKey:(NSString*)gravatarKey customAvatarKey:(NSString*)customAvatarKey;
++ (void)loadAvatar:(SldAsyncImageView*)imageView gravatarKey:(NSString*)gravatarKey customAvatarKey:(NSString*)customAvatarKey;
 
 + (void)setKeyChainWithKey:(NSString*)key value:(NSString*)value;
 + (NSString*)getKeyChainValueWithKey:(NSString*)key;

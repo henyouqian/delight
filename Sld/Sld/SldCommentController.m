@@ -27,7 +27,7 @@
 //CommentCell
 @interface CommentCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet UIImageView *iconView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *iconView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @end
 
@@ -178,7 +178,7 @@
 - (void)loadBackground{
     NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
     
-    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+    [_bgImageView asLoadImageWithKey:bgKey showIndicator:NO completion:^{
         _bgImageView.alpha = 0.0;
         [UIView animateWithDuration:1.f animations:^{
             _bgImageView.alpha = 1.0;

@@ -15,7 +15,7 @@
 @interface SldGameController()
 
 @property (weak, nonatomic) IBOutlet UIView *userAdsView;
-@property (weak, nonatomic) IBOutlet UIImageView *userAdsImageView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *userAdsImageView;
 @property (weak, nonatomic) IBOutlet UIView *warningView;
 
 @property (nonatomic) SldGameData *gd;
@@ -26,7 +26,7 @@
 - (BOOL)showUserAds {
     NSString *imgKey = _gd.match.promoImage;
     if (imgKey.length) {
-        [_userAdsImageView asyncLoadUploadedImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
+        [_userAdsImageView asyncLoadUploadImageWithKey:_gd.match.promoImage showIndicator:NO completion:nil];
         _userAdsView.hidden = NO;
         if (_gd.match.promoUrl && _gd.match.promoUrl.length) {
             _warningView.hidden = NO;

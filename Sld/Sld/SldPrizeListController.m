@@ -25,7 +25,7 @@ static const int PRIZE_LIST_FETCH_LIMIT = 30;
 
 //=================
 @interface SldPrizeCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *thumbView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *thumbView;
 @property (weak, nonatomic) IBOutlet UILabel *reasonLabel;
 @property (weak, nonatomic) IBOutlet UILabel *prizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
@@ -240,7 +240,7 @@ static __weak SldPrizeListController *_inst = nil;
         } else {
             cell.rankLabel.hidden = YES;
         }
-        [cell.thumbView asyncLoadUploadedImageWithKey:record.thumb showIndicator:NO completion:nil];
+        [cell.thumbView asyncLoadUploadImageWithKey:record.thumb showIndicator:NO completion:nil];
         return cell;
     } else if (indexPath.section == 2) {
         SldMorePrizeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"morePrizeCell" forIndexPath:indexPath];

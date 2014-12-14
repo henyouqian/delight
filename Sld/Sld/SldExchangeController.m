@@ -44,7 +44,7 @@
 
 //===============================
 @interface SldExchangeCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *imgView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *imgView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *buyButton;
 @end
@@ -166,7 +166,7 @@
             cell.buyButton.backgroundColor = [SldUtil getPinkColor];
         }
         
-        [cell.imgView asyncLoadUploadedImageWithKey:cardType.thumb showIndicator:NO completion:nil];
+        [cell.imgView asyncLoadUploadImageWithKey:cardType.thumb showIndicator:NO completion:nil];
     }
     return cell;
 }

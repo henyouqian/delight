@@ -110,12 +110,16 @@
             NSError *err = nil;
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSURL *destURL = [NSURL fileURLWithPath:path];
-            if ([fileManager moveItemAtURL:location
-                                       toURL:destURL
-                                       error: &err]) {
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
                 completionHandler(destURL, response, nil, data);
             } else {
-                completionHandler(nil, response, err, data);
+                if ([fileManager moveItemAtURL:location
+                                         toURL:destURL
+                                         error: &err]) {
+                    completionHandler(destURL, response, nil, data);
+                } else {
+                    completionHandler(nil, response, err, data);
+                }
             }
         } else {
             completionHandler(nil, response, error, data);

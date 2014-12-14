@@ -18,7 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @end
 
@@ -275,7 +275,7 @@ static SldMatchRankController *_inst = nil;
 - (void)loadBackground{
     NSString *bgKey = [SldGameData getInstance].packInfo.coverBlur;
     
-    [_bgImageView asyncLoadImageWithKey:bgKey showIndicator:NO completion:^{
+    [_bgImageView asLoadImageWithKey:bgKey showIndicator:NO completion:^{
         _bgImageView.alpha = 0.0;
         [UIView animateWithDuration:1.f animations:^{
             _bgImageView.alpha = 1.0;

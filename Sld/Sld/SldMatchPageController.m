@@ -11,20 +11,21 @@
 #import "DKScrollingTabController.h"
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "SldHttpSession.h"
 
 static const float COMMENT_HEADER_HEIGHT = 36;
 
 @interface SldMatchPageUserCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *likeButton;
 
 @end
 
 @implementation SldMatchPageUserCell
-- (void)update {
-    SldGameData *gd = [SldGameData getInstance];
-    PlayerInfo *author = gd.packInfo.author;
+- (void)update:(SldMatchPageController*)controller {
+    PlayerInfo *author = controller.packInfo.author;
     if (author) {
         [_avatarView.layer setMasksToBounds:YES];
         _avatarView.layer.cornerRadius = 5;
@@ -69,8 +70,7 @@ static const float COMMENT_HEADER_HEIGHT = 36;
 }
 
 - (void)onThumbTap {
-    SldGameData *gd = [SldGameData getInstance];
-    if (gd.packInfo == nil) {
+    if (_controller.packInfo == nil) {
         return;
     }
     CGPoint pt = [_gr locationInView:self];
@@ -96,9 +96,11 @@ static const float COMMENT_HEADER_HEIGHT = 36;
         [view removeFromSuperview];
     }
     
-    SldGameData *gd = [SldGameData getInstance];
-    PackInfo *packInfo = gd.packInfo;
+    PackInfo *packInfo = _controller.packInfo;
     int imgNum = packInfo.images.count;
+    if (packInfo == nil) {
+        return;
+    }
     for (int i = 0; i < imgNum; ++i) {
         int row = i / 3;
         int col = i % 3;
@@ -106,6 +108,14 @@ static const float COMMENT_HEADER_HEIGHT = 36;
         float x = (gap+w)*col + gap;
         float y = (gap+w)*row + gap;
         CGRect frame = CGRectMake(x, y, w, w);
+        
+        UILabel *loadingLabel = [[UILabel alloc] initWithFrame:frame];
+        [self.contentView addSubview:loadingLabel];
+        loadingLabel.text = @"Loading...";
+        loadingLabel.textColor = [UIColor lightGrayColor];
+        loadingLabel.font = [loadingLabel.font fontWithSize:10];
+        loadingLabel.textAlignment = NSTextAlignmentCenter;
+        
         SldAsyncImageView *imageView = [[SldAsyncImageView alloc] initWithFrame:frame];
 //        imageView.backgroundColor = [UIColor clearColor];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -115,10 +125,11 @@ static const float COMMENT_HEADER_HEIGHT = 36;
         
         NSString *imgKey = packInfo.images[i];
         imageView.alpha = 0.0;
-        [imageView asyncLoadUploadImageNoAnimWithKey:imgKey thumbSize:200  showIndicator:NO completion:^{
+        [imageView asyncLoadUploadImageNoAnimWithKey:imgKey thumbSize:200 showIndicator:NO completion:^{
             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 imageView.alpha = 1.0;
             } completion:nil];
+            [loadingLabel removeFromSuperview];
         }];
         
         //gif?
@@ -176,20 +187,21 @@ enum MatchPageListType {
     
     UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:nil action:nil];
 //    UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithTitle:@"♥︎" style:UIBarButtonItemStylePlain target:nil action:nil];
-    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:nil action:nil];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnShare, btnRefresh, nil]];
+//    UIImage *likeImage = [UIImage imageNamed:@"heart48.png"];
+//    UIBarButtonItem *btnLike = [[UIBarButtonItem alloc] initWithImage:likeImage style:UIBarButtonItemStylePlain target:nil action:nil];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnShare, nil]];
     
     _gd = [SldGameData getInstance];
     //load pack
-    [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
+    _gd.matchPlay = nil;
+    _gd.packInfo = nil;
+    _match = _gd.match;
+    [_gd loadPack:_match.packId completion:^(PackInfo *packInfo) {
+        _packInfo = packInfo;
+        [self refreshDynamicData];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
-}
-
-- (void)dealloc {
-    SldGameData *gd = [SldGameData getInstance];
-    gd.packInfo = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -248,11 +260,11 @@ enum MatchPageListType {
         if (indexPath.row == 0) {
             return 64;
         } else if (indexPath.row == 1) { //thumb
-            if (_gd.match.imageNum > 0) {
-                return 108 * ((_gd.match.imageNum-1)/3+1);
+            if (_match.imageNum > 0) {
+                return 108 * ((_match.imageNum-1)/3+1);
             } else {
-                if (_gd.packInfo) {
-                    return 108 * ((_gd.packInfo.images.count-1)/3+1);
+                if (_packInfo) {
+                    return 108 * ((_packInfo.images.count-1)/3+1);
                 } else {
                     return 108 * ((8-1)/3+1);
                 }
@@ -269,12 +281,14 @@ enum MatchPageListType {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     NSString *cellId = @"";
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             SldMatchPageUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"userCell" forIndexPath:indexPath];
-            [cell update];
+            [cell update:self];
+            if (_matchPlay) {
+                [self setLikeButtonHighlight:_matchPlay.like button:cell.likeButton];
+            }
             return cell;
         } else if (indexPath.row == 1) {
             SldMatchPageThumbCell *cell = [tableView dequeueReusableCellWithIdentifier:@"thumbCell" forIndexPath:indexPath];
@@ -443,17 +457,79 @@ enum MatchPageListType {
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
-    return _gd.packInfo.images.count;
+    return _packInfo.images.count;
 }
 
 - (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
-    NSString *imageKey = [_gd.packInfo.images objectAtIndex:index];
+    NSString *imageKey = [_packInfo.images objectAtIndex:index];
     if (!imageKey) {
         return nil;
     }
     NSString *localPath = makeImagePath(imageKey);
     MWPhoto *photo = [MWPhoto photoWithURL:[NSURL fileURLWithPath:localPath]];
     return photo;
+}
+
+- (void)setLikeButtonHighlight:(BOOL)highlight button:(UIButton*)button {
+    UIImage *image = nil;
+    if (highlight) {
+        image = [UIImage imageNamed:@"heart48.png"];
+    } else {
+        image = [UIImage imageNamed:@"heartEmpty48.png"];
+    }
+    [button setImage:image forState:UIControlStateNormal];
+}
+
+- (IBAction)onLikeButton:(id)sender {
+    UIButton *btn = sender;
+    btn.userInteractionEnabled = NO;
+    NSString *postUrl = nil;
+    if (_matchPlay.like) {
+        postUrl = @"match/unlike";
+        if (_match.ownerId == _gd.playerInfo.userId) {
+            alert(@"自己的没有办法不喜欢啊😂", nil);
+            btn.userInteractionEnabled = YES;
+            return;
+        }
+        [self setLikeButtonHighlight:NO button:btn];
+    } else {
+        [self setLikeButtonHighlight:YES button:btn];
+        postUrl = @"match/like";
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"MatchId":@(_match.id)};
+    [session postToApi:postUrl body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        btn.userInteractionEnabled = YES;
+        if (error) {
+            [self setLikeButtonHighlight:_matchPlay.like button:btn];
+            alertHTTPError(error, data);
+            return;
+        }
+        _matchPlay.like = !_matchPlay.like;
+    }];
+}
+
+- (void)refreshDynamicData {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"MatchId":@(_match.id)};
+    [session postToApi:@"match/getDynamicData" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        _matchPlay = [[MatchPlay alloc] initWithDict:dict];
+        
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }];
+    
 }
 
 //- (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {

@@ -19,7 +19,7 @@ static SldAdviceController *_adviceController = nil;
 //AdviceCell
 @interface AdviceCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet UIImageView *iconView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *iconView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 @end

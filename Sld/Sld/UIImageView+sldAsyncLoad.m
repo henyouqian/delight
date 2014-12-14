@@ -16,7 +16,7 @@
 @implementation UIImageView (sldAsyncLoad)
 
 
-- (void)asyncLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion{
+- (void)asLoadLocalImageWithPath:(NSString*)localPath completion:(void (^)(void))completion{
     if (localPath == nil) {
         lwError("localPath == nil");
         return;
@@ -55,13 +55,13 @@
     });
 }
 
-- (void)asyncLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asLoadImageWithKey:(NSString*)imageKey host:(NSString*)host showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     if (imageKey == nil) {
         return;
     }
     UIActivityIndicatorView *indicatorView = nil;
     if (showIndicator) {
-        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         indicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
@@ -76,7 +76,7 @@
     NSString* localPath = makeImagePath(imageKey);
     //local
     if ([[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
-        [self asyncLoadLocalImageWithPath:localPath completion:^{
+        [self asLoadLocalImageWithPath:localPath completion:^{
             if (indicatorView) {
                 [indicatorView removeFromSuperview];
             }
@@ -96,11 +96,12 @@
                  if (indicatorView) {
                      [indicatorView removeFromSuperview];
                  }
+                 lwError("imageKey:%@, host:%@", imageKey, host);
                  lwError("Download error: %@, url:%@", error.localizedDescription, location);
                  return;
              }
              
-             [self asyncLoadLocalImageWithPath:localPath completion:^{
+             [self asLoadLocalImageWithPath:localPath completion:^{
                  if (indicatorView) {
                      [indicatorView removeFromSuperview];
                  }
@@ -112,24 +113,24 @@
     }
 }
 
-- (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     //NSString *host = [SldConfig getInstance].DATA_HOST;
     NSString *host = [SldConfig getInstance].UPLOAD_HOST;
-    [self asyncLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
+    [self asLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
 }
 
-- (void)asyncLoadUploadedImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asLoadUploadedImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     NSString *host = [SldConfig getInstance].UPLOAD_HOST;
-    [self asyncLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
+    [self asLoadImageWithKey:imageKey host:host showIndicator:showIndicator completion:completion];
 }
 
-- (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
+- (void)asLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
     NSString *imageName = [SldUtil sha1WithString:url];
     NSString *localPath = makeImagePath(imageName);
     
     UIActivityIndicatorView *indicatorView = nil;
     if (showIndicator) {
-        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         indicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
@@ -142,7 +143,7 @@
     
     //local
     if ([[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
-        [self asyncLoadLocalImageWithPath:localPath completion:^{
+        [self asLoadLocalImageWithPath:localPath completion:^{
             if (indicatorView) {
                 [indicatorView removeFromSuperview];
             }
@@ -166,7 +167,7 @@
                  return;
              }
              
-             [self asyncLoadLocalImageWithPath:localPath completion:^{
+             [self asLoadLocalImageWithPath:localPath completion:^{
                  if (indicatorView) {
                      [indicatorView removeFromSuperview];
                  }
@@ -188,6 +189,11 @@
         lwError("localPath == nil");
         return;
     }
+    
+    if (self.image && _localPath && [_localPath compare:localPath] == 0) {
+        return;
+    }
+    
     if (_loading) {
         return;
     }
@@ -283,16 +289,22 @@
     if (imageKey == nil || _loading) {
         return;
     }
+    if (self.image && _key && [_key compare:imageKey] == 0) {
+        return;
+    } else {
+        _key = imageKey;
+    }
     self.image = nil;
     UIActivityIndicatorView *indicatorView = nil;
     if (showIndicator) {
-        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         indicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
         [indicatorView sizeToFit];
         [indicatorView startAnimating];
         indicatorView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
+        indicatorView.frame = self.bounds;
         
         [self addSubview:indicatorView];
     }
@@ -322,15 +334,6 @@
                           toPath:localPath
                         withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
          {
-//             //half
-//             UIImage *image = [UIImage imageWithContentsOfFile:localPath];
-//             image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(image.size.width*.5f, image.size.height*.5f)];
-//             
-//             //save
-//             NSData *dt = UIImageJPEGRepresentation(image, 0.85);
-//             [dt writeToFile:localPath atomically:YES];
-             
-             
              if (indicatorView) {
                  [indicatorView removeFromSuperview];
              }
@@ -346,7 +349,7 @@
                  return;
              }
              
-             [self asyncLoadLocalImageWithPath:localPath completion:^{
+             [self asyncLoadLocalImageWithPath:localPath anim:anim thumbSize:thumbSize completion:^{
                  if (completion) {
                      completion();
                  }
@@ -357,11 +360,11 @@
 
 - (void)asyncLoadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
 //    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].DATA_HOST showIndicator:showIndicator completion:completion];
-    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];
+    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator anim:YES thumbSize:0 completion:completion];
 }
 
 - (void)asyncLoadUploadImageWithKey:(NSString*)imageKey showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
-    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator completion:completion];
+    [self asyncLoadImageWithKey:imageKey host:[SldConfig getInstance].UPLOAD_HOST showIndicator:showIndicator anim:YES thumbSize:0 completion:completion];
 }
 
 - (void)asyncLoadUploadImageNoAnimWithKey:(NSString*)imageKey thumbSize:(int)thumbSize showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion {
@@ -372,12 +375,20 @@
     if (_loading) {
         return;
     }
+    if (self.image && _key && [_key compare:url] == 0) {
+        return;
+    } else {
+        _key = url;
+    }
+    
+    self.image = nil;
+    
     NSString *imageName = [SldUtil sha1WithString:url];
     NSString *localPath = makeImagePath(imageName);
     
     UIActivityIndicatorView *indicatorView = nil;
     if (showIndicator) {
-        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         indicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
@@ -390,7 +401,7 @@
     
     //local
     if ([[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
-        [self asyncLoadLocalImageWithPath:localPath completion:^{
+        [self asyncLoadLocalImageWithPath:localPath anim:YES thumbSize:0 completion:^{
             if (indicatorView) {
                 [indicatorView removeFromSuperview];
             }
@@ -427,7 +438,7 @@
                  return;
              }
              
-             [self asyncLoadLocalImageWithPath:localPath completion:^{
+             [self asyncLoadLocalImageWithPath:localPath anim:YES thumbSize:0 completion:^{
                  if (completion) {
                      completion();
                  }

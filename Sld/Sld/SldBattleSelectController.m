@@ -51,7 +51,7 @@
 
 //===============================
 @interface SldBattleSelectHeader : UICollectionReusableView
-@property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *userAvatarView;
 @property (weak, nonatomic) IBOutlet UILabel *heartLabel;
 @property (weak, nonatomic) IBOutlet UILabel *coinLabel;
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;

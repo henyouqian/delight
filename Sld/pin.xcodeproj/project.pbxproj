@@ -99,6 +99,8 @@
 		D03252B0195D761B00D9620C /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D03252AF195D761B00D9620C /* PassKit.framework */; };
 		D03252B8195F064F00D9620C /* libFlurry_5.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */; };
 		D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */; };
+		D0449B811A3C781E005DF920 /* heart48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0449B801A3C781E005DF920 /* heart48@2x.png */; };
+		D0449B831A3C7EFD005DF920 /* heartEmpty48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0449B821A3C7EFD005DF920 /* heartEmpty48@2x.png */; };
 		D0511D231A24D57800993047 /* SldBattleResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0511D221A24D57800993047 /* SldBattleResultController.m */; };
 		D0511D261A270CCA00993047 /* SldEmojiController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0511D251A270CCA00993047 /* SldEmojiController.m */; };
 		D057C1D419FE625B00C56A0D /* UMSocialLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D057C1BA19FE625B00C56A0D /* UMSocialLocalizable.strings */; };
@@ -428,6 +430,8 @@
 		D03252AE195D75B800D9620C /* Sld.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Sld.entitlements; sourceTree = "<group>"; };
 		D03252AF195D761B00D9620C /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_5.1.0.a; path = External/Flurry/libFlurry_5.1.0.a; sourceTree = "<group>"; };
+		D0449B801A3C781E005DF920 /* heart48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart48@2x.png"; sourceTree = "<group>"; };
+		D0449B821A3C7EFD005DF920 /* heartEmpty48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heartEmpty48@2x.png"; sourceTree = "<group>"; };
 		D0511D211A24D57800993047 /* SldBattleResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleResultController.h; sourceTree = "<group>"; };
 		D0511D221A24D57800993047 /* SldBattleResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleResultController.m; sourceTree = "<group>"; };
 		D0511D241A270CCA00993047 /* SldEmojiController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEmojiController.h; sourceTree = "<group>"; };
@@ -948,6 +952,8 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D0449B821A3C7EFD005DF920 /* heartEmpty48@2x.png */,
+				D0449B801A3C781E005DF920 /* heart48@2x.png */,
 				D08C43EA1A3B50F000945C93 /* packBG.png */,
 				D06535AA1A19175400ED0617 /* goldCoin.png */,
 				D08882F91A1217E6009C2F80 /* storehouse.plist */,
@@ -1389,6 +1395,7 @@
 				B39E450E191ED0BB00CBB247 /* MWPhotoBrowser.bundle in Resources */,
 				D0D14B22195B3807009193E6 /* website-320x50.gif in Resources */,
 				D057C1DA19FE625B00C56A0D /* UMShareEditViewControlleriPad.xib in Resources */,
+				D0449B831A3C7EFD005DF920 /* heartEmpty48@2x.png in Resources */,
 				D0D14B62195B3807009193E6 /* webview_bar_share.png in Resources */,
 				D0D14B41195B3807009193E6 /* webview_bar_close_hover_ipad@2x.png in Resources */,
 				D0D14B25195B3807009193E6 /* website-728x90.gif in Resources */,
@@ -1504,6 +1511,7 @@
 				B31EE7EE18F05BE60047E9FD /* Images.xcassets in Resources */,
 				B3C1BB8B191137400062D50C /* btnBgGray90.png in Resources */,
 				D0D14B2D195B3807009193E6 /* shareviewfoot_bg@2x.png in Resources */,
+				D0449B811A3C781E005DF920 /* heart48@2x.png in Resources */,
 				D0D14B1A195B3807009193E6 /* adsmogo_adclose.png in Resources */,
 				D0D14B34195B3807009193E6 /* webview_bar_close@2x.png in Resources */,
 				D06748CE1A00E69D00C390DB /* DomobAdSDKBundle.bundle in Resources */,

@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class Match;
+@class PackInfo;
+@class MatchPlay;
+
 @interface SldMatchPageController : UITableViewController
+@property Match *match;
+@property PackInfo *packInfo;
+@property MatchPlay *matchPlay;
 - (void)openPhotoBrowser:(int)imageIndex;
 @end
