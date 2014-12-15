@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class PlayerInfo;
+
 @interface SldUserPageController : UICollectionViewController
+
+@property PlayerInfo *playerInfo;
 
 @end

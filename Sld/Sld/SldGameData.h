@@ -50,6 +50,9 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int prizeCache;
 @property (nonatomic) int betCloseBeforeEndSec;
 @property (nonatomic) AdsConf *adsConf;
+@property (nonatomic) BOOL followed;
+@property (nonatomic) int followNum;
+@property (nonatomic) int fanNum;
 
 @property (nonatomic) int BattlePoint;
 @property (nonatomic) int BattleWinStreak;
@@ -62,6 +65,19 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 - (NSString*)getHeartTime;
 @end
 
+//=================
+@interface PlayerInfoLite : NSObject
+
+@property SInt64 UserId;
+@property NSString *NickName;
+@property NSString *TeamName;
+@property NSString *GravatarKey;
+@property NSString *CustomAvatarKey;
+@property NSString *Text;
+
+- (instancetype)initWithDict:(NSDictionary*)dict;
+
+@end
 
 //============================
 @interface Match : NSObject
@@ -86,6 +102,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSString *promoUrl;
 @property (nonatomic) NSString *promoImage;
 @property (nonatomic) BOOL isPrivate;
+@property (nonatomic) int likeNum;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end

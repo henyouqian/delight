@@ -13,12 +13,15 @@
 #import "SldMatchListController.h"
 #import "SldConfig.h"
 #import "SldHttpSession.h"
+#import "SldFollowListController.h"
 
 //====================
 @interface SldUserPageHeader : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UIView *segView;
+@property (weak, nonatomic) IBOutlet UIButton *fanLabel;
+@property (weak, nonatomic) IBOutlet UIButton *followLabel;
 
 @end
 
@@ -30,8 +33,6 @@
 @interface SldUserPageController () <DKScrollingTabControllerDelegate>
 
 @property SldGameData *gd;
-
-@property PlayerInfo *playerInfo;
 
 @property NSMutableArray *matches;
 @property NSMutableArray *likeMatches;
@@ -66,12 +67,12 @@
     
     _gd = [SldGameData getInstance];
     
-    _playerInfo = _gd.packInfo.author;
-    
     _likeMatches = [NSMutableArray array];
     _originalMatches = [NSMutableArray array];
     _playedMatches = [NSMutableArray array];
     _matches = _likeMatches;
+    
+    [self updateFollowButton];
     
     [self refresh];
     _likeLoaded = YES;
@@ -90,7 +91,11 @@
                                                            internalAnimationFactor:0.7];
     
     //timer
-    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];    
+    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    self.title = [NSString stringWithFormat:@"%@的主页", _playerInfo.nickName];
+    
+    self.collectionView.backgroundColor = [UIColor darkGrayColor];
 }
 
 - (void)dealloc {
@@ -194,7 +199,6 @@
         [self updateInsets];
         [self updateListEnd];
         [self.collectionView reloadData];
-        
     }];
 }
 
@@ -225,16 +229,6 @@
         _footer.loadMoreButton.enabled = YES;
     }
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -352,7 +346,15 @@
     //this has to be done after customization
     tabController.selection = @[@"喜欢", @"原创", @"参与"];
     
-//    [tabController selectButtonWithIndex:0];
+    [self updateFollowAndFanLabel];
+}
+
+- (void)updateFollowAndFanLabel {
+    NSString *title = [NSString stringWithFormat:@"关注:%d", _playerInfo.followNum];
+    [_header.followLabel setTitle:title forState:UIControlStateNormal];
+    
+    title = [NSString stringWithFormat:@"粉丝:%d", _playerInfo.fanNum];
+    [_header.fanLabel setTitle:title forState:UIControlStateNormal];
 }
 
 - (void)DKScrollingTabController:(DKScrollingTabController *)controller selection:(NSUInteger)selection {
@@ -481,11 +483,73 @@
         SldGameData *gd = [SldGameData getInstance];
         gd.match = cell.match;
     } else if ([segue.identifier compare:@"segueFollow"] == 0) {
-        
+        SldFollowListController *vc = segue.destinationViewController;
+        vc.follow = true;
+        vc.playerInfo = _playerInfo;
     } else if ([segue.identifier compare:@"segueFans"] == 0) {
-        
+        SldFollowListController *vc = segue.destinationViewController;
+        vc.follow = false;
+        vc.playerInfo = _playerInfo;
     }
 }
 
+- (void)updateFollowButton {
+    if (_playerInfo.userId == _gd.playerInfo.userId) {
+        self.navigationItem.rightBarButtonItem.enabled = false;
+        [self.navigationItem.rightBarButtonItem setTitle:@""];
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = true;
+        if (_playerInfo.followed) {
+            [self.navigationItem.rightBarButtonItem setTitle:@"已关注"];
+        } else {
+            [self.navigationItem.rightBarButtonItem setTitle:@"关注"];
+        }
+    }
+}
+
+- (void)doFollow:(BOOL)follow {
+    NSString *api = nil;
+    if (follow) {
+        api = @"player/follow";
+    } else {
+        api = @"player/unfollow";
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"UserId":@(_playerInfo.userId)};
+    [session postToApi:api body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        bool follow = [(NSNumber*)[dict objectForKey:@"Follow"] boolValue];
+        _playerInfo.followed = follow;
+        [self updateFollowButton];
+    }];
+
+}
+
+- (IBAction)onFollowButton:(id)sender {
+    if (_playerInfo.followed) {
+
+        [[[UIAlertView alloc] initWithTitle:@"取消关注?"
+                                    message:nil
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"以后再说" action:^{
+            // Handle "Cancel"
+        }]
+                           otherButtonItems:[RIButtonItem itemWithLabel:@"取消关注" action:^{
+            [self doFollow:false];
+        }], nil] show];
+    } else {
+        [self doFollow:true];
+    }
+}
 
 @end

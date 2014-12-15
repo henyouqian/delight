@@ -12,6 +12,7 @@
 #import "SldGameData.h"
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldHttpSession.h"
+#import "SldUserPageController.h"
 
 static const float COMMENT_HEADER_HEIGHT = 36;
 
@@ -161,7 +162,7 @@ static const float COMMENT_HEADER_HEIGHT = 36;
 enum MatchPageListType {
     LT_REWARD = 0,
     LT_RANK,
-    LT_COMMENT
+    LT_LIKE
 };
 
 @interface SldMatchPageController () <DKScrollingTabControllerDelegate, MWPhotoBrowserDelegate>
@@ -183,7 +184,7 @@ enum MatchPageListType {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _listType = LT_COMMENT;
+    _listType = LT_LIKE;
     
     UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:nil action:nil];
 //    UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithTitle:@"♥︎" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -202,7 +203,10 @@ enum MatchPageListType {
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
+    
+    self.title = _match.title;
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -234,7 +238,7 @@ enum MatchPageListType {
     } else if (section == 1) {
         if (_listType == LT_REWARD) {
             return 10;
-        } else if (_listType == LT_COMMENT) {
+        } else if (_listType == LT_LIKE) {
             return 15;
         } else if (_listType == LT_RANK) {
             return 20;
@@ -258,7 +262,7 @@ enum MatchPageListType {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            return 64;
+            return 48;
         } else if (indexPath.row == 1) { //thumb
             if (_match.imageNum > 0) {
                 return 108 * ((_match.imageNum-1)/3+1);
@@ -301,7 +305,7 @@ enum MatchPageListType {
             return cell;
         }
     } else if (indexPath.section == 1){
-        if (_listType == LT_COMMENT) {
+        if (_listType == LT_LIKE) {
             cellId = @"commentCell";
         } else if (_listType == LT_REWARD) {
             cellId = @"rewardCell";
@@ -366,7 +370,7 @@ enum MatchPageListType {
         tabController.underlineIndicator = YES; // the color is from selectedTextColor property
         
         //this has to be done after customization
-        tabController.selection = @[@"奖励", @"排行榜", @"评论"];
+        tabController.selection = @[@"奖励", @"排行榜", @"喜欢"];
         
         [tabController selectButtonWithIndex:_listType];
         
@@ -391,7 +395,7 @@ enum MatchPageListType {
                 } else {
                     [self.tableView setContentOffset:CGPointMake(0, _section2Offset)];
                 }
-            } else if (_listType == LT_COMMENT) {
+            } else if (_listType == LT_LIKE) {
                 if (_commentOffsetY > _section2Offset) {
                     [self.tableView setContentOffset:CGPointMake(0, _commentOffsetY)];
                 } else {
@@ -425,7 +429,7 @@ enum MatchPageListType {
     } else {
         if (_listType == LT_REWARD) {
             _rewardOffsetY = scrollView.contentOffset.y;
-        } else if (_listType == LT_COMMENT) {
+        } else if (_listType == LT_LIKE) {
             _commentOffsetY = scrollView.contentOffset.y;
         } else if (_listType == LT_RANK) {
             _rankOffsetY = scrollView.contentOffset.y;
@@ -583,14 +587,14 @@ enum MatchPageListType {
 }
 */
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    SldUserPageController *vc = segue.destinationViewController;
+    vc.playerInfo = _packInfo.author;
 }
-*/
+
+
 
 @end

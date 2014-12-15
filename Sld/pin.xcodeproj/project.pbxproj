@@ -101,6 +101,7 @@
 		D03252B9195F0B1D00D9620C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36DAD20190FA66800435EF4 /* SystemConfiguration.framework */; };
 		D0449B811A3C781E005DF920 /* heart48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0449B801A3C781E005DF920 /* heart48@2x.png */; };
 		D0449B831A3C7EFD005DF920 /* heartEmpty48@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0449B821A3C7EFD005DF920 /* heartEmpty48@2x.png */; };
+		D0449B871A3F0994005DF920 /* SldFollowListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0449B861A3F0993005DF920 /* SldFollowListController.m */; };
 		D0511D231A24D57800993047 /* SldBattleResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0511D221A24D57800993047 /* SldBattleResultController.m */; };
 		D0511D261A270CCA00993047 /* SldEmojiController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0511D251A270CCA00993047 /* SldEmojiController.m */; };
 		D057C1D419FE625B00C56A0D /* UMSocialLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D057C1BA19FE625B00C56A0D /* UMSocialLocalizable.strings */; };
@@ -432,6 +433,8 @@
 		D03252B7195F064F00D9620C /* libFlurry_5.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_5.1.0.a; path = External/Flurry/libFlurry_5.1.0.a; sourceTree = "<group>"; };
 		D0449B801A3C781E005DF920 /* heart48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart48@2x.png"; sourceTree = "<group>"; };
 		D0449B821A3C7EFD005DF920 /* heartEmpty48@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heartEmpty48@2x.png"; sourceTree = "<group>"; };
+		D0449B851A3F0993005DF920 /* SldFollowListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldFollowListController.h; sourceTree = "<group>"; };
+		D0449B861A3F0993005DF920 /* SldFollowListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldFollowListController.m; sourceTree = "<group>"; };
 		D0511D211A24D57800993047 /* SldBattleResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldBattleResultController.h; sourceTree = "<group>"; };
 		D0511D221A24D57800993047 /* SldBattleResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldBattleResultController.m; sourceTree = "<group>"; };
 		D0511D241A270CCA00993047 /* SldEmojiController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldEmojiController.h; sourceTree = "<group>"; };
@@ -934,6 +937,8 @@
 				D08E8A511A3752BA00FFA4DC /* SldMatchPageController.m */,
 				D08C43E71A3A379400945C93 /* SldUserPageController.h */,
 				D08C43E81A3A379400945C93 /* SldUserPageController.m */,
+				D0449B851A3F0993005DF920 /* SldFollowListController.h */,
+				D0449B861A3F0993005DF920 /* SldFollowListController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -1611,6 +1616,7 @@
 				B39E4515191FB72400CBB247 /* MSWeakTimer.m in Sources */,
 				D05912AD19D34A00009916AB /* SldMainTabBarController.m in Sources */,
 				D02F76C2198142AF00E742F8 /* SldPackTestController.m in Sources */,
+				D0449B871A3F0994005DF920 /* SldFollowListController.m in Sources */,
 				B31EE7DE18F05BE60047E9FD /* SldAppDelegate.m in Sources */,
 				D08882F81A1216C8009C2F80 /* CBStoreHouseRefreshControl.m in Sources */,
 				B31EE7E718F05BE60047E9FD /* SldGameController.m in Sources */,

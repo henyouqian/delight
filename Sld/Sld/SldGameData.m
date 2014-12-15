@@ -97,6 +97,10 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     //
     gd.BATTLE_HELP_TEXT = [dict objectForKey:@"BattleHelpText"];
     
+    info.followed = [(NSNumber*)dict[@"Followed"] boolValue];
+    info.fanNum = [(NSNumber*)dict[@"FanNum"] intValue];
+    info.followNum = [(NSNumber*)dict[@"FollowNum"] intValue];
+    
     return info;
 }
 
@@ -116,6 +120,23 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     int m = t / 60;
     int s = t % 60;
     return [NSString stringWithFormat:@"%d:%02d", m, s];
+}
+
+@end
+
+//=========================
+@implementation PlayerInfoLite
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _UserId = [(NSNumber*)[dict objectForKey:@"UserId"] longLongValue];
+        _NickName = [dict objectForKey:@"NickName"];
+        _TeamName = [dict objectForKey:@"TeamName"];
+        _GravatarKey = [dict objectForKey:@"GravatarKey"];
+        _CustomAvatarKey = [dict objectForKey:@"CustomAvatarKey"];
+        _Text = [dict objectForKey:@"Text"];
+    }
+    return self;
 }
 
 @end
@@ -149,6 +170,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _promoUrl = [dict objectForKey:@"PromoUrl"];
         _promoImage = [dict objectForKey:@"PromoImage"];
         _isPrivate = [(NSNumber*)[dict objectForKey:@"Private"] boolValue];
+        _likeNum = [(NSNumber*)[dict objectForKey:@"LikeNum"] intValue];
         return self;
     }
     return nil;

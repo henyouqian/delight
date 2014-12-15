@@ -3729,6 +3729,7 @@
                                         <constraint firstAttribute="trailing" secondItem="1JH-Nj-UVf" secondAttribute="trailing" constant="20" id="uu3-MC-OZe"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="15000" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="avatarView" destination="k6W-XB-NyV" id="DWd-7S-dmk"/>
                                     <outlet property="likeButton" destination="kGy-GI-1kR" id="SQl-c9-Z9b"/>
@@ -3904,7 +3905,7 @@
         <!--Sld User Page Controller-->
         <scene sceneID="MsP-6B-g0y">
             <objects>
-                <collectionViewController id="4IT-Xe-09m" customClass="SldUserPageController" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="userPageController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4IT-Xe-09m" customClass="SldUserPageController" sceneMemberID="viewController">
                     <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Po0-Gt-gFG" customClass="SldCollectionView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4002,7 +4003,7 @@
                             </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="header" id="lPN-T7-zXS" customClass="SldUserPageHeader">
-                            <rect key="frame" x="0.0" y="64" width="600" height="227"/>
+                            <rect key="frame" x="0.0" y="64" width="600" height="117"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Henyouqianxxxxxxx" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qeM-OL-4BR">
@@ -4082,6 +4083,8 @@
                             </variation>
                             <connections>
                                 <outlet property="avatarView" destination="gUD-Lq-1lK" id="xeL-A4-LRz"/>
+                                <outlet property="fanLabel" destination="wSb-JE-ghi" id="jb2-hD-4kc"/>
+                                <outlet property="followLabel" destination="VX0-ca-ynP" id="LqJ-g0-2Zj"/>
                                 <outlet property="segView" destination="zuN-sn-kdk" id="RVc-3u-GND"/>
                                 <outlet property="userNameLabel" destination="qeM-OL-4BR" id="5lr-VL-XIb"/>
                             </connections>
@@ -4128,7 +4131,11 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="R07-5X-UuV">
-                        <barButtonItem key="rightBarButtonItem" title="关注" id="HGt-TU-jFz"/>
+                        <barButtonItem key="rightBarButtonItem" title="关注" id="HGt-TU-jFz">
+                            <connections>
+                                <action selector="onFollowButton:" destination="4IT-Xe-09m" id="0g6-Gb-wyW"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <modalPageSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -4137,20 +4144,75 @@
             </objects>
             <point key="canvasLocation" x="-4154" y="-5641"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Sld Follow List Controller-->
         <scene sceneID="yVc-N8-s3y">
             <objects>
-                <tableViewController id="UHD-WE-hCa" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="tJI-Yg-Snv">
+                <tableViewController id="UHD-WE-hCa" customClass="SldFollowListController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="52" sectionHeaderHeight="22" sectionFooterHeight="22" id="tJI-Yg-Snv">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="M6N-7w-Oal">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" id="M6N-7w-Oal" customClass="SldFollowListCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="M6N-7w-Oal" id="TAm-Kg-E4p">
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8dn-jD-5cO" customClass="SldAsyncImageView">
+                                            <rect key="frame" x="10" y="8" width="36" height="36"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="36" id="GaN-1Z-1hh"/>
+                                                <constraint firstAttribute="height" constant="36" id="kAF-XQ-vKl"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mza-49-UCS">
+                                            <rect key="frame" x="56" y="8" width="516" height="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="466" id="54l-dO-c02"/>
+                                                <constraint firstAttribute="height" constant="18" id="Lr9-04-9JN"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="54l-dO-c02"/>
+                                                </mask>
+                                            </variation>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="无个人简介" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KP8-o0-cU7">
+                                            <rect key="frame" x="56" y="28" width="516" height="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="466" id="EcW-Cx-6ZL"/>
+                                                <constraint firstAttribute="height" constant="18" id="dbK-9A-Tkb"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="EcW-Cx-6ZL"/>
+                                                </mask>
+                                            </variation>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="mza-49-UCS" firstAttribute="leading" secondItem="8dn-jD-5cO" secondAttribute="trailing" constant="10" id="NLo-6G-ccp"/>
+                                        <constraint firstItem="KP8-o0-cU7" firstAttribute="top" secondItem="TAm-Kg-E4p" secondAttribute="top" constant="28" id="Ojh-9C-VNh"/>
+                                        <constraint firstItem="8dn-jD-5cO" firstAttribute="top" secondItem="TAm-Kg-E4p" secondAttribute="top" constant="8" id="P58-vn-0As"/>
+                                        <constraint firstItem="KP8-o0-cU7" firstAttribute="leading" secondItem="8dn-jD-5cO" secondAttribute="trailing" constant="10" id="PHu-bJ-zVc"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="KP8-o0-cU7" secondAttribute="trailing" constant="20" id="RXN-gC-CL9"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="mza-49-UCS" secondAttribute="trailing" constant="20" id="Veg-n1-2Vj"/>
+                                        <constraint firstItem="mza-49-UCS" firstAttribute="top" secondItem="TAm-Kg-E4p" secondAttribute="top" constant="8" id="svQ-Im-NbV"/>
+                                        <constraint firstItem="8dn-jD-5cO" firstAttribute="leading" secondItem="TAm-Kg-E4p" secondAttribute="leading" constant="10" id="vLm-Wh-yKj"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="avatarView" destination="8dn-jD-5cO" id="TU7-MD-obr"/>
+                                    <outlet property="userNameLabel" destination="mza-49-UCS" id="b7k-7f-mBv"/>
+                                    <outlet property="userTextLabel" destination="KP8-o0-cU7" id="z4B-oN-L0h"/>
+                                    <segue destination="4IT-Xe-09m" kind="show" identifier="segueUserPage" id="sOD-l0-rRG"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -4161,7 +4223,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wV1-Lk-4m1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3483" y="-5926"/>
+            <point key="canvasLocation" x="-3315" y="-5866"/>
         </scene>
         <!--Sld Match Brief Controller-->
         <scene sceneID="4Tg-dX-tQh">
@@ -6258,10 +6320,11 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Bsz-cY-Efb"/>
         <segue reference="8wM-VL-FwZ"/>
         <segue reference="ixn-EL-AyK"/>
-        <segue reference="Bsz-cY-Efb"/>
+        <segue reference="2PB-GP-Cry"/>
+        <segue reference="5LP-qj-BoP"/>
         <segue reference="Isp-1f-fEi"/>
-        <segue reference="luL-Og-6RZ"/>
     </inferredMetricsTieBreakers>
 </document>
