@@ -396,6 +396,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @property (nonatomic) NSString *coverKey;
 @property (nonatomic) NSString *coverBlurKey;
 @property (nonatomic) NSMutableArray *images;
+@property (nonatomic) NSMutableArray *thumbs;
 @property (nonatomic) SldGameData *gd;
 @property (nonatomic) int totalSize;
 @property (nonatomic) int coinForPrize;
@@ -488,6 +489,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
     //save to temp dir
     _alt = alertNoButton(@"生成中...");
     _images = [NSMutableArray array];
+    _thumbs = [NSMutableArray array];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int i = 0;
@@ -557,10 +559,10 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             //blur first image
             if (i == 0) {
                 UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:0.3];
-                image = [image applyBlurWithRadius:25 tintColor:tintColor saturationDeltaFactor:1.4 maskImage:nil];
+                UIImage *bluredImage = [image applyBlurWithRadius:25 tintColor:tintColor saturationDeltaFactor:1.4 maskImage:nil];
                 
                 //save
-                NSData *data = UIImageJPEGRepresentation(image, 0.85);
+                NSData *data = UIImageJPEGRepresentation(bluredImage, 0.85);
                 NSString *fileName = @"coverBlur.jpg";
                 NSString *filePath = makeTempPath(fileName);
                 [filePathes addObject:filePath];
@@ -571,22 +573,18 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                 [fileKeys addObject:_coverBlurKey];
             }
             
-            i++;
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //thumb
-            ALAsset *asset = [_assets firstObject];
-            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+            //thumbs
             float s = MIN(image.size.width, image.size.height);
-            float scale = 256.0/s;
+            float l = 200.0;
+            float scale = l/s;
             float w = image.size.width * scale;
             float h = image.size.height * scale;
             image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
-            CGRect cropRect = CGRectMake(0, 0, 256, 256);
+            CGRect cropRect = CGRectMake(0, 0, l, l);
             if (image.size.width >= image.size.height) {
-                cropRect.origin.x = w*0.5-128;
+                cropRect.origin.x = (w-l)*0.5;
             } else {
-                cropRect.origin.y = h*0.5-128;
+                cropRect.origin.y = (h-l)*0.5;
             }
             
             CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
@@ -594,26 +592,66 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             
             //thumb save
             NSData *data = UIImageJPEGRepresentation(image, 0.85);
-            NSString *fileName = @"thumb.jpg";
-            NSString *filePath = makeTempPath(fileName);
+            fileName = [NSString stringWithFormat:@"thumb%d.jpg", i];
+            filePath = makeTempPath(fileName);
             [filePathes addObject:filePath];
             [data writeToFile:filePath atomically:YES];
             
             //thumb key
-            _thumbKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
-            [fileKeys addObject:_thumbKey];
+            key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            [fileKeys addObject:key];
+            [_thumbs addObject:key];
             
-            //promo image
-            if (_promoImage) {
-                NSData *data = UIImageJPEGRepresentation(_promoImage, 0.85);
-                NSString *fileName = @"promo.jpg";
-                NSString *filePath = makeTempPath(fileName);
-                [filePathes addObject:filePath];
-                [data writeToFile:filePath atomically:YES];
-                
-                _promoImageKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
-                [fileKeys addObject:_promoImageKey];
+            if (i == 0) {
+                _thumbKey = key;
             }
+            
+            i++;
+        }
+        
+        //promo image
+        if (_promoImage) {
+            NSData *data = UIImageJPEGRepresentation(_promoImage, 0.85);
+            NSString *fileName = @"promo.jpg";
+            NSString *filePath = makeTempPath(fileName);
+            [filePathes addObject:filePath];
+            [data writeToFile:filePath atomically:YES];
+            
+            _promoImageKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            [fileKeys addObject:_promoImageKey];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            //thumb
+//            ALAsset *asset = [_assets firstObject];
+//            UIImage *image = [[UIImage alloc] initWithCGImage:asset.defaultRepresentation.fullScreenImage];
+//            float s = MIN(image.size.width, image.size.height);
+//            float scale = 256.0/s;
+//            float w = image.size.width * scale;
+//            float h = image.size.height * scale;
+//            image = [SldUtil imageWithImage:image scaledToSize:CGSizeMake(w, h)];
+//            CGRect cropRect = CGRectMake(0, 0, 256, 256);
+//            if (image.size.width >= image.size.height) {
+//                cropRect.origin.x = w*0.5-128;
+//            } else {
+//                cropRect.origin.y = h*0.5-128;
+//            }
+//            
+//            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
+//            image = [UIImage imageWithCGImage:imageRef];
+//            
+//            //thumb save
+//            NSData *data = UIImageJPEGRepresentation(image, 0.85);
+//            NSString *fileName = @"thumb.jpg";
+//            NSString *filePath = makeTempPath(fileName);
+//            [filePathes addObject:filePath];
+//            [data writeToFile:filePath atomically:YES];
+//            
+//            //thumb key
+//            _thumbKey = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+//            [fileKeys addObject:_thumbKey];
+            
+            
             
             //
             _alt.title = @"上传中... 0%";
@@ -728,6 +766,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
         @"Cover":_coverKey,
         @"CoverBlur":_coverBlurKey,
         @"Images":_images,
+        @"Thumbs":_thumbs,
         @"SizeMb":@(fMb),
         @"GoldCoinForPrize":@(_coinForPrize),
         @"SliderNum":@(_sliderNum),

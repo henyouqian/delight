@@ -33,6 +33,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         [images addObject:img[@"Key"]];
     }
     packInfo.images = images;
+    packInfo.thumbs = dict[@"Thumbs"];
     
     if (packInfo.text == nil || packInfo.text.length == 0) {
         packInfo.text = packInfo.title;

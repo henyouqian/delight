@@ -20,6 +20,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSString *cover;
 @property (nonatomic) NSString *coverBlur;
 @property (nonatomic) NSMutableArray *images;
+@property (nonatomic) NSArray *thumbs;
 @property (nonatomic) SInt64 timeUnix;
 @property (nonatomic) PlayerInfo *author;
 

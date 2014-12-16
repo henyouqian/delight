@@ -63,6 +63,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    /////
     self.navigationController.view.backgroundColor = [UIColor whiteColor];
     
     _gd = [SldGameData getInstance];

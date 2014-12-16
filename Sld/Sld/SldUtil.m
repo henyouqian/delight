@@ -74,7 +74,7 @@ NSString* makeImagePathFromUrl(NSString *imageUrl) {
 
 NSString* makeImageServerUrl(NSString *imageKey) {
     SldConfig *conf = [SldConfig getInstance];
-    return [NSString stringWithFormat:@"%@/%@", conf.DATA_HOST, imageKey];
+    return [NSString stringWithFormat:@"%@/%@", conf.UPLOAD_HOST, imageKey];
 }
 
 NSString* makeImageServerUrl2(NSString *imageKey, NSString *host) {

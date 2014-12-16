@@ -14,8 +14,6 @@
 #import "SldHttpSession.h"
 #import "SldUserPageController.h"
 
-static const float COMMENT_HEADER_HEIGHT = 36;
-
 @interface SldMatchPageUserCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
@@ -56,7 +54,7 @@ static const float COMMENT_HEADER_HEIGHT = 36;
 //============================
 @interface SldMatchPageThumbCell : UITableViewCell
 @property UITapGestureRecognizer *gr;
-@property SldMatchPageController *controller;
+@property (weak) SldMatchPageController *controller;
 @end
 
 @implementation SldMatchPageThumbCell
@@ -75,15 +73,63 @@ static const float COMMENT_HEADER_HEIGHT = 36;
         return;
     }
     CGPoint pt = [_gr locationInView:self];
+//    SldGameData *gd = [SldGameData getInstance];
     
     int i = 0;
     for (UIView *view in self.contentView.subviews) {
         CGPoint origin = view.frame.origin;
         CGSize size = view.frame.size;
         if (pt.x >= origin.x && pt.x < origin.x+size.width && pt.y >= origin.y && pt.y < origin.y+size.height) {
-            //[self openPhotoBrowser:i];
-            [_controller openPhotoBrowser:i];
-            break;
+            //check all download
+            NSArray *imageKeys = _controller.packInfo.images;
+            __block int localNum = 0;
+            NSUInteger totalNum = [imageKeys count];
+            for (NSString *imageKey in imageKeys) {
+                if (imageExist(imageKey)) {
+                    localNum++;
+                }
+            }
+            
+            if (localNum == totalNum) {
+                //open browser
+                [_controller openPhotoBrowser:i];
+            } else {
+                NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"图集下载中..."
+                                                                message:msg
+                                                               delegate:self
+                                                      cancelButtonTitle:@"取消"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                
+                //download
+                SldHttpSession *session = [SldHttpSession defaultSession];
+                [session cancelAllTask];
+                for (NSString *imageKey in imageKeys) {
+                    if (!imageExist(imageKey)) {
+                        [session downloadFromUrl:makeImageServerUrl(imageKey)
+                                          toPath:makeImagePath(imageKey)
+                                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
+                         {
+                             if (error) {
+                                 lwError("Download error: %@", error.localizedDescription);
+                                 [alert dismissWithClickedButtonIndex:0 animated:YES];
+                                 return;
+                             }
+                             localNum++;
+                             [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
+                             
+                             //download complete
+                             if (localNum == totalNum) {
+                                 [alert dismissWithClickedButtonIndex:0 animated:YES];
+                                 [_controller openPhotoBrowser:i];
+                             }
+                         }];
+                    }
+                }
+            }
+            
+            return;
         }
         i++;
     }
@@ -112,7 +158,7 @@ static const float COMMENT_HEADER_HEIGHT = 36;
         
         UILabel *loadingLabel = [[UILabel alloc] initWithFrame:frame];
         [self.contentView addSubview:loadingLabel];
-        loadingLabel.text = @"Loading...";
+        loadingLabel.text = @"载入中...";
         loadingLabel.textColor = [UIColor lightGrayColor];
         loadingLabel.font = [loadingLabel.font fontWithSize:10];
         loadingLabel.textAlignment = NSTextAlignmentCenter;
@@ -125,6 +171,9 @@ static const float COMMENT_HEADER_HEIGHT = 36;
         [self.contentView addSubview:imageView];
         
         NSString *imgKey = packInfo.images[i];
+        if (packInfo.thumbs != nil && i < packInfo.thumbs.count) {
+            imgKey = packInfo.thumbs[i];
+        }
         imageView.alpha = 0.0;
         [imageView asyncLoadUploadImageNoAnimWithKey:imgKey thumbSize:200 showIndicator:NO completion:^{
             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -159,16 +208,30 @@ static const float COMMENT_HEADER_HEIGHT = 36;
 @end
 
 //============================
-enum MatchPageListType {
-    LT_REWARD = 0,
-    LT_RANK,
-    LT_LIKE
-};
+@interface SldMatchPageMatchCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIView *bgView;
+@property (weak, nonatomic) IBOutlet UILabel *midLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bottomLabel;
+@end
 
-@interface SldMatchPageController () <DKScrollingTabControllerDelegate, MWPhotoBrowserDelegate>
+@implementation SldMatchPageMatchCell
+
+@end
+
+//============================
+@interface SldMatchPageLikeCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIView *avatarView;
+@property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@end
+
+@implementation SldMatchPageLikeCell
+
+@end
+
+//============================
+@interface SldMatchPageController () <MWPhotoBrowserDelegate>
 
 @property SldMatchPageThumbCell *thumbCell;
-@property int listType;
 @property float section2Offset;
 
 @property float rewardOffsetY;
@@ -177,14 +240,20 @@ enum MatchPageListType {
 
 @property SldGameData *gd;
 
+@property (weak) SldMatchPageMatchCell *matchCell;
+@property (nonatomic) MSWeakTimer *secTimer;
+@property NSMutableArray *matchLikers;
+
 @end
 
 @implementation SldMatchPageController
 
+- (void)dealloc {
+    [_secTimer invalidate];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _listType = LT_LIKE;
     
     UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:nil action:nil];
 //    UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithTitle:@"♥︎" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -199,12 +268,18 @@ enum MatchPageListType {
     _match = _gd.match;
     [_gd loadPack:_match.packId completion:^(PackInfo *packInfo) {
         _packInfo = packInfo;
+        _gd.packInfo = packInfo;
         [self refreshDynamicData];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
     
     self.title = _match.title;
+    
+    _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
+    
+    //get likers
+    
 }
 
 
@@ -219,6 +294,10 @@ enum MatchPageListType {
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)onSecTimer {
+    [self updateMatchCell];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -236,13 +315,7 @@ enum MatchPageListType {
     if (section == 0) {
         return 3;
     } else if (section == 1) {
-        if (_listType == LT_REWARD) {
-            return 10;
-        } else if (_listType == LT_LIKE) {
-            return 15;
-        } else if (_listType == LT_RANK) {
-            return 20;
-        }
+        return 10;
     }
     return 0;
 }
@@ -276,16 +349,15 @@ enum MatchPageListType {
             
             return 0;
         } else if (indexPath.row == 2) { //match result
-            return 80;
+            return 107;
         }
     } else if (indexPath.section == 1) {
-        return 84;
+        return 48;
     }
     return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellId = @"";
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             SldMatchPageUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"userCell" forIndexPath:indexPath];
@@ -301,141 +373,122 @@ enum MatchPageListType {
             [cell update];
             return cell;
         } else if (indexPath.row == 2) {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"resultCell" forIndexPath:indexPath];
-            return cell;
+            _matchCell = [tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
+            return _matchCell;
         }
     } else if (indexPath.section == 1){
-        if (_listType == LT_LIKE) {
-            cellId = @"commentCell";
-        } else if (_listType == LT_REWARD) {
-            cellId = @"rewardCell";
-        }else {
-            cellId = @"rankCell";
-        }
-    }
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId forIndexPath:indexPath];
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 1) {
-        return COMMENT_HEADER_HEIGHT;
-    }
-    return 0;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == 1) {
-        NSString *reuseId = @"headerView";
-        UITableViewHeaderFooterView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseId];
-        if (headerView) {
-            return headerView;
-        }
-        
-        CGRect frame = tableView.frame;
-        
-        headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:reuseId];
-        headerView.frame = CGRectMake(0, 0, frame.size.width, COMMENT_HEADER_HEIGHT);
-//        headerView.contentView.backgroundColor = [UIColor lightGrayColor];
-        
-        //
-        DKScrollingTabController *tabController = [[DKScrollingTabController alloc] init];
-        tabController.delegate = self;
-        
-        [self addChildViewController:tabController];
-        [tabController didMoveToParentViewController:self];
-        [headerView addSubview:tabController.view];
-        tabController.view.backgroundColor = [UIColor whiteColor];
-        tabController.view.frame = CGRectMake(0, 0, frame.size.width, COMMENT_HEADER_HEIGHT);
-        
-        // controller customization
-        tabController.selectionFont = [UIFont boldSystemFontOfSize:12];
-        tabController.buttonInset = 30;
-        tabController.buttonPadding = 4;
-        tabController.firstButtonInset = 30;
-        
-        tabController.translucent = YES; // experimental, this overrides background colors
-        //[tabController addTopBorder:[UIColor grayColor]]; // this might be needed depending on the background view
-        
-        frame = tabController.toolbar.frame;
-        frame.size.width = 12000;
-        tabController.toolbar.frame = frame;
-        
-        //remove scroll bar
-        tabController.buttonsScrollView.showsHorizontalScrollIndicator = NO;
-        
-        //add indicator
-        tabController.selectedTextColor = [UIColor orangeColor];
-        tabController.underlineIndicator = YES; // the color is from selectedTextColor property
-        
-        //this has to be done after customization
-        tabController.selection = @[@"奖励", @"排行榜", @"喜欢"];
-        
-        [tabController selectButtonWithIndex:_listType];
-        
-        return headerView;
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"likeCell" forIndexPath:indexPath];
+        return cell;
     }
     return nil;
 }
 
-- (void)DKScrollingTabController:(DKScrollingTabController *)controller selection:(NSUInteger)selection {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        _listType = selection;
-//        [self.tableView reloadData];
-        [UIView setAnimationsEnabled:NO];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
-        [UIView setAnimationsEnabled:YES];
-        
-        lwInfo("%f", self.tableView.contentOffset.y);
-        if (self.tableView.contentOffset.y >= _section2Offset) {
-            if (_listType == LT_REWARD) {
-                if (_rewardOffsetY > _section2Offset) {
-                    [self.tableView setContentOffset:CGPointMake(0, _rewardOffsetY)];
-                } else {
-                    [self.tableView setContentOffset:CGPointMake(0, _section2Offset)];
-                }
-            } else if (_listType == LT_LIKE) {
-                if (_commentOffsetY > _section2Offset) {
-                    [self.tableView setContentOffset:CGPointMake(0, _commentOffsetY)];
-                } else {
-                    [self.tableView setContentOffset:CGPointMake(0, _section2Offset)];
-                }
-            } else if (_listType == LT_RANK) {
-                if (_rankOffsetY > _section2Offset) {
-                    [self.tableView setContentOffset:CGPointMake(0, _rankOffsetY)];
-                } else {
-                    [self.tableView setContentOffset:CGPointMake(0, _section2Offset)];
-                }
+- (void)updateMatchCell {
+    if (_matchCell == nil) {
+        return;
+    }
+    UInt64 now = getServerNowSec();
+    BOOL matchEnd = NO;
+    if (_match.hasResult || now > _match.endTime) { //closed
+        [UIView animateWithDuration:0.8 animations:^{
+            _matchCell.bgView.backgroundColor = makeUIColor(121, 135, 136, 255);
+        }];
+        _matchCell.midLabel.text = @"比赛已结束，点击查看";
+        matchEnd = YES;
+    } else {
+        SInt64 endIntv = _match.endTime - now;
+        NSString *timeStr = formatInterval((int)endIntv);
+        [UIView animateWithDuration:0.8 animations:^{
+            _matchCell.bgView.backgroundColor = makeUIColor(80, 146, 155, 255);
+        }];
+        _matchCell.midLabel.text = [NSString stringWithFormat:@"比赛进行中，点击进入(%@)", timeStr];
+    }
+    if (_matchPlay) {
+        if (matchEnd) {
+            if (_matchPlay.myRank == 0) {
+                _matchCell.bottomLabel.text = [NSString stringWithFormat:@"奖金：%d 名次：无", _matchPlay.extraPrize+_match.prize];
+            } else {
+                _matchCell.bottomLabel.text = [NSString stringWithFormat:@"奖金：%d 名次：%d", _matchPlay.extraPrize+_match.prize, _matchPlay.myRank];
+            }
+        } else {
+            if (_matchPlay.myRank == 0) {
+                _matchCell.bottomLabel.text = [NSString stringWithFormat:@"实时奖金：%d 实时名次：无", _matchPlay.extraPrize+_match.prize];
+            } else {
+                _matchCell.bottomLabel.text = [NSString stringWithFormat:@"实时奖金：%d 实时名次：%d", _matchPlay.extraPrize+_match.prize, _matchPlay.myRank];
             }
         }
-    });
-}
-
-
-- (IBAction)onPracticeButton:(id)sender {
-
-}
-
-- (IBAction)onMatchButton:(id)sender {
-    
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y < _section2Offset) {
-        _rewardOffsetY = 0;
-        _commentOffsetY = 0;
-        _rankOffsetY = 0;
     } else {
-        if (_listType == LT_REWARD) {
-            _rewardOffsetY = scrollView.contentOffset.y;
-        } else if (_listType == LT_LIKE) {
-            _commentOffsetY = scrollView.contentOffset.y;
-        } else if (_listType == LT_RANK) {
-            _rankOffsetY = scrollView.contentOffset.y;
-        }
+        _matchCell.midLabel.text = @"";
     }
 }
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    if (section == 1) {
+//        NSString *reuseId = @"headerView";
+//        UITableViewHeaderFooterView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:reuseId];
+//        if (headerView) {
+//            return headerView;
+//        }
+//        
+//        CGRect frame = tableView.frame;
+//        
+//        headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:reuseId];
+//        headerView.frame = CGRectMake(0, 0, frame.size.width, COMMENT_HEADER_HEIGHT);
+//        
+//        //
+//        DKScrollingTabController *tabController = [[DKScrollingTabController alloc] init];
+//        tabController.delegate = self;
+//        
+//        [self addChildViewController:tabController];
+//        [tabController didMoveToParentViewController:self];
+//        [headerView addSubview:tabController.view];
+//        tabController.view.backgroundColor = [UIColor whiteColor];
+//        tabController.view.frame = CGRectMake(0, 0, frame.size.width, COMMENT_HEADER_HEIGHT);
+//        
+//        // controller customization
+//        tabController.selectionFont = [UIFont boldSystemFontOfSize:12];
+//        tabController.buttonInset = 30;
+//        tabController.buttonPadding = 4;
+//        tabController.firstButtonInset = 30;
+//        
+//        tabController.translucent = YES; // experimental, this overrides background colors
+//        //[tabController addTopBorder:[UIColor grayColor]]; // this might be needed depending on the background view
+//        
+//        frame = tabController.toolbar.frame;
+//        frame.size.width = 12000;
+//        tabController.toolbar.frame = frame;
+//        
+//        //remove scroll bar
+//        tabController.buttonsScrollView.showsHorizontalScrollIndicator = NO;
+//        
+//        //add indicator
+//        tabController.selectedTextColor = [UIColor orangeColor];
+//        tabController.underlineIndicator = YES; // the color is from selectedTextColor property
+//        
+//        //this has to be done after customization
+//        tabController.selection = @[@"奖励", @"排行榜", @"喜欢"];
+//        
+//        [tabController selectButtonWithIndex:_listType];
+//        
+//        return headerView;
+//    }
+//    return nil;
+//}
+
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (scrollView.contentOffset.y < _section2Offset) {
+//        _rewardOffsetY = 0;
+//        _commentOffsetY = 0;
+//        _rankOffsetY = 0;
+//    } else {
+//        if (_listType == LT_REWARD) {
+//            _rewardOffsetY = scrollView.contentOffset.y;
+//        } else if (_listType == LT_LIKE) {
+//            _commentOffsetY = scrollView.contentOffset.y;
+//        } else if (_listType == LT_RANK) {
+//            _rankOffsetY = scrollView.contentOffset.y;
+//        }
+//    }
+//}
 
 #pragma mark - MWPhotoBrowser
 - (void)openPhotoBrowser:(int)imageIndex {
@@ -469,6 +522,7 @@ enum MatchPageListType {
     if (!imageKey) {
         return nil;
     }
+    
     NSString *localPath = makeImagePath(imageKey);
     MWPhoto *photo = [MWPhoto photoWithURL:[NSURL fileURLWithPath:localPath]];
     return photo;
@@ -531,7 +585,9 @@ enum MatchPageListType {
         
         _matchPlay = [[MatchPlay alloc] initWithDict:dict];
         
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        _gd.matchPlay = _matchPlay;
+        _gd.match.extraPrize = _gd.matchPlay.extraPrize;
     }];
     
 }
@@ -591,8 +647,13 @@ enum MatchPageListType {
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    SldUserPageController *vc = segue.destinationViewController;
-    vc.playerInfo = _packInfo.author;
+    if ([segue.identifier compare:@"segueUser"] == 0) {
+        SldUserPageController *vc = segue.destinationViewController;
+        vc.playerInfo = _packInfo.author;
+    } else if ([segue.identifier compare:@"segueMatch"] == 0) {
+        _gd.match = _match;
+    }
+    
 }
 
 

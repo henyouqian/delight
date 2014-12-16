@@ -13,6 +13,7 @@
 #import "SldUtil.h"
 #import "UIImage+animatedGIF.h"
 #import "UIImageView+sldAsyncLoad.h"
+#import "SldUserPageController.h"
 
 @interface MatchRankCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
@@ -20,12 +21,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
+@property SInt64 userId;
 @end
 
 @implementation MatchRankCell
 - (void)reset {
     self.backgroundColor = [UIColor clearColor];
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    [self.avatarImageView.layer setMasksToBounds:YES];
+    self.avatarImageView.layer.cornerRadius = 5;
 }
 @end
 
@@ -338,6 +341,7 @@ static SldMatchRankController *_inst = nil;
             if (rankInfo) {
                 MatchRankCell *cell = [tableView dequeueReusableCellWithIdentifier:@"rankCell" forIndexPath:indexPath];
                 [cell reset];
+                cell.userId = rankInfo.userId;
                 int rank = [rankInfo.rank intValue];
                 cell.rankLabel.text = [NSString stringWithFormat:@"第%d名", rank];
                 cell.userNameLabel.text = rankInfo.nickName;
@@ -448,15 +452,36 @@ static SldMatchRankController *_inst = nil;
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier compare:@"segueUserPage"] == 0) {
+        //get playerInfo
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        MatchRankCell *cell = sender;
+        NSDictionary *body = @{@"UserId":@(cell.userId)};
+        [session postToApi:@"player/getInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            PlayerInfo *playerInfo = [PlayerInfo playerWithDictionary:dict];
+            
+            SldUserPageController* vc = [getStoryboard() instantiateViewControllerWithIdentifier:@"userPageController"];
+            vc.playerInfo = playerInfo;
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
+    }
+    return NO;
 }
-*/
+
 
 @end

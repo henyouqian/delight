@@ -57,8 +57,9 @@
 {
     [super viewDidLoad];
     
+    self.navigationController.view.backgroundColor = [UIColor lightGrayColor];
+    
     _gd = [SldGameData getInstance];
-    _gd.matchPlay = nil;
     
     lwInfo("matchId: %lld", _gd.match.id);
     
@@ -68,21 +69,26 @@
     _minTimer = [MSWeakTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(onMinTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     //button disable
-    _practiceButton.enabled = NO;
     _matchButton.enabled = NO;
-    _prizeButton.enabled = NO;
-    _rankButton.enabled = NO;
-    _reviewButton.enabled = NO;
-    _likeButton.enabled = NO;
+    _reviewButton.hidden = YES;
+    _likeButton.hidden = YES;
+    
+    //buttons
+    _practiceButton.enabled = YES;
+    _prizeButton.enabled = YES;
+    _rankButton.enabled = YES;
+    _likeButton.enabled = YES;
     
     //
     [self onSecTimer];
     
     //load pack
-    [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
-        [self refreshDynamicData];
-        [self loadBackground];
-    }];
+//    [_gd loadPack:_gd.match.packId completion:^(PackInfo *packInfo) {
+//        [self refreshDynamicData];
+//        [self loadBackground];
+//    }];
+    
+    [self loadBackground];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -173,12 +179,6 @@
         //prize
         _gd.match.extraPrize = _gd.matchPlay.extraPrize;
         _gd.match.playTimes = _gd.matchPlay.playTimes;
-        
-        //buttons
-        _practiceButton.enabled = YES;
-        _prizeButton.enabled = YES;
-        _rankButton.enabled = YES;
-        _likeButton.enabled = YES;
         
         [self setLikeButtonHighlight:_gd.matchPlay.like];
         
