@@ -33,7 +33,12 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         [images addObject:img[@"Key"]];
     }
     packInfo.images = images;
-    packInfo.thumbs = dict[@"Thumbs"];
+    id thumbs = [dict objectForKey:@"Thumbs"];
+    if ([thumbs isKindOfClass:[NSNull null].class]) {
+        packInfo.thumbs = nil;
+    } else {
+        packInfo.thumbs = thumbs;
+    }
     
     if (packInfo.text == nil || packInfo.text.length == 0) {
         packInfo.text = packInfo.title;
@@ -194,6 +199,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _rankNum = [(NSNumber*)dict[@"RankNum"] intValue];
         _team = dict[@"Team"];
         _like = [dict[@"Like"] boolValue];
+        _played = [dict[@"Played"] boolValue];
     }
     return self;
 }

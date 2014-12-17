@@ -121,6 +121,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) int rankNum;
 @property (nonatomic) BOOL like;
 @property (nonatomic) NSString *team;
+@property (nonatomic) BOOL played;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 

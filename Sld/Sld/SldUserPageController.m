@@ -96,7 +96,7 @@
     
     self.title = [NSString stringWithFormat:@"%@的主页", _playerInfo.nickName];
     
-    self.collectionView.backgroundColor = [UIColor darkGrayColor];
+    self.collectionView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)dealloc {

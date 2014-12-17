@@ -1260,6 +1260,7 @@ static float lerpf(float a, float b, float t) {
                 }
                 _gd.matchPlay.myRank = [(NSNumber*)[dict objectForKey:@"MyRank"] intValue];
                 _gd.matchPlay.rankNum = [(NSNumber*)[dict objectForKey:@"RankNum"] intValue];
+                _gd.matchPlay.played = true;
                 
                 //rank label
                 double delayInSeconds = .4f;
@@ -1292,6 +1293,19 @@ static float lerpf(float a, float b, float t) {
         }
         NSString *str = [NSString stringWithFormat:@"滑块数量：%d，用时：%@", _sliderNum, formatScore(score)];
         [_gd.userPackTestHistory insertObject:str atIndex:0];
+    }
+    // M_PRACTICE
+    else if (_gd.gameMode == M_PRACTICE) {
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"MatchId":@(_gd.match.id), @"Score":@(score)};
+        [session postToApi:@"match/freePlay" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            _gd.matchPlay.played = true;
+        }];
+
     }
     
     //show blured image and cover

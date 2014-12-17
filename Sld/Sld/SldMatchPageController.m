@@ -14,6 +14,28 @@
 #import "SldHttpSession.h"
 #import "SldUserPageController.h"
 
+//=============================
+@interface MatchActivity : NSObject
+
+@property PlayerInfoLite *Player;
+@property NSString *Text;
+
+@end
+
+@implementation MatchActivity
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _Text= [dict objectForKey:@"Text"];
+        NSDictionary *playerDict = [dict objectForKey:@"Player"];
+        _Player = [[PlayerInfoLite alloc] initWithDict:playerDict];
+    }
+    return self;
+}
+
+@end
+
+//=============================
 @interface SldMatchPageUserCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
@@ -212,6 +234,7 @@
 @property (weak, nonatomic) IBOutlet UIView *bgView;
 @property (weak, nonatomic) IBOutlet UILabel *midLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bottomLabel;
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
 @end
 
 @implementation SldMatchPageMatchCell
@@ -219,12 +242,14 @@
 @end
 
 //============================
-@interface SldMatchPageLikeCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIView *avatarView;
+@interface SldMatchPageActivityCell : UITableViewCell
+@property SInt64 userId;
+@property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
 @end
 
-@implementation SldMatchPageLikeCell
+@implementation SldMatchPageActivityCell
 
 @end
 
@@ -243,6 +268,7 @@
 @property (weak) SldMatchPageMatchCell *matchCell;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property NSMutableArray *matchLikers;
+@property NSMutableArray *activities;
 
 @end
 
@@ -254,6 +280,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.tableView.backgroundColor = [UIColor whiteColor];
     
     UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:nil action:nil];
 //    UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithTitle:@"♥︎" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -278,8 +306,28 @@
     
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
-    //get likers
-    
+    //list play record
+    _activities = [NSMutableArray arrayWithCapacity:20];
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"MatchId":@(_match.id)};
+    [session postToApi:@"match/listActivity" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        for (NSDictionary *recDict in array) {
+            MatchActivity *activity = [[MatchActivity alloc] initWithDict:recDict];
+            [_activities addObject:activity];
+        }
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }];
 }
 
 
@@ -315,7 +363,7 @@
     if (section == 0) {
         return 3;
     } else if (section == 1) {
-        return 10;
+        return _activities.count;
     }
     return 0;
 }
@@ -374,10 +422,22 @@
             return cell;
         } else if (indexPath.row == 2) {
             _matchCell = [tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
+            if (_activities.count == 0) {
+                _matchCell.activityLabel.hidden = YES;
+            } else {
+                _matchCell.activityLabel.hidden = NO;
+            }
             return _matchCell;
         }
     } else if (indexPath.section == 1){
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"likeCell" forIndexPath:indexPath];
+        SldMatchPageActivityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"activityCell" forIndexPath:indexPath];
+        MatchActivity *activity = [_activities objectAtIndex:indexPath.row];
+        [SldUtil loadAvatar:cell.avatarView gravatarKey:activity.Player.GravatarKey customAvatarKey:activity.Player.CustomAvatarKey];
+        cell.userNameLabel.text = activity.Player.NickName;
+        cell.activityLabel.text = activity.Text;
+        [cell.avatarView.layer setMasksToBounds:YES];
+        cell.avatarView.layer.cornerRadius = 5;
+        cell.userId = activity.Player.UserId;
         return cell;
     }
     return nil;
@@ -645,6 +705,38 @@
 
 #pragma mark - Navigation
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier compare:@"segueMatch"] == 0) {
+        if (_gd.packInfo == nil || _matchPlay == nil) {
+            return NO;
+        }
+    } else if ([identifier compare:@"segueActivity"] == 0) {
+        //get playerInfo
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        SldMatchPageActivityCell *cell = sender;
+        NSDictionary *body = @{@"UserId":@(cell.userId)};
+        [session postToApi:@"player/getInfo" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error) {
+                lwError("Json error:%@", [error localizedDescription]);
+                return;
+            }
+            PlayerInfo *playerInfo = [PlayerInfo playerWithDictionary:dict];
+            
+            SldUserPageController* vc = [getStoryboard() instantiateViewControllerWithIdentifier:@"userPageController"];
+            vc.playerInfo = playerInfo;
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
+        return NO;
+    }
+    return YES;
+}
+
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier compare:@"segueUser"] == 0) {
@@ -653,7 +745,6 @@
     } else if ([segue.identifier compare:@"segueMatch"] == 0) {
         _gd.match = _match;
     }
-    
 }
 
 

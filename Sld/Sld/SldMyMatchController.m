@@ -506,9 +506,11 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             UIImage *image = [[UIImage alloc] initWithCGImage:repr.fullScreenImage];
             
             //check gif
+            BOOL isGif = NO;
             unsigned char bytes[4];
             [repr getBytes:bytes fromOffset:0 length:4 error:nil];
             if (bytes[0]=='G' && bytes[1]=='I' && bytes[2]=='F') {
+                isGif = YES;
                 fileName = [NSString stringWithFormat:@"%d.gif", i];
                 filePath = makeTempPath(fileName);
                 
@@ -592,13 +594,23 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             
             //thumb save
             NSData *data = UIImageJPEGRepresentation(image, 0.85);
-            fileName = [NSString stringWithFormat:@"thumb%d.jpg", i];
+            if (isGif) {
+                fileName = [NSString stringWithFormat:@"thumb%d.gif", i];
+            } else {
+                fileName = [NSString stringWithFormat:@"thumb%d.jpg", i];
+            }
+            
             filePath = makeTempPath(fileName);
             [filePathes addObject:filePath];
             [data writeToFile:filePath atomically:YES];
             
             //thumb key
-            key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            if (isGif) {
+                key = [NSString stringWithFormat:@"%@.gif", [SldUtil sha1WithData:data]];
+            } else {
+                key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
+            }
+            
             [fileKeys addObject:key];
             [_thumbs addObject:key];
             

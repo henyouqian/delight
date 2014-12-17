@@ -3680,7 +3680,6 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uIi-Y3-9gb">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.90199130640000003" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="48" id="kfC-ku-XTB" customClass="SldMatchPageUserCell">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
@@ -3729,6 +3728,7 @@
                                         <constraint firstAttribute="trailing" secondItem="1JH-Nj-UVf" secondAttribute="trailing" constant="20" id="uu3-MC-OZe"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.95148026320000001" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="15000" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="avatarView" destination="k6W-XB-NyV" id="DWd-7S-dmk"/>
@@ -3742,6 +3742,7 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dbi-9B-gpD" id="fol-Um-JJF">
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="15000" minY="0.0" maxX="0.0" maxY="0.0"/>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="matchCell" rowHeight="107" id="Gjh-Ir-h1o" customClass="SldMatchPageMatchCell">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
@@ -3794,7 +3795,7 @@
                                                 <constraint firstItem="c2F-b7-d7a" firstAttribute="leading" secondItem="eIN-Td-ktG" secondAttribute="leading" id="xTp-3G-Bg0"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最近玩的人：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lc-3s-Xvf">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最新动态：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lc-3s-Xvf">
                                             <rect key="frame" x="14" y="87" width="156" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="MqK-7q-ZLe"/>
@@ -3816,31 +3817,41 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
+                                    <outlet property="activityLabel" destination="7lc-3s-Xvf" id="xwt-de-yqM"/>
                                     <outlet property="bgView" destination="eIN-Td-ktG" id="KBk-aA-NQY"/>
                                     <outlet property="bottomLabel" destination="Csp-OG-37Z" id="A0a-V7-nUL"/>
                                     <outlet property="midLabel" destination="qJU-h8-cvP" id="QPV-W2-1Uu"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="likeCell" rowHeight="48" id="A8q-2m-MpV" customClass="SldMatchPageLikeCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="activityCell" rowHeight="48" id="A8q-2m-MpV" customClass="SldMatchPageActivityCell">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="A8q-2m-MpV" id="q3q-mX-NZT">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QIK-Hg-apL" customClass="SldAsyncImageView">
-                                            <rect key="frame" x="16" y="5" width="36" height="36"/>
+                                            <rect key="frame" x="16" y="7" width="36" height="36"/>
                                             <color key="backgroundColor" red="0.81324696539999997" green="0.81322258709999995" blue="0.81323635579999998" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="36" id="03X-v7-Z6k"/>
                                                 <constraint firstAttribute="height" constant="36" id="NYW-Cb-Z0a"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="userName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yc2-so-jNa">
-                                            <rect key="frame" x="67" y="12" width="504" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="userName（14-09-14 12:45）" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yc2-so-jNa">
+                                            <rect key="frame" x="67" y="6" width="504" height="16"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="mCa-II-CLC"/>
+                                                <constraint firstAttribute="height" constant="16" id="mCa-II-CLC"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="喜欢这个图集" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baV-m2-sMa">
+                                            <rect key="frame" x="67" y="24" width="504" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="yd0-jT-OPj"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -3849,14 +3860,19 @@
                                         <constraint firstItem="QIK-Hg-apL" firstAttribute="leading" secondItem="q3q-mX-NZT" secondAttribute="leadingMargin" constant="8" id="LNL-NK-SJj"/>
                                         <constraint firstItem="Yc2-so-jNa" firstAttribute="leading" secondItem="QIK-Hg-apL" secondAttribute="trailing" constant="15" id="P6A-4M-Qs2"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="Yc2-so-jNa" secondAttribute="trailing" constant="21" id="ZNM-Rp-jb2"/>
-                                        <constraint firstItem="Yc2-so-jNa" firstAttribute="top" secondItem="q3q-mX-NZT" secondAttribute="topMargin" constant="4" id="dJa-Mz-VfX"/>
-                                        <constraint firstItem="QIK-Hg-apL" firstAttribute="top" secondItem="q3q-mX-NZT" secondAttribute="topMargin" constant="-3" id="ncu-ew-1Y0"/>
+                                        <constraint firstItem="Yc2-so-jNa" firstAttribute="top" secondItem="q3q-mX-NZT" secondAttribute="topMargin" constant="-2" id="dJa-Mz-VfX"/>
+                                        <constraint firstAttribute="bottom" secondItem="baV-m2-sMa" secondAttribute="bottom" constant="3" id="hic-qK-tq7"/>
+                                        <constraint firstAttribute="trailing" secondItem="baV-m2-sMa" secondAttribute="trailing" constant="29" id="ldO-vH-JYa"/>
+                                        <constraint firstItem="QIK-Hg-apL" firstAttribute="top" secondItem="q3q-mX-NZT" secondAttribute="topMargin" constant="-1" id="ncu-ew-1Y0"/>
+                                        <constraint firstItem="baV-m2-sMa" firstAttribute="leading" secondItem="QIK-Hg-apL" secondAttribute="trailing" constant="15" id="pHg-Md-VgH"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <inset key="separatorInset" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
-                                    <outlet property="avatarView" destination="q3q-mX-NZT" id="Wbr-DE-9JW"/>
+                                    <outlet property="activityLabel" destination="baV-m2-sMa" id="b4T-Ud-joz"/>
+                                    <outlet property="avatarView" destination="QIK-Hg-apL" id="5jA-If-NSN"/>
                                     <outlet property="userNameLabel" destination="Yc2-so-jNa" id="hz4-oo-1ub"/>
+                                    <segue destination="4IT-Xe-09m" kind="show" identifier="segueActivity" id="Dh8-4Z-bBg"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -3873,7 +3889,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="prd-7M-Kf6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4885" y="-5476"/>
+            <point key="canvasLocation" x="-4885" y="-5479"/>
         </scene>
         <!--Sld User Page Controller-->
         <scene sceneID="MsP-6B-g0y">
@@ -6294,11 +6310,11 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Bsz-cY-Efb"/>
         <segue reference="LCc-lA-MQV"/>
         <segue reference="Isp-1f-fEi"/>
-        <segue reference="5LP-qj-BoP"/>
+        <segue reference="Dh8-4Z-bBg"/>
         <segue reference="2PB-GP-Cry"/>
         <segue reference="ixn-EL-AyK"/>
+        <segue reference="Bsz-cY-Efb"/>
     </inferredMetricsTieBreakers>
 </document>
