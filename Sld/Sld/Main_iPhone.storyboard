@@ -10,7 +10,7 @@
         <!--Sld Game Controller-->
         <scene sceneID="CtS-rA-C9T">
             <objects>
-                <viewController storyboardIdentifier="game" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LVB-YS-i5n" customClass="SldGameController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="game" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LVB-YS-i5n" customClass="SldGameController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fEJ-U5-kBV"/>
                         <viewControllerLayoutGuide type="bottom" id="zdj-dK-hBM"/>
@@ -6314,7 +6314,7 @@
         <segue reference="Isp-1f-fEi"/>
         <segue reference="Dh8-4Z-bBg"/>
         <segue reference="2PB-GP-Cry"/>
-        <segue reference="ixn-EL-AyK"/>
         <segue reference="Bsz-cY-Efb"/>
+        <segue reference="28D-cR-agb"/>
     </inferredMetricsTieBreakers>
 </document>

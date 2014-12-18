@@ -13,6 +13,7 @@
 #import "UIImageView+sldAsyncLoad.h"
 #import "SldHttpSession.h"
 #import "SldUserPageController.h"
+#import "SldGameController.h"
 
 //=============================
 @interface MatchActivity : NSObject
@@ -90,6 +91,60 @@
     }
 }
 
+- (void)downloadAllImages:(void(^)(void))complete {
+    NSArray *imageKeys = _controller.packInfo.images;
+    __block int localNum = 0;
+    NSUInteger totalNum = [imageKeys count];
+    for (NSString *imageKey in imageKeys) {
+        if (imageExist(imageKey)) {
+            localNum++;
+        }
+    }
+    
+    if (totalNum == localNum) {
+        if (complete) {
+            complete();
+        }
+        return;
+    }
+    
+    NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"图集下载中..."
+                                                    message:msg
+                                                   delegate:self
+                                          cancelButtonTitle:@"取消"
+                                          otherButtonTitles:nil];
+    [alert show];
+    
+    //download
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    [session cancelAllTask];
+    for (NSString *imageKey in imageKeys) {
+        if (!imageExist(imageKey)) {
+            [session downloadFromUrl:makeImageServerUrl(imageKey)
+                              toPath:makeImagePath(imageKey)
+                            withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
+             {
+                 if (error) {
+                     lwError("Download error: %@", error.localizedDescription);
+                     [alert dismissWithClickedButtonIndex:0 animated:YES];
+                     return;
+                 }
+                 localNum++;
+                 [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
+                 
+                 //download complete
+                 if (localNum == totalNum) {
+                     [alert dismissWithClickedButtonIndex:0 animated:YES];
+                     if (complete) {
+                         complete();
+                     }
+                 }
+             }];
+        }
+    }
+}
+
 - (void)onThumbTap {
     if (_controller.packInfo == nil) {
         return;
@@ -101,54 +156,23 @@
     for (UIView *view in self.contentView.subviews) {
         CGPoint origin = view.frame.origin;
         CGSize size = view.frame.size;
-        if (pt.x >= origin.x && pt.x < origin.x+size.width && pt.y >= origin.y && pt.y < origin.y+size.height) {
-            //check all download
-            NSArray *imageKeys = _controller.packInfo.images;
-            __block int localNum = 0;
-            NSUInteger totalNum = [imageKeys count];
-            for (NSString *imageKey in imageKeys) {
-                if (imageExist(imageKey)) {
-                    localNum++;
-                }
-            }
-            
-            if (localNum == totalNum) {
-                //open browser
-                [_controller openPhotoBrowser:i];
+        if (pt.x >= origin.x && pt.x < origin.x+size.width && pt.y >= origin.y && pt.y < origin.y+size.height)
+        {
+            if (_controller.matchPlay.played) {
+                [self downloadAllImages:^{
+                    [_controller openPhotoBrowser:i];
+                }];
             } else {
-                NSString *msg = [NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"图集下载中..."
-                                                                message:msg
-                                                               delegate:self
-                                                      cancelButtonTitle:@"取消"
-                                                      otherButtonTitles:nil];
-                [alert show];
-                
-                //download
-                SldHttpSession *session = [SldHttpSession defaultSession];
-                [session cancelAllTask];
-                for (NSString *imageKey in imageKeys) {
-                    if (!imageExist(imageKey)) {
-                        [session downloadFromUrl:makeImageServerUrl(imageKey)
-                                          toPath:makeImagePath(imageKey)
-                                        withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
-                         {
-                             if (error) {
-                                 lwError("Download error: %@", error.localizedDescription);
-                                 [alert dismissWithClickedButtonIndex:0 animated:YES];
-                                 return;
-                             }
-                             localNum++;
-                             [alert setMessage:[NSString stringWithFormat:@"%d%%", (int)(100.f*(float)localNum/(float)totalNum)]];
-                             
-                             //download complete
-                             if (localNum == totalNum) {
-                                 [alert dismissWithClickedButtonIndex:0 animated:YES];
-                                 [_controller openPhotoBrowser:i];
-                             }
-                         }];
-                    }
-                }
+                [[[UIAlertView alloc] initWithTitle:@"完成拼图后即可查看大图，现在开始拼？"
+                                            message:nil
+                                   cancelButtonItem:[RIButtonItem itemWithLabel:@"稍后再说" action:^{
+                    // Handle "Cancel"
+                }]
+                                   otherButtonItems:[RIButtonItem itemWithLabel:@"开拼！" action:^{
+                    [self downloadAllImages:^{
+                        [_controller enterGame];
+                    }];
+                }], nil] show];
             }
             
             return;
@@ -571,6 +595,13 @@
     MatchPagePhotoBrowserNavController *nc = [[MatchPagePhotoBrowserNavController alloc] initWithRootViewController:browser];
     nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:nc animated:YES completion:nil];
+}
+
+- (void)enterGame {
+    _gd.gameMode = M_PRACTICE;
+    SldGameController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"game"];
+    
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {

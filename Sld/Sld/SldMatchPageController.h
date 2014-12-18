@@ -17,4 +17,5 @@
 @property PackInfo *packInfo;
 @property MatchPlay *matchPlay;
 - (void)openPhotoBrowser:(int)imageIndex;
+- (void)enterGame;
 @end
