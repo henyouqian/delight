@@ -22,3 +22,10 @@
 @property (nonatomic) NSURL *url;
 @property (weak, nonatomic) IBOutlet UIWebView *reviewView;
 @end
+
+//==========================
+@interface SldMyMatchImagePickListController : UICollectionViewController
+
+- (void)setAssets :(NSArray *)assets;
+
+@end

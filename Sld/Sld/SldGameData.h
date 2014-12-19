@@ -10,6 +10,7 @@
 
 extern const UInt32 DEFUALT_SLIDER_NUM;
 @class PlayerInfo;
+@class SldUserPageController;
 
 //=================
 @interface PackInfo : NSObject
@@ -111,8 +112,12 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 //==================
 @interface MatchPlay : NSObject
 
+//dynamic data
 @property (nonatomic) int playTimes;
+@property (nonatomic) int likeNum;
 @property (nonatomic) int extraPrize;
+
+//play data
 @property (nonatomic) int highScore;
 @property (nonatomic) int finalRank;
 @property (nonatomic) int freeTries;
@@ -204,6 +209,10 @@ enum GameMode{
 @property (nonatomic) int sliderNum;
 
 @property (nonatomic) SRWebSocket *webSocket;
+
+@property SldUserPageController *myPageController;
+@property BOOL needRefreshMatchPage;
+
 @end
 
 

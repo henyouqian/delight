@@ -14,6 +14,7 @@
 #import "SldHttpSession.h"
 #import "SldUserPageController.h"
 #import "SldGameController.h"
+#import "SldConfig.h"
 
 //=============================
 @interface MatchActivity : NSObject
@@ -41,7 +42,6 @@
 
 @property (weak, nonatomic) IBOutlet SldAsyncImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UIButton *likeButton;
 
 @end
 
@@ -259,6 +259,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *midLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bottomLabel;
 @property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+@property (weak, nonatomic) IBOutlet UIButton *likeButton;
+@property (weak, nonatomic) IBOutlet UILabel *likeNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *playNumLabel;
 @end
 
 @implementation SldMatchPageMatchCell
@@ -294,6 +297,8 @@
 @property NSMutableArray *matchLikers;
 @property NSMutableArray *activities;
 
+@property (nonatomic) CBStoreHouseRefreshControl *storeHouseRefreshControl;
+
 @end
 
 @implementation SldMatchPageController
@@ -306,12 +311,6 @@
     [super viewDidLoad];
     
     self.tableView.backgroundColor = [UIColor whiteColor];
-    
-    UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:nil action:nil];
-//    UIBarButtonItem *btnShare = [[UIBarButtonItem alloc] initWithTitle:@"♥︎" style:UIBarButtonItemStylePlain target:nil action:nil];
-//    UIImage *likeImage = [UIImage imageNamed:@"heart48.png"];
-//    UIBarButtonItem *btnLike = [[UIBarButtonItem alloc] initWithImage:likeImage style:UIBarButtonItemStylePlain target:nil action:nil];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnShare, nil]];
     
     _gd = [SldGameData getInstance];
     //load pack
@@ -330,11 +329,59 @@
     
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
-    //list play record
+    //
+    CGRect frame = self.tableView.frame;
+    frame = CGRectMake(0, 0, frame.size.width, 44);
+    UILabel *footer = [[UILabel alloc] initWithFrame:frame];
+    self.tableView.tableFooterView = footer;
+    footer.font = [footer.font fontWithSize:12];
+    footer.textAlignment = NSTextAlignmentCenter;
+    footer.textColor = [UIColor grayColor];
+    footer.text = @"后面没有了";
+    
+    //
+    _storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.tableView
+                                                                            target:self
+                                                                     refreshAction:@selector(refresh) plist:@"storehouse"
+                                                                             color:[UIColor orangeColor]
+                                                                         lineWidth:4
+                                                                        dropHeight:80
+                                                                             scale:1
+                                                              horizontalRandomness:150
+                                                           reverseLoadingAnimation:NO
+                                                           internalAnimationFactor:0.7];
+}
+
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (_gd.needRefreshMatchPage) {
+        _gd.needRefreshMatchPage = NO;
+        [self refresh];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)refresh {
+    [self refreshDynamicData];
+//    [self refreshActivities];
+}
+
+- (void)refreshActivities {
     _activities = [NSMutableArray arrayWithCapacity:20];
     SldHttpSession *session = [SldHttpSession defaultSession];
     NSDictionary *body = @{@"MatchId":@(_match.id)};
     [session postToApi:@"match/listActivity" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_storeHouseRefreshControl finishingLoading];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -352,20 +399,6 @@
         }
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
-}
-
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)onSecTimer {
@@ -421,7 +454,7 @@
             
             return 0;
         } else if (indexPath.row == 2) { //match result
-            return 107;
+            return 154;
         }
     } else if (indexPath.section == 1) {
         return 48;
@@ -430,13 +463,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    lwInfo("%d, %d", indexPath.section, indexPath.row);
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             SldMatchPageUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"userCell" forIndexPath:indexPath];
             [cell update:self];
-            if (_matchPlay) {
-                [self setLikeButtonHighlight:_matchPlay.like button:cell.likeButton];
-            }
             return cell;
         } else if (indexPath.row == 1) {
             SldMatchPageThumbCell *cell = [tableView dequeueReusableCellWithIdentifier:@"thumbCell" forIndexPath:indexPath];
@@ -451,17 +482,29 @@
             } else {
                 _matchCell.activityLabel.hidden = NO;
             }
+            if (_matchPlay) {
+                [self setLikeButtonHighlight:_matchPlay.like button:_matchCell.likeButton];
+            }
+            if (_match.ownerId == _gd.playerInfo.userId) {
+                _matchPlay.like = YES;
+                [self setLikeButtonHighlight:YES button:_matchCell.likeButton];
+            }
+            _matchCell.likeNumLabel.text = [NSString stringWithFormat:@"%d喜欢", _match.likeNum];
+            _matchCell.playNumLabel.text = [NSString stringWithFormat:@"%d 已玩", _match.playTimes];
             return _matchCell;
         }
     } else if (indexPath.section == 1){
         SldMatchPageActivityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"activityCell" forIndexPath:indexPath];
-        MatchActivity *activity = [_activities objectAtIndex:indexPath.row];
-        [SldUtil loadAvatar:cell.avatarView gravatarKey:activity.Player.GravatarKey customAvatarKey:activity.Player.CustomAvatarKey];
-        cell.userNameLabel.text = activity.Player.NickName;
-        cell.activityLabel.text = activity.Text;
-        [cell.avatarView.layer setMasksToBounds:YES];
-        cell.avatarView.layer.cornerRadius = 5;
-        cell.userId = activity.Player.UserId;
+        if (indexPath.row < _activities.count) {
+            MatchActivity *activity = [_activities objectAtIndex:indexPath.row];
+            [SldUtil loadAvatar:cell.avatarView gravatarKey:activity.Player.GravatarKey customAvatarKey:activity.Player.CustomAvatarKey];
+            cell.userNameLabel.text = activity.Player.NickName;
+            cell.activityLabel.text = activity.Text;
+            [cell.avatarView.layer setMasksToBounds:YES];
+            cell.avatarView.layer.cornerRadius = 5;
+            cell.userId = activity.Player.UserId;
+        }
+
         return cell;
     }
     return nil;
@@ -574,6 +617,16 @@
 //    }
 //}
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.storeHouseRefreshControl scrollViewDidScroll];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.storeHouseRefreshControl scrollViewDidEndDragging];
+}
+
 #pragma mark - MWPhotoBrowser
 - (void)openPhotoBrowser:(int)imageIndex {
     MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
@@ -656,6 +709,20 @@
             return;
         }
         _matchPlay.like = !_matchPlay.like;
+        
+        //
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeText;
+        if (_matchPlay.like) {
+            hud.labelText = @"❤️喜欢了这组拼图";
+        } else {
+            hud.labelText = @"💔";
+        }
+        
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
     }];
 }
 
@@ -663,6 +730,7 @@
     SldHttpSession *session = [SldHttpSession defaultSession];
     NSDictionary *body = @{@"MatchId":@(_match.id)};
     [session postToApi:@"match/getDynamicData" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_storeHouseRefreshControl finishingLoading];
         if (error) {
             alertHTTPError(error, data);
             return;
@@ -676,11 +744,15 @@
         
         _matchPlay = [[MatchPlay alloc] initWithDict:dict];
         
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
         _gd.matchPlay = _matchPlay;
-        _gd.match.extraPrize = _gd.matchPlay.extraPrize;
+        _match.extraPrize = _matchPlay.extraPrize;
+        _match.playTimes = _matchPlay.playTimes;
+        _match.likeNum = _matchPlay.likeNum;
+        
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        
+        [self refreshActivities];
     }];
-    
 }
 
 //- (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
@@ -778,6 +850,57 @@
     }
 }
 
+- (IBAction)onShareButton:(id)sender {
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    int msec = 0;
+    if (_gd.matchPlay) {
+        msec = -_gd.matchPlay.highScore;
+    }
+    
+    UIAlertView* alt = alertNoButton(@"生成中...");
+    NSDictionary *body = @{@"PackId":@(_gd.match.packId), @"SliderNum":@(_gd.match.sliderNum), @"Msec":@(msec)};
+    [session postToApi:@"social/newPack" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [alt dismissWithClickedButtonIndex:0 animated:YES];
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        
+        NSString *key = [dict objectForKey:@"Key"];
+        
+        //
+        NSString *path = makeImagePath(_gd.match.thumb);
+        UIImage *image = [UIImage imageWithContentsOfFile:path];
+        NSString *url = [NSString stringWithFormat:@"%@?key=%@", [SldConfig getInstance].HTML5_URL, key];
+        
+        [[[UIAlertView alloc] initWithTitle:@"分享这组拼图给朋友，朋友可以点开链接直接玩。"
+                                    message:nil
+                           cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
+            NSString *weixinText = [NSString stringWithFormat:@"看看你的手有多快。"];
+            if (_gd.matchPlay && _gd.matchPlay.highScore != 0) {
+                weixinText = [NSString stringWithFormat:@"我只用了%@就拼好了这些图，敢来挑战么？", formatScore(_gd.matchPlay.highScore)];
+            }
+            UMSocialData *umData = [UMSocialData defaultData];
+            umData.extConfig.title = @"";
+            umData.extConfig.wechatSessionData.url = url;
+            umData.extConfig.wechatSessionData.shareText = weixinText;
+            NSString *text = [NSString stringWithFormat:@"%@\n%@", weixinText, url];
+            [UMSocialSnsService presentSnsIconSheetView:self
+                                                 appKey:nil
+                                              shareText:text
+                                             shareImage:image
+                                        shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina,UMShareToTencent, UMShareToDouban, UMShareToQzone]
+                                               delegate:nil];
+        }]
+                           otherButtonItems:nil] show];
+    }];
+}
 
 
 @end

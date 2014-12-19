@@ -265,6 +265,9 @@ NSString *const yKey = @"y";
 
 - (void)finishingLoading
 {
+    if (self.state != CBStoreHouseRefreshControlStateRefreshing) {
+        return;
+    }
     self.state = CBStoreHouseRefreshControlStateDisappearing;
     UIEdgeInsets newInsets = self.scrollView.contentInset;
     newInsets.top = self.originalTopContentInset;

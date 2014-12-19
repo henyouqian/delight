@@ -50,7 +50,16 @@ static SldHotMatchListController* _inst = nil;
     
     //refresh control
     self.collectionView.alwaysBounceVertical = YES;
-    self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refreshMatch) plist:@"storehouse"];
+    _storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView
+                                                                        target:self
+                                                                 refreshAction:@selector(refreshMatch) plist:@"storehouse"
+                                                                         color:[UIColor orangeColor]
+                                                                     lineWidth:4
+                                                                    dropHeight:80
+                                                                         scale:1
+                                                          horizontalRandomness:150
+                                                       reverseLoadingAnimation:NO
+                                                       internalAnimationFactor:0.7];
     
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
@@ -138,6 +147,7 @@ static SldHotMatchListController* _inst = nil;
     SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"matchListCell" forIndexPath:indexPath];
     Match *match = [_matches objectAtIndex:indexPath.row];
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
+    [cell.timeLebel.layer setAffineTransform:CGAffineTransformMakeRotation(M_PI_4)];
     cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
     if (match.prize + match.extraPrize == 0) {
         cell.prizeLabel.text = @"";

@@ -190,6 +190,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
 - (instancetype)initWithDict:(NSDictionary*)dict {
     if (self = [super init]) {
         _playTimes = [(NSNumber*)dict[@"PlayTimes"] intValue];
+        _likeNum = [(NSNumber*)dict[@"LikeNum"] intValue];
         _extraPrize = [(NSNumber*)dict[@"ExtraPrize"] intValue];
         _highScore = [(NSNumber*)dict[@"HighScore"] intValue];
         _finalRank = [(NSNumber*)dict[@"FinalRank"] intValue];

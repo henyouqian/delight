@@ -13,5 +13,6 @@
 @interface SldUserPageController : UICollectionViewController
 
 @property PlayerInfo *playerInfo;
+- (void)refresh;
 
 @end

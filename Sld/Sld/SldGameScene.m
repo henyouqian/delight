@@ -1370,6 +1370,8 @@ static float lerpf(float a, float b, float t) {
     
     [completeLabel runAction:appear];
     
+    _gd.needRefreshMatchPage = YES;
+    
     
 //    SKAction *appear = [SKAction customActionWithDuration:dur actionBlock:^(SKNode *node, CGFloat elapsedTime) {
 //        float t = QuarticEaseOut(elapsedTime/dur);

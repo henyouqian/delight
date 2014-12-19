@@ -67,7 +67,16 @@ static SldMatchListController* _inst = nil;
     
     //refresh control
     self.collectionView.alwaysBounceVertical = YES;
-    self.storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView target:self refreshAction:@selector(refreshMatch) plist:@"storehouse"];
+    _storeHouseRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.collectionView
+                                                                        target:self
+                                                                 refreshAction:@selector(refreshMatch) plist:@"storehouse"
+                                                                         color:[UIColor orangeColor]
+                                                                     lineWidth:4
+                                                                    dropHeight:80
+                                                                         scale:1
+                                                          horizontalRandomness:150
+                                                       reverseLoadingAnimation:NO
+                                                       internalAnimationFactor:0.7];
     
     //
     [self refreshMatch];

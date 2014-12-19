@@ -18,6 +18,7 @@
 #import "SldConfig.h"
 #import "SldMatchBriefController.h"
 #import "CBStoreHouseRefreshControl.h"
+#import "SldUserPageController.h"
 
 static NSArray* _assets;
 static int _publishDelayHour = 0;
@@ -89,7 +90,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
 @end
 
 //=============================
-@interface SldMyMatchImagePickListController : UICollectionViewController
+@interface SldMyMatchImagePickListController()
 
 @property (nonatomic) NSArray *sliderNumbers;
 @property (nonatomic) NSMutableArray *filePathes;
@@ -806,7 +807,8 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                            cancelButtonItem:[RIButtonItem itemWithLabel:@"好的" action:^{
 //            [self.navigationController popToViewController:_myMatchListController animated:YES];
             [self.navigationController popToRootViewControllerAnimated:YES];
-            [_myMatchListController refresh];
+//            [_myMatchListController refresh];
+            [_gd.myPageController refresh];
         }]
                            otherButtonItems:nil] show];
     }];

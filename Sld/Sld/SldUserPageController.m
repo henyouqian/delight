@@ -14,6 +14,7 @@
 #import "SldConfig.h"
 #import "SldHttpSession.h"
 #import "SldFollowListController.h"
+#import "SldMyMatchController.h"
 
 //====================
 @interface SldUserPageHeader : UICollectionReusableView
@@ -30,7 +31,7 @@
 @end
 
 //====================
-@interface SldUserPageController () <DKScrollingTabControllerDelegate>
+@interface SldUserPageController () <DKScrollingTabControllerDelegate, QBImagePickerControllerDelegate>
 
 @property SldGameData *gd;
 
@@ -47,9 +48,9 @@
 
 @property SldUserPageHeader *header;
 @property SldMatchListFooter *footer;
-@property (nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic) MSWeakTimer *secTimer;
 @property (nonatomic) CBStoreHouseRefreshControl *storeHouseRefreshControl;
+@property (nonatomic) QBImagePickerController *imagePickerController;
 
 @property SInt64 likeLastScore;
 @property SInt64 originalLastScore;
@@ -68,6 +69,13 @@
     
     _gd = [SldGameData getInstance];
     
+    //
+    if (_playerInfo == nil) {
+        _playerInfo = _gd.playerInfo;
+        _gd.myPageController = self;
+    }
+    
+    //
     _likeMatches = [NSMutableArray array];
     _originalMatches = [NSMutableArray array];
     _playedMatches = [NSMutableArray array];
@@ -95,6 +103,9 @@
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
     self.title = [NSString stringWithFormat:@"%@的主页", _playerInfo.nickName];
+    if (_playerInfo == _gd.playerInfo) {
+        self.title = @"我的";
+    }
     
     self.collectionView.backgroundColor = [UIColor whiteColor];
 }
@@ -110,7 +121,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [_refreshControl endRefreshing];
+    [self.storeHouseRefreshControl finishingLoading];
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
@@ -140,7 +151,6 @@
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:api body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         _footer.loadMoreButton.enabled = YES;
-        [_refreshControl endRefreshing];
         [self.storeHouseRefreshControl finishingLoading];
         if (error) {
             alertHTTPError(error, data);
@@ -496,8 +506,8 @@
 
 - (void)updateFollowButton {
     if (_playerInfo.userId == _gd.playerInfo.userId) {
-        self.navigationItem.rightBarButtonItem.enabled = false;
-        [self.navigationItem.rightBarButtonItem setTitle:@""];
+        self.navigationItem.rightBarButtonItem.enabled = true;
+        [self.navigationItem.rightBarButtonItem setTitle:@"发布拼图"];
     } else {
         self.navigationItem.rightBarButtonItem.enabled = true;
         if (_playerInfo.followed) {
@@ -538,19 +548,53 @@
 }
 
 - (IBAction)onFollowButton:(id)sender {
-    if (_playerInfo.followed) {
-
-        [[[UIAlertView alloc] initWithTitle:@"取消关注?"
-                                    message:nil
-                           cancelButtonItem:[RIButtonItem itemWithLabel:@"以后再说" action:^{
-            // Handle "Cancel"
-        }]
-                           otherButtonItems:[RIButtonItem itemWithLabel:@"取消关注" action:^{
-            [self doFollow:false];
-        }], nil] show];
+    if (_playerInfo == _gd.playerInfo) {
+        [self newMatch];
     } else {
-        [self doFollow:true];
+        if (_playerInfo.followed) {
+            
+            [[[UIAlertView alloc] initWithTitle:@"取消关注?"
+                                        message:nil
+                               cancelButtonItem:[RIButtonItem itemWithLabel:@"以后再说" action:^{
+                // Handle "Cancel"
+            }]
+                               otherButtonItems:[RIButtonItem itemWithLabel:@"取消关注" action:^{
+                [self doFollow:false];
+            }], nil] show];
+        } else {
+            [self doFollow:true];
+        }
     }
+}
+
+- (void)newMatch{
+    _imagePickerController = [[QBImagePickerController alloc] init];
+    _imagePickerController.delegate = self;
+    _imagePickerController.filterType = QBImagePickerControllerFilterTypePhotos;
+    _imagePickerController.allowsMultipleSelection = YES;
+    _imagePickerController.minimumNumberOfSelection = 4;
+    _imagePickerController.maximumNumberOfSelection = 12;
+    _imagePickerController.title = @"选择4-12张图片";
+    
+    _imagePickerController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:_imagePickerController animated:YES];
+}
+
+- (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAssets:(NSArray *)assets {
+    //    [self.navigationController popToViewController:self animated:NO];
+    
+    SldMyMatchImagePickListController* vc = (SldMyMatchImagePickListController*)[getStoryboard() instantiateViewControllerWithIdentifier:@"myUserPackEditVC"];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+    
+    [vc setAssets:assets];
+}
+
+- (void)qb_imagePickerControllerDidCancel:(QBImagePickerController *)imagePickerController {
+    //    [self.navigationController popToViewController:self animated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+- (IBAction)onShareButton:(id)sender {
 }
 
 @end
