@@ -105,6 +105,7 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @property (nonatomic) NSString *promoImage;
 @property (nonatomic) BOOL isPrivate;
 @property (nonatomic) int likeNum;
+@property (nonatomic) BOOL deleted;
 
 - (instancetype)initWithDict:(NSDictionary*)dict;
 @end

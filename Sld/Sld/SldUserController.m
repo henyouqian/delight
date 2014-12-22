@@ -61,6 +61,9 @@ static const int DAILLY_LOGOUT_NUM = 5;
                                             selector:@selector(rotateDisc)
                                                 name:UIApplicationDidBecomeActiveNotification
                                               object:nil];
+    
+    [_avatarView.layer setMasksToBounds:YES];
+    _avatarView.layer.cornerRadius = 5;
 }
 
 - (void)dealloc {

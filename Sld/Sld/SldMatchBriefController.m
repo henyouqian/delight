@@ -131,6 +131,7 @@
         _matchTimeLabel.text = @"比赛已结束";
         [_matchButton setTitle:@"已结束" forState:UIControlStateDisabled];
         _matchButton.enabled = NO;
+        [_practiceButton setTitle:@"拼图" forState:UIControlStateNormal];
     } else {
         NSString *str = formatInterval((int)endIntv);
         

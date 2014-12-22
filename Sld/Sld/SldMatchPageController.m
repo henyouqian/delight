@@ -262,6 +262,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
 @property (weak, nonatomic) IBOutlet UILabel *likeNumLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playNumLabel;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
+@property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 @end
 
 @implementation SldMatchPageMatchCell
@@ -488,9 +490,15 @@
             if (_match.ownerId == _gd.playerInfo.userId) {
                 _matchPlay.like = YES;
                 [self setLikeButtonHighlight:YES button:_matchCell.likeButton];
+                _matchCell.editButton.hidden = NO;
+                _matchCell.deleteButton.hidden = NO;
+            } else {
+                _matchCell.editButton.hidden = YES;
+                _matchCell.deleteButton.hidden = YES;
             }
             _matchCell.likeNumLabel.text = [NSString stringWithFormat:@"%d喜欢", _match.likeNum];
-            _matchCell.playNumLabel.text = [NSString stringWithFormat:@"%d 已玩", _match.playTimes];
+            _matchCell.playNumLabel.text = [NSString stringWithFormat:@"%d已玩", _match.playTimes];
+            [self updateMatchCell];
             return _matchCell;
         }
     } else if (indexPath.section == 1){
@@ -516,6 +524,13 @@
     }
     UInt64 now = getServerNowSec();
     BOOL matchEnd = NO;
+    if (_match.deleted) {
+        _matchCell.bgView.backgroundColor = makeUIColor(150, 150, 150, 255);
+        _matchCell.midLabel.text = @"比赛已删除";
+        _matchCell.bottomLabel.text = @"";
+        return;
+    }
+    
     if (_match.hasResult || now > _match.endTime) { //closed
         [UIView animateWithDuration:0.8 animations:^{
             _matchCell.bgView.backgroundColor = makeUIColor(121, 135, 136, 255);
@@ -813,6 +828,9 @@
         if (_gd.packInfo == nil || _matchPlay == nil) {
             return NO;
         }
+        if (_match.deleted) {
+            return NO;
+        }
     } else if ([identifier compare:@"segueActivity"] == 0) {
         //get playerInfo
         SldHttpSession *session = [SldHttpSession defaultSession];
@@ -842,11 +860,17 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (segue.identifier == nil) {
+        return;
+    }
+    
     if ([segue.identifier compare:@"segueUser"] == 0) {
         SldUserPageController *vc = segue.destinationViewController;
         vc.playerInfo = _packInfo.author;
     } else if ([segue.identifier compare:@"segueMatch"] == 0) {
         _gd.match = _match;
+    } else if ([segue.identifier compare:@"segueMatchEdit"] == 0) {
+        
     }
 }
 
@@ -902,5 +926,24 @@
     }];
 }
 
+- (IBAction)onDeleteButton:(id)sender {
+    [[[UIAlertView alloc] initWithTitle:@"删除这组拼图吗？"
+                                message:@"注意，如比赛未结束，提供的奖金不退还，并在结束后正常分发奖金。"
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+        // Handle "Cancel"
+    }]
+                       otherButtonItems:[RIButtonItem itemWithLabel:@"删除！" action:^{
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        NSDictionary *body = @{@"MatchId":@(_match.id)};
+        [session postToApi:@"match/del" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                alertHTTPError(error, data);
+                return;
+            }
+            _match.deleted = YES;
+        }];
+
+    }], nil] show];
+}
 
 @end

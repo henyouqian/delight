@@ -42,9 +42,10 @@ UIColor *_matchTimeLabelGreen = nil;
         inst.WEB_SOCKET_URL = @"ws://192.168.2.55:9977/ws";
         
         //distcheck
-        inst.HOST = @"http://192.168.2.55:9998";
+//        inst.HOST = @"http://192.168.2.55:9998";
 //        inst.HOST = @"http://192.168.1.43:9998";
-//        inst.HOST = @"http://sld.pintugame.com";
+        inst.HOST = @"http://sld.pintugame.com";
+//        inst.HOST = @"http://120.27.31.146:9998";
         
         _matchTimeLabelGreen = makeUIColor(71, 186, 43, 180);
         _matchTimeLabelRed = makeUIColor(40, 40, 40, 120);

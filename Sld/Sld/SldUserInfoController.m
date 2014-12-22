@@ -548,6 +548,8 @@ static NSArray *_genderStrings;
     cell.imageView.image = nil;
     NSString *key = [NSString stringWithFormat:@"%d", _idStart+ indexPath.row];
     NSString *url = [SldUtil makeGravatarUrlWithKey:key width:64];
+    [cell.imageView.layer setMasksToBounds:YES];
+    cell.imageView.layer.cornerRadius = 5;
     [cell.imageView asyncLoadImageWithUrl:url showIndicator:YES completion:nil];
     
     return cell;

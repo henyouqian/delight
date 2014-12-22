@@ -177,6 +177,7 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
         _promoImage = [dict objectForKey:@"PromoImage"];
         _isPrivate = [(NSNumber*)[dict objectForKey:@"Private"] boolValue];
         _likeNum = [(NSNumber*)[dict objectForKey:@"LikeNum"] intValue];
+        _deleted = [(NSNumber*)[dict objectForKey:@"Deleted"] boolValue];
         return self;
     }
     return nil;

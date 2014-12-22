@@ -39,12 +39,15 @@
 @property NSMutableArray *likeMatches;
 @property NSMutableArray *originalMatches;
 @property NSMutableArray *playedMatches;
+@property NSMutableArray *playedAlls;
 @property BOOL likeLoaded;
 @property BOOL originalLoaded;
 @property BOOL playedLoaded;
+@property BOOL playedAllLoaded;
 @property BOOL likeEnd;
 @property BOOL originalEnd;
 @property BOOL playedEnd;
+@property BOOL playedAllEnd;
 
 @property SldUserPageHeader *header;
 @property SldMatchListFooter *footer;
@@ -55,6 +58,7 @@
 @property SInt64 likeLastScore;
 @property SInt64 originalLastScore;
 @property SInt64 playedLastScore;
+@property SInt64 playedAllLastScroe;
 
 
 @end
@@ -79,6 +83,7 @@
     _likeMatches = [NSMutableArray array];
     _originalMatches = [NSMutableArray array];
     _playedMatches = [NSMutableArray array];
+    _playedAlls = [NSMutableArray array];
     _matches = _likeMatches;
     
     [self updateFollowButton];
@@ -144,7 +149,9 @@
     } else if (_matches == _originalMatches) {
         api = @"match/listOriginal";
     } else if (_matches == _playedMatches) {
-        api = @"match/listPlayed";
+        api = @"match/listPlayedMatch";
+    } else if (_matches == _playedAlls) {
+        api = @"match/listPlayedAll";
     }
     
     NSDictionary *body = @{@"UserId": @(_playerInfo.userId), @"StartId": @(0), @"LastScore":@(0), @"Limit": @(MATCH_FETCH_LIMIT)};
@@ -174,6 +181,9 @@
         } else if (_matches == _playedMatches) {
             _playedLastScore = lastScore;
             listEnd = &_playedEnd;
+        } else if (_matches == _playedAlls) {
+            _playedAllLastScroe = lastScore;
+            listEnd = &_playedAllEnd;
         }
         
         if (matchesJs.count < MATCH_FETCH_LIMIT) {
@@ -230,6 +240,8 @@
         listEnd = _originalEnd;
     } else if (_matches == _playedMatches) {
         listEnd = _playedEnd;
+    } else if (_matches == _playedAlls) {
+        listEnd = _playedAllEnd;
     }
     
     if (listEnd) {
@@ -332,7 +344,7 @@
     [self addChildViewController:tabController];
     [tabController didMoveToParentViewController:self];
     [_header addSubview:tabController.view];
-    tabController.view.backgroundColor = [UIColor whiteColor];
+    tabController.view.backgroundColor = [UIColor grayColor];
     tabController.view.frame = _header.segView.frame;
     
     // controller customization
@@ -355,7 +367,7 @@
     tabController.underlineIndicator = YES; // the color is from selectedTextColor property
     
     //this has to be done after customization
-    tabController.selection = @[@"喜欢", @"原创", @"参与"];
+    tabController.selection = @[@"喜欢", @"原创", @"比赛", @"已玩"];
     
     [self updateFollowAndFanLabel];
 }
@@ -385,6 +397,11 @@
             _matches = _playedMatches;
             if (!_playedLoaded) {
                 needRefresh = _playedLoaded = YES;
+            }
+        } else if (selection == 3) {
+            _matches = _playedAlls;
+            if (!_playedAllLoaded) {
+                needRefresh = _playedAllLoaded = YES;
             }
         }
         
@@ -435,9 +452,13 @@
         lastScore = &_originalLastScore;
         listEnd = &_originalEnd;
     } else if (_matches == _playedMatches) {
-        api = @"match/listPlayed";
+        api = @"match/listPlayedMatch";
         lastScore = &_playedLastScore;
         listEnd = &_playedEnd;
+    }  else if (_matches == _playedAlls) {
+        api = @"match/listPlayedAll";
+        lastScore = &_playedAllLastScroe;
+        listEnd = &_playedAllEnd;
     }
     
     Match* lastMatch = [_matches lastObject];
@@ -506,10 +527,16 @@
 
 - (void)updateFollowButton {
     if (_playerInfo.userId == _gd.playerInfo.userId) {
-        self.navigationItem.rightBarButtonItem.enabled = true;
-        [self.navigationItem.rightBarButtonItem setTitle:@"发布拼图"];
+        if (self.navigationController.viewControllers.count == 1) {
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+            [self.navigationItem.rightBarButtonItem setTitle:@"发布拼图"];
+        } else {
+            self.navigationItem.rightBarButtonItem.enabled = NO;
+            [self.navigationItem.rightBarButtonItem setTitle:@""];
+        }
+        
     } else {
-        self.navigationItem.rightBarButtonItem.enabled = true;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         if (_playerInfo.followed) {
             [self.navigationItem.rightBarButtonItem setTitle:@"已关注"];
         } else {
@@ -548,7 +575,7 @@
 }
 
 - (IBAction)onFollowButton:(id)sender {
-    if (_playerInfo == _gd.playerInfo) {
+    if (_playerInfo.userId == _gd.playerInfo.userId) {
         [self newMatch];
     } else {
         if (_playerInfo.followed) {
@@ -594,7 +621,50 @@
     //    [self.navigationController popToViewController:self animated:YES];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
+
 - (IBAction)onShareButton:(id)sender {
+    if (_matches.count == 0) {
+        alert(@"暂时没有什么可分享的，先发布一个图集试试吧。", nil);
+        return;
+    }
+    
+    Match *match = _matches[0];
+    NSString *path = makeImagePath(match.thumb);
+    UIImage *image = [UIImage imageWithContentsOfFile:path];
+    NSString *url = [NSString stringWithFormat:@"%@?u=%lld", [SldConfig getInstance].USER_HOME_URL, _gd.playerInfo.userId];
+    
+    NSString *title;
+    if (_playerInfo.userId == _gd.playerInfo.userId) {
+        title = @"把我的拼图主页";
+    } else {
+        title = [NSString stringWithFormat:@"把%@的拼图主页分享给朋友", _playerInfo.nickName];
+    }
+    [[[UIAlertView alloc] initWithTitle:    title
+                                message:    nil
+                       cancelButtonItem:    [RIButtonItem itemWithLabel:@"取消" action:nil]
+                       otherButtonItems:    [RIButtonItem itemWithLabel:@"拷贝链接地址" action:^{
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = url;
+    }],
+      [RIButtonItem itemWithLabel:@"分享到社交平台" action:^{
+        NSString *weixinText = @"我的拼图主页。";
+        if (_playerInfo.userId != _gd.playerInfo.userId) {
+            weixinText = [NSString stringWithFormat:@"这个人的拼图很有意思。"];
+        }
+        
+        UMSocialData *umData = [UMSocialData defaultData];
+        umData.extConfig.title = @"";
+        umData.extConfig.wechatSessionData.url = url;
+        umData.extConfig.wechatSessionData.shareText = weixinText;
+        NSString *text = [NSString stringWithFormat:@"%@\n%@", weixinText, url];
+        [UMSocialSnsService presentSnsIconSheetView:self
+                                             appKey:nil
+                                          shareText:text
+                                         shareImage:image
+                                    shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina,UMShareToTencent, UMShareToDouban, UMShareToQzone]
+                                           delegate:nil];
+    }],
+      nil] show];
 }
 
 @end

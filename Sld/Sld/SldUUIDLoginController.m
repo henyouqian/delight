@@ -20,6 +20,7 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
 //static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT2";
 
 @interface SldUUIDLoginController ()
+@property (weak, nonatomic) IBOutlet UIButton *retryButton;
 
 @end
 
@@ -39,21 +40,31 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
     }
 }
 
+- (IBAction)onRetryButton:(id)sender {
+    [self login];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
+    _retryButton.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-//    del all account
-//    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
-//    for (NSDictionary *acc in accounts) {
-//        [SSKeychain deletePasswordForService:KEYCHAIN_SERVICE account:acc[@"acct"]];
-//    }
+    [self login];
+}
+
+- (void)login {
+    //    del all account
+    //    NSArray *accounts = [SSKeychain accountsForService:KEYCHAIN_SERVICE];
+    //    for (NSDictionary *acc in accounts) {
+    //        [SSKeychain deletePasswordForService:KEYCHAIN_SERVICE account:acc[@"acct"]];
+    //    }
+    
+    _retryButton.hidden = YES;
     
     NSString *key = [SSKeychain passwordForService:KEYCHAIN_SERVICE account:LOCAL_ACCOUNT];
     NSString *type = @"uuid";
@@ -65,19 +76,20 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
     }
     
     //distcheck
-//    NSArray *users = @[@"7F2EB1DC-921A-4415-8A01-778255ABC1B8",
-//                       @"C7F7CE83-FD9E-4F35-B230-179E27825CF9",
-//                       @"49BE1E72-A581-4170-9C3C-AEC38E3BB5A1",
-//                       @"9DA924BB-6327-4C8A-BA4D-B010765478CD",
-//                       @"43DF2717-1407-4D0A-822C-38275B22617A"];
-
-//#define FAKEUSER
-//    key = @"9DA924BB-6327-4C8A-BA4D-B010765478CD111";
+    //    NSArray *users = @[@"7F2EB1DC-921A-4415-8A01-778255ABC1B8",
+    //                       @"C7F7CE83-FD9E-4F35-B230-179E27825CF9",
+    //                       @"49BE1E72-A581-4170-9C3C-AEC38E3BB5A1",
+    //                       @"9DA924BB-6327-4C8A-BA4D-B010765478CD",
+    //                       @"43DF2717-1407-4D0A-822C-38275B22617A"];
+    
+    //#define FAKEUSER
+    //    key = @"9DA924BB-6327-4C8A-BA4D-B010765478CD111";
     
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session postToApi:@"auth/getSnsSecret" body:nil completionHandler:^(NSData *data, NSURLResponse *resp, NSError *error) {
         if (error) {
             alertHTTPError(error, data);
+            _retryButton.hidden = NO;
             return;
         }
         
@@ -109,7 +121,7 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
             
             //save to keychain
 #ifndef FAKEUSER
-                [SSKeychain setPassword:key forService:KEYCHAIN_SERVICE account:LOCAL_ACCOUNT];
+            [SSKeychain setPassword:key forService:KEYCHAIN_SERVICE account:LOCAL_ACCOUNT];
 #endif
             
             //
