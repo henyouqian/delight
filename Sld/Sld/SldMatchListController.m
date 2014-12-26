@@ -124,6 +124,7 @@ static SldMatchListController* _inst = nil;
             alertHTTPError(error, data);
             return;
         }
+        NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         if (error) {
             lwError("Json error:%@", [error localizedDescription]);

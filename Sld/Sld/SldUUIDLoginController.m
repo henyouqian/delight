@@ -125,13 +125,13 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
 #endif
             
             //
-            SldGameData *gameData = [SldGameData getInstance];
-            gameData.token = [dict objectForKey:@"Token"];
+            SldGameData *gd = [SldGameData getInstance];
+            gd.token = [dict objectForKey:@"Token"];
             NSNumber *nUserId = [dict objectForKey:@"UserId"];
             if (nUserId) {
-                gameData.userId = [nUserId unsignedLongLongValue];
+                gd.userId = [nUserId unsignedLongLongValue];
             }
-            gameData.userName = [dict objectForKey:@"UserName"];
+            gd.userName = [dict objectForKey:@"UserName"];
             NSNumber *nNow = [dict objectForKey:@"Now"];
             if (nNow) {
                 setServerNow([nNow longLongValue]);
@@ -148,12 +148,12 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
                     }
                     
                 } else {
-                    gameData.online = YES;
+                    gd.online = YES;
                     
                     //update game data
                     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                     
-                    gameData.playerInfo = [PlayerInfo playerWithDictionary:dict];
+                    gd.playerInfo = [PlayerInfo playerWithDictionary:dict];
                     
                     //update client conf
                     NSDictionary *confDict = [dict objectForKey:@"ClientConf"];
@@ -162,7 +162,7 @@ static NSString *LOCAL_ACCOUNT = @"LOCAL_ACCOUNT1"; //LOCAL_ACCOUNT1 is for dist
                     //init SldIapManager
                     [SldIapManager getInstance];
                     
-                    if (gameData.playerInfo.nickName.length == 0) {
+                    if (gd.playerInfo.nickName.length == 0) {
                         [SldUserInfoController createAndPresentFromController:self cancelable:NO];
                     } else {
                         [self dismissViewControllerAnimated:YES completion:nil];

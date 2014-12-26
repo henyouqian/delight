@@ -60,6 +60,8 @@
 @property SInt64 playedLastScore;
 @property SInt64 playedAllLastScroe;
 
+@property DKScrollingTabController *tabController;
+
 
 @end
 
@@ -74,22 +76,11 @@
     _gd = [SldGameData getInstance];
     
     //
-    if (_playerInfo == nil) {
-        _playerInfo = _gd.playerInfo;
-        _gd.myPageController = self;
-    }
-    
-    //
     _likeMatches = [NSMutableArray array];
     _originalMatches = [NSMutableArray array];
     _playedMatches = [NSMutableArray array];
     _playedAlls = [NSMutableArray array];
     _matches = _likeMatches;
-    
-    [self updateFollowButton];
-    
-    [self refresh];
-    _likeLoaded = YES;
     
     //refresh control
     self.collectionView.alwaysBounceVertical = YES;
@@ -107,11 +98,6 @@
     //timer
     _secTimer = [MSWeakTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(onSecTimer) userInfo:nil repeats:YES dispatchQueue:dispatch_get_main_queue()];
     
-    self.title = [NSString stringWithFormat:@"%@的主页", _playerInfo.nickName];
-    if (_playerInfo == _gd.playerInfo) {
-        self.title = @"我的";
-    }
-    
     self.collectionView.backgroundColor = [UIColor whiteColor];
 }
 
@@ -127,6 +113,22 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.storeHouseRefreshControl finishingLoading];
+    
+    if (!_likeLoaded) {
+        if (_playerInfo == nil) {
+            _playerInfo = _gd.playerInfo;
+        }
+        _gd.myPageController = self;
+        [self refresh];
+        
+        self.title = [NSString stringWithFormat:@"%@的主页", _playerInfo.nickName];
+        if (_playerInfo == _gd.playerInfo) {
+            self.title = @"我的";
+        }
+    }
+    
+    [self updateFollowButton];
+    [self updateFollowAndFanLabel];
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
@@ -192,6 +194,9 @@
             *listEnd = NO;
         }
         
+        _playerInfo.fanNum = [(NSNumber*)[msgJs objectForKey:@"FanNum"] intValue];
+        _playerInfo.followed= [(NSNumber*)[msgJs objectForKey:@"FollowNum"] intValue];
+        
 //        //delete
 //        int matchNum = _matches.count;
 //        [_matches removeAllObjects];
@@ -217,9 +222,11 @@
             Match *match = [[Match alloc] initWithDict:dict];
             [_matches addObject:match];
         }
-        [self updateInsets];
+//        [self updateInsets];
         [self updateListEnd];
+//        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
         [self.collectionView reloadData];
+        [self updateFollowAndFanLabel];
     }];
 }
 
@@ -265,8 +272,9 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"matchListCell" forIndexPath:indexPath];
+    SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"userPageMatchCell" forIndexPath:indexPath];
     Match *match = [_matches objectAtIndex:indexPath.row];
+    lwInfo("%d, %d, %@", indexPath.section, indexPath.row, match.thumb);
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
     [cell.timeLebel.layer setAffineTransform:CGAffineTransformMakeRotation(M_PI_4)];
@@ -338,36 +346,40 @@
     _header.userNameLabel.text = _playerInfo.nickName;
     
     //
-    DKScrollingTabController *tabController = [[DKScrollingTabController alloc] init];
-    tabController.delegate = self;
-    
-    [self addChildViewController:tabController];
-    [tabController didMoveToParentViewController:self];
-    [_header addSubview:tabController.view];
-    tabController.view.backgroundColor = [UIColor grayColor];
-    tabController.view.frame = _header.segView.frame;
-    
-    // controller customization
-    tabController.selectionFont = [UIFont boldSystemFontOfSize:12];
-    tabController.buttonInset = 30;
-    tabController.buttonPadding = 4;
-    tabController.firstButtonInset = 30;
-    
-    tabController.translucent = YES;
-    
-    CGRect frame = tabController.toolbar.frame;
-    frame.size.width = 12000;
-    tabController.toolbar.frame = frame;
-    
-    //remove scroll bar
-    tabController.buttonsScrollView.showsHorizontalScrollIndicator = NO;
-    
-    //add indicator
-    tabController.selectedTextColor = [UIColor orangeColor];
-    tabController.underlineIndicator = YES; // the color is from selectedTextColor property
-    
-    //this has to be done after customization
-    tabController.selection = @[@"喜欢", @"原创", @"比赛", @"已玩"];
+    if (_tabController == nil) {
+        DKScrollingTabController *tabController = [[DKScrollingTabController alloc] init];
+        tabController.delegate = self;
+        
+        [self addChildViewController:tabController];
+        [tabController didMoveToParentViewController:self];
+        [_header addSubview:tabController.view];
+        tabController.view.backgroundColor = [UIColor grayColor];
+        tabController.view.frame = _header.segView.frame;
+        
+        // controller customization
+        tabController.selectionFont = [UIFont boldSystemFontOfSize:12];
+        tabController.buttonInset = 30;
+        tabController.buttonPadding = 4;
+        tabController.firstButtonInset = 30;
+        
+        tabController.translucent = YES;
+        
+        CGRect frame = tabController.toolbar.frame;
+        frame.size.width = 12000;
+        tabController.toolbar.frame = frame;
+        
+        //remove scroll bar
+        tabController.buttonsScrollView.showsHorizontalScrollIndicator = NO;
+        
+        //add indicator
+        tabController.selectedTextColor = [UIColor orangeColor];
+        tabController.underlineIndicator = YES; // the color is from selectedTextColor property
+        
+        //this has to be done after customization
+        tabController.selection = @[@"喜欢", @"原创", @"比赛", @"已玩"];
+        
+        _tabController = tabController;
+    }
     
     [self updateFollowAndFanLabel];
 }
@@ -569,7 +581,12 @@
         
         bool follow = [(NSNumber*)[dict objectForKey:@"Follow"] boolValue];
         _playerInfo.followed = follow;
+        _playerInfo.fanNum = [(NSNumber*)[dict objectForKey:@"FanNum"] intValue];
         [self updateFollowButton];
+        
+        _gd.playerInfo.followNum = [(NSNumber*)[dict objectForKey:@"FollowNum"] intValue];
+        
+        [self updateFollowAndFanLabel];
     }];
 
 }

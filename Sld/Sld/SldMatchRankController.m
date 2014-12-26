@@ -43,7 +43,7 @@
 
 @interface MatchRankInfo : NSObject
 @property (nonatomic) NSNumber *rank;
-@property (nonatomic) UInt64 userId;
+@property (nonatomic) SInt64 userId;
 @property (nonatomic) NSString *nickName;
 @property (nonatomic) NSString *score;
 @property (nonatomic) NSString *teamName;
@@ -54,6 +54,7 @@
 @implementation MatchRankInfo
 +(instancetype)create:(NSDictionary*)dict {
     MatchRankInfo *rankInfo = [[MatchRankInfo alloc] init];
+    rankInfo.userId = [(NSNumber*)[dict objectForKey:@"UserId"] longLongValue];
     rankInfo.rank = [dict objectForKey:@"Rank"];
     rankInfo.nickName = [dict objectForKey:@"NickName"];
     rankInfo.teamName = [dict objectForKey:@"TeamName"];

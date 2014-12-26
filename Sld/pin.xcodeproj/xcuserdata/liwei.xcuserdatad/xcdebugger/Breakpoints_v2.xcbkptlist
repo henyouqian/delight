@@ -19,14 +19,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Sld/SldMyMatchController.m"
-            timestampString = "440769325.80361"
+            filePath = "Sld/SldHttpSession.m"
+            timestampString = "441320579.789423"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "809"
-            endingLineNumber = "809"
-            landmarkName = "-addUserPack"
-            landmarkType = "5">
+            startingLineNumber = "203"
+            endingLineNumber = "203"
+            landmarkName = "alertHTTPError()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
