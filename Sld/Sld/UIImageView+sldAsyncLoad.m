@@ -448,6 +448,61 @@
     }
 }
 
+- (void)asyncLoadPrivateImageWithUrl:(NSString*)url key:(NSString*)key completion:(void (^)(void))completion {
+    if (_loading) {
+        return;
+    }
+    if (self.image && _key && [_key compare:key] == 0) {
+        return;
+    } else {
+        _key = key;
+    }
+    
+    self.image = nil;
+    
+    NSString *localPath = makeImagePath(key);
+    
+    //local
+    if ([[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
+        [self asyncLoadLocalImageWithPath:localPath anim:YES thumbSize:0 completion:^{
+            if (completion) {
+                completion();
+            }
+        }];
+    }
+    //remote
+    else {
+        _serverUrl = url;
+        SldHttpSession *session = [SldHttpSession defaultSession];
+        if (_task) {
+            [_task cancel];
+            lwInfo("_task cancel");
+        }
+        _task = [session downloadFromUrl:url
+                                  toPath:localPath
+                                withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
+         {
+             _task = nil;
+             NSURL *nsurl = [NSURL URLWithString:_serverUrl];
+             if (![response.URL isEqual:nsurl]) {
+                 lwInfo("![response.URL isEqual:nsurl]");
+                 return;
+             }
+             
+             if (error) {
+                 lwError("Download error: %@, url:%@", error.localizedDescription, location);
+                 return;
+             }
+             
+             [self asyncLoadLocalImageWithPath:localPath anim:YES thumbSize:0 completion:^{
+                 if (completion) {
+                     completion();
+                 }
+             }];
+         }];
+    }
+}
+
 - (void)releaseImage {
     if (_loading) {
         _loadCanceling = YES;

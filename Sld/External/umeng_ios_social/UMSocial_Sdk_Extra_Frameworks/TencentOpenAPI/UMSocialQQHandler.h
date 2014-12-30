@@ -16,12 +16,12 @@
 /**
  设置分享到手机QQ和QQ空间的应用ID
  
- @param app_Id QQ互联应用Id
+ @param appId QQ互联应用Id
  @param appKey QQ互联应用Key
  
  @param url 分享URL链接
  */
-+(void)setQQWithAppId:(NSString *)app_Id appKey:(NSString *)appKey url:(NSString *)url;
++(void)setQQWithAppId:(NSString *)appId appKey:(NSString *)appKey url:(NSString *)url;
 
 /**
  设置在没有安装QQ客户端的情况下，是否支持单独授权到QQ互联

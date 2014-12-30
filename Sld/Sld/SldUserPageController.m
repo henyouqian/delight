@@ -274,7 +274,6 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     SldMatchListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"userPageMatchCell" forIndexPath:indexPath];
     Match *match = [_matches objectAtIndex:indexPath.row];
-    lwInfo("%d, %d, %@", indexPath.section, indexPath.row, match.thumb);
     [cell.imageView asyncLoadUploadImageWithKey:match.thumb showIndicator:NO completion:nil];
     cell.prizeLabel.text = [NSString stringWithFormat:@"奖金：%d", match.prize + match.extraPrize];
     [cell.timeLebel.layer setAffineTransform:CGAffineTransformMakeRotation(M_PI_4)];

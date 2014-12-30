@@ -496,6 +496,8 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
         int i = 0;
         NSMutableArray *filePathes = [NSMutableArray array];
         NSMutableArray *fileKeys = [NSMutableArray array];
+        NSMutableArray *privateFilePathes = [NSMutableArray array];
+        NSMutableArray *privateFileKeys = [NSMutableArray array];
         _totalSize = 0;
 
         for (ALAsset *asset in _assets) {
@@ -555,9 +557,9 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                 key = [NSString stringWithFormat:@"%@.jpg", [SldUtil sha1WithData:data]];
             }
             
-            [fileKeys addObject:key];
-            [filePathes addObject:filePath];
-            [_images addObject:@{@"File":fileName, @"Key":key}];
+            [privateFileKeys addObject:key];
+            [privateFilePathes addObject:filePath];
+            [_images addObject:@{@"Url":@"1", @"Key":key}];
             
             //blur first image
             if (i == 0) {
@@ -671,7 +673,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             
             //uploader
             SldHttpSession *session = [SldHttpSession defaultSession];
-            [session postToApi:@"player/getUptoken" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [session postToApi:@"player/getPrivateUptoken" body:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 if (error) {
                     alertHTTPError(error, data);
                     [_alt dismissWithClickedButtonIndex:0 animated:YES];
@@ -688,12 +690,12 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                 }
                 
                 NSString *token = [dict objectForKey:@"Token"];
+                NSString *privateToken = [dict objectForKey:@"PrivateToken"];
                 
                 _upManager = [[QNUploadManager alloc] init];
                 
-                _uploadNum = 0;
+                _uploadNum = filePathes.count + privateFilePathes.count;
                 _finishNum = 0;
-//                int i = 0;
                 
                 SldConfig *conf = [SldConfig getInstance];
                 int i = 0;
@@ -701,7 +703,6 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                     NSString *key = [fileKeys objectAtIndex:i];
                     i++;
                     NSString *strUrl = [NSString stringWithFormat:@"%@/%@", conf.UPLOAD_HOST, key];
-                    _uploadNum++;
                     
                     //check exist
                     NSURL *url = [NSURL URLWithString: strUrl];
@@ -748,6 +749,33 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                             }
                         });
                     });
+                }
+                
+                i = 0;
+                for (NSString *filePath in privateFilePathes) {
+                    NSString *key = [privateFileKeys objectAtIndex:i];
+                    i++;
+                    [_upManager putFile:filePath
+                                    key:key
+                                  token:privateToken
+                               complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                                   if (info.ok) {
+                                       _finishNum++;
+                                       if (_finishNum >= _uploadNum) {
+                                           [self addUserPack];
+                                       } else {
+                                           float f = (float)_finishNum/_uploadNum;
+                                           int n = f*100;
+                                           _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+                                       }
+                                   } else {
+                                       [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                                       _alt = nil;
+                                       alert(@"上传失败", nil);
+                                       lwError(@"uploadFailed: %@, %@", filePath, info);
+                                   }
+                               }
+                                 option:nil];
                 }
             }];
         });
@@ -918,7 +946,7 @@ static SldMyMatchListController* _inst = nil;
         }
         
         //delete
-        int matchNum = _matches.count;
+        int matchNum = (int)_matches.count;
         [_matches removeAllObjects];
         NSMutableArray *deleteIndexPathes = [NSMutableArray array];
         for (int i = 0; i < matchNum; ++i) {

@@ -92,11 +92,11 @@
 }
 
 - (void)downloadAllImages:(void(^)(void))complete {
-    NSArray *imageKeys = _controller.packInfo.images;
+    NSArray *images = _controller.packInfo.images;
     __block int localNum = 0;
-    NSUInteger totalNum = [imageKeys count];
-    for (NSString *imageKey in imageKeys) {
-        if (imageExist(imageKey)) {
+    NSUInteger totalNum = [images count];
+    for (ImageInfo *image in images) {
+        if (imageExist(image.Key)) {
             localNum++;
         }
     }
@@ -119,10 +119,10 @@
     //download
     SldHttpSession *session = [SldHttpSession defaultSession];
     [session cancelAllTask];
-    for (NSString *imageKey in imageKeys) {
-        if (!imageExist(imageKey)) {
-            [session downloadFromUrl:makeImageServerUrl(imageKey)
-                              toPath:makeImagePath(imageKey)
+    for (ImageInfo *image in images) {
+        if (!imageExist(image.Key)) {
+            [session downloadFromUrl:[image getUrl]
+                              toPath:makeImagePath(image.Key)
                             withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
              {
                  if (error) {
@@ -216,12 +216,13 @@
         imageView.userInteractionEnabled = YES;
         [self.contentView addSubview:imageView];
         
-        NSString *imgKey = packInfo.images[i];
+        ImageInfo *image = packInfo.images[i];
+        NSString *key = image.Key;
         if (packInfo.thumbs != nil && i < packInfo.thumbs.count) {
-            imgKey = packInfo.thumbs[i];
+            key = packInfo.thumbs[i];
         }
         imageView.alpha = 0.0;
-        [imageView asyncLoadUploadImageNoAnimWithKey:imgKey thumbSize:200 showIndicator:NO completion:^{
+        [imageView asyncLoadUploadImageNoAnimWithKey:key thumbSize:200 showIndicator:NO completion:^{
             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 imageView.alpha = 1.0;
             } completion:nil];
@@ -230,8 +231,8 @@
         
         //gif?
         BOOL isGif = false;
-        if (imgKey.length > 3) {
-            NSString *str = [imgKey substringWithRange:NSMakeRange(imgKey.length-3, 3)];
+        if (key.length > 3) {
+            NSString *str = [key substringWithRange:NSMakeRange(key.length-3, 3)];
             isGif = [[str lowercaseString] compare:@"gif"] == 0;
         }
         if (isGif) {
@@ -677,12 +678,12 @@
 }
 
 - (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
-    NSString *imageKey = [_packInfo.images objectAtIndex:index];
-    if (!imageKey) {
+    ImageInfo *imageInfo = [_packInfo.images objectAtIndex:index];
+    if (!imageInfo) {
         return nil;
     }
     
-    NSString *localPath = makeImagePath(imageKey);
+    NSString *localPath = makeImagePath(imageInfo.Key);
     MWPhoto *photo = [MWPhoto photoWithURL:[NSURL fileURLWithPath:localPath]];
     return photo;
 }

@@ -25,6 +25,7 @@ UIColor *_matchTimeLabelGreen = nil;
         inst.IMG_CACHE_DIR = @"imgCache";
         inst.DATA_HOST = @"http://dn-pintugame.qbox.me";
         inst.UPLOAD_HOST = @"http://dn-pintuuserupload.qbox.me";
+        inst.PRIVATE_UPLOAD_HOST = @"http://7tebsf.com1.z0.glb.clouddn.com";
         inst.KEYCHAIN_SERVICE = @"com.liwei.Sld.HTTP_ACCOUNT";
         inst.KEYCHAIN_KV = @"com.liwei.Sld.KV";
         inst.STORE_ID = @"923531990";
@@ -42,9 +43,9 @@ UIColor *_matchTimeLabelGreen = nil;
         inst.WEB_SOCKET_URL = @"ws://192.168.2.55:9977/ws";
         
         //distcheck
-//        inst.HOST = @"http://192.168.2.55:9998";
+        inst.HOST = @"http://192.168.2.55:9998";
 //        inst.HOST = @"http://192.168.1.43:9998";
-        inst.HOST = @"http://sld.pintugame.com";
+//        inst.HOST = @"http://sld.pintugame.com";
 //        inst.HOST = @"http://120.27.31.146:9998";
         
         _matchTimeLabelGreen = makeUIColor(71, 186, 43, 180);
@@ -63,6 +64,11 @@ UIColor *_matchTimeLabelGreen = nil;
     if (uploadHost) {
         self.UPLOAD_HOST = uploadHost;
     }
+    NSString *privateUploadHost = [dict objectForKey:@"PrivateUploadHost"];
+    if (privateUploadHost) {
+        self.PRIVATE_UPLOAD_HOST = privateUploadHost;
+    }
+
     NSString *storeId = [dict objectForKey:@"StoreId"];
     if (storeId) {
         self.STORE_ID = storeId;

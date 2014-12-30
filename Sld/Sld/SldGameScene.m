@@ -216,12 +216,12 @@ NSDate *_gameBeginTime;
         
         NSMutableArray *files = [NSMutableArray arrayWithCapacity:[_gd.packInfo.images count]];
         if (M_TEST == _gd.gameMode) {
-            for (NSString *img in _gd.packInfo.images) {
-                [files addObject:img];
+            for (ImageInfo *img in _gd.packInfo.images) {
+                [files addObject:img.Key];
             }
         } else {
-            for (NSString *img in _gd.packInfo.images) {
-                [files addObject:makeImagePath(img)];
+            for (ImageInfo *img in _gd.packInfo.images) {
+                [files addObject:makeImagePath(img.Key)];
             }
         }
         

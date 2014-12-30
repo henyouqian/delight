@@ -35,5 +35,6 @@
 - (void)asyncLoadUploadImageNoAnimWithKey:(NSString*)imageKey thumbSize:(int)thumbSize showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
 
 - (void)asyncLoadImageWithUrl:(NSString*)url showIndicator:(BOOL)showIndicator completion:(void (^)(void))completion;
+- (void)asyncLoadPrivateImageWithUrl:(NSString*)url key:(NSString*)key completion:(void (^)(void))completion;
 - (void)releaseImage;
 @end

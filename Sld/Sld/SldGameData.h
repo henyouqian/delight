@@ -13,6 +13,17 @@ extern const UInt32 DEFUALT_SLIDER_NUM;
 @class SldUserPageController;
 
 //=================
+@interface ImageInfo : NSObject
+@property NSString *Key;
+@property NSString *Url;
+
+- (instancetype)initWithDict:(NSDictionary*)dict;
+- (NSString*)getUrl;
+@end
+
+
+
+//=================
 @interface PackInfo : NSObject
 @property (nonatomic) SInt64 id;
 @property (nonatomic) NSString *title;

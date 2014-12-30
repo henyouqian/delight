@@ -348,15 +348,15 @@
 }
 
 - (void)loadAndEnterGame {
-    NSArray *imageKeys = _gd.packInfo.images;
+    NSArray *images = _gd.packInfo.images;
     __block int localNum = 0;
-    NSUInteger totalNum = [imageKeys count];
+    NSUInteger totalNum = [images count];
     if (totalNum == 0) {
         alert(@"Not downloaded", nil);
         return;
     }
-    for (NSString *imageKey in imageKeys) {
-        if (imageExist(imageKey)) {
+    for (ImageInfo *image in images) {
+        if (imageExist(image.Key)) {
             localNum++;
         }
     }
@@ -376,11 +376,10 @@
         //download
         SldHttpSession *session = [SldHttpSession defaultSession];
         [session cancelAllTask];
-        SldConfig *conf = [SldConfig getInstance];
-        for (NSString *imageKey in imageKeys) {
-            if (!imageExist(imageKey)) {
-                [session downloadFromUrl:makeImageServerUrl2(imageKey, conf.UPLOAD_HOST)
-                                  toPath:makeImagePath(imageKey)
+        for (ImageInfo* image in images) {
+            if (!imageExist(image.Key)) {
+                [session downloadFromUrl:[image getUrl]
+                                  toPath:makeImagePath(image.Key)
                                 withData:nil completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error, id data)
                  {
                      if (error) {

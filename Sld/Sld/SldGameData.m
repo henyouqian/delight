@@ -13,6 +13,27 @@
 const UInt32 DEFUALT_SLIDER_NUM = 6;
 
 //=========================
+@implementation ImageInfo
+
+- (instancetype)initWithDict:(NSDictionary*)dict {
+    if (self = [super init]) {
+        _Key = dict[@"Key"];
+        _Url = dict[@"Url"];
+    }
+    return self;
+}
+
+- (NSString*)getUrl {
+    if (_Url == nil || _Url.length == 0) {
+        return makeImageServerUrl(_Key);
+    }
+    return _Url;
+}
+
+@end
+
+
+//=========================
 @implementation PackInfo
 + (instancetype)packWithDictionary:(NSDictionary*)dict {
     PackInfo *packInfo = [[PackInfo alloc] init];
@@ -29,8 +50,9 @@ const UInt32 DEFUALT_SLIDER_NUM = 6;
     packInfo.timeUnix = [(NSNumber*)dict[@"TimeUnix"] longLongValue];
     NSArray *imgs = dict[@"Images"];
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:[imgs count]];
-    for (NSDictionary *img in imgs) {
-        [images addObject:img[@"Key"]];
+    for (NSDictionary *imgDict in imgs) {
+        ImageInfo *img = [[ImageInfo alloc] initWithDict:imgDict];
+        [images addObject:img];
     }
     packInfo.images = images;
     id thumbs = [dict objectForKey:@"Thumbs"];

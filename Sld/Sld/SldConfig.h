@@ -17,6 +17,7 @@ extern NSUInteger const LOCAL_SCORE_COUNT_LIMIT;
 @property (nonatomic) NSString *IMG_CACHE_DIR;
 @property (nonatomic) NSString *DATA_HOST;
 @property (nonatomic) NSString *UPLOAD_HOST;
+@property (nonatomic) NSString *PRIVATE_UPLOAD_HOST;
 @property (nonatomic) NSString *KEYCHAIN_SERVICE;
 @property (nonatomic) NSString *KEYCHAIN_KV;
 @property (nonatomic) NSString *STORE_ID;
