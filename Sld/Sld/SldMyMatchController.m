@@ -694,7 +694,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                 
                 _upManager = [[QNUploadManager alloc] init];
                 
-                _uploadNum = filePathes.count + privateFilePathes.count;
+                _uploadNum = (int)(filePathes.count + privateFilePathes.count);
                 _finishNum = 0;
                 
                 SldConfig *conf = [SldConfig getInstance];
@@ -751,32 +751,58 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                     });
                 }
                 
-                i = 0;
-                for (NSString *filePath in privateFilePathes) {
-                    NSString *key = [privateFileKeys objectAtIndex:i];
-                    i++;
-                    [_upManager putFile:filePath
-                                    key:key
-                                  token:privateToken
-                               complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-                                   if (info.ok) {
-                                       _finishNum++;
-                                       if (_finishNum >= _uploadNum) {
-                                           [self addUserPack];
-                                       } else {
-                                           float f = (float)_finishNum/_uploadNum;
-                                           int n = f*100;
-                                           _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+                SldHttpSession *session = [SldHttpSession defaultSession];
+                NSDictionary *body = @{@"FileKeys":privateFileKeys};
+                [session postToApi:@"etc/checkPrivateFilesExist" body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    if (error) {
+                        alertHTTPError(error, data);
+                        return;
+                    }
+                    
+                    NSDictionary *existDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                    if (error) {
+                        lwError("Json error:%@", [error localizedDescription]);
+                        return;
+                    }
+                    
+                    int i = 0;
+                    for (NSString *filePath in privateFilePathes) {
+                        NSString *key = [privateFileKeys objectAtIndex:i];
+                        i++;
+                        if ([existDict objectForKey:key]) {
+                            _finishNum++;
+                            if (_finishNum >= _uploadNum) {
+                                [self addUserPack];
+                            } else {
+                                float f = (float)_finishNum/_uploadNum;
+                                int n = f*100;
+                                _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+                            }
+                        } else {
+                            [_upManager putFile:filePath
+                                            key:key
+                                          token:privateToken
+                                       complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                                           if (info.ok) {
+                                               _finishNum++;
+                                               if (_finishNum >= _uploadNum) {
+                                                   [self addUserPack];
+                                               } else {
+                                                   float f = (float)_finishNum/_uploadNum;
+                                                   int n = f*100;
+                                                   _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
+                                               }
+                                           } else {
+                                               [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                                               _alt = nil;
+                                               alert(@"上传失败", nil);
+                                               lwError(@"uploadFailed: %@, %@", filePath, info);
+                                           }
                                        }
-                                   } else {
-                                       [_alt dismissWithClickedButtonIndex:0 animated:YES];
-                                       _alt = nil;
-                                       alert(@"上传失败", nil);
-                                       lwError(@"uploadFailed: %@, %@", filePath, info);
-                                   }
-                               }
-                                 option:nil];
-                }
+                                         option:nil];
+                        }
+                    }
+                }];
             }];
         });
     });

@@ -186,6 +186,7 @@
 		D0088F281A52F93C001DD871 /* webview_bar_refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = D0088EC01A52F93C001DD871 /* webview_bar_refresh.png */; };
 		D0088F291A52F93C001DD871 /* webview_bar_share.png in Resources */ = {isa = PBXBuildFile; fileRef = D0088EC11A52F93C001DD871 /* webview_bar_share.png */; };
 		D0088FE41A530B79001DD871 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0088FE31A530B79001DD871 /* CoreMotion.framework */; };
+		D0088FE91A53F35C001DD871 /* imageLock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0088FE81A53F35C001DD871 /* imageLock@2x.png */; };
 		D00D900C19B882650026B9FD /* SldMatchBriefController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00D900B19B882650026B9FD /* SldMatchBriefController.m */; };
 		D00F63FB19407FD200C8EA3F /* cupGold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F819407FD200C8EA3F /* cupGold@2x.png */; };
 		D00F63FC19407FD200C8EA3F /* cupSilver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D00F63F919407FD200C8EA3F /* cupSilver@2x.png */; };
@@ -551,6 +552,7 @@
 		D0088F321A52F97B001DD871 /* AdMoGoAdapterAdvertSplash.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdMoGoAdapterAdvertSplash.m; sourceTree = "<group>"; };
 		D0088F331A52F998001DD871 /* libGoogleAdMobAds.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGoogleAdMobAds.a; path = External/AdsMoGoLib/AdNetworkLibs/AdMob_SDK_612/libGoogleAdMobAds.a; sourceTree = "<group>"; };
 		D0088FE31A530B79001DD871 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		D0088FE81A53F35C001DD871 /* imageLock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imageLock@2x.png"; sourceTree = "<group>"; };
 		D00C7549198F966F00F32046 /* libBaiduMobAdSdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduMobAdSdk.a; path = External/AdsMoGoLib/AdNetworkLibs/Baidu_3.5.1_SDK/lib/libBaiduMobAdSdk.a; sourceTree = "<group>"; };
 		D00D900A19B882650026B9FD /* SldMatchBriefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SldMatchBriefController.h; sourceTree = "<group>"; };
 		D00D900B19B882650026B9FD /* SldMatchBriefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SldMatchBriefController.m; sourceTree = "<group>"; };
@@ -1019,6 +1021,7 @@
 		B3789F0E190D7A39002E4127 /* uikit */ = {
 			isa = PBXGroup;
 			children = (
+				D0088FE81A53F35C001DD871 /* imageLock@2x.png */,
 				D0449B821A3C7EFD005DF920 /* heartEmpty48@2x.png */,
 				D0449B801A3C781E005DF920 /* heart48@2x.png */,
 				D08C43EA1A3B50F000945C93 /* packBG.png */,
@@ -1602,6 +1605,7 @@
 				D0088EC71A52F93C001DD871 /* adchina_stoploading.png in Resources */,
 				D062EFF119860B63004AD4A9 /* otlFire48@2x.png in Resources */,
 				D05E9961195C7189002A6B83 /* coin5.png in Resources */,
+				D0088FE91A53F35C001DD871 /* imageLock@2x.png in Resources */,
 				D0088F021A52F93C001DD871 /* webview_bar_refresh@2x.png in Resources */,
 				D02F76BB197FFBE200E742F8 /* btnBgBlue90h@2x.png in Resources */,
 				D0088EDF1A52F93C001DD871 /* adsmogo_bannerface50.png in Resources */,

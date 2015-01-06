@@ -78,6 +78,8 @@
 @interface SldMatchPageThumbCell : UITableViewCell
 @property UITapGestureRecognizer *gr;
 @property (weak) SldMatchPageController *controller;
+@property NSMutableArray *lockLabels;
+@property NSMutableArray *thumbViews;
 @end
 
 @implementation SldMatchPageThumbCell
@@ -153,12 +155,26 @@
 //    SldGameData *gd = [SldGameData getInstance];
     
     int i = 0;
-    for (UIView *view in self.contentView.subviews) {
+    for (UIView *view in _thumbViews) {
         CGPoint origin = view.frame.origin;
         CGSize size = view.frame.size;
         if (pt.x >= origin.x && pt.x < origin.x+size.width && pt.y >= origin.y && pt.y < origin.y+size.height)
         {
             if (_controller.matchPlay.played) {
+//                [[[UIAlertView alloc] initWithTitle:@"我想要..."
+//                                            message:nil
+//                                   cancelButtonItem:nil
+//                                   otherButtonItems:[RIButtonItem itemWithLabel:@"浏览" action:^{
+//                    [self downloadAllImages:^{
+//                        [_controller openPhotoBrowser:i];
+//                        lwInfo(@"%d", i);
+//                    }];
+//                }],[RIButtonItem itemWithLabel:@"拼图" action:^{
+//                    [self downloadAllImages:^{
+//                        [_controller enterGame];
+//                    }];
+//                }],nil] show];
+                
                 [self downloadAllImages:^{
                     [_controller openPhotoBrowser:i];
                 }];
@@ -181,19 +197,37 @@
     }
 }
 
+- (void)updateLockLabels {
+    BOOL show = !_controller.matchPlay.played;
+    for (UILabel *label in _lockLabels) {
+        if (show) {
+            label.text = @"点击解锁";
+        } else {
+            [UIView animateWithDuration:1.0 animations:^{
+                label.alpha = 0.0;
+            }];
+        }
+    }
+}
+
 - (void)update {
+    PackInfo *packInfo = _controller.packInfo;
+    if (!packInfo || self.contentView.subviews.count > 0) {
+        return;
+    }
     float gap = 3.0;
     float w = (self.frame.size.width - 4 * gap) / 3;
     
     for (UIView *view in self.contentView.subviews) {
         [view removeFromSuperview];
     }
+    _lockLabels = [NSMutableArray arrayWithCapacity:16];
     
-    PackInfo *packInfo = _controller.packInfo;
-    int imgNum = packInfo.images.count;
+    int imgNum = (int)packInfo.images.count;
     if (packInfo == nil) {
         return;
     }
+    _thumbViews = [NSMutableArray arrayWithCapacity:16];
     for (int i = 0; i < imgNum; ++i) {
         int row = i / 3;
         int col = i % 3;
@@ -215,6 +249,21 @@
         imageView.clipsToBounds = YES;
         imageView.userInteractionEnabled = YES;
         [self.contentView addSubview:imageView];
+        [_thumbViews addObject:imageView];
+        
+        //
+        UILabel *label = [[UILabel alloc]initWithFrame:frame];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.font = [label.font fontWithSize:14];
+        label.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
+        [self.contentView addSubview:label];
+        [_lockLabels addObject:label];
+        //            UIImageView *lockImageView = [[UIImageView alloc] initWithFrame:frame];
+        //            lockImageView.image = [UIImage imageNamed:@"imageLock.png"];
+        if (_controller.matchPlay && !_controller.matchPlay.played) {
+            label.hidden = YES;
+        }
         
         ImageInfo *image = packInfo.images[i];
         NSString *key = image.Key;
@@ -466,7 +515,6 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    lwInfo("%d, %d", indexPath.section, indexPath.row);
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             SldMatchPageUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"userCell" forIndexPath:indexPath];
@@ -766,6 +814,8 @@
         _match.likeNum = _matchPlay.likeNum;
         
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        
+        [_thumbCell updateLockLabels];
         
         [self refreshActivities];
     }];

@@ -310,7 +310,6 @@
 		B3C0AE991906662100CB4DFD /* liblibExt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibExt.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C0AE9C1906662100CB4DFD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B3C0AEA01906662100CB4DFD /* libExt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "libExt-Prefix.pch"; sourceTree = "<group>"; };
-		B3C0AEAD1906662100CB4DFD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		B3C0AF12190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAKeyframeAnimation+AHEasing.h"; sourceTree = "<group>"; };
 		B3C0AF13190667C300CB4DFD /* CAKeyframeAnimation+AHEasing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAKeyframeAnimation+AHEasing.m"; sourceTree = "<group>"; };
 		B3C0AF14190667C300CB4DFD /* easing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = easing.c; sourceTree = "<group>"; };
@@ -933,7 +932,6 @@
 				D0088F8C1A5300DC001DD871 /* libBaiduMobAdSdk64bit.a */,
 				B3C0AF491906680800CB4DFD /* OpenAL.framework */,
 				B3C0AE9C1906662100CB4DFD /* Foundation.framework */,
-				B3C0AEAD1906662100CB4DFD /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

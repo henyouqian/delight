@@ -195,7 +195,7 @@
         }
         
         _playerInfo.fanNum = [(NSNumber*)[msgJs objectForKey:@"FanNum"] intValue];
-        _playerInfo.followed= [(NSNumber*)[msgJs objectForKey:@"FollowNum"] intValue];
+        _playerInfo.followNum= [(NSNumber*)[msgJs objectForKey:@"FollowNum"] intValue];
         
 //        //delete
 //        int matchNum = _matches.count;
