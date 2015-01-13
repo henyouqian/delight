@@ -651,7 +651,7 @@
     
     NSString *title;
     if (_playerInfo.userId == _gd.playerInfo.userId) {
-        title = @"把我的拼图主页";
+        title = @"把我的拼图主页分享给朋友";
     } else {
         title = [NSString stringWithFormat:@"把%@的拼图主页分享给朋友", _playerInfo.nickName];
     }

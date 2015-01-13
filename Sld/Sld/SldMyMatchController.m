@@ -242,7 +242,13 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
             gd.match.sliderNum = _sliderNum;
             
             gd.packInfo = [[PackInfo alloc] init];
-            gd.packInfo.images = _filePathes;
+            NSMutableArray *images = [NSMutableArray array];
+            for (NSString *path in _filePathes) {
+                ImageInfo *imgInfo = [[ImageInfo alloc] init];
+                imgInfo.Key = path;
+                [images addObject:imgInfo];
+            }
+            gd.packInfo.images = images;
             
             //enter game
             gd.gameMode = M_TEST;
@@ -730,7 +736,7 @@ static const int IMAGE_SIZE_LIMIT_BYTE = IMAGE_SIZE_LIMIT_MB * 1024 * 1024;
                                                       _alt.title = [NSString stringWithFormat:@"上传中... %d%%", n];
                                                   }
                                               } else {
-                                                  [_alt dismissWithClickedButtonIndex:0 animated:YES];
+                                                  [_alt dismissWithClickedButtonIndex:0 animated:NO];
                                                   _alt = nil;
                                                   alert(@"上传失败", nil);
                                                   lwError(@"uploadFailed: %@", filePath);

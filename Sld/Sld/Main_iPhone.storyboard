@@ -3781,7 +3781,7 @@
             <objects>
                 <tableViewController id="ty0-W9-BMK" customClass="SldMatchPageController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uIi-Y3-9gb">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="userCell" rowHeight="48" id="kfC-ku-XTB" customClass="SldMatchPageUserCell">
@@ -4092,7 +4092,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="userPageController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4IT-Xe-09m" customClass="SldUserPageController" sceneMemberID="viewController">
                     <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Po0-Gt-gFG" customClass="SldCollectionView">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.90199130640000003" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="l9U-oq-Zq7">
@@ -4305,7 +4305,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="70"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <state key="normal" title="更多">
-                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
@@ -4350,7 +4350,7 @@
             <objects>
                 <tableViewController id="UHD-WE-hCa" customClass="SldFollowListController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="52" sectionHeaderHeight="22" sectionFooterHeight="22" id="tJI-Yg-Snv">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -4413,6 +4413,57 @@
                                     <outlet property="userNameLabel" destination="mza-49-UCS" id="b7k-7f-mBv"/>
                                     <outlet property="userTextLabel" destination="KP8-o0-cU7" id="z4B-oN-L0h"/>
                                     <segue destination="4IT-Xe-09m" kind="show" identifier="segueUserPage" id="sOD-l0-rRG"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="loadMoreCell" id="d8f-ff-RVe" customClass="SldLoadMoreCell">
+                                <rect key="frame" x="0.0" y="84" width="320" height="62"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d8f-ff-RVe" id="pB5-D2-z9o">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="61"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ot5-8i-5c0">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="51"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <state key="normal" title="更多">
+                                                <color key="titleColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="disabled">
+                                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
+                                                <rect key="frame" x="8" y="8" width="304" height="45"/>
+                                            </variation>
+                                            <connections>
+                                                <action selector="onLoadMore:" destination="TqF-dg-F0F" eventType="touchUpInside" id="quc-Uw-IaK"/>
+                                                <action selector="onLoadMoreButton:" destination="UHD-WE-hCa" eventType="touchUpInside" id="YMK-pE-Zbe"/>
+                                                <action selector="onMorePrizeButton:" destination="VkF-K5-zTO" eventType="touchUpInside" id="UKe-lx-Yvz"/>
+                                            </connections>
+                                        </button>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="XBu-Vx-mKu">
+                                            <rect key="frame" x="250" y="16" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="20" id="Q6v-PC-UyY"/>
+                                                <constraint firstAttribute="height" constant="20" id="mst-IH-ah8"/>
+                                            </constraints>
+                                            <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
+                                                <rect key="frame" x="110" y="20" width="20" height="20"/>
+                                            </variation>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ot5-8i-5c0" firstAttribute="leading" secondItem="pB5-D2-z9o" secondAttribute="leading" id="15n-BX-NxZ"/>
+                                        <constraint firstAttribute="trailing" secondItem="ot5-8i-5c0" secondAttribute="trailing" id="7Ui-9s-fcJ"/>
+                                        <constraint firstItem="ot5-8i-5c0" firstAttribute="top" secondItem="pB5-D2-z9o" secondAttribute="top" id="DSm-iu-l3C"/>
+                                        <constraint firstAttribute="centerX" secondItem="XBu-Vx-mKu" secondAttribute="centerX" constant="40" id="V1X-5o-Z15"/>
+                                        <constraint firstAttribute="centerY" secondItem="XBu-Vx-mKu" secondAttribute="centerY" id="VYy-RF-6Ql"/>
+                                        <constraint firstAttribute="bottom" secondItem="ot5-8i-5c0" secondAttribute="bottom" id="kRS-YT-mrx"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="moreButton" destination="ot5-8i-5c0" id="KSh-d5-0zB"/>
+                                    <outlet property="spin" destination="XBu-Vx-mKu" id="x3L-oB-IVN"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -5052,7 +5103,7 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="Bvm-gr-URN" customClass="SldMatchEditController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="jRg-rh-AyG">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -6528,12 +6579,12 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="lYQ-ma-kr7"/>
+        <segue reference="Bsz-cY-Efb"/>
+        <segue reference="LCc-lA-MQV"/>
         <segue reference="Isp-1f-fEi"/>
+        <segue reference="sOD-l0-rRG"/>
         <segue reference="2PB-GP-Cry"/>
         <segue reference="jIz-IY-0hK"/>
-        <segue reference="LCc-lA-MQV"/>
         <segue reference="ixn-EL-AyK"/>
-        <segue reference="Bsz-cY-Efb"/>
     </inferredMetricsTieBreakers>
 </document>

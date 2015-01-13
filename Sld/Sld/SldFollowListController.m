@@ -35,6 +35,8 @@ static const int FOLLOW_FETCH_LIMIT = 30;
 
 @property NSMutableArray *playerInfoLites;
 
+@property SldLoadMoreCell *loadMoreCell;
+
 @end
 
 @implementation SldFollowListController
@@ -76,7 +78,7 @@ static const int FOLLOW_FETCH_LIMIT = 30;
         }
         NSArray *playerInfoLitesJs = [dict objectForKey:@"PlayerInfoLites"];
         _lastKey = [(NSNumber*)[dict objectForKey:@"LastKey"] longLongValue];
-        _lastScore = [(NSNumber*)[dict objectForKey:@"LastKey"] longLongValue];
+        _lastScore = [(NSNumber*)[dict objectForKey:@"LastScore"] longLongValue];
         
         [_playerInfoLites removeAllObjects];
         if (playerInfoLitesJs) {
@@ -94,35 +96,93 @@ static const int FOLLOW_FETCH_LIMIT = 30;
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)onLoadMoreButton:(id)sender {
+    [_loadMoreCell startSpin];
+    
+    NSString *api = nil;
+    if (_follow) {
+        api = @"player/followList";
+    } else {
+        api = @"player/fanList";
+    }
+    
+    SldHttpSession *session = [SldHttpSession defaultSession];
+    NSDictionary *body = @{@"UserId":@(_playerInfo.userId), @"StartId":@(_lastKey), @"LastScore":@(_lastScore), @"Limit":@(FOLLOW_FETCH_LIMIT)};
+    [session postToApi:api body:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [_loadMoreCell stopSpin];
+        
+        if (error) {
+            alertHTTPError(error, data);
+            return;
+        }
+        
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            lwError("Json error:%@", [error localizedDescription]);
+            return;
+        }
+        NSArray *playerInfoLitesJs = [dict objectForKey:@"PlayerInfoLites"];
+        _lastKey = [(NSNumber*)[dict objectForKey:@"LastKey"] longLongValue];
+        _lastScore = [(NSNumber*)[dict objectForKey:@"LastScore"] longLongValue];
+        
+        if (playerInfoLitesJs) {
+            if (playerInfoLitesJs.count < FOLLOW_FETCH_LIMIT) {
+                [_loadMoreCell noMore];
+                return;
+            }
+            
+            NSMutableArray *inserts = [NSMutableArray array];
+            for (NSDictionary *liteDict in playerInfoLitesJs) {
+                PlayerInfoLite *infoLite = [[PlayerInfoLite alloc] initWithDict:liteDict];
+                
+                [inserts addObject:[NSIndexPath indexPathForRow:_playerInfoLites.count inSection:0]];
+                [_playerInfoLites addObject:infoLite];
+            }
+            [self.tableView insertRowsAtIndexPaths:inserts withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+    }];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _playerInfoLites.count;
+    if (section == 0) {
+        return _playerInfoLites.count;
+    } else if (section == 1) {
+        return 1;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SldFollowListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"userCell" forIndexPath:indexPath];
-    
-    if (indexPath.row < _playerInfoLites.count) {
-        PlayerInfoLite *info = _playerInfoLites[indexPath.row];
-        [SldUtil loadAvatar:cell.avatarView gravatarKey:info.GravatarKey customAvatarKey:info.CustomAvatarKey];
-        [cell.avatarView.layer setMasksToBounds:YES];
-        cell.avatarView.layer.cornerRadius = 5;
+    if (indexPath.section == 0) {
+        SldFollowListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"userCell" forIndexPath:indexPath];
         
-        cell.userNameLabel.text = info.NickName;
-        cell.userId = info.UserId;
-        if (info.Text && info.Text.length > 0) {
-            cell.userTextLabel.text = info.Text;
-        } else {
-            cell.userTextLabel.text = @"无简介";
+        if (indexPath.row < _playerInfoLites.count) {
+            PlayerInfoLite *info = _playerInfoLites[indexPath.row];
+            [SldUtil loadAvatar:cell.avatarView gravatarKey:info.GravatarKey customAvatarKey:info.CustomAvatarKey];
+            [cell.avatarView.layer setMasksToBounds:YES];
+            cell.avatarView.layer.cornerRadius = 5;
+            
+            cell.userNameLabel.text = info.NickName;
+            cell.userId = info.UserId;
+            if (info.Text && info.Text.length > 0) {
+                cell.userTextLabel.text = info.Text;
+            } else {
+                cell.userTextLabel.text = @"无简介";
+            }
         }
+        return cell;
+    } else if (indexPath.section == 1) {
+        _loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"loadMoreCell" forIndexPath:indexPath];
+        
+        return _loadMoreCell;
     }
-    
-    return cell;
+    return nil;
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {

@@ -160,7 +160,7 @@ NSString* formatInterval(int sec) {
 + (NSString*)sha1WithData:(NSData*)data {
     SHA1 *md = [[SHA1 alloc] init];
     
-    [md updateWith:data.bytes length:data.length];
+    [md updateWith:data.bytes length:(CC_LONG)data.length];
     [md final];
     
     NSData *nsd = [NSData dataWithBytes:md.buffer length:md.bufferSize];
@@ -442,12 +442,15 @@ static NSString *SECURE_SERVICE = @"SECURE_SERVICE";
 - (void)startSpin {
     _spin.hidden = NO;
     [_spin startAnimating];
+    _moreButton.enabled = NO;
 }
 - (void)stopSpin {
     [_spin stopAnimating];
     _spin.hidden = YES;
+    _moreButton.enabled = YES;
 }
 - (void)noMore {
+    _spin.hidden = YES;
     _moreButton.enabled = NO;
     [_moreButton setTitle:@"后面没有了" forState:UIControlStateDisabled];
 }

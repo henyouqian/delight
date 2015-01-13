@@ -271,7 +271,13 @@
             key = packInfo.thumbs[i];
         }
         imageView.alpha = 0.0;
-        [imageView asyncLoadUploadImageNoAnimWithKey:key thumbSize:200 showIndicator:NO completion:^{
+//        [imageView asyncLoadUploadImageNoAnimWithKey:key thumbSize:200 showIndicator:NO completion:^{
+//            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//                imageView.alpha = 1.0;
+//            } completion:nil];
+//            [loadingLabel removeFromSuperview];
+//        }];
+        [imageView asyncLoadImageWithKey:key showIndicator:NO completion:^{
             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 imageView.alpha = 1.0;
             } completion:nil];
