@@ -88,6 +88,9 @@ var cocos2dApp = cc.Application.extend({
                 for (var i in images) {
                     var image = images[i]
                     var url = QINIU_HOST+image.Key
+                    if (("Url" in image) && image.Url.length > 0 ) {
+                        url = image.Url
+                    }
                     reses.push({src:url})
                     g_imageUrls.push(url)
                 }

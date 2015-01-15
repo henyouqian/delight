@@ -1401,7 +1401,7 @@
             </objects>
             <point key="canvasLocation" x="-6920.625" y="601.05633802816897"/>
         </scene>
-        <!--展示卡片（可选）-->
+        <!--广告卡片（可不填）-->
         <scene sceneID="cYs-4d-ZpL">
             <objects>
                 <viewController id="6kV-Z1-tNc" customClass="SldMyMatchPromoController" sceneMemberID="viewController">
@@ -1425,7 +1425,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" keyboardType="URL" returnKeyType="done"/>
                                     </textField>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="展示链接地址：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZK-79-J7q">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="展示链接地址（可不填）：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZK-79-J7q">
                                         <rect key="frame" x="20" y="118" width="191" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="191" id="Hdh-zr-vac"/>
@@ -1435,7 +1435,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="展示图片：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xei-CG-tbW">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="展示图片（可不填）：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xei-CG-tbW">
                                         <rect key="frame" x="20" y="195" width="166" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="MLZ-Ct-051"/>
@@ -1536,7 +1536,7 @@
                             <constraint firstAttribute="bottom" secondItem="1Rl-X9-cWB" secondAttribute="bottom" id="ZSm-nb-EUp"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="展示卡片（可选）" id="OnQ-Ba-ga5">
+                    <navigationItem key="navigationItem" title="广告卡片（可不填）" id="OnQ-Ba-ga5">
                         <barButtonItem key="rightBarButtonItem" title="下一步" id="hPT-tQ-VKg">
                             <connections>
                                 <segue destination="ewK-rt-HVl" kind="show" id="Wgb-tw-pQU"/>
@@ -3781,7 +3781,7 @@
             <objects>
                 <tableViewController id="ty0-W9-BMK" customClass="SldMatchPageController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uIi-Y3-9gb">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="userCell" rowHeight="48" id="kfC-ku-XTB" customClass="SldMatchPageUserCell">
@@ -5103,7 +5103,7 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="Bvm-gr-URN" customClass="SldMatchEditController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="jRg-rh-AyG">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -6579,12 +6579,12 @@
         <image name="weibo64.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Bsz-cY-Efb"/>
         <segue reference="LCc-lA-MQV"/>
         <segue reference="Isp-1f-fEi"/>
         <segue reference="sOD-l0-rRG"/>
         <segue reference="2PB-GP-Cry"/>
         <segue reference="jIz-IY-0hK"/>
-        <segue reference="ixn-EL-AyK"/>
+        <segue reference="Bsz-cY-Efb"/>
+        <segue reference="FHQ-UU-UuL"/>
     </inferredMetricsTieBreakers>
 </document>

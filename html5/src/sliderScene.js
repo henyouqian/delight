@@ -301,7 +301,7 @@ var SliderLayer = cc.Layer.extend({
         menu2.setPosition(cc.p(winSize.width-180, 100));
 
         //time label
-        this._timeLabel = cc.LabelTTF.create("0:00.000", "Arial", 70, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
+        this._timeLabel = cc.LabelTTF.create("0:00.000", "Arial", 60, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
         this._timeLabel.setColor(new cc.Color3B(255, 197, 131))
         this._timeLabel.setPosition(winSize.width / 2, 780)
         this._resultView.addChild(this._timeLabel, 1)
@@ -480,10 +480,10 @@ var SliderLayer = cc.Layer.extend({
         this.reset(0)
 
         //
-        if (g_conn) {
-            msg = {"Type":"ready"}
-            g_conn.send(JSON.stringify(msg))
-        }
+        // if (g_conn) {
+        //     msg = {"Type":"ready"}
+        //     g_conn.send(JSON.stringify(msg))
+        // }
 
         return true;
     },
@@ -728,10 +728,10 @@ var SliderLayer = cc.Layer.extend({
     onPageFinish: function() {
         // cc.AudioEngine.getInstance().playEffect("res/success.mp3");
         this._btn.setVisible(true)
-        if (g_conn) {
-            msg = {"Type":"progress", "CompleteNum":this._imgIdx+1}
-            g_conn.send(JSON.stringify(msg))
-        }
+        // if (g_conn) {
+        //     msg = {"Type":"progress", "CompleteNum":this._imgIdx+1}
+        //     g_conn.send(JSON.stringify(msg))
+        // }
     },
     onFinish: function () {
         //
@@ -804,7 +804,7 @@ var SliderScene = cc.Scene.extend({
     }
 });
 
-g_procMap.start = function(msg) {
-    console.log("onStart")
-}
+// g_procMap.start = function(msg) {
+//     console.log("onStart")
+// }
 

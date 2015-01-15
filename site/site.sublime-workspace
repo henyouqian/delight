@@ -1,0 +1,984 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"sr",
+				"stringify"
+			],
+			[
+				"js",
+				"JSON"
+			],
+			[
+				"re",
+				"retry"
+			],
+			[
+				"pr",
+				"Printf	n int, err error ƒ"
+			],
+			[
+				"inl",
+				"inline-block"
+			],
+			[
+				"paddin",
+				"padding-right"
+			],
+			[
+				"pad",
+				"padding-left"
+			],
+			[
+				"he",
+				"WriteHeader	 ƒ"
+			],
+			[
+				"_s",
+				"_ecardStoreClose	built-in ν"
+			],
+			[
+				"add",
+				"addCoupon	rCoupon float32 ƒ"
+			],
+			[
+				"addcoup",
+				"addCouponCache	rCoupon float32 ƒ"
+			],
+			[
+				"getcou",
+				"getCouponCache	float32 ƒ"
+			],
+			[
+				"pa",
+				"ParseFloat	f float64, err error ƒ"
+			],
+			[
+				"cou",
+				"CouponCache	float32 ν"
+			],
+			[
+				"er",
+				"Error	 ƒ"
+			],
+			[
+				"err",
+				"Errorf	 ƒ"
+			],
+			[
+				"par",
+				"ParseInt	i int64, err error ƒ"
+			],
+			[
+				"PROV",
+				"ECARD_PROVIDERS	map[string]Provider ν"
+			],
+			[
+				"getredis",
+				"GetRedisTime	time.Time ƒ"
+			],
+			[
+				"Pr",
+				"Println	n int, err error ƒ"
+			],
+			[
+				"sprnt",
+				"Sprint	string ƒ"
+			],
+			[
+				"Coupone",
+				"CouponItemType	struct ʈ"
+			],
+			[
+				"Star",
+				"StartScore	int64 ν"
+			],
+			[
+				"makeplayer",
+				"makeZPlayerRewardKey	string ƒ"
+			],
+			[
+				"Z_pla",
+				"Z_MY_PLAYED_MATCH	 Ɩ"
+			],
+			[
+				"own",
+				"OwnerId	int64 ν"
+			],
+			[
+				"owner",
+				"OwnerRewardProportion	float32 ν"
+			],
+			[
+				"rewar",
+				"CouponReward	int ν"
+			],
+			[
+				"h_ma",
+				"H_MATCH_EXTRA	 Ɩ"
+			],
+			[
+				"makematch",
+				"makeHMatchRankKey	string ƒ"
+			],
+			[
+				"redis",
+				"GetRedisTimeUnix	int64 ƒ"
+			],
+			[
+				"makehmatch",
+				"makeHMatchRankKey	string ƒ"
+			],
+			[
+				"Inf",
+				"Infof	 ƒ"
+			],
+			[
+				"secr",
+				"SecretExpire	int64 ν"
+			],
+			[
+				"H_M",
+				"H_MATCH_PLAY	 Ɩ"
+			],
+			[
+				"pro",
+				"PromoUrl	string ν"
+			],
+			[
+				"prin",
+				"Println	n int, err error ƒ"
+			],
+			[
+				"matchextr",
+				"MATCH_EXTRA_PLAY_TIMES	 Ɩ"
+			],
+			[
+				"match",
+				"MATCH_EXTRA_PLAY_TIMES	 Ɩ"
+			],
+			[
+				"begint",
+				"beginTimeUnix	int64 ν"
+			],
+			[
+				"beginTim",
+				"beginTimeUnix	int64 ν"
+			],
+			[
+				"H_USE",
+				"H_USER_PACK_PLAY	 Ɩ"
+			],
+			[
+				"h_coupon",
+				"H_COUPON_ITEM	 Ɩ"
+			],
+			[
+				"max",
+				"MaxInt32	 Ɩ"
+			],
+			[
+				"makecoupon",
+				"makeCouponItemQueueKey	string ƒ"
+			],
+			[
+				"type",
+				"TypeKey	string ν"
+			],
+			[
+				"couponite",
+				"CouponItemType	struct ʈ"
+			],
+			[
+				"coupo",
+				"CouponItemType	struct ʈ"
+			],
+			[
+				"coupon_",
+				"COUPON_ITME_PROVIDERS	[]string ν"
+			],
+			[
+				"coup",
+				"CouponSum	int ν"
+			],
+			[
+				"Er",
+				"Errorf	 ƒ"
+			],
+			[
+				"maxint",
+				"MaxInt32	 Ɩ"
+			],
+			[
+				"ch",
+				"CheckSsdbError	 ƒ"
+			],
+			[
+				"H_userp",
+				"H_USER_PACK_PLAY_TIMES	 Ɩ"
+			],
+			[
+				"makezuser",
+				"makeZUserPackRanksKey	string ƒ"
+			],
+			[
+				"sprn",
+				"Sprintf	string ƒ"
+			],
+			[
+				"ques",
+				"question	PickSideQuestion ν"
+			],
+			[
+				"question",
+				"questionId	int64 ν"
+			],
+			[
+				"z_pi",
+				"Z_PICK_SIDE_QUESTION	 Ɩ"
+			],
+			[
+				"h_pick",
+				"H_PICK_SIDE_QUESTION	 Ɩ"
+			],
+			[
+				"pickside",
+				"PickSideQuestion	struct ʈ"
+			],
+			[
+				"H_pick",
+				"H_PICK_SIDE_QUESTION	 Ɩ"
+			],
+			[
+				"Pick",
+				"PickSideQuestion	struct ʈ"
+			],
+			[
+				"pick",
+				"PickSideQuestion	struct ʈ"
+			],
+			[
+				"s",
+				"SsdbAuthPort	int ν"
+			],
+			[
+				"makez",
+				"makeZSocialPackKey	string ƒ"
+			],
+			[
+				"ssdb",
+				"SsdbMatchPort	int ν"
+			],
+			[
+				"H_cha",
+				"H_CHALLENGE	 Ɩ"
+			],
+			[
+				"ti",
+				"Title	string ν"
+			],
+			[
+				"Pack_",
+				"PACK_RESP_JS	 Ɩ"
+			],
+			[
+				"exi",
+				"IsExist	bool ƒ"
+			],
+			[
+				"save",
+				"saveChallengePlay	 ƒ"
+			],
+			[
+				"Chall",
+				"ChallengePlay	struct ʈ"
+			],
+			[
+				"H_chall",
+				"H_CHALLENGE_PLAY	 Ɩ"
+			],
+			[
+				"chall",
+				"Challenge	struct ʈ"
+			],
+			[
+				"int64",
+				"redisUint64	uint64, error ƒ"
+			],
+			[
+				"be",
+				"BetReward	int64 ν"
+			],
+			[
+				"saveevent",
+				"saveEventPlayerRecord	 ƒ"
+			],
+			[
+				"getplay",
+				"getEventPlayerRecord	*EventPlayerRecord ƒ"
+			],
+			[
+				"st",
+				"StringVar	 ƒ"
+			],
+			[
+				"admin",
+				"ADMIN_NAME	 Ɩ"
+			],
+			[
+				"TE",
+				"TEAM_NAMES	[]string ν"
+			],
+			[
+				"tim",
+				"TimeUnix	int64 ν"
+			],
+			[
+				"z_ev",
+				"Z_EVENT	 ν"
+			],
+			[
+				"getevent",
+				"getEvent	*Event ƒ"
+			],
+			[
+				"lo",
+				"Local	*time.Location ν"
+			],
+			[
+				"p",
+				"Println	n int, err error ƒ"
+			],
+			[
+				"Z_EV",
+				"Z_EVENT_WAIT	 Ɩ"
+			],
+			[
+				"Even",
+				"Event	struct ʈ"
+			],
+			[
+				"In",
+				"Infof	 ƒ"
+			],
+			[
+				"va",
+				"ValueOf	reflect.Value ƒ"
+			],
+			[
+				"is",
+				"IsValid	bool ƒ"
+			],
+			[
+				"set",
+				"SetPointer	 ƒ"
+			],
+			[
+				"sets",
+				"SetBytes	 ƒ"
+			],
+			[
+				"fi",
+				"FieldByName	reflect.Value ƒ"
+			],
+			[
+				"obj",
+				"objVal	reflect.Value ν"
+			],
+			[
+				"fiel",
+				"FieldByIndex	reflect.StructField ƒ"
+			],
+			[
+				"rew",
+				"totalReward	int64 ν"
+			],
+			[
+				"b",
+				"Bet	map[string]int64 ν"
+			],
+			[
+				"bet",
+				"BetMoneySum	int64 ν"
+			],
+			[
+				"check",
+				"CheckError	 ƒ"
+			],
+			[
+				"che",
+				"CheckError	 ƒ"
+			],
+			[
+				"I",
+				"Int64	int64, error ƒ"
+			],
+			[
+				"i",
+				"Int64	int64, error ƒ"
+			],
+			[
+				"Event",
+				"EventPlayerRecord	struct ʈ"
+			],
+			[
+				"z_event",
+				"Z_EVENT_PLAYER_RECORD	 Ɩ"
+			],
+			[
+				"parse",
+				"ParseInt	i int64, err error ƒ"
+			],
+			[
+				"INI",
+				"INIT_GAME_COIN_NUM	 Ɩ"
+			],
+			[
+				"rank",
+				"rankNum	 ν"
+			],
+			[
+				"Prin",
+				"Printf	n int, err error ƒ"
+			],
+			[
+				"rewa",
+				"challageRewards	[]int ν"
+			],
+			[
+				"min",
+				"MinInt32	 Ɩ"
+			],
+			[
+				"game",
+				"gameCoinPack	GameCoinPack ν"
+			],
+			[
+				"getreds",
+				"GetRedisTimeUnix	int64 ƒ"
+			],
+			[
+				"enco",
+				"EncodeToString	string ƒ"
+			],
+			[
+				"sprin",
+				"Sprintf	string ƒ"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "auth.js",
+			"settings":
+			{
+				"buffer_size": 1412,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"main",
+				"Snippet: main()"
+			],
+			[
+				"con",
+				"Convert Case: Lower Case"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 146.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/liwei/Documents/projects/2014/delight/html5/slider.js",
+		"/Users/liwei/Documents/projects/2014/delight/html5/src/battleConnectScene.js",
+		"/Users/liwei/Documents/projects/2014/delight/html5/html5LocalServer.go",
+		"/Users/liwei/Documents/projects/2014/delight/html5/cocos2d.js",
+		"/Users/liwei/Documents/projects/2014/delight/html5/matchList.js",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/conf.json",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/main.go",
+		"/Users/liwei/Desktop/aaaaaa.html",
+		"/Users/liwei/Documents/go/src/github.com/henyouqian/lwutil/util.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/util.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/admin.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/match.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/conf.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/etc.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/event.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/scorekeeper.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/social.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/store.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/userPack.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/bak/pickSide.go",
+		"/Users/liwei/Documents/projects/2014/delight/tools/packUploader/main.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/match",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/pickSide.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/challenge.go",
+		"/Users/liwei/Documents/projects/2014/delight/tools/pickSideUploader/main.go",
+		"/Users/liwei/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/liwei/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/www/api.html",
+		"/Users/liwei/Documents/projects/2014/delight/tools/pickSideUploader/event_template.js",
+		"/Users/liwei/Documents/projects/2014/delight/tools/packUploader/conf.json",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/db.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/player.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/pack.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/ssdb/auth.sh",
+		"/Users/liwei/Documents/projects/2014/SldServer/ssdb/match/ssdb.conf",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/auth.go",
+		"/Users/liwei/Documents/projects/2014/delight/tools/packUploader/confServer.json",
+		"/Users/liwei/Documents/projects/2014/SldServer/match/ssdb/ssdb.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/robot/main.go",
+		"/Users/liwei/Documents/projects/2014/SldServer/ssdb/match/log.txt",
+		"/Users/liwei/Documents/projects/2014/SldServer/ssh henyouqian@173.255.215.104",
+		"/Users/liwei/Documents/projects/2014/delight/server/robot/main.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/tools/packUploader/main.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/conf.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/ssdb/ssdb.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/admin.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/main.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/conf.json",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/util.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/conf.js",
+		"/Users/liwei/Desktop/sld.html",
+		"/Users/liwei/Documents/projects/2014/delight/Sld/Sld/Base.lproj/Main_ipad.storyboard",
+		"/Users/liwei/Documents/go/src/github.com/henyouqian/lwutil/smtp.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/booker/main.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/scorekeeper.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/db.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/match/collection.go",
+		"/Users/liwei/Documents/projects/2014/delight/server/tools/packUploader/packs/宫泽理惠/1/pack.js",
+		"/Users/liwei/Documents/projects/2014/delight/server/tools/packUploader/account.json",
+		"/Users/liwei/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/liwei/Documents/projects/2014/delight/server/ssdb/ssdb.conf"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"_timeLabel",
+			"g_",
+			"g_conn",
+			"g_procMap",
+			"g_socialPack",
+			"slidernum",
+			"g_imageUrls",
+			"g_",
+			"battle",
+			"replaceScene",
+			"resp",
+			"new SliderScene",
+			"replaceScene",
+			"g_thumbUrl",
+			"g_socialPack",
+			"procm",
+			"g_conn",
+			"conn",
+			"myapp",
+			"myApp",
+			"app",
+			"director",
+			"addch",
+			"btn",
+			"HTML5_HOST",
+			".js",
+			"mode",
+			"SliderScene",
+			"document.location.href",
+			"MATCH_LIST_URL",
+			"document.location.href",
+			"matchlist",
+			"app store",
+			"_startView",
+			"start",
+			"g_key",
+			"g_sldNum",
+			"apiMatchmod",
+			"g_",
+			"g_socialPack",
+			"data",
+			"g_key",
+			"app",
+			"pack",
+			"reses",
+			"g_imageUrls",
+			"HOST",
+			"post",
+			"HandleFunc",
+			"Access-Control-Allow-Origin",
+			"rootTextFile",
+			"rootTextFile\n",
+			"mod",
+			"apiEtcReport",
+			"hide",
+			"//out",
+			"apiSetEcardStoreClose",
+			"apibuyec",
+			"w.Write(",
+			"apilistecar",
+			"_ecardStoreClose",
+			"KEY_ECARD_STORE_CLOSE",
+			"apiSetEcardStoreClose",
+			"getLastEcard",
+			"addecardt",
+			"ad d",
+			"addecardt",
+			"typeKey",
+			"addecard",
+			"makeEcardTypeKey",
+			"addecard",
+			"ECard",
+			"apiAddEcard",
+			"RmbPrice",
+			"RmbPrice\nRmbPrice",
+			"RmbPrice",
+			"price\nrmbprice",
+			"price\nprice",
+			"price",
+			"addecardt",
+			"ad d",
+			"GenDate",
+			"2017-",
+			"20172017-10-18",
+			"2017-10-18",
+			"有",
+			"有效",
+			"https://www.amazon.cn/gp/css/gc/paymen=\nt/view-gc-balance?code=",
+			"code=",
+			"=EF=BF=A5",
+			"Claim code",
+			"code=",
+			"https://",
+			"=EF=BF=A5",
+			"view-gc",
+			"ssdb.",
+			"CheckSsdbError",
+			"glog",
+			"save",
+			"getMatch",
+			"matchId",
+			"match",
+			"HasResult",
+			"apiMatchGetRanks",
+			"staticFile",
+			"rc.Do",
+			"lbKey",
+			"makeMatchLeaderboardRdsKey",
+			"RDS_Z_MATCH_LEADERBOARD",
+			"zadd",
+			"zset",
+			"makeMatchLeaderboardRdsKey",
+			"RDS_Z_MATCH_LEADERBOARD",
+			"makeMatchLeaderboardRdsKey",
+			"playtimes",
+			"newPack",
+			"lbKey",
+			"makeMatchLeaderboardRdsKey",
+			"playEnd",
+			"zadd",
+			"makeMatchLeaderboardRdsKey",
+			"apiMatchPlayEnd",
+			"scoreUpdate",
+			"zadd",
+			"5",
+			"ZADD",
+			"lbKey",
+			"makeMatchLeaderboardRdsKey"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"MATCH_EXTRA_REWARD_COUPON",
+			"RewardCoupon",
+			"ExtraCoupon",
+			"ExtraReward",
+			"ExtraCouponReward\nExtraCouponReward\nExtraReward",
+			"makeMatchLeaderboardRdsKey",
+			"ssdbc",
+			"PLAYER_CURR_CHALLENGE_ID",
+			"PLAYER_IAP_SECRET",
+			"PLAYER_TOTAL_REWARD",
+			"PLAYER_REWARD_CACHE",
+			"PLAYER_MONEY",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "auth.js",
+					"settings":
+					{
+						"buffer_size": 1412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 37.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.9o:///Users/liwei/Documents/go/src/github.com/henyouqian/lwutil":
+	{
+		"height": 124.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/SldServer/match":
+	{
+		"height": 136.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/SldServer/robot":
+	{
+		"height": 136.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/server/match":
+	{
+		"height": 150.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/server/match/ssdb":
+	{
+		"height": 136.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/server/robot":
+	{
+		"height": 136.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/server/tools/packUploader":
+	{
+		"height": 118.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/tools/packUploader":
+	{
+		"height": 136.0
+	},
+	"output.9o:///Users/liwei/Documents/projects/2014/delight/tools/pickSideUploader":
+	{
+		"height": 136.0
+	},
+	"replace":
+	{
+		"height": 68.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"etc",
+				"SldServer/match/etc.go"
+			],
+			[
+				"main",
+				"SldServer/match/main.go"
+			],
+			[
+				"match",
+				"SldServer/match/match.go"
+			],
+			[
+				"store",
+				"SldServer/match/store.go"
+			],
+			[
+				"conf.json",
+				"SldServer/match/conf.json"
+			],
+			[
+				"conf.go",
+				"SldServer/match/conf.go"
+			],
+			[
+				"admin",
+				"SldServer/match/admin.go"
+			],
+			[
+				"so",
+				"SldServer/match/social.go"
+			],
+			[
+				"player",
+				"SldServer/match/player.go"
+			],
+			[
+				"sto",
+				"SldServer/match/store.go"
+			],
+			[
+				"conf",
+				"SldServer/match/conf.go"
+			],
+			[
+				"match.go",
+				"SldServer/match/match.go"
+			],
+			[
+				"mat",
+				"SldServer/match/match"
+			],
+			[
+				"user",
+				"SldServer/match/userPack.go"
+			],
+			[
+				"layer",
+				"SldServer/match/player.go"
+			],
+			[
+				"adm",
+				"SldServer/match/admin.go"
+			],
+			[
+				"chal",
+				"SldServer/match/challenge.go"
+			],
+			[
+				"stor",
+				"SldServer/match/store.go"
+			],
+			[
+				"ch",
+				"SldServer/match/challenge.go"
+			],
+			[
+				"sc",
+				"SldServer/match/scorekeeper.go"
+			],
+			[
+				"event",
+				"SldServer/match/event.go"
+			],
+			[
+				"chall",
+				"SldServer/match/challenge.go"
+			],
+			[
+				"ssdb",
+				"server/match/ssdb/ssdb.go"
+			],
+			[
+				"json",
+				"server/match/conf.json"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 209.0,
+	"status_bar_visible": true
+}

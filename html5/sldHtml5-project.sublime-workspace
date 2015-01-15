@@ -483,15 +483,7 @@
 			"file": "main.js",
 			"settings":
 			{
-				"buffer_size": 4388,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/battleConnectScene.js",
-			"settings":
-			{
-				"buffer_size": 5504,
+				"buffer_size": 4519,
 				"line_ending": "Windows"
 			}
 		},
@@ -499,7 +491,7 @@
 			"file": "src/sliderScene.js",
 			"settings":
 			{
-				"buffer_size": 28125,
+				"buffer_size": 28158,
 				"line_ending": "Windows"
 			}
 		},
@@ -568,6 +560,8 @@
 	},
 	"file_history":
 	[
+		"/Users/liwei/Documents/projects/2014/delight/html5/slider.js",
+		"/Users/liwei/Documents/projects/2014/delight/html5/src/battleConnectScene.js",
 		"/Users/liwei/Documents/projects/2014/delight/html5/html5LocalServer.go",
 		"/Users/liwei/Documents/projects/2014/delight/html5/cocos2d.js",
 		"/Users/liwei/Documents/projects/2014/delight/html5/matchList.js",
@@ -634,7 +628,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 99.0,
 		"where_history":
 		[
 			""
@@ -645,6 +639,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"_timeLabel",
+			"g_",
+			"g_conn",
+			"g_procMap",
 			"g_socialPack",
 			"slidernum",
 			"g_imageUrls",
@@ -768,11 +766,7 @@
 			"5",
 			"ZADD",
 			"lbKey",
-			"makeMatchLeaderboardRdsKey",
-			"lbKey",
-			"apiMatchPlayEnd",
-			"SECRET",
-			"MATCH_TRY_EXPIRE_SECONDS"
+			"makeMatchLeaderboardRdsKey"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -803,7 +797,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -829,7 +823,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 236.0,
+						"translation.y": 87.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -839,15 +833,15 @@
 					"file": "main.js",
 					"settings":
 					{
-						"buffer_size": 4388,
+						"buffer_size": 4519,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4213,
-								4213
+								3716,
+								3716
 							]
 						],
 						"settings":
@@ -857,25 +851,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1610.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "src/battleConnectScene.js",
+					"file": "src/sliderScene.js",
 					"settings":
 					{
-						"buffer_size": 5504,
+						"buffer_size": 28158,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4932,
-								4932
+								9987,
+								9987
 							]
 						],
 						"settings":
@@ -884,42 +878,14 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 3012.0,
+						"translation.x": 57.0,
+						"translation.y": 6050.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/sliderScene.js",
-					"settings":
-					{
-						"buffer_size": 28125,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1360,
-								1429
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 244.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"file": "matchList.html",
 					"settings":
 					{
@@ -945,7 +911,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 4,
 					"file": "src/resource.js",
 					"settings":
 					{
@@ -973,7 +939,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "cocos2d.js",
 					"settings":
 					{
