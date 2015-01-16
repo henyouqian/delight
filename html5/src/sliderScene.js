@@ -223,26 +223,25 @@ var SliderLayer = cc.Layer.extend({
             this.reset(0)
         },this);
 
-        retry.setScale(0.6, 0.6)
-
-        var menuRetry = cc.Menu.create(retry)
-        this._resultView.addChild(menuRetry, 0)
-        menuRetry.setPosition(cc.p(70, 100))
-        menuRetry.setOpacity(120)
+        retry.setScale(0.7, 0.7)
+        retry.setOpacity(120)
+        retry.setPosition(cc.p(0, -360));
+        
 
         //more
-        var sptMore1 = cc.Sprite.create("res/more1.png")
-        var sptMore2 = cc.Sprite.create("res/more2.png")
+        var sptMore1 = cc.Sprite.create("res/back1.png")
+        var sptMore2 = cc.Sprite.create("res/back2.png")
         var more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
-            document.location.href = MATCH_LIST_URL
+            // document.location.href = MATCH_LIST_URL
+            window.history.back(-1);
         },this);
 
-        more.setScale(0.6, 0.6)
+        more.setScale(0.4, 0.4)
+        more.setOpacity(120)
+        more.setPosition(cc.p(-250, -360));
 
-        var menuMore = cc.Menu.create(more)
-        this._resultView.addChild(menuMore, 0)
-        menuMore.setPosition(cc.p(200, 100))
-        menuMore.setOpacity(120)
+        var menu = cc.Menu.create(retry, more);
+        this._resultView.addChild(menu, 1);
 
         //rename
         var sptRename1 = cc.Sprite.create("res/rename1.png")
@@ -297,8 +296,8 @@ var SliderLayer = cc.Layer.extend({
 
         var menu2 = cc.Menu.create(appStore);
         // menu.alignItemsVerticallyWithPadding(10);
-        this._resultView.addChild(menu2, 0);
         menu2.setPosition(cc.p(winSize.width-180, 100));
+        // this._resultView.addChild(menu2, 0);
 
         //time label
         this._timeLabel = cc.LabelTTF.create("0:00.000", "Arial", 60, new cc.Size(300, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
@@ -375,26 +374,29 @@ var SliderLayer = cc.Layer.extend({
             this._startView.setVisible(false)
             // document.location.href = "ads.html"
         },this);
-        start.setScale(0.6, 0.6)
+        start.setScale(0.7, 0.7)
         start.setOpacity(120)
-
-        var startMenu = cc.Menu.create(start);
-        this._startView.addChild(startMenu, 1);
-        startMenu.setPosition(cc.p(70, 140));
+        start.setPosition(cc.p(0, -360));
 
         //more
-        sptMore1 = cc.Sprite.create("res/more1.png")
-        sptMore2 = cc.Sprite.create("res/more2.png")
+        sptMore1 = cc.Sprite.create("res/back1.png")
+        sptMore2 = cc.Sprite.create("res/back2.png")
         more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
-            document.location.href = MATCH_LIST_URL
+            // document.location.href = MATCH_LIST_URL
+            window.history.back(-1);
         },this);
 
-        more.setScale(0.6, 0.6)
+        more.setScale(0.4, 0.4)
+        more.setOpacity(120)
+        more.setPosition(cc.p(-250, -360));
 
-        menuMore = cc.Menu.create(more)
-        this._startView.addChild(menuMore, 1)
-        menuMore.setPosition(cc.p(200, 140))
-        menuMore.setOpacity(120)
+        var startMenu = cc.Menu.create(start, more);
+        this._startView.addChild(startMenu, 1);
+
+        // menuMore = cc.Menu.create(more)
+        // this._startView.addChild(menuMore, 1)
+        // menuMore.setPosition(cc.p(200, 140))
+        // menuMore.setOpacity(120)
 
         //name label
         var y = 420
@@ -432,8 +434,8 @@ var SliderLayer = cc.Layer.extend({
 
         var menuAppStore = cc.Menu.create(appStore);
         // menu.alignItemsVerticallyWithPadding(10);
-        this._startView.addChild(menuAppStore, 0);
         menuAppStore.setPosition(cc.p(winSize.width-180, 140));
+        // this._startView.addChild(menuAppStore, 0);
 
 
         //rank

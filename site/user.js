@@ -1,4 +1,6 @@
 (function(){
+    $("#storeLink").attr("href", APPSTORE_URL)
+
     var lastMatchId
     var lastScore
 
@@ -31,7 +33,7 @@
  
             $("#thumbRoot").append( '\
                 <div class="width3">\
-                    <a href="match.html?id=' + match.Id + '" class="thumbnail thumb">\
+                    <a href="match.html?key=' + match.Id + '" class="thumbnail thumb">\
                         <img src="' + thumbUrl +'">\
                     </a>\
                 </div>\

@@ -62,8 +62,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">个人</a></li>
-            <li><a href="#about">最新</a></li>
+            <li><a href="#" id="storeLink">下载iPhone客户端</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -85,9 +84,9 @@
     		<div class="col-xs-9" style="background-color:#0; margin:15px 0px 0px;">
     			<a id="userName" style="font:16px bold; "></a>
     		</div>
-        <div style="margin:15px 0px 0px;">
+        <!-- <div style="margin:15px 0px 0px;">
           <p style="font:18px bold;">⟩</p>
-        </div>
+        </div> -->
 
     	</div>
     </div>
@@ -104,7 +103,8 @@
       </div>
     </div>
 
-    <button type="button" id="playGame" class="btn btn-info btn-block" style="margin-top:10px;">开始拼图</button>
+    <button type="button" class="playGame btn btn-info btn-block btn-lg" style="margin-top:10px;">开始拼图</button>
+    <br><br>
 	
     <!-- <script charset="gbk" src="http://p.tanx.com/ex?i=mm_62440092_7934214_26788550&m=1"></script> -->
 
@@ -144,8 +144,6 @@
 
                     <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 
-                    <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
-                    <!-- element will get class pswp__preloader--active when preloader is running -->
                     <div class="pswp__preloader">
                         <div class="pswp__preloader__icn">
                           <div class="pswp__preloader__cut">
@@ -172,15 +170,30 @@
             </div>
 
         </div>
+    </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="thumbModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="playGame btn btn-primary">开始拼图</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/util.js"></script>
-    <script src="js/photoswipe.js"></script> 
-    <script src="js/photoswipe-ui-default.js"></script>
+    <script src="js/photoswipe.min.js"></script> 
+    <script src="js/photoswipe-ui-default.min.js"></script>
     <script src="match.js"></script>
-    
+
   </body>
 </html>

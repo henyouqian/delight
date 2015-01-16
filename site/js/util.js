@@ -120,4 +120,5 @@ var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
 var RES_HOST = "http://dn-pintuuserupload.qbox.me/"
 var HTML5_HOST = "http://pintuhtml5.qiniudn.com/"
+var APPSTORE_URL = "https://itunes.apple.com/cn/app/man-pin-de/id923531990?l=zh&ls=1&mt=8"
 

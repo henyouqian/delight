@@ -9,8 +9,8 @@ var g_resources = [
     {src:"res/retry2.png"},
     {src:"res/start1.png"},
     {src:"res/start2.png"},
-    {src:"res/more1.png"},
-    {src:"res/more2.png"},
+    {src:"res/back1.png"},
+    {src:"res/back2.png"},
     {src:"res/appStore1.png"},
     {src:"res/appStore2.png"},
     {src:"res/dot24.png"}

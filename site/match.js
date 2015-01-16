@@ -1,11 +1,10 @@
 (function(){
-    function getUrlParam(name) {
-        var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
-        if (reg.test(location.href)) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
-    };
 
-    var matchId = parseInt(getUrlParam("id"))
+    $("#storeLink").attr("href", APPSTORE_URL)
+
+    var matchId = parseInt(getUrlParam("key"))
     var packId = 0
+    var playerId = 0
 
     var url = HOST + "match/web/get"
     var data = {
@@ -18,6 +17,12 @@
         var match = resp["Match"]
         var pack = resp["Pack"]
         var player = resp["Player"]
+
+        if(match.Title.length > 0) {
+            $(".navbar-brand").text(match.Title)
+        }
+
+        playerId = player.UserId
         $("#userName").text(player.NickName)
         var customKey = player.CustomAvatarKey
         var gravatarKey = player.GravatarKey
@@ -50,7 +55,7 @@
         for (var i in thumbUrls) {
             var thumbUrl = thumbUrls[i]
             $("#thumbRoot").append( '\
-                    <div class="thumbnail thumb">\
+                    <div class="thumbnail thumb" index='+i+'>\
                         <img src="' + thumbUrl +'">\
                     </div>\
                 ' );
@@ -58,8 +63,11 @@
         $("#playGame").prop('disabled', false)
 
         $(".thumb").click(function(a) {
-            console.log(a)
-
+            if (!isdef(localStorage["matchPlayed/"+matchId])) {
+                $('#thumbModal').modal('show')
+                return
+            }
+            
             var images = pack.Images
             var items = []
             for (var i in images) {
@@ -70,9 +78,8 @@
                 } else {
                     item.src = RES_HOST + image.Key
                 }
-                item.w = 400
-                item.h = 500
-                console.log(item)
+                item.w = image.W
+                item.h = image.H
                 items.push(item)
             }
 
@@ -81,14 +88,11 @@
 
             // define options (if needed)
             var options = {
-                // optionName: 'option value'
-                // for example:
-                index: 0 // start at first slide
+                index: $(this).attr("index")
             };
 
             // Initializes and opens PhotoSwipe
             var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
-            console.log(pswpElement)
             gallery.init();
         })
 
@@ -108,13 +112,15 @@
     }, "json")
 
     $("#userRow").click(function() {
-        alert("aaa")
-    })
-
-    $("#playGame").click(function() {
-        var url = HTML5_HOST+'index.html?key=' + matchId
-        alert(url)
+        var url = "user.html?u="+playerId
         window.location.href = url
     })
+
+    $(".playGame").click(function() {
+        console.log("xxx")
+        var url = HTML5_HOST+'index.html?key='+matchId
+        window.location.href = url
+    })
+
 
 })()
