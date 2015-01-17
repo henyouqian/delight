@@ -119,6 +119,26 @@ function loadObj(key) {
 var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
 var RES_HOST = "http://dn-pintuuserupload.qbox.me/"
-var HTML5_HOST = "http://pintuhtml5.qiniudn.com/"
+var GAME_DIR = "game/index.html"
 var APPSTORE_URL = "https://itunes.apple.com/cn/app/man-pin-de/id923531990?l=zh&ls=1&mt=8"
+
+function makeGravatarUrl(key, size) {
+    var url = "http://en.gravatar.com/avatar/"+key+"?d=identicon&s="+size
+    return url
+}
+
+(function() {
+    $("body").append('<br><footer style="color:#ccc;text-align:center;">\
+            <a><img id="appStoreLink" src="res/appStore.png" style="width:100%;max-width:140px;margin-right:10px;"></a>\
+            浙ICP备15000079号\
+        </footer><br>')
+
+    $("#appStoreLink").click(function() {
+        setTimeout(function(){
+            alert('如不能自动跳转至App Store(苹果应用商店)，请点击右上"三个点"按钮，选择在Safari中打开，然后在Safari的页面中点击此App Store按钮。或直接至App Store搜索《蛮拼的》')
+        }, 1000)
+        window.location.href = APPSTORE_URL
+    })
+}())
+
 

@@ -177,15 +177,19 @@
         if (_matches == _likeMatches) {
             _likeLastScore = lastScore;
             listEnd = &_likeEnd;
+            _likeLoaded = true;
         } else if (_matches == _originalMatches) {
             _originalLastScore = lastScore;
             listEnd = &_originalEnd;
+            _originalLoaded = true;
         } else if (_matches == _playedMatches) {
             _playedLastScore = lastScore;
             listEnd = &_playedEnd;
+            _playedLoaded = true;
         } else if (_matches == _playedAlls) {
             _playedAllLastScroe = lastScore;
             listEnd = &_playedAllEnd;
+            _playedAllLoaded = true;
         }
         
         if (matchesJs.count < MATCH_FETCH_LIMIT) {

@@ -1,7 +1,4 @@
 (function(){
-
-    $("#storeLink").attr("href", APPSTORE_URL)
-
     var matchId = parseInt(getUrlParam("key"))
     var packId = 0
     var playerId = 0
@@ -30,8 +27,7 @@
             var url = RES_HOST + customKey
             $("#avatar").prop("src", url)
         } else if (gravatarKey.length > 0) {
-            var url = "http://en.gravatar.com/avatar/"+gravatarKey+"?d=identicon&s=64"
-            $("#avatar").prop("src", url)
+            $("#avatar").attr("src", makeGravatarUrl(gravatarKey, 64))
         }
 
         var thumbs = pack.Thumbs
@@ -88,7 +84,7 @@
 
             // define options (if needed)
             var options = {
-                index: $(this).attr("index")
+                index: parseInt($(this).attr("index"))
             };
 
             // Initializes and opens PhotoSwipe
@@ -112,15 +108,12 @@
     }, "json")
 
     $("#userRow").click(function() {
-        var url = "user.html?u="+playerId
-        window.location.href = url
+        window.location.href = "user.html?u="+playerId
     })
 
     $(".playGame").click(function() {
-        console.log("xxx")
-        var url = HTML5_HOST+'index.html?key='+matchId
-        window.location.href = url
+        $('#thumbModal').modal('hide')
+        window.location.href = GAME_DIR+'?key='+matchId
     })
-
 
 })()

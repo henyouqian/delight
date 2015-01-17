@@ -100,35 +100,35 @@
                 <file name="compress/zlib.min.js"/>
                 <file name="particle_nodes/CCFormatHelper.js"/>
                 <file name="particle_nodes/CCPNGReader.js"/>
-                <file name="particle_nodes/CCTIFFReader.js"/>
+                <!-- <file name="particle_nodes/CCTIFFReader.js"/>
                 <file name="particle_nodes/CCParticleSystem.js"/>
                 <file name="particle_nodes/CCParticleExamples.js"/>
                 <file name="particle_nodes/CCParticleBatchNode.js"/>
                 <file name="physics_nodes/CCPhysicsDebugNode.js"/>
-                <file name="physics_nodes/CCPhysicsSprite.js"/>
+                <file name="physics_nodes/CCPhysicsSprite.js"/> -->
                 <file name="touch_dispatcher/CCTouchDelegateProtocol.js"/>
                 <file name="touch_dispatcher/CCTouchHandler.js"/>
                 <file name="touch_dispatcher/CCTouchDispatcher.js"/>
                 <file name="touch_dispatcher/CCMouseDispatcher.js"/>
-                <file name="keyboard_dispatcher/CCKeyboardDelegate.js"/>
+                <!-- <file name="keyboard_dispatcher/CCKeyboardDelegate.js"/>
                 <file name="keyboard_dispatcher/CCKeyboardDispatcher.js"/>
                 <file name="accelerometer/CCAccelerometer.js"/>
-                <file name="text_input_node/CCIMEDispatcher.js"/>
+                <file name="text_input_node/CCIMEDispatcher.js"/> -->
                 <file name="text_input_node/CCTextFieldTTF.js"/>
                 <file name="menu_nodes/CCMenuItem.js"/>
                 <file name="menu_nodes/CCMenu.js"/>
-                <file name="tileMap_nodes/CCTGAlib.js"/>
+                <!-- <file name="tileMap_nodes/CCTGAlib.js"/>
                 <file name="tileMap_nodes/CCTMXTiledMap.js"/>
                 <file name="tileMap_nodes/CCTMXXMLParser.js"/>
                 <file name="tileMap_nodes/CCTMXObjectGroup.js"/>
                 <file name="tileMap_nodes/CCTMXLayer.js"/>
-                <file name="parallax_nodes/CCParallaxNode.js"/>
+                <file name="parallax_nodes/CCParallaxNode.js"/> -->
                 <file name="audio/SimpleAudioEngine.js"/>
                 <file name="CCUserDefault.js"/>
                 <file name="CCImage.js"/>
             </sources>
             <!-- extensions -->
-            <sources dir="${basedir}/extensions">
+            <!-- <sources dir="${basedir}/extensions">
                 <file name="CCBReader/CCBReaderUtil.js"/>
                 <file name="CCBReader/CCBValue.js"/>
                 <file name="CCBReader/CCBKeyframe.js"/>
@@ -214,7 +214,7 @@
                 <file name="CocoStudio/Trigger/TriggerObj.js"/>
                 <file name="CocoStudio/Reader/GUIReader.js"/>
                 <file name="CocoStudio/Reader/SceneReader.js"/>
-            </sources>
+            </sources> -->
             <sources dir="${basedir}">
                 <file name="src/sliderScene.js"/>
                 <file name="src/zepto.min.js"/>

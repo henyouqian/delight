@@ -236,7 +236,9 @@ var SliderLayer = cc.Layer.extend({
             window.history.back(-1);
         },this);
 
-        more.setScale(0.4, 0.4)
+        var moreScale = 0.5
+
+        more.setScale(moreScale, moreScale)
         more.setOpacity(120)
         more.setPosition(cc.p(-250, -360));
 
@@ -386,7 +388,7 @@ var SliderLayer = cc.Layer.extend({
             window.history.back(-1);
         },this);
 
-        more.setScale(0.4, 0.4)
+        more.setScale(moreScale, moreScale)
         more.setOpacity(120)
         more.setPosition(cc.p(-250, -360));
 
@@ -736,6 +738,7 @@ var SliderLayer = cc.Layer.extend({
         // }
     },
     onFinish: function () {
+        localStorage["matchPlayed/"+g_key] = 1
         //
         this._resultView.setVisible(true)
         this._resultView.setOpacity(0)
@@ -749,51 +752,55 @@ var SliderLayer = cc.Layer.extend({
         var mSec = t - this._beginTime
         this._timeLabel.setString(msecToStr(mSec))
 
-        //getUserName
-        var userName = getCookie(USER_NAME)
-        while (userName == "") {
-            userName = prompt("请输入您的名字以便于提交成绩");
-            if (userName != null) {
-                setCookie(USER_NAME, userName, 30)
-            }
-        }
+        var self = this
 
-        if (g_key) {
-            //submit
-            var url = HOST + "social/play"
-            var data = {
-                "Key": g_key,
-                "CheckSum": "xxxx",
-                "UserName": userName,
-                "Msec": mSec
-            }
-            var self = this
-            $.post(url, JSON.stringify(data), function(resp){
-                console.log(resp)
-                var nameString = ""
-                var scoreString = ""
-                for (var i in resp.Ranks) {
-                    var rank = parseInt(i) + 1
-                    var name = resp.Ranks[i].Name
-                    if (i == 9) {
-                        nameString += rank + ". " + name + "\n"
-                    } else {
-                        nameString += rank + ".   " + name + "\n"
-                    }
-
-                    var timeStr = msecToStr(resp.Ranks[i].Msec)
-                    if (name == data.UserName) {
-                        gMyScore = timeStr
-                        scoreString += "* "
-                        updateWeixin()
-                    }
-                    scoreString += timeStr + "\n"
+        setTimeout(function(){
+            //getUserName
+            var userName = getCookie(USER_NAME)
+            userName = ""
+            while (userName == "" || userName==null) {
+                userName = prompt("请输入您的名字以便于提交成绩");
+                if (userName != null) {
+                    setCookie(USER_NAME, userName, 30)
                 }
-                self._nameLabel.setString(nameString)
-                self._scoreLabel.setString(scoreString)
+            }
 
-            }, "json")
-        }
+            if (g_key) {
+                //submit
+                var url = HOST + "social/play"
+                var data = {
+                    "Key": g_key,
+                    "CheckSum": "xxxx",
+                    "UserName": userName,
+                    "Msec": mSec
+                }
+                $.post(url, JSON.stringify(data), function(resp){
+                    console.log(resp)
+                    var nameString = ""
+                    var scoreString = ""
+                    for (var i in resp.Ranks) {
+                        var rank = parseInt(i) + 1
+                        var name = resp.Ranks[i].Name
+                        if (i == 9) {
+                            nameString += rank + ". " + name + "\n"
+                        } else {
+                            nameString += rank + ".   " + name + "\n"
+                        }
+
+                        var timeStr = msecToStr(resp.Ranks[i].Msec)
+                        if (name == data.UserName) {
+                            gMyScore = timeStr
+                            scoreString += "* "
+                            updateWeixin()
+                        }
+                        scoreString += timeStr + "\n"
+                    }
+                    self._nameLabel.setString(nameString)
+                    self._scoreLabel.setString(scoreString)
+
+                }, "json")
+            }
+        }, 1000)
     }
 });
 

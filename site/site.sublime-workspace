@@ -472,10 +472,51 @@
 	"buffers":
 	[
 		{
-			"file": "auth.js",
+			"file": "user.html",
 			"settings":
 			{
-				"buffer_size": 1412,
+				"buffer_size": 3143,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "user.js",
+			"settings":
+			{
+				"buffer_size": 2826,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "js/util.js",
+			"settings":
+			{
+				"buffer_size": 3932,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "http://pintuhtml5.qiniudn.com/index.html?key=-QuYMFmMHxbUFtLZou-lXRHJ-lI8BhqtY7nDxw==\nhttp://pintuhtml5.qiniudn.com/index.html?key=SumXyDslOuqMFOGA-bPPJyM93pk-RIBqnC09KQ==\n\nhttp://7u2jqf.com1.z0.glb.clouddn.com/user.js\nhttp://7u2jqf.com1.z0.glb.clouddn.com/user.html?u=29\nhttp://7u2jqf.com1.z0.glb.clouddn.com/match.html\nhttp://7u2jqf.com1.z0.glb.clouddn.com/match.js",
+			"settings":
+			{
+				"buffer_size": 367,
+				"line_ending": "Unix",
+				"name": "http://pintuhtml5.qiniudn.com/index.html?key=-QuYM"
+			}
+		},
+		{
+			"file": "match.html",
+			"settings":
+			{
+				"buffer_size": 6888,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "match.js",
+			"settings":
+			{
+				"buffer_size": 3689,
 				"line_ending": "Windows"
 			}
 		}
@@ -520,6 +561,17 @@
 	},
 	"file_history":
 	[
+		"/Users/liwei/Documents/projects/2014/delight/html5/index.html",
+		"/Users/liwei/Documents/projects/2014/delight/html5/qiniuSync/cocos2d.js",
+		"/Users/liwei/Documents/projects/2014/delight/html5/qiniuSync/index.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/js/photoswipe.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/js/photoswipe-ui-default.js",
+		"/Users/liwei/Downloads/PhotoSwipe-master/website/index.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/match.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/match.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/syncConf.json",
+		"/Users/liwei/Documents/projects/2014/delight/html5/syncConf.json",
+		"/Users/liwei/Documents/projects/2014/delight/site/auth.js",
 		"/Users/liwei/Documents/projects/2014/delight/html5/slider.js",
 		"/Users/liwei/Documents/projects/2014/delight/html5/src/battleConnectScene.js",
 		"/Users/liwei/Documents/projects/2014/delight/html5/html5LocalServer.go",
@@ -599,6 +651,34 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"background",
+			"playerId",
+			"matchId",
+			"window",
+			"prop",
+			"text",
+			"tweet",
+			"console",
+			"getPack",
+			"alert",
+			"enab",
+			"button",
+			"font",
+			"width3",
+			"fontZero",
+			"width3",
+			"thumbRoot",
+			"lastMatchId",
+			"local",
+			"#avatar",
+			"RES_HOST",
+			"onMatchList",
+			"prop",
+			"avatar",
+			"userRow",
+			"noborder",
+			"loadMore",
+			"request_data",
 			"_timeLabel",
 			"g_",
 			"g_conn",
@@ -698,35 +778,7 @@
 			"CheckSsdbError",
 			"glog",
 			"save",
-			"getMatch",
-			"matchId",
-			"match",
-			"HasResult",
-			"apiMatchGetRanks",
-			"staticFile",
-			"rc.Do",
-			"lbKey",
-			"makeMatchLeaderboardRdsKey",
-			"RDS_Z_MATCH_LEADERBOARD",
-			"zadd",
-			"zset",
-			"makeMatchLeaderboardRdsKey",
-			"RDS_Z_MATCH_LEADERBOARD",
-			"makeMatchLeaderboardRdsKey",
-			"playtimes",
-			"newPack",
-			"lbKey",
-			"makeMatchLeaderboardRdsKey",
-			"playEnd",
-			"zadd",
-			"makeMatchLeaderboardRdsKey",
-			"apiMatchPlayEnd",
-			"scoreUpdate",
-			"zadd",
-			"5",
-			"ZADD",
-			"lbKey",
-			"makeMatchLeaderboardRdsKey"
+			"getMatch"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -757,23 +809,50 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "auth.js",
+					"file": "user.html",
 					"settings":
 					{
-						"buffer_size": 1412,
+						"buffer_size": 3143,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1726,
+								1726
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1767.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "user.js",
+					"settings":
+					{
+						"buffer_size": 2826,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12,
+								12
 							]
 						],
 						"settings":
@@ -783,7 +862,117 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
+						"translation.y": 454.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "js/util.js",
+					"settings":
+					{
+						"buffer_size": 3932,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3188,
+								3193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1776.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"settings":
+					{
+						"buffer_size": 367,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								367,
+								272
+							]
+						],
+						"settings":
+						{
+							"auto_name": "http://pintuhtml5.qiniudn.com/index.html?key=-QuYM",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "match.html",
+					"settings":
+					{
+						"buffer_size": 6888,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6503,
+								6503
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4520.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "match.js",
+					"settings":
+					{
+						"buffer_size": 3689,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3397,
+								3397
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1816.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -979,6 +1168,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 209.0,
+	"side_bar_width": 177.0,
 	"status_bar_visible": true
 }

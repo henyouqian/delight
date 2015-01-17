@@ -1,13 +1,11 @@
 (function(){
-    $("#storeLink").attr("href", APPSTORE_URL)
-
     var lastMatchId
     var lastScore
 
-    var api = "match/listUserWeb"
+    var api = "match/web/listUser"
 
     var url = HOST + api
-    var limit = 6
+    var limit = 30
     var userId = parseInt(getUrlParam("u"))
     var data = {
         "UserId": userId,
@@ -32,8 +30,8 @@
             //     ' );
  
             $("#thumbRoot").append( '\
-                <div class="width3">\
-                    <a href="match.html?key=' + match.Id + '" class="thumbnail thumb">\
+                <div class="thumbnail thumb">\
+                    <a href="match.html?key=' + match.Id + '">\
                         <img src="' + thumbUrl +'">\
                     </a>\
                 </div>\
@@ -45,7 +43,7 @@
         }
         if (matches.length < limit) {
             $("#loadMore").text("后面没有了")
-            $("#loadMore").prop('class', "btn btn-default btn-block")
+            $("#loadMore").prop('class', "btn btn-default btn-block btn-lg")
         } else {
             $("#loadMore").prop('disabled', false)
         }
@@ -58,7 +56,10 @@
     $.post(url, JSON.stringify(data), onMatchList, "json")
 
     //get player info
-    url = HOST + "player/getInfoWeb"
+    var fanNum = 0
+    var followNum = 0
+
+    url = HOST + "player/web/getInfo"
     data = {
         "UserId": userId,
     }
@@ -66,14 +67,15 @@
         var nickName = resp["NickName"]
         var customKey = resp["CustomAvatarKey"]
         var gravatarKey = resp["GravatarKey"]
-        var fanNum = resp["FanNum"]
-        var followNum = resp["FollowNum"]
+        fanNum = resp["FanNum"]
+        followNum = resp["FollowNum"]
+        localStorage.userName = nickName
         $("#userName").text(nickName)
         if (customKey.length > 0) {
             var url = RES_HOST + customKey
             $("#avatar").prop("src", url)
         } else if (gravatarKey.length > 0) {
-            alert(gravatarKey)
+            $("#avatar").attr("src", makeGravatarUrl(gravatarKey, 64))
         }
         $("#follow").text("关注："+followNum)
         $("#fan").text("粉丝："+fanNum)
@@ -92,5 +94,18 @@
 
         $.post(url, JSON.stringify(data), onMatchList, "json")
     });
+
+    $("#follow").click(function(){
+        if (followNum == 0) {
+            return
+        }
+        window.location.href = "follow.html?type=0&userId="+userId
+    })
+    $("#fan").click(function(){
+        if (fanNum == 0) {
+            return
+        }
+        window.location.href = "follow.html?type=1&userId="+userId
+    })
     
 })();
