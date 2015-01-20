@@ -101,8 +101,27 @@ function isdef(v) {
 
 function getUrlParam(name) {
     var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
-    if (reg.test(location.href)) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
+    if (reg.test(decodeURI(location.href))) return unescape(RegExp.$2.replace(/\+/g, " ")); return "";
 };
+// function getUrlParam(paramName) {
+//     paramValue = "";
+//     var isFound = false;
+//     var 
+//     if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+//         arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&");
+//         i = 0;
+//         while (i < arrSource.length && !isFound) {
+//             if (arrSource[i].indexOf("=") > 0) {
+//                 if (arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase()) {
+//                     paramValue = arrSource[i].split("=")[1];
+//                     isFound = true;
+//                 }
+//             }
+//             i++;
+//         }
+//     }
+//     return paramValue;
+// }
 
 function copyObj(obj) {
     return JSON.parse(JSON.stringify(obj))
@@ -120,25 +139,62 @@ var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
 var RES_HOST = "http://dn-pintuuserupload.qbox.me/"
 var GAME_DIR = "game/index.html"
+var WINXIN_SPPSTORE_DIR = "weixin2appstore.html"
 var APPSTORE_URL = "https://itunes.apple.com/cn/app/man-pin-de/id923531990?l=zh&ls=1&mt=8"
+
 
 function makeGravatarUrl(key, size) {
     var url = "http://en.gravatar.com/avatar/"+key+"?d=identicon&s="+size
     return url
 }
 
-(function() {
+function isWeixin(){
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function addHeader() {
+    $("body").prepend('<nav class="navbar navbar-default navbar-fixed-top" role="navigation">\
+            <div class="container">\
+                <div class="navbar-header">\
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="t ru" aria-controls="navbar">\
+                        <span class="sr-only">Toggle navigation</span>\
+                        <span class="icon-bar"></span>\
+                        <span class="icon-bar"></span>\
+                        <span class="icon-bar"></span>\
+                    </button>\
+                    <a class="navbar-brand" href="#">蛮拼的</a>\
+                </div>\
+                <div id="navbar" class="collapse navbar-collapse">\
+                    <ul class="nav navbar-nav">\
+                        <li><a href="search.html">搜索</a></li>\
+                        <li><a href="#" class="appStoreLink">下载iPhone客户端</a></li>\
+                    </ul>\
+                </div>\
+            </div>\
+        </nav>')
+}
+
+function addFooter() {
     $("body").append('<br><footer style="color:#ccc;text-align:center;">\
-            <a><img id="appStoreLink" src="res/appStore.png" style="width:100%;max-width:140px;margin-right:10px;"></a>\
+            <a><img class="appStoreLink" src="res/appStore.png" style="width:100%;max-width:140px;margin-right:10px;"></a>\
             浙ICP备15000079号\
         </footer><br>')
 
-    $("#appStoreLink").click(function() {
-        setTimeout(function(){
-            alert('如不能自动跳转至App Store(苹果应用商店)，请点击右上"三个点"按钮，选择在Safari中打开，然后在Safari的页面中点击此App Store按钮。或直接至App Store搜索《蛮拼的》')
-        }, 1000)
-        window.location.href = APPSTORE_URL
+    $(".appStoreLink").click(function() {
+        if (isWeixin()) {
+            window.location.href = WINXIN_SPPSTORE_DIR
+        } else {
+            window.location.href = APPSTORE_URL
+        }
+        // setTimeout(function(){
+        //     window.location.href = WINXIN_SPPSTORE_DIR
+        // }, 500)
     })
-}())
+}
 
 

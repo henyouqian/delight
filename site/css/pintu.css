@@ -13,7 +13,16 @@
 	max-width: 200px;
 }
 
-.avatarRow {
+.packThumb {
+	background-image: url(../res/packBG.png);
+	background-size:100% 100%;
+	/*padding: 0.5% 1% 1% 0.5%;*/
+	padding: 1% 2% 2% 1%;
+	border-width: 0px;
+	box-shadow: 2px 2px 4px #ddd;
+}
+
+.userRow {
 	margin:6px 10px;
 }
 

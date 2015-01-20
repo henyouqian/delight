@@ -1,4 +1,7 @@
 (function(){
+    addHeader()
+    addFooter()
+
     var matchId = parseInt(getUrlParam("key"))
     var packId = 0
     var playerId = 0
@@ -25,7 +28,7 @@
         var gravatarKey = player.GravatarKey
         if (customKey.length > 0) {
             var url = RES_HOST + customKey
-            $("#avatar").prop("src", url)
+            $("#avatar").attr("src", url)
         } else if (gravatarKey.length > 0) {
             $("#avatar").attr("src", makeGravatarUrl(gravatarKey, 64))
         }

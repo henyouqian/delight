@@ -757,7 +757,6 @@ var SliderLayer = cc.Layer.extend({
         setTimeout(function(){
             //getUserName
             var userName = getCookie(USER_NAME)
-            userName = ""
             while (userName == "" || userName==null) {
                 userName = prompt("请输入您的名字以便于提交成绩");
                 if (userName != null) {

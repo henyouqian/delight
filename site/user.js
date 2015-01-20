@@ -1,4 +1,7 @@
 (function(){
+    addHeader()
+    addFooter()
+
     var lastMatchId
     var lastScore
 
@@ -7,6 +10,7 @@
     var url = HOST + api
     var limit = 30
     var userId = parseInt(getUrlParam("u"))
+    var userName = ""
     var data = {
         "UserId": userId,
         "StartId": 0,
@@ -30,7 +34,7 @@
             //     ' );
  
             $("#thumbRoot").append( '\
-                <div class="thumbnail thumb">\
+                <div class="thumbnail thumb packThumb">\
                     <a href="match.html?key=' + match.Id + '">\
                         <img src="' + thumbUrl +'">\
                     </a>\
@@ -69,7 +73,7 @@
         var gravatarKey = resp["GravatarKey"]
         fanNum = resp["FanNum"]
         followNum = resp["FollowNum"]
-        localStorage.userName = nickName
+        userName = nickName
         $("#userName").text(nickName)
         if (customKey.length > 0) {
             var url = RES_HOST + customKey
@@ -99,13 +103,13 @@
         if (followNum == 0) {
             return
         }
-        window.location.href = "follow.html?type=0&userId="+userId
+        window.location.href = encodeURI("follow.html?type=0&userId="+userId+"&userName="+userName)
     })
     $("#fan").click(function(){
         if (fanNum == 0) {
             return
         }
-        window.location.href = "follow.html?type=1&userId="+userId
+        window.location.href = encodeURI("follow.html?type=1&userId="+userId+"&userName="+userName)
     })
     
 })();
