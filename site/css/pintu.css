@@ -13,6 +13,10 @@
 	max-width: 200px;
 }
 
+.thumb>img, .thumb>a>img {
+	width:100%;
+}
+
 .packThumb {
 	background-image: url(../res/packBG.png);
 	background-size:100% 100%;

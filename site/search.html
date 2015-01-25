@@ -1,31 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="res/icon.png"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>蛮拼的</title>
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" type="image/png" href="res/icon.png"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<title>蛮拼的</title>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/pintu.css">
-    <style type="text/css">
-	    body {
-		  padding-top: 50px;
-		}
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/pintu.css">
+		<style type="text/css">
+			body {
+				padding-top: 60px;
+			}
+			.searchInputDiv {
+				padding: 10px 10px 0 10px;
+			}
+			.searchButtonRow {
+				margin: 10px 10px 0 10px;
+			}
+			.searchButtonDiv {
+				display: inline-block;
+				margin: 0px;
+				width: 49%;
+				padding: 0 5px 5px 5px;
+			}
+			.searchButtonDiv>button {
+				width: 100%;
+			}
 
-	</style>
+			#searchInput {
+				/*display: inline-block;*/
+				width:auto;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.searchButton {
+				display: inline-block;
+				/*float: right;*/
+			}
+			.left {
+				display: inline-block;
+				width:100%;
+				position:absolute;
+				left:10px;
+				/*padding-right: 140px;*/
+				padding-right: 90px;
+			}
+			.right {
+				position:absolute;
+				right: 0px;
+				display: inline-block;
+				/*width:120px;*/
+				width:70px;
+			}
+			#searchInput {
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="left">
+			<input id="searchInput" type="text" class="form-control" placeholder="搜索">
+		</div>
+		<div class="right">
+			<button id="searchUser" type="button" class="searchButton btn btn-info">用户</button>
+			<!-- <button id="searchPack" type="button" class="searchButton btn btn-info">拼图</button> -->
+		</div>
+		
+		<div style="height:50px;clear:both;">
+		</div>
+		
+		<!-- user results -->
+		<div id="resultRows">
+		</div>
 
-  </head>
-  <body>
+		<button id="loadMore" type="button" class="btn btn-info btn-block btn-lg" style="display:none;margin-top:10px;">更多</button>
 
-    <button id="loadMore" type="button" class="btn btn-info btn-block btn-lg" style="margin-top:10px;">更多</button>
+		<!-- invisible -->
+		<div style="display:none;">
+			<div class="userRow" style="display:none;">
+				<img class="avatar avatar40"></img>
+				<a class="userNameLabel"></a>
+				<HR class="userLine">
+			</div>
+		</div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/util.js"></script>
-    <script src="search.js"></script>
 
-  </body>
+
+		<!-- <div class="searchInputDiv">
+			<input type="text" class="form-control" placeholder="搜索">
+		</div>
+		<div class="searchButtonRow">
+			<div class="searchButtonDiv">
+				<button id="searchUser" type="button" class="btn btn-info btn-lg">搜索用户</button>
+			</div>
+			<div class="searchButtonDiv">
+				<button id="searchPack" type="button" class="btn btn-info btn-lg">搜索拼图</button>
+			</div>
+		</div> -->
+
+		
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/util.js"></script>
+		<script src="search.js"></script>
+
+	</body>
 </html>
