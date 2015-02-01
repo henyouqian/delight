@@ -35,10 +35,11 @@
             var players = resp.PlayerInfoLites
             lastKey = resp.LastKey
             lastScore = resp.LastScore
+
             for (var i in players) {
                 var player = players[i]
                 var row = userRow.clone()
-                row.css("display", "block")
+                row.show()
 
                 //avatar
                 var customKey = player.CustomAvatarKey
@@ -54,10 +55,11 @@
                 //user label
                 var labelObj = $(".userNameLabel", row)
                 labelObj.text(player.NickName)
+                row.attr("userId", player.UserId)
 
                 //onclick
                 row.click(function(){
-                    window.location.href = "user.html?u="+player.UserId
+                    window.location.href = "user.html?u="+$(this).attr("userId")
                 })
 
                 //

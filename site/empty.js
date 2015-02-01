@@ -1,6 +1,6 @@
-(function(){
+$().ready(function() {
 	addHeader()
 	addFooter()
 	
 	
-})()
+})

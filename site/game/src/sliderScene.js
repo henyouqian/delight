@@ -51,6 +51,15 @@ function setCookie(c_name,value,expiredays) {
         ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
 }
 
+function isWeixin(){
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function shuffle(o){ //v1.0
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
@@ -165,6 +174,8 @@ var SliderLayer = cc.Layer.extend({
     _beginTime:0,
     _timeLabel:null,
     _nameLabel:null,
+    _submitLabel:null,
+    _submitLabelLayer:null,
     _scoreLabel:null,
     _startView:null,
     _startNameLabel:null,
@@ -180,6 +191,8 @@ var SliderLayer = cc.Layer.extend({
         this._sliderNum = g_socialPack.SliderNum
 
         updateWeixin()
+
+        // g_imageUrls = g_imageUrls.slice(0, 1)
         
         //shuffle image idx
         for (var i = 0; i < g_imageUrls.length; i++) {
@@ -205,6 +218,7 @@ var SliderLayer = cc.Layer.extend({
         // cc.AudioEngine.getInstance().preloadEffect("res/tink.mp3");
         // cc.AudioEngine.getInstance().preloadEffect("res/finish.mp3");
 
+        //result view
         this._resultView = cc.LayerColor.create(new cc.Color3B(40,40,40), winSize.width+20, winSize.height+20)
         this.addChild(this._resultView, 200)
         this._resultView.setOpacity(220)
@@ -232,7 +246,6 @@ var SliderLayer = cc.Layer.extend({
         var sptMore1 = cc.Sprite.create("res/back1.png")
         var sptMore2 = cc.Sprite.create("res/back2.png")
         var more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
-            // document.location.href = MATCH_LIST_URL
             window.history.back(-1);
         },this);
 
@@ -286,6 +299,24 @@ var SliderLayer = cc.Layer.extend({
         fingerLabel.stopAllActions();
         fingerLabel.runAction(repeat);
 
+        if (!isWeixin()) {
+            inviteLabel.setVisible(false)
+            fingerLabel.setVisible(false)
+        }
+
+        //////////
+        //_submitLabel
+        var w = 400
+        var h = 120
+        var label = cc.LabelTTF.create("成绩提交中，请稍候...", "Arial", 30, new cc.Size(w, h), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_CENTER)
+        label.setColor(new cc.Color4B(255, 222, 170, 255))
+        this._submitLabelLayer = cc.LayerColor.create(new cc.Color4B(0, 0, 0, 100), w, h)
+        this._submitLabelLayer.addChild(label);
+        this._submitLabelLayer.setPosition(winSize.width/2-w/2, winSize.height/2-h/2)
+        label.setPosition(w/2, h/2)
+        this._resultView.addChild(this._submitLabelLayer, 2)
+        this._submitLabelLayer.setVisible(false)
+        this._submitLabel = label
 
         //app store
         var spt1 = cc.Sprite.create("res/appStore1.png")
@@ -384,7 +415,6 @@ var SliderLayer = cc.Layer.extend({
         sptMore1 = cc.Sprite.create("res/back1.png")
         sptMore2 = cc.Sprite.create("res/back2.png")
         more = cc.MenuItemSprite.create(sptMore1, sptMore2, null, function () {
-            // document.location.href = MATCH_LIST_URL
             window.history.back(-1);
         },this);
 
@@ -738,7 +768,6 @@ var SliderLayer = cc.Layer.extend({
         // }
     },
     onFinish: function () {
-        localStorage["matchPlayed/"+g_key] = 1
         //
         this._resultView.setVisible(true)
         this._resultView.setOpacity(0)
@@ -753,6 +782,18 @@ var SliderLayer = cc.Layer.extend({
         this._timeLabel.setString(msecToStr(mSec))
 
         var self = this
+
+        if (g_key) {
+            self._submitLabelLayer.setVisible(true)
+            self._submitLabelLayer.setOpacity(0)
+            var fadein = cc.FadeTo.create(0.4, 100)
+            var ease = cc.EaseSineOut.create(fadein)
+            self._submitLabelLayer.runAction(ease)
+
+            fadein = cc.FadeTo.create(0.4, 255)
+            ease = cc.EaseSineOut.create(fadein)
+            this._submitLabel.runAction(ease)
+        }
 
         setTimeout(function(){
             //getUserName
@@ -774,6 +815,16 @@ var SliderLayer = cc.Layer.extend({
                     "Msec": mSec
                 }
                 $.post(url, JSON.stringify(data), function(resp){
+                    setTimeout(function(){
+                        var fadeout = cc.FadeTo.create(0.4, 0)
+                        var ease = cc.EaseSineOut.create(fadeout)
+                        self._submitLabelLayer.runAction(ease)
+
+                        fadeout = cc.FadeTo.create(0.4, 0)
+                        ease = cc.EaseSineOut.create(fadeout)
+                        self._submitLabel.runAction(ease)
+                    }, 500)
+                    
                     console.log(resp)
                     var nameString = ""
                     var scoreString = ""
@@ -796,6 +847,16 @@ var SliderLayer = cc.Layer.extend({
                     }
                     self._nameLabel.setString(nameString)
                     self._scoreLabel.setString(scoreString)
+
+                    var matchId = parseInt(g_key)
+                    if (matchId > 0) {
+                        var playedMatchIdMap = lscache.get("playedMatchIdMap")
+                        if (playedMatchIdMap==null) {
+                            playedMatchIdMap = {}
+                        }
+                        playedMatchIdMap[matchId] = true
+                        lscache.set("playedMatchIdMap", playedMatchIdMap)
+                    }
 
                 }, "json")
             }

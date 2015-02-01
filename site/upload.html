@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" type="image/png" href="res/icon.png"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<title>蛮拼的</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/pintu.css">
+		<style type="text/css">
+			body {
+				padding-top: 50px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<input id="imgInput" type="file" accept="image/*" multiple style="display:none" >
+		<button id="selectImageButton" type="button" class="btn btn-warning btn btn-block">选择图片</button>
+		<div id="thumbRoot">
+			<!-- <div class="thumbnail thumb" style="position:relative;">
+				<img src="http://pintuuserupload.qiniudn.com/0gqoM_k4eW_h1hrtue4FnmwKcrs=.jpg">
+			</div>
+			<div class="thumbnail thumb" style="position:relative;">
+				<img src="http://pintuuserupload.qiniudn.com/1-gNSiUP0WFX3cFTv3cUSqNBLb4=.jpg">
+			</div>
+			<div class="thumbnail thumb" style="position:relative;">
+				<img src="http://pintuuserupload.qiniudn.com/2DXNODUffbvlPzSLkItWvWrC7zA=.jpg">
+			</div> -->
+			
+		</div>
+
+		<!-- template -->
+		<div id="template" style="display:none">
+			<div class="thumbDiv thumbnail thumb" style="position:relative;">
+				<img>
+			</div>
+		</div>
+
+		<div class="hudBgFrame">
+			<div class="hudCover"></div>
+			<div style="position:relative;width:100%;height:100%">
+				<div class="hudBg">
+					<div id="loading-text">处理中...</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/util.js"></script>
+		<script src="js/jquery.exif.js"></script>
+		<script src="js/jquery.canvasResize.js"></script>
+
+		<script src="upload.js"></script>
+
+	</body>
+</html>

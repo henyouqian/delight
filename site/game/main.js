@@ -26,8 +26,10 @@
  ****************************************************************************/
 var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
+if (window.location.hostname == "localhost") {
+    HOST = "http://localhost:9998/"
+}
 var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"
-var MATCH_LIST_URL = "http://www.pintugame.com/"
 var WEBSOCKET_URL = "ws://127.0.0.1:8080/ws"
 
 function getUrlParam(name) {
@@ -46,6 +48,14 @@ var cocos2dApp = cc.Application.extend({
         cc.AppController.shareAppController().didFinishLaunchingWithOptions();
     },
     applicationDidFinishLaunching:function () {
+        $.ajaxSettings.cache = false
+        $.ajaxSettings.crossDomain = true
+        $.ajaxSettings.dataType = 'json'
+        $.ajaxSettings.xhrFields = {
+            withCredentials: true
+        }
+        
+
         if(cc.RenderDoesnotSupport()){
             //show Information to user
             alert("Browser doesn't support WebGL");

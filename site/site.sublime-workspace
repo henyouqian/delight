@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"bord",
+				"border-radius"
+			],
+			[
+				"foll",
+				"followButton"
+			],
+			[
+				"lo",
+				"location"
+			],
+			[
+				"local",
+				"localhost"
+			],
+			[
+				"loc",
+				"localStorage"
+			],
+			[
+				"played",
+				"playedMatchIdMap"
+			],
+			[
+				"locl",
+				"localStorage"
+			],
+			[
+				"par",
+				"parseInt"
+			],
+			[
 				"loca",
 				"localhost"
 			],
@@ -106,10 +138,6 @@
 			[
 				"err",
 				"Errorf	 ƒ"
-			],
-			[
-				"par",
-				"ParseInt	i int64, err error ƒ"
 			],
 			[
 				"PROV",
@@ -384,10 +412,6 @@
 				"getEvent	*Event ƒ"
 			],
 			[
-				"lo",
-				"Local	*time.Location ν"
-			],
-			[
 				"p",
 				"Println	n int, err error ƒ"
 			],
@@ -490,22 +514,6 @@
 			[
 				"min",
 				"MinInt32	 Ɩ"
-			],
-			[
-				"game",
-				"gameCoinPack	GameCoinPack ν"
-			],
-			[
-				"getreds",
-				"GetRedisTimeUnix	int64 ƒ"
-			],
-			[
-				"enco",
-				"EncodeToString	string ƒ"
-			],
-			[
-				"sprin",
-				"Sprintf	string ƒ"
 			]
 		]
 	},
@@ -515,7 +523,7 @@
 			"file": "user.html",
 			"settings":
 			{
-				"buffer_size": 2548,
+				"buffer_size": 3693,
 				"line_ending": "Windows"
 			}
 		},
@@ -523,7 +531,7 @@
 			"file": "user.js",
 			"settings":
 			{
-				"buffer_size": 2730,
+				"buffer_size": 6865,
 				"line_ending": "Windows"
 			}
 		},
@@ -531,56 +539,75 @@
 			"file": "js/util.js",
 			"settings":
 			{
-				"buffer_size": 6407,
+				"buffer_size": 8949,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "http://pintuhtml5.qiniudn.com/index.html?key=-QuYMFmMHxbUFtLZou-lXRHJ-lI8BhqtY7nDxw==\nhttp://pintuhtml5.qiniudn.com/index.html?key=SumXyDslOuqMFOGA-bPPJyM93pk-RIBqnC09KQ==\n\nhttp://g.pintugame.com/user.js\nhttp://g.pintugame.com/user.html\nhttp://g.pintugame.com/match.html\nhttp://g.pintugame.com/match.js\nhttp://g.pintugame.com/js/util.js\nhttp://g.pintugame.com/css/pintu.css\n\nhttp://g.pintugame.com/game/slider.js\n\nhttp://g.pintugame.com/res/weixin2appstore.jpg\nnellibor",
+			"contents": "http://pintuhtml5.qiniudn.com/index.html?key=-QuYMFmMHxbUFtLZou-lXRHJ-lI8BhqtY7nDxw==\nhttp://pintuhtml5.qiniudn.com/index.html?key=SumXyDslOuqMFOGA-bPPJyM93pk-RIBqnC09KQ==\n\nhttp://g.pintugame.com/account.html\nhttp://g.pintugame.com/account.js\nhttp://g.pintugame.com/js/util.js\nhttp://g.pintugame.com/user.js\nhttp://g.pintugame.com/user.html\nhttp://g.pintugame.com/match.html\nhttp://g.pintugame.com/match.js\nhttp://g.pintugame.com/follow.html\nhttp://g.pintugame.com/follow.js\n\nhttp://g.pintugame.com/css/pintu.css\n\nhttp://g.pintugame.com/game/slider.js\nhttp://g.pintugame.com/res/weixin2appstore.jpg\nhttp://g.pintugame.com/js/jquery.html\n\nnellibor\nseifukuschoolgirl\n\n\nhttps://api.weibo.com/oauth2/authorize?client_id=2485478034&response_type=code&redirect_uri=g.pintugame.com/weiboOauth\n",
+			"file": "http:::pintuhtml5.qiniudn.com:index.html?key=-QuYM",
+			"file_size": 748,
+			"file_write_time": 1422465656000000,
 			"settings":
 			{
-				"buffer_size": 469,
+				"buffer_size": 786,
 				"line_ending": "Unix",
 				"name": "http://pintuhtml5.qiniudn.com/index.html?key=-QuYM"
-			}
-		},
-		{
-			"file": "css/pintu.css",
-			"settings":
-			{
-				"buffer_size": 692,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "follow.html",
-			"settings":
-			{
-				"buffer_size": 1055,
-				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "follow.js",
 			"settings":
 			{
-				"buffer_size": 2363,
+				"buffer_size": 2406,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "search.html",
+			"file": "home.html",
 			"settings":
 			{
-				"buffer_size": 2660,
+				"buffer_size": 3507,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "search.js",
+			"file": "home.js",
 			"settings":
 			{
-				"buffer_size": 2003,
+				"buffer_size": 1652,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "js/jquery.canvasResize.js",
+			"settings":
+			{
+				"buffer_size": 11427,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/jquery.html",
+			"settings":
+			{
+				"buffer_size": 11157,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "match.html",
+			"settings":
+			{
+				"buffer_size": 5531,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "match.js",
+			"settings":
+			{
+				"buffer_size": 4504,
 				"line_ending": "Windows"
 			}
 		}
@@ -625,18 +652,30 @@
 	},
 	"file_history":
 	[
-		"/Users/liwei/Documents/projects/2014/delight/site/empty.html",
-		"/Users/liwei/Documents/projects/2014/delight/site/empty.js",
-		"/Users/liwei/Documents/projects/2014/delight/site/match.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/js/jquery.exif.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/css/bootstrap.min.css",
 		"/Users/liwei/Documents/projects/2014/delight/site/match.html",
-		"/Users/liwei/Documents/projects/2014/delight/site/follow.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/search.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/empty.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/account.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/css/pintu.css",
+		"/Users/liwei/Documents/projects/2014/delight/site/empty.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/account.html",
 		"/Users/liwei/Documents/projects/2014/delight/site/follow.js",
-		"/Users/liwei/Documents/projects/2014/delight/site/game/cocos2d.js",
 		"/Users/liwei/Documents/projects/2014/delight/site/game/src/sliderScene.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/oauth.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/oauth.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/user.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/game/cocos2d.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/match.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/game/main.js",
+		"/Users/liwei/Documents/projects/2014/delight/site/game/build.xml",
+		"/Users/liwei/Documents/projects/2014/delight/site/search.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/index.html",
+		"/Users/liwei/Documents/projects/2014/delight/site/follow.html",
 		"/Users/liwei/Documents/projects/2014/delight/site/weixin2appstore.js",
 		"/Users/liwei/Documents/projects/2014/delight/site/weixin2appstore.html",
 		"/Users/liwei/Documents/projects/2014/delight/site/game/index.html",
-		"/Users/liwei/Documents/projects/2014/delight/site/game/build.xml",
 		"/Users/liwei/Documents/projects/2014/delight/html5/index.html",
 		"/Users/liwei/Documents/projects/2014/delight/html5/qiniuSync/cocos2d.js",
 		"/Users/liwei/Documents/projects/2014/delight/html5/qiniuSync/index.html",
@@ -714,7 +753,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 99.0,
 		"where_history":
 		[
 			""
@@ -725,134 +764,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"userRows",
+			"hudBgFrame",
+			"rotate-loading",
+			"transparent",
+			"rotate-loading",
+			"remove",
 			"userRow",
-			"show",
-			"floa",
-			"userName",
-			"USER_NAME",
-			"onFinish",
-			"thumb",
-			"storeLink",
-			"loadMore",
-			"moreButton",
-			"userName",
-			"locals",
-			"onclick",
-			"avatar",
-			"var customKey = resp[\"CustomAvatarKey\"]\ngravatar",
-			"var customKey = resp[\"CustomAvatarKey\"]\n        var gravatarKey = resp[\"GravatarKey\"]",
-			"post",
-			"getinfoweb",
-			"userName",
-			"getInfoWeb",
-			"follow",
-			"autoMargin",
-			"row",
-			"thumbRoot",
-			"width3",
-			"onFinish",
-			"moreScale",
-			"more.setScale",
-			"more",
-			"btn",
-			"footer",
-			"key",
-			"match",
-			"matchid",
-			"finish",
-			"full",
-			"fullscr",
-			"html5",
-			"background",
-			"playerId",
-			"matchId",
-			"window",
-			"prop",
-			"text",
-			"tweet",
-			"console",
-			"getPack",
-			"alert",
-			"enab",
+			"clone",
+			"img",
+			"<img",
+			"<img>",
+			"$('<img>')",
+			"dataURL",
+			"transformCoordinate",
+			"Plugin",
+			"callback",
+			"Orientation",
+			"readAsDataURL",
+			"jpeg",
+			"getImageDataFromDataURL",
+			"getDataFromDataURL",
+			"exifLoadFromDataURL",
+			"img",
+			"reader",
+			"exifLoadFromDataURL",
+			"exif",
+			"EXIF",
+			"<scrip",
 			"button",
-			"font",
-			"width3",
-			"fontZero",
-			"width3",
-			"thumbRoot",
-			"lastMatchId",
-			"local",
-			"#avatar",
-			"RES_HOST",
-			"onMatchList",
-			"prop",
-			"avatar",
-			"userRow",
-			"noborder",
-			"loadMore",
-			"request_data",
+			"input",
+			"<script",
+			"param",
+			"alert",
+			"loadPage",
+			"alert",
+			"loadPage",
+			"getPlayedMap",
+			"getPlayedMap\ngetPlayedMap",
+			"getPlayedMap\n",
+			"getPlayedMap\ngetPlayedMap\ngetPlayedMap\ngetPlayedMap\ngetPlayedMap\ngetPlayedMap",
+			"getPlayedMap\ngetPlayedMap\ngetPlayedMap\ngetPlayedMap\ngetPlayedMap",
+			"getPlayedMap\ngetPlayedMap\ngetPlayedMap\ngetPlayedMap",
+			"getPlayedMap\ngetPlayedMap\ngetPlayedMap",
+			"getPlayedMap\ngetPlayedMap",
+			"getPlayedMap",
+			"savePlayedMap",
+			"pageload",
+			"islocked",
+			"playedMatchIdMap",
+			"getPlayedMap",
+			"isLocked",
+			"getPlayedMap",
+			"player/",
+			"navbar-brand",
+			"url",
+			"console",
+			"input",
+			"currPage",
+			"pageButton",
+			"userName",
+			"followButton",
+			"fannum\nfannum",
+			"followed",
+			"followbutton",
+			"followed",
+			"userName",
+			"_submitLabelLayer",
+			"action",
+			"setvisi",
+			"g_imageUrls",
+			"_submitLabelLayer",
+			"this._submitLabelLayer.setVisible",
+			"this._submitLabelLayer",
+			"_submitLabelLayer",
+			"setVisible",
+			"_submitLabel",
+			"_resultView",
+			"weixin",
+			"xxx",
+			"onfinish",
+			"submit",
+			"xxx",
 			"_timeLabel",
-			"g_",
-			"g_conn",
-			"g_procMap",
-			"g_socialPack",
-			"slidernum",
-			"g_imageUrls",
-			"g_",
-			"battle",
-			"replaceScene",
-			"resp",
-			"new SliderScene",
-			"replaceScene",
-			"g_thumbUrl",
-			"g_socialPack",
-			"procm",
-			"g_conn",
-			"conn",
-			"myapp",
-			"myApp",
-			"app",
-			"director",
-			"addch",
-			"btn",
-			"HTML5_HOST",
-			".js",
-			"mode",
-			"SliderScene",
-			"document.location.href",
+			"isLocked",
+			"json",
+			"accountType",
+			"usertoken",
+			"reload",
+			"WEIBO_REDICRCT_URI",
+			"getCookie",
+			"weiboChangeAccount",
+			"loadObj",
+			"saveObj",
+			"localStorage",
+			"lscache",
+			"usertoken",
+			"avatar",
+			"background",
+			"avatar40",
+			"avatar",
+			"playedMatchIdMap",
+			"isLocked",
+			"returnurl",
+			"isLocked",
+			"match.",
+			"matchid",
+			"playedMatchIds",
+			"isLocked",
+			"playedMatchIds",
+			"lscache",
 			"MATCH_LIST_URL",
-			"document.location.href",
-			"matchlist",
-			"app store",
-			"_startView",
-			"start",
-			"g_key",
-			"g_sldNum",
-			"apiMatchmod",
-			"g_",
-			"g_socialPack",
-			"data",
-			"g_key",
-			"app",
-			"pack",
-			"reses",
-			"g_imageUrls",
-			"HOST",
-			"post",
-			"HandleFunc",
-			"Access-Control-Allow-Origin",
-			"rootTextFile",
-			"rootTextFile\n",
-			"mod",
-			"apiEtcReport",
-			"hide",
-			"//out",
-			"apiSetEcardStoreClose",
-			"apibuyec",
-			"w.Write(",
-			"apilistecar",
-			"_ecardStoreClose"
+			"GAME_DIR",
+			"resource.js",
+			"isLocked",
+			"playedMatchIds",
+			"lsca",
+			"isLocked",
+			".matches",
+			"_matches",
+			"_matchs",
+			"isLocked",
+			"loadPage",
+			"getPageIndexFromUrl",
+			"pageIndex",
+			"listq",
+			"WINXIN_SPPSTORE_DIR",
+			"getUrlParam",
+			"locked",
+			"isdef(localStorage"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -884,7 +923,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -892,24 +931,25 @@
 					"file": "user.html",
 					"settings":
 					{
-						"buffer_size": 2548,
+						"buffer_size": 3693,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1694,
-								1803
+								2216,
+								2216
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1181.0,
+						"translation.y": 1275.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -919,25 +959,24 @@
 					"file": "user.js",
 					"settings":
 					{
-						"buffer_size": 2730,
+						"buffer_size": 6865,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								160,
-								160
+								5072,
+								5078
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4314.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -947,15 +986,15 @@
 					"file": "js/util.js",
 					"settings":
 					{
-						"buffer_size": 6407,
+						"buffer_size": 8949,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6103,
-								6118
+								6525,
+								6525
 							]
 						],
 						"settings":
@@ -965,24 +1004,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3946.0,
+						"translation.y": 4828.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "http:::pintuhtml5.qiniudn.com:index.html?key=-QuYM",
 					"settings":
 					{
-						"buffer_size": 469,
+						"buffer_size": 786,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								373,
-								173
+								636,
+								599
 							]
 						],
 						"settings":
@@ -998,79 +1038,161 @@
 				},
 				{
 					"buffer": 4,
-					"file": "css/pintu.css",
+					"file": "follow.js",
 					"settings":
 					{
-						"buffer_size": 692,
+						"buffer_size": 2406,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								440,
-								440
+								1116,
+								1118
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 195.0,
+						"translation.y": 534.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "follow.html",
+					"file": "home.html",
 					"settings":
 					{
-						"buffer_size": 1055,
+						"buffer_size": 3507,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								863,
-								753
+								3228,
+								3228
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 173.0,
+						"translation.y": 2101.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "follow.js",
+					"file": "home.js",
 					"settings":
 					{
-						"buffer_size": 2363,
+						"buffer_size": 1652,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								253,
-								280
+								1558,
+								1558
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 806.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "js/jquery.canvasResize.js",
+					"settings":
+					{
+						"buffer_size": 11427,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10969,
+								10978
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5516.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "js/jquery.html",
+					"settings":
+					{
+						"buffer_size": 11157,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10502,
+								10527
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4250.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "match.html",
+					"settings":
+					{
+						"buffer_size": 5531,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								551,
+								507
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -1081,57 +1203,28 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "search.html",
+					"buffer": 10,
+					"file": "match.js",
 					"settings":
 					{
-						"buffer_size": 2660,
+						"buffer_size": 4504,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1091,
-								1091
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1706.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "search.js",
-					"settings":
-					{
-						"buffer_size": 2003,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1872,
-								1872
+								1603,
+								1720
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1013.0,
+						"translation.y": 1319.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1217,16 +1310,56 @@
 		"selected_items":
 		[
 			[
+				"match",
+				"match.html"
+			],
+			[
+				"match.h",
+				"match.html"
+			],
+			[
+				"home.js",
+				"home.js"
+			],
+			[
+				"emp",
+				"empty.html"
+			],
+			[
+				"home",
+				"home.html"
+			],
+			[
+				"oa",
+				"oauth.html"
+			],
+			[
+				"oau",
+				"oauth.js"
+			],
+			[
+				"sear",
+				"search.js"
+			],
+			[
+				"match.js",
+				"match.js"
+			],
+			[
+				"o",
+				"oauth.js"
+			],
+			[
+				"acc",
+				"account.js"
+			],
+			[
 				"etc",
 				"SldServer/match/etc.go"
 			],
 			[
 				"main",
 				"SldServer/match/main.go"
-			],
-			[
-				"match",
-				"SldServer/match/match.go"
 			],
 			[
 				"store",

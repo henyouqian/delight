@@ -1,4 +1,4 @@
-(function(){
+$().ready(function() {
 	addHeader()
 	addFooter()
 
@@ -6,21 +6,31 @@
 	var packId = 0
 	var playerId = 0
 
-	var url = HOST + "match/web/get"
+	var url = "match/web/get"
 	var data = {
 		"MatchId": matchId
 	}
 
 	function isLocked() {
-		return !isdef(localStorage["matchPlayed/"+matchId])
+		var playedMatchIdMap = getPlayedMap()
+		if (!playedMatchIdMap) {
+			return true
+		}
+		return !(matchId in playedMatchIdMap)
 	}
 
 	$("#playGame").prop('disabled', true)
 
-	$.post(url, JSON.stringify(data), function(resp){
+	post(url, data, function(resp){
 		var match = resp["Match"]
 		var pack = resp["Pack"]
 		var player = resp["Player"]
+		var played = resp["Played"]
+		if (played) {
+			var playedMatchIdMap = getPlayedMap()
+			playedMatchIdMap[matchId] = true
+			savePlayedMap(playedMatchIdMap)
+		}
 
 		if(match.Title.length > 0) {
 			$(".navbar-brand").text(match.Title)
@@ -34,7 +44,7 @@
 			var url = RES_HOST + customKey
 			$("#avatar").attr("src", url)
 		} else if (gravatarKey.length > 0) {
-			$("#avatar").attr("src", makeGravatarUrl(gravatarKey, 64))
+			$("#avatar").attr("src", makeGravatarUrl(gravatarKey, 40))
 		}
 
 		var thumbs = pack.Thumbs
@@ -146,7 +156,7 @@
 		//     $("#playGame").prop('disabled', false)
 		// })
 
-	}, "json")
+	})
 
 	$("#userRow").click(function() {
 		window.location.href = "user.html?u="+playerId
@@ -160,6 +170,14 @@
 	window.onpageshow = function() {
 		var lockerElems = $(".locker")
 		var locked = isLocked()
+
+		var str = ""
+		var playedMatchIdMap = getPlayedMap()
+		for (var k in playedMatchIdMap) {
+			str += k + ","
+		}
+		// alert(str)
+
 		lockerElems.each(function(i, v){
 			var elem = $(v)
 			var matchId = elem.attr("matchId")
@@ -171,8 +189,8 @@
 		})
 	};
 
-	window.onload = function() {
-		window.onpageshow()
-	}
+	// window.onload = function() {
+	// 	window.onpageshow()
+	// }
 
-})()
+})

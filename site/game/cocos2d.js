@@ -42,6 +42,7 @@
         //     'src/resource.js',
         //     'src/battleConnectScene.js',
         //     'src/sliderScene.js',
+        //     'src/lscache.min.js',
         // ]
     };
 

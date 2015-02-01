@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" type="image/png" href="res/icon.png"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<title>蛮拼的</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/photoswipe.css">
+		<link rel="stylesheet" href="css/photoswipe/default-skin.css">
+		<link rel="stylesheet" href="css/pintu.css">
+		<style type="text/css">
+			body {
+				padding-top: 50px;
+				background-color: #f2f2f0;
+			}
+			.card {
+				margin: 16px 6px;
+				background-color: #fff;
+				border: 1px solid #eee;
+				border-radius: 3px;
+				box-shadow: 2px 2px 4px #ccc;
+			}
+			.avatar {
+				padding: 0px;
+				margin: 2px 10px 2px 10px;
+				border: 1px solid #eee;
+				border-radius: 3px;
+				width:34px;
+				height:34px;
+				box-shadow: 1px 1px 1px #ccc;
+			}
+			HR {
+				margin: 0
+			}
+			.likeLink {
+				position:absolute;
+				font-size:16px;
+				color:#5bc0de;
+				text-align: center;
+				width:70px;
+				/*background-color: #eee;*/
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="content">
+		</div>
+
+
+		<button id="loadMore" type="button" class="btn btn-info btn-block btn-lg" style="margin-top:10px;">更多</button>
+
+
+		<div id="template" style="display:none">
+			<div class="card">
+				<div class="userRow" style="margin:5px 0;position:relative;">
+					<img class="avatar"></img>
+					<a class="userName" style="position:relative;font:16px bold;top:3px">name</a>
+				</div>
+				<HR>
+				<div class="thumbRoot">
+					<!-- <div class="thumbnail thumb" index="11" style="position:relative;">
+						<img>
+					</div> -->
+				</div>
+				
+				<div style="position:relative;padding:10px 5px">
+					<button type="button" class="playButton btn btn-info">开始拼图</button>
+
+					<div style="display:none">
+						<div style="position:absolute;right:10px;bottom:10px;display:inline-block;width:150px;height:36px;//background-color:#ccc">
+							<a class="likeLink" style="right:70px;bottom:5px;">喜欢</a>
+							<a class="likeLink" style="right:5px;bottom:5px;">私藏</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="thumbnail thumb" style="position:relative;">
+				<img>
+			</div>
+		</div>
+
+		<div class="hudBgFrame">
+			<div class="hudCover"></div>
+			<div style="position:relative;width:100%;height:100%">
+				<div class="hudBg">
+					<div id="loading-text">读取中...</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="pswp__bg"></div>
+			<div class="pswp__scroll-wrap">
+				<div class="pswp__container">
+					<div class="pswp__item"></div>
+					<div class="pswp__item"></div>
+					<div class="pswp__item"></div>
+				</div>
+
+				<div class="pswp__ui pswp__ui--hidden">
+					<div class="pswp__top-bar">
+						<div class="pswp__counter"></div>
+						<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+						<button class="pswp__button pswp__button--share" title="Share"></button>
+						<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+						<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+						<div class="pswp__preloader">
+							<div class="pswp__preloader__icn">
+							  <div class="pswp__preloader__cut">
+								<div class="pswp__preloader__donut"></div>
+							  </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+						<div class="pswp__share-tooltip"></div> 
+					</div>
+
+					<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+					</button>
+					<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+					</button>
+					<div class="pswp__caption">
+						<div class="pswp__caption__center"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="playConfirmButton btn btn-primary">开始拼图</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/photoswipe.min.js"></script> 
+		<script src="js/photoswipe-ui-default.min.js"></script>
+		<script src="js/util.js"></script>
+		<script src="channel.js"></script>
+		<script id="tanxScript" charset="gbk" src="http://p.tanx.com/ex?i=mm_62440092_8766919_29590783&m=1"></script>
+
+	</body>
+</html>

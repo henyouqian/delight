@@ -218,6 +218,7 @@
             <sources dir="${basedir}">
                 <file name="src/sliderScene.js"/>
                 <file name="src/zepto.min.js"/>
+                <file name="src/lscache.min.js"/>
                 <file name="main.js"/>
                 <file name="src/resource.js"/>
             </sources>

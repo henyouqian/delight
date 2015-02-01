@@ -1,6 +1,7 @@
-(function(){
+$().ready(function() {
 	addHeader()
 	addFooter()
+	setTitle("搜索")
 
 	var lastKey = ""
 	var lastScore = 0
@@ -77,6 +78,4 @@
 		searchMore()
 	}) //$("#searchUser").click()
 
-	
-
-})()
+})

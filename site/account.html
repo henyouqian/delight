@@ -10,21 +10,72 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/pintu.css">
-		<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2485478034" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 			body {
 				padding-top: 50px;
+			}
+			.avatar {
+				padding: 0px;
+				margin: 10px 10px 10px 20px;
+				border: 1px solid #fff;
+				border-radius: 5px;
+				width:40px;
+				height:40px;
 			}
 		</style>
 	</head>
 
 	<body>
-		<h5 id="loginInfo" style="margin-left:1em;"></h5>
-		<button id="createTmpAccount" type="button" class="btn btn-info btn-block btn-lg">创建临时账号</button>
-		<button id="tmpAccountLogin" type="button" class="btn btn-info btn-block btn-lg">登陆临时账号</button>
-		<button id="weiboBind" type="button" class="btn btn-info btn-block btn-lg">绑定微博账号</button>
-		<button id="weiboLogin" type="button" class="btn btn-info btn-block btn-lg">微博登陆</button>
-		<button id="weiboLogout" type="button" class="btn btn-info btn-block btn-lg">微博登出</button>
+		<h5 id="loginInfo" style="margin-left:1em;min-height:30px;display:none;"></h5>
+
+		<div id="userRow" style="background-color: #eee; margin:10px 0;display:none;position:relative;">
+			<img id="avatar" class="avatar"></img>
+			<a id="userName" style="font:16px bold; "></a>
+			<button id="setPlayer" type="button" class="btn btn-info" style="position:absolute; top:10px;right:20px;">设置</button>
+		</div>
+
+		<div id="buttons" class="well" style="display:none">
+			<button id="createTmpAccount" type="button" class="btn btn-info btn-block btn-lg">创建临时账号</button>
+			<button id="tmpAccountLogin" type="button" class="btn btn-info btn-block btn-lg">登陆临时账号</button>
+			<button id="weiboBind" type="button" class="btn btn-info btn-block btn-lg">绑定新浪微博账号</button>
+			<button id="weiboLogin" type="button" class="btn btn-info btn-block btn-lg">使用新浪微博账号登陆</button>
+			<button id="weiboChangeAccount" type="button" class="btn btn-info btn-block btn-lg">切换至其他新浪微博账号</button>
+			<button id="logout" type="button" class="btn btn-info btn-block btn-lg">退出当前账号</button>
+		</div>
+
+		<!-- Modal -->
+		<div id="weiboChangeAccountModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">警告！</h4>
+			  </div>
+			  <div class="modal-body">
+				<p>切换至其他微博账号会导致当前临时账号所有信息丢失，如需保留请使用“绑定新浪微博账号”功能。</p>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button id="weiboChangeAccountConfirm" type="button" class="btn btn-primary">切换账号</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<div id="logoutModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">确定退出当前账号吗？</h4>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button id="logoutConfirm" type="button" class="btn btn-primary">退出</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
 
 		<script src="js/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
