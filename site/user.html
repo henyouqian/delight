@@ -9,56 +9,57 @@
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/photoswipe.css">
+		<link rel="stylesheet" href="css/photoswipe/default-skin.css">
 		<link rel="stylesheet" href="css/pintu.css">
 
 		<style type="text/css">
 			body {
-			padding-top: 50px;
-		}
-		.row {
-			margin-left: auto;
-			margin-right: auto;
-		}
-		
-		.avatar {
-			padding: 0px;
-			margin: 5px 10px 5px;
-			border: 1px solid #fff;
-			border-radius: 5px;
-			width:56px;
-			height:56px;
-		}
-		.noborder {
-			border: 0px;
-		}
-		.nopadding {
-			padding: 0px;
-		}
-	</style>
+				padding-top: 50px;
+				background-color: #f2f2f0;
+			}
+			.row {
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			.card {
+				margin: 0px 6px 16px;
+				padding: 4px 0px 4px;
+				background-color: #fff;
+				border: 1px solid #eee;
+				border-radius: 3px;
+				box-shadow: 2px 2px 4px #ccc;
+			}
+			.avatar {
+				padding: 0px;
+				margin: 5px 10px 3px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				box-shadow: 1px 1px 2px #999;
+				width:56px;
+				height:56px;
+				cursor:pointer;
+			}
+			#userRow {
+				background-color: #fff;
+				margin:10px 0;
+				padding:6px 0;
+				position:relative;
+				box-shadow: 2px 2px 2px #ccc;
+			}.likeLink {
+				position:absolute;
+				font-size:16px;
+				color:#5bc0de;
+				text-align: center;
+				width:70px;
+				/*background-color: #eee;*/
+			}
+		</style>
 
 	</head>
 	<body>
-		<!-- <div class="container" id="userRow" style="background-color:#eee;">
-			<div class="row">
-				<div class="col-xs-2 nopadding" >
-					<a class="noborder" href="#">
-						<img id="avatar" class="avatar" style="margin:10px 0px;"></img>
-					</a>
-				</div>
-				<div class="col-xs-10" style="background-color:#0;padding-left:5px;padding-right:0px;position:relative;">
-					<div style="font:16px bold; margin:15px 50px 10px 10px; display:inline-block;">
-						<a id="userName" >&nbsp</a>
-					</div>
-					<button type="button" class="btn btn-info btn-sm" style="position:absolute;right:0px;top:10px">关注</button>
-					<div style="margin:0px 10px;">
-						<a id="follow" href="#">关注：</a>
-						<a id="fan" href="#" style="margin-left:20px;">粉丝：</a>
-					</div>
-				</div>
-			</div>
-		</div> -->
-
-		<div id="userRow" style="background-color: #eee;margin:10px 0;position:relative;">
+		<div id="userRow">
 			<img id="avatar" class="avatar"></img>
 			<div style="position:absolute;top:10px;height:30px;line-height:200%;margin:0 80px 0 75px;overflow:hidden;">
 				<a id="userName" style="font:16px bold;word-break:break-all;"></a>
@@ -71,38 +72,131 @@
 			<button id="followButton" type="button" class="btn btn-warning btn-sm" style="position:absolute;top:10px;right:10px;display:none">取消关注</button>
 		</div>
 
-		<div id="thumbRoot">
+		<div id="content">
 		</div>
 
 		<ul class="pager">
-				<li class="previous"><a><span aria-hidden="true">&larr;</span> 上一页</a></li>
-				<button type="button" class="btn btn-default pageButton">1/1</button>
-				<li class="next"><a>下一页 <span aria-hidden="true">&rarr;</span></a></li>
-			</ul>
-		</nav>
+			<li class="previous"><a><span aria-hidden="true">&larr;</span> 上一页</a></li>
+			<button type="button" class="btn btn-default pageButton">1/1</button>
+			<li class="next"><a>下一页 <span aria-hidden="true">&rarr;</span></a></li>
+		</ul>
 
 		<!-- Modal -->
-    <div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel">页面跳转</h4>
-          </div>
-          <div class="modal-body">
-		        <input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
-		      </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
-          </div>
-        </div>
-      </div>
-    </div>
+	    <div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	            <h4 class="modal-title" id="myModalLabel">页面跳转</h4>
+	          </div>
+	          <div class="modal-body">
+			        <input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
+			      </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	            <button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+
+	    <div id="template" style="display:none">
+			<div class="card">
+				<div class="thumbRoot">
+					<!-- <div class="thumbnail thumb" index="11" style="position:relative;">
+						<img>
+					</div> -->
+				</div>
+				
+				<div style="position:relative;padding:10px 5px">
+					<button type="button" class="playButton btn btn-info">开始拼图</button>
+
+					<!-- <div style="display:none"> -->
+						<div style="position:absolute;right:10px;bottom:10px;display:inline-block;width:150px;height:36px;//background-color:#ccc">
+							<a class="likeLink" style="right:70px;bottom:5px;">喜欢</a>
+							<a class="likeLink" style="right:5px;bottom:5px;">私藏</a>
+						</div>
+					<!-- </div> -->
+				</div>
+
+			</div>
+
+			<div class="thumbnail thumb" style="position:relative;left:2px">
+				<img>
+			</div>
+		</div>
+
+		<div class="hudBgFrame">
+			<div class="hudCover"></div>
+			<div style="position:relative;width:100%;height:100%">
+				<div class="hudBg">
+					<div id="loading-text">读取中...</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="pswp__bg"></div>
+			<div class="pswp__scroll-wrap">
+				<div class="pswp__container">
+					<div class="pswp__item"></div>
+					<div class="pswp__item"></div>
+					<div class="pswp__item"></div>
+				</div>
+
+				<div class="pswp__ui pswp__ui--hidden">
+					<div class="pswp__top-bar">
+						<div class="pswp__counter"></div>
+						<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+						<button class="pswp__button pswp__button--share" title="Share"></button>
+						<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+						<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+						<div class="pswp__preloader">
+							<div class="pswp__preloader__icn">
+							  <div class="pswp__preloader__cut">
+								<div class="pswp__preloader__donut"></div>
+							  </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+						<div class="pswp__share-tooltip"></div> 
+					</div>
+
+					<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+					</button>
+					<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+					</button>
+					<div class="pswp__caption">
+						<div class="pswp__caption__center"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="playConfirmButton btn btn-primary">开始拼图</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
 
 		<script src="js/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/util.js"></script>
+		<script src="js/photoswipe.min.js"></script> 
+		<script src="js/photoswipe-ui-default.min.js"></script>
 		<script src="user.js"></script>
 		<script id="tanxScript" charset="gbk" src="http://p.tanx.com/ex?i=mm_62440092_8766919_29590783&m=1"></script>
 	</body>

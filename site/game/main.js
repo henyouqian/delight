@@ -26,11 +26,13 @@
  ****************************************************************************/
 var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
-if (window.location.hostname == "localhost") {
-    HOST = "http://localhost:9998/"
+if (window.location.hostname == "localhost" || window.location.hostname == "192.168.2.55") {
+    HOST = "http://"+window.location.hostname+":9998/"
 }
 var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"
 var WEBSOCKET_URL = "ws://127.0.0.1:8080/ws"
+
+var g_match = null
 
 function getUrlParam(name) {
     var reg = new RegExp("(^|\\?|&)"+ name +"=([^&]*)(\\s|&|$)", "i");  
@@ -80,11 +82,45 @@ var cocos2dApp = cc.Application.extend({
         //var key = parseInt(getUrlParam("key")) 
         var key = getUrlParam("key")
         var battle = getUrlParam("battle")
+        var matchId = parseInt(getUrlParam("matchId")) 
 
         var app = this
         g_key = key
 
-        if (battle == "") {
+        if (matchId > 0) {
+            var body = {
+                "MatchId": matchId
+            }
+            
+            var url = HOST + "social/getMatch"
+            $.post(url, JSON.stringify(body), function(resp){
+                g_match = resp.Match
+                g_pack = resp.Pack 
+                g_ranks = resp.Ranks
+                g_sliderNum = g_match.SliderNum
+                var reses = []
+                g_imageUrls = []
+                var images = resp.Pack.Images
+                for (var i in images) {
+                    var image = images[i]
+                    var url = QINIU_HOST+image.Key
+                    if (("Url" in image) && image.Url.length > 0 ) {
+                        url = image.Url
+                    }
+                    reses.push({src:url})
+                    g_imageUrls.push(url)
+                }
+                g_bgUrl = QINIU_HOST+resp.Pack.CoverBlur
+                reses.push({src:g_bgUrl})
+
+                g_thumbUrl = QINIU_HOST+resp.Pack.Thumb
+
+                cc.LoaderScene.preload(reses, function () {
+                    director.replaceScene(new app.startScene());
+                }, app);
+
+            }, "json")
+        } else if (battle == "") {
             var body = {
                 "Key": key
             }
@@ -94,6 +130,9 @@ var cocos2dApp = cc.Application.extend({
                 var reses = []
                 g_imageUrls = []
                 g_socialPack = resp
+                g_pack = resp.Pack
+                g_ranks = resp.Ranks
+                g_sliderNum = resp.SliderNum
                 var images = resp.Pack.Images
                 for (var i in images) {
                     var image = images[i]

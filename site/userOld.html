@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:wb="http://open.weibo.com/wb">
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" type="image/png" href="res/icon.png"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<title>蛮拼的</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/pintu.css">
+
+		<style type="text/css">
+			body {
+			padding-top: 50px;
+		}
+		.row {
+			margin-left: auto;
+			margin-right: auto;
+		}
+		
+		.avatar {
+			padding: 0px;
+			margin: 5px 10px 5px;
+			border: 1px solid #fff;
+			border-radius: 5px;
+			width:56px;
+			height:56px;
+		}
+		.noborder {
+			border: 0px;
+		}
+		.nopadding {
+			padding: 0px;
+		}
+	</style>
+
+	</head>
+	<body>
+		<!-- <div class="container" id="userRow" style="background-color:#eee;">
+			<div class="row">
+				<div class="col-xs-2 nopadding" >
+					<a class="noborder" href="#">
+						<img id="avatar" class="avatar" style="margin:10px 0px;"></img>
+					</a>
+				</div>
+				<div class="col-xs-10" style="background-color:#0;padding-left:5px;padding-right:0px;position:relative;">
+					<div style="font:16px bold; margin:15px 50px 10px 10px; display:inline-block;">
+						<a id="userName" >&nbsp</a>
+					</div>
+					<button type="button" class="btn btn-info btn-sm" style="position:absolute;right:0px;top:10px">关注</button>
+					<div style="margin:0px 10px;">
+						<a id="follow" href="#">关注：</a>
+						<a id="fan" href="#" style="margin-left:20px;">粉丝：</a>
+					</div>
+				</div>
+			</div>
+		</div> -->
+
+		<div id="userRow" style="background-color: #eee;margin:10px 0;position:relative;">
+			<img id="avatar" class="avatar"></img>
+			<div style="position:absolute;top:10px;height:30px;line-height:200%;margin:0 80px 0 75px;overflow:hidden;">
+				<a id="userName" style="font:16px bold;word-break:break-all;"></a>
+			</div>
+			<div style="position:absolute;top:40px;left:75px;">
+				<a id="follow">关注：</a>
+				<a id="fan" style="margin-left:20px;">粉丝：</a>
+			</div>
+			
+			<button id="followButton" type="button" class="btn btn-warning btn-sm" style="position:absolute;top:10px;right:10px;display:none">取消关注</button>
+		</div>
+
+		<div id="thumbRoot">
+		</div>
+
+		<ul class="pager">
+			<li class="previous"><a><span aria-hidden="true">&larr;</span> 上一页</a></li>
+			<button type="button" class="btn btn-default pageButton">1/1</button>
+			<li class="next"><a>下一页 <span aria-hidden="true">&rarr;</span></a></li>
+		</ul>
+
+		<!-- Modal -->
+    <div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">页面跳转</h4>
+          </div>
+          <div class="modal-body">
+		        <input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
+		      </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/util.js"></script>
+		<script src="userOld.js"></script>
+		<script id="tanxScript" charset="gbk" src="http://p.tanx.com/ex?i=mm_62440092_8766919_29590783&m=1"></script>
+	</body>
+</html>

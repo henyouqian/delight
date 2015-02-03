@@ -113,6 +113,7 @@ $().ready(function() {
 
 		//user name
 		$("#userName").text(player.NickName)
+		lscache.set("userName", player.NickName)
 	}
 
 	

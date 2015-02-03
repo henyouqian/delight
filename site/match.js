@@ -11,25 +11,18 @@ $().ready(function() {
 		"MatchId": matchId
 	}
 
-	function isLocked() {
-		var playedMatchIdMap = getPlayedMap()
-		if (!playedMatchIdMap) {
-			return true
-		}
-		return !(matchId in playedMatchIdMap)
-	}
-
 	$("#playGame").prop('disabled', true)
 
 	post(url, data, function(resp){
 		var match = resp["Match"]
 		var pack = resp["Pack"]
 		var player = resp["Player"]
-		var played = resp["Played"]
-		if (played) {
-			var playedMatchIdMap = getPlayedMap()
-			playedMatchIdMap[matchId] = true
-			savePlayedMap(playedMatchIdMap)
+		var matchPlay = resp["PlayerMatchInfo"]
+
+		if (matchPlay) {
+			var playedMatchMap = getPlayedMap()
+			playedMatchMap[matchId] = matchPlay
+			savePlayedMap(playedMatchMap)
 		}
 
 		if(match.Title.length > 0) {
@@ -65,7 +58,8 @@ $().ready(function() {
 				thumbUrls.push(thumbUrl)
 			}
 		}
-		var locked = isLocked()
+		var locked = isLocked(matchId)
+		console.log(locked)
 		for (var i in thumbUrls) {
 			var thumbUrl = thumbUrls[i]
 			var thumbElem = $('\
@@ -86,7 +80,7 @@ $().ready(function() {
 		$("#playGame").prop('disabled', false)
 
 		$(".thumb").click(function(a) {
-			if (isLocked()) {
+			if (isLocked(matchId)) {
 				$('#thumbModal').modal('show')
 				return
 			}
@@ -164,16 +158,16 @@ $().ready(function() {
 
 	$(".playGame").click(function() {
 		$('#thumbModal').modal('hide')
-		window.location.href = GAME_DIR+'?key='+matchId
+		window.location.href = GAME_DIR+'?matchId='+matchId
 	})
 
 	window.onpageshow = function() {
 		var lockerElems = $(".locker")
-		var locked = isLocked()
+		var locked = isLocked(matchId)
 
 		var str = ""
-		var playedMatchIdMap = getPlayedMap()
-		for (var k in playedMatchIdMap) {
+		var playedMatchMap = getPlayedMap()
+		for (var k in playedMatchMap) {
 			str += k + ","
 		}
 		// alert(str)

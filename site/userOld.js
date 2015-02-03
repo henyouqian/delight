@@ -1,28 +1,18 @@
 $().ready(function() {
 	addHeader()
 	addFooter()
-	setTitle("我的主页")
 	moveTaobaoAds()
 
 	var matchNum = 0
-	var limit = 30
+	var limit = 27
 	var pageNum = 1
 	var currPage = -100
 	var followed = false
 
+	var userId = parseInt(getUrlParam("u"))
 	var userName = ""
 
 	var _matches = {};
-
-	function isLocked(matchId, playedMatchMap) {
-		if (!playedMatchMap) {
-			playedMatchMap = getPlayedMap()
-		}
-		if (!playedMatchMap) {
-			return true
-		}
-		return !(matchId in playedMatchMap)
-	}
 
 	function loadPage(pageIndex, saveHistory) {
 		// if (pageIndex == currPage) {
@@ -33,12 +23,13 @@ $().ready(function() {
 
 		var url = "match/web/listUserQ"
 		var data = {
-			"UserId": 0,
+			"UserId": userId,
 			"Offset": pageIndex*limit,
 			"Limit": limit
 		}
 		
 		post(url, data, function(resp){
+			console.log(resp)
 			var matches = resp.Matches
 			matchNum = resp.MatchNum
 			var playedMatchMap = resp.PlayedMatchMap
@@ -118,7 +109,7 @@ $().ready(function() {
 
 	var url = "player/web/getInfo"
 	var data = {
-		"UserId": 0,
+		"UserId": userId,
 	}
 
 	post(url, data, function(resp){
@@ -142,6 +133,21 @@ $().ready(function() {
 		$("#follow").text("关注："+followNum)
 		$("#fan").text("粉丝："+fanNum)
 
+		//follow button
+		followed = resp.Followed
+		var followButton = $("#followButton")
+		followButton.removeClass("btn-warning btn-info")
+
+		if (followed) {
+			followButton.addClass("btn-warning")
+			followButton.text("取消关注")
+		} else {
+			followButton.addClass("btn-info")
+			followButton.text("关注")
+		}
+		
+		followButton.show()
+
 		//
 		var pageIndex = getPageIndexFromUrl()
 		loadPage(pageIndex, true)
@@ -152,13 +158,13 @@ $().ready(function() {
 		if (followNum == 0) {
 			return
 		}
-		window.location.href = encodeURI("follow.html?type=0&userId=0&userName="+userName)
+		window.location.href = encodeURI("follow.html?type=0&userId="+userId+"&userName="+userName)
 	})
 	$("#fan").click(function(){
 		if (fanNum == 0) {
 			return
 		}
-		window.location.href = encodeURI("follow.html?type=1&userId=0&userName="+userName)
+		window.location.href = encodeURI("follow.html?type=1&userId="+userId+"&userName="+userName)
 	})
 
 	$(".previous").click(function(){
@@ -177,6 +183,35 @@ $().ready(function() {
 		loadPage(currPage+1,true)
 		// var newURL = window.location.href.split('#')[0] + '#&page=' + (currPage+1);
 		// window.location.assign(newURL)
+	})
+
+	$("#followButton").click(function(){
+		var url = "player/follow"
+		if (followed) {
+			url = "player/unfollow"
+		}
+		var data = {
+			"UserId":userId
+		}
+		post(url, data, function(resp){
+			followed = resp.Follow
+			myFollowNum = resp.FollowNum
+			fanNum = resp.FanNum
+			// $("#follow").text("关注："+followNum)
+			$("#fan").text("粉丝："+fanNum)
+
+			var followButton = $("#followButton")
+			followButton.removeClass("btn-warning btn-info")
+			if (followed) {
+				followButton.addClass("btn-warning")
+				followButton.text("取消关注")
+			} else {
+				followButton.addClass("btn-info")
+				followButton.text("关注")
+			}
+		}, function(resp){
+			alert(resp.Error)
+		})
 	})
 
 	$(".pageButton").click(function(){

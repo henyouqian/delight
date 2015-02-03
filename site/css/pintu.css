@@ -1,3 +1,7 @@
+a {
+	cursor:pointer;
+}
+
 #thumbRoot {
 	margin:8px;
 	font-size:0;
@@ -11,6 +15,7 @@
 	border-radius: 2px;
 	box-shadow: 2px 2px 4px #ccc;
 	max-width: 200px;
+	cursor:pointer;
 }
 
 .thumb>img, .thumb>a>img {
@@ -24,6 +29,7 @@
 	padding: 1% 2% 2% 1%;
 	border-width: 0px;
 	box-shadow: 2px 2px 4px #ddd;
+	cursor:pointer;
 }
 
 .userRow {
@@ -38,6 +44,7 @@
 	border-radius: 5px;
 	width:40px;
 	height:40px;
+	cursor:pointer;
 }
 
 .userNameLabel {
@@ -46,6 +53,7 @@
 	font-size: 18px;
 	overflow:hidden;
 	min-height: 40px;
+	cursor:pointer;
 }
 
 .userLine {

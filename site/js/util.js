@@ -171,7 +171,7 @@ function addHeader() {
 				<div id="navbar" class="collapse navbar-collapse">\
 					<ul class="nav navbar-nav">\
 						<li><a href="me.html">我的主页</a></li>\
-						<li><a href="channelHub.html">分类推荐</a></li>\
+						<li><a href="channelHub.html">频道推荐</a></li>\
 						<li><a href="search.html">搜索</a></li>\
 						<li><a id="menuAccount" href="account.html">账号</a></li>\
 					</ul>\
@@ -268,25 +268,43 @@ function post(url, data, func, errFunc) {
 }
 
 function getPlayedMap() {
-	var m = lscache.get("playedMatchIdMap")
+	var m = lscache.get("playedMatchMap")
 	if (!isdef(m) || m == null ) {
 		m = {}
 	}
 	return m
 }
 
+function extendPlayedMap(playedMap) {
+	var oldMap = getPlayedMap()
+	if (typeof(playedMap) == "object") {
+		playedMap = $.extend(oldMap, playedMap)
+		lscache.set("playedMatchMap", playedMap)
+		return playedMap
+	}
+	return oldMap
+}
+
 function savePlayedMap(playedMap) {
 	if (typeof(playedMap) == "object") {
-		lscache.set("playedMatchIdMap", playedMap)
+		lscache.set("playedMatchMap", playedMap)
 	}
 }
 
-function isLocked(matchId) {
-	var playedMatchIdMap = getPlayedMap()
-	if (!playedMatchIdMap) {
+function isLocked(matchId, playedMatchMap) {
+	matchId = matchId.toString()
+	if (!playedMatchMap) {
+		playedMatchMap = getPlayedMap()
+	}
+	if (!playedMatchMap) {
 		return true
 	}
-	return !(matchId in playedMatchIdMap)
+	if (matchId in playedMatchMap) {
+		if (playedMatchMap[matchId].Played) {
+			return false
+		}
+	}
+	return true
 }
 
 function getTime() {
@@ -296,8 +314,8 @@ function getTime() {
 
 
 (function(){
-	if (window.location.hostname == "localhost") {
-	    HOST = "http://localhost:9998/"
+	if (window.location.hostname == "localhost" || window.location.hostname == "192.168.2.55") {
+	    HOST = "http://"+window.location.hostname+":9998/"
 	}
 
 	$.ajaxSetup({

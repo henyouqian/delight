@@ -1,7 +1,14 @@
 $().ready(function() {
 	addHeader()
 	addFooter()
-	moveTaobaoAds()
+	
+	//move ads
+	var iframe = $("iframe")
+	if (iframe) {
+		var div = iframe.parent().parent()
+		div.detach()
+		$("#loadMore").before(div)
+	}
 	
 	var channelName = getUrlParam("name")
 	if (!channelName) {
@@ -17,6 +24,13 @@ $().ready(function() {
 	var matches = {}
 	var packs = {}
 	var enterMatchId = 0
+	var limit = 10
+
+	var loadMoreBtn = $("#loadMore")
+
+	loadMoreBtn.click(function(){
+		moreMatch()
+	})
 
 	function moreMatch() {
 		var url = "channel/listMatch"
@@ -24,16 +38,20 @@ $().ready(function() {
 			"ChannelName": channelName,
 			"Key": lastKey,
 			"Score": lastScore,
+			"Limit": limit,
 		}
 
 		post(url, data, function(resp){
 			console.log(resp)
 			lastKey = resp.LastKey
 			lastScore = resp.LaseScore
+			var playedMap = extendPlayedMap(resp.PlayedMatchMap)
 
-			var playedMatchIdMap = getPlayedMap()
-			$.extend(playedMatchIdMap, resp.PlayedMatchIds)
-			savePlayedMap()
+			if (resp.Matches.length < limit) {
+				buttonEnable(loadMoreBtn, false)
+				loadMoreBtn.text("后面没有了")
+			}
+			resp.Matches.length < limit
 
 			var contentElem = $("#content")
 			for (var i in resp.Matches) {
@@ -113,7 +131,7 @@ $().ready(function() {
 				var playButton = $(".playButton", cardElem)
 				playButton[0].matchId = match.Id
 				playButton.click(function(){
-					window.location.href = GAME_DIR+'?key='+$(this)[0].matchId
+					window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
 				})
 			}
 		})
@@ -133,7 +151,6 @@ $().ready(function() {
 			}
 			item.w = image.W
 			item.h = image.H
-			console.log(item)
 			items.push(item)
 		}
 
@@ -145,8 +162,6 @@ $().ready(function() {
 		var options = {
 			index: thumbIndex
 		};
-		console.log(items)
-		console.log(options)
 
 		// Initializes and opens PhotoSwipe
 		var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
@@ -178,17 +193,17 @@ $().ready(function() {
 	}
 
 	$(".playConfirmButton").click(function(){
-		window.location.href = GAME_DIR+'?key='+enterMatchId
+		$('#thumbModal').modal('hide')
+		window.location.href = GAME_DIR+'?matchId='+enterMatchId
 	})
 
 	window.onpageshow = function() {
 		var lockerElems = $(".locker")
-		var playedMatchIdMap = getPlayedMap()
 		
 		lockerElems.each(function(){
 			var elem = $(this)
 			var matchId = parseInt(elem.attr("matchId"))
-			if (!(matchId in playedMatchIdMap)) {
+			if (isLocked(matchId)) {
 				elem.show()
 			} else {
 				elem.hide()

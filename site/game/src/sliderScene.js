@@ -188,7 +188,8 @@ var SliderLayer = cc.Layer.extend({
         //////////////////////////////
         // 1. super init first
         this._super()
-        this._sliderNum = g_socialPack.SliderNum
+        this._sliderNum = g_sliderNum
+        this._sliderNum = 3
 
         updateWeixin()
 
@@ -354,15 +355,15 @@ var SliderLayer = cc.Layer.extend({
         //
         var nameString = ""
         var scoreString = ""
-        for (var i in g_socialPack.Ranks) {
+        for (var i in g_ranks) {
             var rank = parseInt(i) + 1
             if (i == 9) {
-                nameString += rank + ". " + g_socialPack.Ranks[i].Name + "\n"
+                nameString += rank + ". " + g_ranks[i].Name + "\n"
             } else {
-                nameString += rank + ".   " + g_socialPack.Ranks[i].Name + "\n"
+                nameString += rank + ".   " + g_ranks[i].Name + "\n"
             }
             
-            var msec = g_socialPack.Ranks[i].Msec
+            var msec = g_ranks[i].Msec
             var s = Math.floor(msec/1000)
             var min = Math.floor(s / 60)
             var sec = padLeft(s%60+"", 2)
@@ -444,7 +445,7 @@ var SliderLayer = cc.Layer.extend({
         //title label
         this._titleLabel = cc.LabelTTF.create("", "Arial", 40, new cc.Size(600, 100), cc.TEXT_ALIGNMENT_CENTER, cc.TEXT_ALIGNMENT_TOP)
         this._titleLabel.setPosition(winSize.width/2, 820)
-        this._titleLabel.setString(g_socialPack.Pack.Title)
+        this._titleLabel.setString(g_pack.Title)
         this._titleLabel.setColor(new cc.Color3B(255, 197, 131))
         this._startView.addChild(this._titleLabel, 1)
 
@@ -474,16 +475,16 @@ var SliderLayer = cc.Layer.extend({
         var nameString = ""
         var scoreString = ""
         var userName = getCookie(USER_NAME)
-        for (var i in g_socialPack.Ranks) {
+        for (var i in g_ranks) {
             var rank = parseInt(i) + 1
-            var name = g_socialPack.Ranks[i].Name
+            var name = g_ranks[i].Name
             if (i == 9) {
                 nameString += rank + ". " + name + "\n"
             } else {
                 nameString += rank + ".   " + name + "\n"
             }
 
-            var timeStr = msecToStr(g_socialPack.Ranks[i].Msec)
+            var timeStr = msecToStr(g_ranks[i].Msec)
             if (name == userName) {
                 gMyScore = timeStr
                 scoreString += "* "
@@ -649,7 +650,7 @@ var SliderLayer = cc.Layer.extend({
                 spt.setPosition(this._sliderX0, y);
                 spt.setRotation(90);
                 
-                spt.setScale(scale);
+                spt.setScale(scale*1.01);
                 this._sliderGroup.addChild(spt, 0);
 
                 this._sliders.push({
@@ -783,7 +784,7 @@ var SliderLayer = cc.Layer.extend({
 
         var self = this
 
-        if (g_key) {
+        if (g_key || g_match) {
             self._submitLabelLayer.setVisible(true)
             self._submitLabelLayer.setOpacity(0)
             var fadein = cc.FadeTo.create(0.4, 100)
@@ -797,24 +798,27 @@ var SliderLayer = cc.Layer.extend({
 
         setTimeout(function(){
             //getUserName
-            var userName = getCookie(USER_NAME)
-            while (userName == "" || userName==null) {
-                userName = prompt("请输入您的名字以便于提交成绩");
-                if (userName != null) {
-                    setCookie(USER_NAME, userName, 30)
-                }
+            var userName = lscache.get("userName")
+
+            if (!userName) {
+                return
             }
 
-            if (g_key) {
+            if (g_key || g_match) {
                 //submit
                 var url = HOST + "social/play"
+                var matchId = 0
+                if (g_match) {
+                    matchId = g_match.Id
+                }
                 var data = {
                     "Key": g_key,
-                    "CheckSum": "xxxx",
+                    "MatchId":matchId,
                     "UserName": userName,
                     "Msec": mSec
                 }
                 $.post(url, JSON.stringify(data), function(resp){
+                    console.log(data)
                     setTimeout(function(){
                         var fadeout = cc.FadeTo.create(0.4, 0)
                         var ease = cc.EaseSineOut.create(fadeout)
@@ -829,6 +833,9 @@ var SliderLayer = cc.Layer.extend({
                     var nameString = ""
                     var scoreString = ""
                     for (var i in resp.Ranks) {
+                        if (i == 10) {
+                            break
+                        }
                         var rank = parseInt(i) + 1
                         var name = resp.Ranks[i].Name
                         if (i == 9) {
@@ -848,14 +855,13 @@ var SliderLayer = cc.Layer.extend({
                     self._nameLabel.setString(nameString)
                     self._scoreLabel.setString(scoreString)
 
-                    var matchId = parseInt(g_key)
                     if (matchId > 0) {
-                        var playedMatchIdMap = lscache.get("playedMatchIdMap")
-                        if (playedMatchIdMap==null) {
-                            playedMatchIdMap = {}
+                        var playedMatchMap = lscache.get("playedMatchMap")
+                        if (playedMatchMap==null) {
+                            playedMatchMap = {}
                         }
-                        playedMatchIdMap[matchId] = true
-                        lscache.set("playedMatchIdMap", playedMatchIdMap)
+                        playedMatchMap[matchId] = resp.PlayerMatchInfo
+                        lscache.set("playedMatchMap", playedMatchMap)
                     }
 
                 }, "json")
