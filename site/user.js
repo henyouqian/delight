@@ -3,29 +3,62 @@ $().ready(function() {
 	addFooter()
 	moveTaobaoAds()
 
+	var unlikedText = "喜欢"
+	var privateUnlikedText = "私藏"
+	var likedText = "已喜欢"
+	var privateLikedText = "已私藏"
+	var unlikedColor = "#5bc0de"
+	var likedColor = "#f0ad4e"
+
 	var matchNum = 0
 	var limit = 9
 	var pageNum = 1
 	var currPage = -100
 	var followed = false
+	var firstLoad = true
 
 	var userId = parseInt(getUrlParam("u"))
+	if (userId == 0) {
+		userId = lscache.get("userId")
+	}
 	var userName = ""
 
 	var contentElem = $("#content")
 	var enterMatchId = 0
 	var _matches = {}
 	var packs = {}
+	var ownerMap = {}
+	var currType = 0
+	var matchExMap = {}
+
+	var likePlayInfo = null
+	var _likeButton = null
+	var likeMatchId = 0
+	
+
+	$("#tab>li").click(function() {
+		if ($(this).hasClass("active")) {
+			return
+		}
+		$("#tab>li").removeClass("active")
+		$(this).addClass("active")
+
+		currType = parseInt($(this).attr("type"))
+
+		loadPage(-1, false)
+	})
 
 	function loadPage(pageIndex, saveHistory) {
-		// if (pageIndex == currPage) {
-		// 	return
-		// }
+		if (pageIndex == currPage) {
+			return
+		}
+		console.log(currType, pageIndex)
 
 		contentElem.empty()
 
 		var url = "match/web/listUserQ"
 		var data = {
+			"Type": currType,
 			"UserId": userId,
 			"Offset": pageIndex*limit,
 			"Limit": limit
@@ -37,11 +70,15 @@ $().ready(function() {
 			matchNum = resp.MatchNum
 			var playedMatchMap = resp.PlayedMatchMap
 			savePlayedMap(playedMatchMap)
+			$.extend(ownerMap, resp.OwnerMap)
+			matchExMap = resp.MatchExMap
 
 			if (pageIndex < 0) {
 				var nMatch = matchNum % limit
 				matches = matches.slice(-nMatch)
 			}
+
+			matches.reverse()
 
 			for (var i in matches) {
 				var match = matches[i]
@@ -50,6 +87,38 @@ $().ready(function() {
 				var cardElem = $("#template>.card").clone()
 				contentElem.append(cardElem)
 
+				//userDiv
+				var userDiv = cardElem.find(".userDiv")
+				if (match.OwnerId == userId) {
+					userDiv.hide()
+				} else {
+					userDiv.show()
+
+					var userNameElem = userDiv.find(".userName")
+					userNameElem.text(match.OwnerName)
+					userNameElem.attr("href", "user.html?u="+match.OwnerId)
+
+					var avatar = userDiv.find(".avatarSm")
+					avatar[0].href = "user.html?u="+match.OwnerId
+					avatar.click(function(){
+						window.location.href = $(this)[0].href
+					})
+
+					if (match.OwnerId in ownerMap) {
+						var owner = ownerMap[""+match.OwnerId]
+						var url = getPlayerAvatarUrl(owner)
+						avatar.attr("src", url)
+					}
+				}
+				var playTimesLabel = cardElem.find(".playTimesLabel")
+				var playTimes = matchExMap[match.Id.toString()]
+				if (!isdef(playTimes)) {
+					playTimesLabel.text("暂无记录")
+				} else {
+					playTimesLabel.text("已拼"+playTimes+"次")
+				}
+
+				//thumbs
 				var thumbRoot = $(".thumbRoot", cardElem)
 				var locked = isLocked(match.Id)
 				for (var iThumb in match.Thumbs) {
@@ -106,6 +175,58 @@ $().ready(function() {
 					window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
 				})
 
+				var likeButton = $(".likeButton", cardElem)
+				likeButton[0].matchId = match.Id
+				likeButton.click(function(){
+					var matchId = $(this)[0].matchId
+					var playInfo = playedMatchMap[matchId]
+
+					var modal = $("#likeModal")
+					var title = modal.find("#likeModalLabel")
+					if (playInfo.Liked) {
+						title.text("取消喜欢这组拼图吗？")
+					} else {
+						title.text("喜欢这组拼图吗？")
+					}
+
+					likePlayInfo = playInfo
+					_likeButton = $(this)
+					likeMatchId = matchId
+
+					modal.modal("show")
+				})
+				
+				var privateButton = $(".privateButton", cardElem)
+				privateButton[0].matchId = match.Id
+				privateButton.click(function(){
+					alert("暂未实现:matchId="+$(this)[0].matchId)
+					// window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
+				})
+
+				var playInfo = playedMatchMap[match.Id]
+				if (isdef(playInfo)) {
+					if (playInfo.Liked) {
+						likeButton.text(likedText)
+						likeButton.css("color", likedColor)
+					} else {
+						likeButton.text(unlikedText)
+						likeButton.css("color", unlikedColor)
+					}
+					if (playInfo.PrivateLiked) {
+						privateButton.text(privateLikedText)
+						privateButton.css("color", likedColor)
+					} else {
+						privateButton.text(privateUnlikedText)
+						privateButton.css("color", unlikedColor)
+					}
+				} else {
+					playedMatchMap[match.Id] = {
+						Played:false,
+						Liked:false,
+						PrivateLiked:false,
+					}
+				}
+
 
 				var thumbUrl = RES_HOST + match.Thumb
 	 
@@ -132,7 +253,7 @@ $().ready(function() {
 				pageNum = Math.floor((matchNum-1) / limit) + 1
 			}
 			currPage = pageIndex
-			if (currPage == -1) {
+			if (currPage < 0) {
 				currPage = pageNum - 1
 			}
 			$(".pageButton").text((currPage+1)+"/"+pageNum)
@@ -150,20 +271,25 @@ $().ready(function() {
 			}
 
 			//check page
-			if (currPage >= pageNum) {
-				var newURL = window.location.href.split('#')[0] + '#&page=' + (pageNum-1);
-				loadPage(pageNum-1, false)
-				return
-			} else {
-				var newURL = window.location.href.split('#')[0] + '#&page=' +  currPage;
-				if (saveHistory && currPage != pageNum-1) {
-					window.location.assign(newURL)
-				} else {
-					window.location.replace(newURL)
-				}
-			}
+			// if (currPage >= pageNum) {
+			// 	// var newURL = window.location.href.split('#')[0] + '#&page=' + (pageNum-1);
+			// 	loadPage(pageNum-1, false)
+			// 	return
+			// } else {
+			// 	var newURL = window.location.href.split('#')[0] + '#&page=' +  currPage;
+			// 	if (saveHistory && !firstLoad) {
+			// 		window.location.assign(newURL)
+			// 	} else {
+			// 		window.location.replace(newURL)
+			// 	}
+			// 	if (firstLoad) {
+			// 		firstLoad = false
+			// 	}
+
+			// 	$("title").text(userName+"(页"+(getPageIndexFromUrl()+1)+")")
+			// }
 			
-		}, "json")
+		})
 	}
 
 	//get player info
@@ -185,7 +311,15 @@ $().ready(function() {
 		fanNum = resp["FanNum"]
 		followNum = resp["FollowNum"]
 		userName = nickName
-		$("#userName").text(nickName)
+		var isSelf = lscache.get("userId") == userId.toString()
+		if (isSelf) {
+			$("#userName").text(nickName+"(我)")
+			$("title").text("我的主页")
+		} else {
+			$("#userName").text(nickName)
+			$("title").text(userName+"的主页")
+		}
+
 
 		if (customKey.length > 0) {
 			var url = RES_HOST + customKey
@@ -208,12 +342,14 @@ $().ready(function() {
 			followButton.addClass("btn-info")
 			followButton.text("关注")
 		}
-		
-		followButton.show()
+
+		if (!isSelf) {
+			followButton.show()
+		}
 
 		//
-		var pageIndex = getPageIndexFromUrl()
-		loadPage(pageIndex, true)
+		// var pageIndex = getPageIndexFromUrl()
+		// loadPage(pageIndex, true)
 		// alert("onGetPlayerInfo")
 	})
 
@@ -235,20 +371,30 @@ $().ready(function() {
 			return
 		}
 		loadPage(currPage-1,true)
-		// var newURL = window.location.href.split('#')[0] + '#&page=' + (currPage-1);
-		// window.location.assign(newURL)
-
+		$(this).removeClass("active")
 	})
 	$(".next").click(function(){
 		if (currPage == pageNum - 1) {
 			return
 		}
 		loadPage(currPage+1,true)
-		// var newURL = window.location.href.split('#')[0] + '#&page=' + (currPage+1);
-		// window.location.assign(newURL)
+		$(this).removeClass("active")
 	})
 
 	$("#followButton").click(function(){
+		if (followed) {
+			$("#followModal").modal("show")
+		} else {
+			doFollow()
+		}
+	})
+
+	$("#confirmFollowButton").click(function() {
+		$("#followModal").modal("hide")
+		doFollow()
+	})
+
+	function doFollow() {
 		var url = "player/follow"
 		if (followed) {
 			url = "player/unfollow"
@@ -275,14 +421,18 @@ $().ready(function() {
 		}, function(resp){
 			alert(resp.Error)
 		})
-	})
+	}
 
 	$(".pageButton").click(function(){
 		var input = $("#pageInput")
 		input.val("")
 		input.attr("placeholder", "请输入跳转页码（"+1+"-"+pageNum+"）")
-		input[0].focus()
+		input.trigger("focusin");
 		$("#pageModal").modal("show")
+	})
+
+	$('#pageModal').on('shown.bs.modal', function () {
+		$('#pageInput').focus()
 	})
 
 	$("#gotoPage").click(function(){
@@ -306,11 +456,12 @@ $().ready(function() {
 	function getPageIndexFromUrl() {
 		var pageIndex = getUrlParam("page")
 		if (pageIndex == "") {
-			pageNum = 1
-			if (matchNum > 0) {
-				pageNum = Math.floor((matchNum-1) / limit) + 1
-			}
-			pageIndex = pageNum-1
+			// pageNum = 1
+			// if (matchNum > 0) {
+			// 	pageNum = Math.floor((matchNum-1) / limit) + 1
+			// }
+			// pageIndex = pageNum-1
+			pageIndex = -1
 		} else {
 			pageIndex = parseInt(pageIndex)
 		}
@@ -320,7 +471,6 @@ $().ready(function() {
 	window.onhashchange = function(){
 		var pageIndex = getPageIndexFromUrl()
 		loadPage(pageIndex, false)
-		// alert("onHashChange")
 	}
 
 	window.onpageshow = function() {
@@ -341,6 +491,35 @@ $().ready(function() {
 	$(".playConfirmButton").click(function(){
 		$('#thumbModal').modal('hide')
 		window.location.href = GAME_DIR+'?matchId='+enterMatchId
+	})
+
+	$("#confirmLikeButton").click(function(){
+		$("#likeModal").modal("hide")
+		// var matchId = $(this)[0].matchId
+		var playInfo = likePlayInfo
+
+		var url = "match/like"
+		if (playInfo.Liked) {
+			url = "match/unlike"
+		}
+		var data = {
+			"MatchId": likeMatchId
+		}
+		var button = _likeButton
+		post(url, data, function(resp){
+			playInfo.Liked = !playInfo.Liked
+
+			if (playInfo.Liked) {
+				button.text(likedText)
+				button.css("color", likedColor)
+			} else {
+				button.text(unlikedText)
+				button.css("color", unlikedColor)
+			}
+
+		}, function(resp) {
+			alert("like error")
+		})
 	})
 
 	function showImage(pack, thumbIndex) {
@@ -396,6 +575,40 @@ $().ready(function() {
 			});
 		}
 	}
+
+	// iOS check...ugly but necessary
+	if( navigator.userAgent.match(/iPhone|iPad|iPod/i) ) {
+		$('#pageModal').on('show.bs.modal', function() {
+			// Position modal absolute and bump it down to the scrollPosition
+			$(this)
+				.css({
+					position: 'absolute',
+					marginTop: $(window).scrollTop() + 'px',
+					bottom: 'auto'
+				});
+			// Position backdrop absolute and make it span the entire page
+			//
+			// Also dirty, but we need to tap into the backdrop after Boostrap 
+			// positions it but before transitions finish.
+			//
+			setTimeout( function() {
+				$('.modal-backdrop').css({
+					position: 'absolute', 
+					top: 0, 
+					left: 0,
+					width: '100%',
+					height: Math.max(
+						document.body.scrollHeight, document.documentElement.scrollHeight,
+						document.body.offsetHeight, document.documentElement.offsetHeight,
+						document.body.clientHeight, document.documentElement.clientHeight
+					) + 'px'
+				});
+			}, 0);
+		});
+	}
+
+	var pageIndex = getPageIndexFromUrl()
+	loadPage(pageIndex, true)
 
 	// window.onload = function() {
 	// 	window.onpageshow()

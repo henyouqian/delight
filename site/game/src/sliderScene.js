@@ -189,7 +189,7 @@ var SliderLayer = cc.Layer.extend({
         // 1. super init first
         this._super()
         this._sliderNum = g_sliderNum
-        this._sliderNum = 3
+        // this._sliderNum = 3
 
         updateWeixin()
 
@@ -277,7 +277,7 @@ var SliderLayer = cc.Layer.extend({
         renameItem.setScale(0.4, 0.4)
 
         var menuRename = cc.Menu.create(renameItem)
-        this._resultView.addChild(menuRename, 0)
+        // this._resultView.addChild(menuRename, 0)
         menuRename.setPosition(cc.p(70, 880))
         menuRename.setOpacity(120)
 

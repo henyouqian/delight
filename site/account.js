@@ -18,6 +18,7 @@ $().ready(function() {
 		$.post(url, function(resp) {
 			lscache.set("uuid", resp.UUID)
 			lscache.set("userName", resp.Player.NickName)
+			lscache.set("userId", resp.UserId)
 			// $("#loginInfo").text("创建 userId:"+resp.UserId+" nickName:"+resp.Player.NickName)
 
 			lscache.set("accountType", "tmp")
@@ -44,6 +45,7 @@ $().ready(function() {
 		post(url, data, function(resp){
 			lscache.set("accountType", "tmp")
 			lscache.set("userName", resp.Player.NickName)
+			lscache.set("userId", resp.UserId)
 
 			var returnUrl = lscache.get("returnUrl")
 			if (returnUrl) {

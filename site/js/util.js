@@ -166,12 +166,12 @@ function addHeader() {
 						<span class="icon-bar"></span>\
 						<span class="icon-bar"></span>\
 					</button>\
-					<a id="brand" class="navbar-brand" href="#">蛮拼的</a>\
+					<a id="brand" class="navbar-brand" href="#">慢慢拼</a>\
 				</div>\
 				<div id="navbar" class="collapse navbar-collapse">\
 					<ul class="nav navbar-nav">\
-						<li><a href="me.html">我的主页</a></li>\
-						<li><a href="channelHub.html">频道推荐</a></li>\
+						<li><a href="user.html?u=0">我的主页</a></li>\
+						<li><a href="channelHub.html">分类推荐</a></li>\
 						<li><a href="search.html">搜索</a></li>\
 						<li><a id="menuAccount" href="account.html">账号</a></li>\
 					</ul>\
@@ -224,7 +224,7 @@ function moveTaobaoAds() {
 		if (iframe) {
 			var div = iframe.parent().parent()
 			div.detach()
-			$("#thumbRoot").after(div)
+			$("#content").after(div)
 		}
 	})
 }

@@ -18,6 +18,13 @@ $().ready(function() {
 
 	setTitle("#"+channelName)
 
+	var unlikedText = "喜欢"
+	var privateUnlikedText = "私藏"
+	var likedText = "已喜欢"
+	var privateLikedText = "已私藏"
+	var unlikedColor = "#5bc0de"
+	var likedColor = "#f0ad4e"
+
 	var lastKey = ""
 	var lastScore = ""
 	var ownerMap = {}
@@ -27,6 +34,10 @@ $().ready(function() {
 	var limit = 10
 
 	var loadMoreBtn = $("#loadMore")
+
+	var likePlayInfo = null
+	var _likeButton = null
+	var likeMatchId = 0
 
 	loadMoreBtn.click(function(){
 		moreMatch()
@@ -45,7 +56,8 @@ $().ready(function() {
 			console.log(resp)
 			lastKey = resp.LastKey
 			lastScore = resp.LaseScore
-			var playedMap = extendPlayedMap(resp.PlayedMatchMap)
+			var playedMatchMap = resp.PlayedMatchMap
+			savePlayedMap(playedMatchMap)
 
 			if (resp.Matches.length < limit) {
 				buttonEnable(loadMoreBtn, false)
@@ -133,6 +145,58 @@ $().ready(function() {
 				playButton.click(function(){
 					window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
 				})
+
+				var likeButton = $(".likeButton", cardElem)
+				likeButton[0].matchId = match.Id
+				likeButton.click(function(){
+					var matchId = $(this)[0].matchId
+					var playInfo = playedMatchMap[matchId]
+
+					var modal = $("#likeModal")
+					var title = modal.find("#likeModalLabel")
+					if (playInfo.Liked) {
+						title.text("取消喜欢这组拼图吗？")
+					} else {
+						title.text("喜欢这组拼图吗？")
+					}
+
+					likePlayInfo = playInfo
+					_likeButton = $(this)
+					likeMatchId = matchId
+
+					modal.modal("show")
+				})
+				
+				var privateButton = $(".privateButton", cardElem)
+				privateButton[0].matchId = match.Id
+				privateButton.click(function(){
+					alert("暂未实现:matchId="+$(this)[0].matchId)
+					// window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
+				})
+
+				var playInfo = playedMatchMap[match.Id]
+				if (isdef(playInfo)) {
+					if (playInfo.Liked) {
+						likeButton.text(likedText)
+						likeButton.css("color", likedColor)
+					} else {
+						likeButton.text(unlikedText)
+						likeButton.css("color", unlikedColor)
+					}
+					if (playInfo.PrivateLiked) {
+						privateButton.text(privateLikedText)
+						privateButton.css("color", likedColor)
+					} else {
+						privateButton.text(privateUnlikedText)
+						privateButton.css("color", unlikedColor)
+					}
+				} else {
+					playedMatchMap[match.Id] = {
+						Played:false,
+						Liked:false,
+						PrivateLiked:false,
+					}
+				}
 			}
 		})
 	}
@@ -195,6 +259,35 @@ $().ready(function() {
 	$(".playConfirmButton").click(function(){
 		$('#thumbModal').modal('hide')
 		window.location.href = GAME_DIR+'?matchId='+enterMatchId
+	})
+
+	$("#confirmLikeButton").click(function(){
+		$("#likeModal").modal("hide")
+		// var matchId = $(this)[0].matchId
+		var playInfo = likePlayInfo
+
+		var url = "match/like"
+		if (playInfo.Liked) {
+			url = "match/unlike"
+		}
+		var data = {
+			"MatchId": likeMatchId
+		}
+		var button = _likeButton
+		post(url, data, function(resp){
+			playInfo.Liked = !playInfo.Liked
+
+			if (playInfo.Liked) {
+				button.text(likedText)
+				button.css("color", likedColor)
+			} else {
+				button.text(unlikedText)
+				button.css("color", unlikedColor)
+			}
+
+		}, function(resp) {
+			alert("like error")
+		})
 	})
 
 	window.onpageshow = function() {

@@ -25,6 +25,7 @@
 	post(url, data, function(resp){
 		lscache.set("accountType", "weibo")
 		lscache.set("userName", resp.Player.NickName)
+		lscache.set("userId", resp.UserId)
 		
 		var returnUrl = lscache.get("returnUrl")
 		if (returnUrl) {

@@ -28,7 +28,7 @@
 				padding: 4px 0px 4px;
 				background-color: #fff;
 				border: 1px solid #eee;
-				border-radius: 3px;
+				border-radius: 5px;
 				box-shadow: 2px 2px 4px #ccc;
 			}
 			.avatar {
@@ -41,19 +41,66 @@
 				height:56px;
 				cursor:pointer;
 			}
+			.avatarSm {
+				padding: 0px;
+				margin: 2px 10px 2px 10px;
+				border: 1px solid #eee;
+				border-radius: 3px;
+				width:34px;
+				height:34px;
+				box-shadow: 1px 1px 2px #999;
+			}
+			HR {
+				margin: 0
+			}
 			#userRow {
 				background-color: #fff;
 				margin:10px 0;
 				padding:6px 0;
 				position:relative;
 				box-shadow: 2px 2px 2px #ccc;
-			}.likeLink {
+			}
+			.likeLink {
 				position:absolute;
 				font-size:16px;
-				color:#5bc0de;
+				/*color:#5bc0de;*/
+				color:#337ab7;
 				text-align: center;
 				width:70px;
 				/*background-color: #eee;*/
+			}
+			.pager li>a:hover, .pager li>a:focus {
+					text-decoration: none;
+					background-color: #fff
+			}
+			.topPageButton {
+				position: absolute;
+				right : 10px;
+				border:1px solid #fff;
+				box-shadow: 2px 2px 4px #ccc;
+			}
+			.nav-pills {
+				margin:10px 0;
+				padding-left:10px;
+				background-color:#fff;
+				box-shadow: 1px 1px 2px #ccc;
+			}
+			.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+				color: #d9534f;
+				background-color: transparent;
+				border-radius: 0px;
+				/*border-bottom: 3px solid #f50;*/
+				border-bottom: 3px solid #d9534f;
+				padding: 4px 7px;
+				margin: 4px 8px;
+			}
+			.nav-pills>li>a, .nav-pills>li>a:hover, .nav-pills>li>a:focus {
+				color: #999;
+				background-color: transparent;
+				border-radius: 0px;
+				font-weight:lighter;
+				padding: 4px 7px;
+				margin: 4px 8px;
 			}
 		</style>
 
@@ -72,6 +119,16 @@
 			<button id="followButton" type="button" class="btn btn-warning btn-sm" style="position:absolute;top:10px;right:10px;display:none">取消关注</button>
 		</div>
 
+		<!-- <div style="position:relative;height:40px">
+			<button type="button" class="btn btn-default pageButton topPageButton">页码</button>
+		</div> -->
+
+		<ul id="tab" class="nav nav-pills">
+			<li role="presentation" class="active" type="0"><a>全部</a></li>
+			<li role="presentation" type="1"><a>原创</a></li>
+			<li role="presentation" type="2"><a>私藏</a></li>
+		</ul>
+
 		<div id="content">
 		</div>
 
@@ -82,26 +139,87 @@
 		</ul>
 
 		<!-- Modal -->
-	    <div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	      <div class="modal-dialog">
-	        <div class="modal-content">
-	          <div class="modal-header">
-	            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	            <h4 class="modal-title" id="myModalLabel">页面跳转</h4>
-	          </div>
-	          <div class="modal-body">
-			        <input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
-			      </div>
-	          <div class="modal-footer">
-	            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-	            <button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
+			<div id="pageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">页面跳转</h4>
+						</div>
+						<div class="modal-body">
+							<input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
-	    <div id="template" style="display:none">
+			<div id="likeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="likeModalLabel">只是确定一下</h4>
+						</div>
+						<!-- <div class="modal-body">
+							<p></p>
+						</div> -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button id="confirmLikeButton" type="button" class="btn btn-primary">确定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="playConfirmButton btn btn-primary">开始拼图</button>
+					</div>
+				</div>
+				</div>
+			</div>
+
+			<div id="followModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title">取消关注吗？</h4>
+						</div>
+						<!-- <div class="modal-body">
+							<p></p>
+						</div> -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button id="confirmFollowButton" type="button" class="btn btn-primary">取消关注</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div id="template" style="display:none">
 			<div class="card">
+				<div class="userRowSm" style="margin:2px 0 2px;position:relative;min-height:20px">
+					<div class="userDiv" style="display:none">
+						<img class="avatarSm"></img>
+						<a class="userName" style="position:relative;font:16px bold;top:3px">name</a>
+					</div>
+					<span class="playTimesLabel" style="position:absolute;top:0px;right:10px;color:#999;font-size:12px">已玩189</span>
+				</div>
+				<!-- <HR> -->
+
 				<div class="thumbRoot">
 					<!-- <div class="thumbnail thumb" index="11" style="position:relative;">
 						<img>
@@ -109,12 +227,12 @@
 				</div>
 				
 				<div style="position:relative;padding:10px 5px">
-					<button type="button" class="playButton btn btn-info">开始拼图</button>
+					<button type="button" class="playButton btn btn-info" style="margin-left:10px">开始拼图</button>
 
 					<!-- <div style="display:none"> -->
-						<div style="position:absolute;right:10px;bottom:10px;display:inline-block;width:150px;height:36px;//background-color:#ccc">
-							<a class="likeLink" style="right:70px;bottom:5px;">喜欢</a>
-							<a class="likeLink" style="right:5px;bottom:5px;">私藏</a>
+						<div style="position:absolute;right:0px;bottom:10px;display:inline-block;width:150px;height:36px;//background-color:#ccc">
+							<a class="likeLink likeButton" style="right:70px;bottom:7px;">喜欢</a>
+							<a class="likeLink privateButton" style="right:5px;bottom:7px;">私藏</a>
 						</div>
 					<!-- </div> -->
 				</div>
@@ -154,9 +272,9 @@
 						<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 						<div class="pswp__preloader">
 							<div class="pswp__preloader__icn">
-							  <div class="pswp__preloader__cut">
+								<div class="pswp__preloader__cut">
 								<div class="pswp__preloader__donut"></div>
-							  </div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -174,22 +292,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<!-- Modal -->
-		<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="playConfirmButton btn btn-primary">开始拼图</button>
-			  </div>
-			</div>
-		  </div>
 		</div>
 
 		<script src="js/jquery.min.js"></script>
