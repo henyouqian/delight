@@ -44,7 +44,7 @@
                 //avatar
                 var customKey = player.CustomAvatarKey
                 var gravatarKey = player.GravatarKey
-                var avatarObj = $(".avatar", row)
+                var avatarObj = $(".avatar40", row)
                 if (customKey.length > 0) {
                     var url = RES_HOST + customKey
                     avatarObj.attr("src", url)

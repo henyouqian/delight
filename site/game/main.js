@@ -26,7 +26,7 @@
  ****************************************************************************/
 var HOST = "http://sld.pintugame.com/"
 // var HOST = "http://localhost:9998/"
-if (window.location.hostname == "localhost" || window.location.hostname == "192.168.2.55") {
+if (window.location.hostname == "localhost" || window.location.hostname == "192.168.2.55" || window.location.hostname == "192.168.1.43") {
     HOST = "http://"+window.location.hostname+":9998/"
 }
 var QINIU_HOST = "http://dn-pintuuserupload.qbox.me/"

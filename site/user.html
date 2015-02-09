@@ -5,7 +5,7 @@
 		<link rel="icon" type="image/png" href="res/icon.png"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		<title>蛮拼的</title>
+		<title>慢慢拼</title>
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -17,30 +17,14 @@
 			body {
 				padding-top: 50px;
 				background-color: #f2f2f0;
+				max-width: 600px;
+				margin: auto;
 			}
 			.row {
 				margin-left: auto;
 				margin-right: auto;
 			}
 			
-			.card {
-				margin: 0px 6px 16px;
-				padding: 4px 0px 4px;
-				background-color: #fff;
-				border: 1px solid #eee;
-				border-radius: 5px;
-				box-shadow: 2px 2px 4px #ccc;
-			}
-			.avatar {
-				padding: 0px;
-				margin: 5px 10px 3px;
-				border: 1px solid #ccc;
-				border-radius: 5px;
-				box-shadow: 1px 1px 2px #999;
-				width:56px;
-				height:56px;
-				cursor:pointer;
-			}
 			.avatarSm {
 				padding: 0px;
 				margin: 2px 10px 2px 10px;
@@ -126,7 +110,7 @@
 		<ul id="tab" class="nav nav-pills">
 			<li role="presentation" class="active" type="0"><a>全部</a></li>
 			<li role="presentation" type="1"><a>原创</a></li>
-			<li role="presentation" type="2"><a>私藏</a></li>
+			<li role="presentation" type="2" id="privateTab"><a>私藏</a></li>
 		</ul>
 
 		<div id="content">
@@ -175,6 +159,24 @@
 				</div>
 			</div>
 
+			<div id="privateLikeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="privateLikeModalLabel">只是确定一下</h4>
+						</div>
+						<!-- <div class="modal-body">
+							<p></p>
+						</div> -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button id="confirmPrivateLikeButton" type="button" class="btn btn-primary">确定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 				<div class="modal-content">
@@ -214,9 +216,9 @@
 				<div class="userRowSm" style="margin:2px 0 2px;position:relative;min-height:20px">
 					<div class="userDiv" style="display:none">
 						<img class="avatarSm"></img>
-						<a class="userName" style="position:relative;font:16px bold;top:3px">name</a>
+						<a class="userName" style="position:relative;font:16px bold;top:0px">name</a>
 					</div>
-					<span class="playTimesLabel" style="position:absolute;top:0px;right:10px;color:#999;font-size:12px">已玩189</span>
+					<span class="playTimesLabel" style="position:absolute;top:0px;right:10px;color:#999;font-size:12px">已拼189</span>
 				</div>
 				<!-- <HR> -->
 

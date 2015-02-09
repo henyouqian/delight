@@ -4,8 +4,8 @@ $().ready(function() {
 	moveTaobaoAds()
 
 	var unlikedText = "喜欢"
-	var privateUnlikedText = "私藏"
 	var likedText = "已喜欢"
+	var privateUnlikedText = "私藏"
 	var privateLikedText = "已私藏"
 	var unlikedColor = "#5bc0de"
 	var likedColor = "#f0ad4e"
@@ -19,9 +19,13 @@ $().ready(function() {
 
 	var userId = parseInt(getUrlParam("u"))
 	if (userId == 0) {
-		userId = lscache.get("userId")
+		userId = parseInt(lscache.get("userId"))
 	}
 	var userName = ""
+	var isMe = false
+	if (userId == parseInt(lscache.get("userId"))) {
+		isMe = true
+	}
 
 	var contentElem = $("#content")
 	var enterMatchId = 0
@@ -29,6 +33,7 @@ $().ready(function() {
 	var packs = {}
 	var ownerMap = {}
 	var currType = 0
+	var _typePageMap = {}
 	var matchExMap = {}
 
 	var likePlayInfo = null
@@ -43,16 +48,33 @@ $().ready(function() {
 		$("#tab>li").removeClass("active")
 		$(this).addClass("active")
 
+		_typePageMap[currType] = currPage
 		currType = parseInt($(this).attr("type"))
+		var pageIndex = _typePageMap[currType]
+		if (!isdef(pageIndex)) {
+			pageIndex = -1
+		}
 
-		loadPage(-1, false)
+
+		loadPage(pageIndex, false)
 	})
+
+	if (isMe) {
+		$("#privateTab").show()
+	} else {
+		$("#privateTab").hide()
+	}
+	
 
 	function loadPage(pageIndex, saveHistory) {
 		if (pageIndex == currPage) {
 			return
 		}
 		console.log(currType, pageIndex)
+
+		var lis = $("#tab>li")
+		lis.removeClass("active")
+		$("#tab>li[type="+currType+"]").addClass("active")
 
 		contentElem.empty()
 
@@ -111,8 +133,14 @@ $().ready(function() {
 					}
 				}
 				var playTimesLabel = cardElem.find(".playTimesLabel")
-				var playTimes = matchExMap[match.Id.toString()]
-				if (!isdef(playTimes)) {
+				var matchIdStr = match.Id.toString()
+				var playTimes = 0
+				if (matchIdStr in matchExMap) {
+					playTimes = matchExMap[matchIdStr].PlayTimes
+				} else {
+					playTimes = 0
+				}
+				if (playTimes == 0) {
 					playTimesLabel.text("暂无记录")
 				} else {
 					playTimesLabel.text("已拼"+playTimes+"次")
@@ -199,8 +227,22 @@ $().ready(function() {
 				var privateButton = $(".privateButton", cardElem)
 				privateButton[0].matchId = match.Id
 				privateButton.click(function(){
-					alert("暂未实现:matchId="+$(this)[0].matchId)
-					// window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
+					var matchId = $(this)[0].matchId
+					var playInfo = playedMatchMap[matchId]
+
+					var modal = $("#privateLikeModal")
+					var title = modal.find("#privateLikeModalLabel")
+					if (playInfo.PrivateLiked) {
+						title.text("取消私藏这组拼图吗？")
+					} else {
+						title.text("私藏这组拼图吗？")
+					}
+
+					likePlayInfo = playInfo
+					_likeButton = $(this)
+					likeMatchId = matchId
+
+					modal.modal("show")
 				})
 
 				var playInfo = playedMatchMap[match.Id]
@@ -270,6 +312,9 @@ $().ready(function() {
 				$(".next").removeClass("disabled")
 			}
 
+			var newURL = window.location.href.split('#')[0]+"#&type="+currType+'&page='+currPage;
+			window.location.replace(newURL)
+
 			//check page
 			// if (currPage >= pageNum) {
 			// 	// var newURL = window.location.href.split('#')[0] + '#&page=' + (pageNum-1);
@@ -303,6 +348,10 @@ $().ready(function() {
 
 	post(url, data, function(resp){
 		console.log(resp)
+		var pageIndex = getPageIndexFromUrl()
+		currType = getTypeFromUrl()
+		loadPage(pageIndex, true)
+
 		var nickName = resp.NickName
 		var customKey = resp.CustomAvatarKey
 		var gravatarKey = resp.GravatarKey
@@ -456,20 +505,25 @@ $().ready(function() {
 	function getPageIndexFromUrl() {
 		var pageIndex = getUrlParam("page")
 		if (pageIndex == "") {
-			// pageNum = 1
-			// if (matchNum > 0) {
-			// 	pageNum = Math.floor((matchNum-1) / limit) + 1
-			// }
-			// pageIndex = pageNum-1
 			pageIndex = -1
 		} else {
 			pageIndex = parseInt(pageIndex)
 		}
 		return pageIndex
 	}
+	function getTypeFromUrl() {
+		var type = getUrlParam("type")
+		if (type == "") {
+			type = 0
+		} else {
+			type = parseInt(type)
+		}
+		return type
+	}
 
 	window.onhashchange = function(){
 		var pageIndex = getPageIndexFromUrl()
+		currType = getTypeFromUrl()
 		loadPage(pageIndex, false)
 	}
 
@@ -514,6 +568,35 @@ $().ready(function() {
 				button.css("color", likedColor)
 			} else {
 				button.text(unlikedText)
+				button.css("color", unlikedColor)
+			}
+
+		}, function(resp) {
+			alert("like error")
+		})
+	})
+
+	$("#confirmPrivateLikeButton").click(function(){
+		$("#privateLikeModal").modal("hide")
+		// var matchId = $(this)[0].matchId
+		var playInfo = likePlayInfo
+
+		var url = "match/privateLike"
+		if (playInfo.PrivateLiked) {
+			url = "match/privateUnlike"
+		}
+		var data = {
+			"MatchId": likeMatchId
+		}
+		var button = _likeButton
+		post(url, data, function(resp){
+			playInfo.PrivateLiked = !playInfo.PrivateLiked
+
+			if (playInfo.PrivateLiked) {
+				button.text(privateLikedText)
+				button.css("color", likedColor)
+			} else {
+				button.text(privateUnlikedText)
 				button.css("color", unlikedColor)
 			}
 
@@ -606,9 +689,6 @@ $().ready(function() {
 			}, 0);
 		});
 	}
-
-	var pageIndex = getPageIndexFromUrl()
-	loadPage(pageIndex, true)
 
 	// window.onload = function() {
 	// 	window.onpageshow()

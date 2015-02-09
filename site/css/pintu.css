@@ -1,3 +1,11 @@
+body {
+	position: relative;
+	padding-top: 50px;
+	background-color: #f2f2f0;
+	max-width: 600px;
+	margin: auto;
+}
+
 a {
 	cursor:pointer;
 }
@@ -6,12 +14,13 @@ a:hover{
 	text-decoration: none;
 }
 
-#thumbRoot {
-	margin:8px;
+.thumbRoot {
+	/*margin:8px;*/
+	/*padding:30px;*/
 	font-size:0;
 }
 
-.thumb {
+/*.thumb {
 	display: inline-block;
 	width:31%;
 	padding: 0px;
@@ -20,10 +29,24 @@ a:hover{
 	box-shadow: 2px 2px 4px #ccc;
 	max-width: 200px;
 	cursor:pointer;
+}*/
+.thumb {
+	display: inline-block;
+	width:33%;
+	padding: 1px;
+	margin: 0px;
+	border-radius: 0px;
+	border-color: transparent;
+	/*box-shadow: 2px 2px 4px #ccc;*/
+	cursor:pointer;
 }
 
 .thumb>img, .thumb>a>img {
 	width:100%;
+	box-shadow: 2px 2px 4px #ccc;
+	border-radius: 2px;
+	/*border: 1px solid #ddd;*/
+	max-width: 200px;
 }
 
 .packThumb {
@@ -70,6 +93,7 @@ a:hover{
 	width:100%;
 	height:100%;
 	display: none;
+	max-width: 600px;
 }
 .hudCover {
 	position:absolute;
@@ -89,6 +113,25 @@ a:hover{
 	background-color:#333;
 	opacity:0.8;
 	border-radius: 5px;
+}
+
+.card {
+	margin: 0px 6px 16px;
+	padding: 4px 0px 4px;
+	background-color: #fff;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	box-shadow: 2px 2px 4px #ccc;
+}
+.avatar {
+	padding: 0px;
+	margin: 5px 10px 3px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 1px 1px 2px #999;
+	width:56px;
+	height:56px;
+	cursor:pointer;
 }
 
  

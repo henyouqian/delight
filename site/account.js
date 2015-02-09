@@ -19,6 +19,7 @@ $().ready(function() {
 			lscache.set("uuid", resp.UUID)
 			lscache.set("userName", resp.Player.NickName)
 			lscache.set("userId", resp.UserId)
+			lscache.set("player", resp.Player)
 			// $("#loginInfo").text("创建 userId:"+resp.UserId+" nickName:"+resp.Player.NickName)
 
 			lscache.set("accountType", "tmp")
@@ -46,6 +47,7 @@ $().ready(function() {
 			lscache.set("accountType", "tmp")
 			lscache.set("userName", resp.Player.NickName)
 			lscache.set("userId", resp.UserId)
+			lscache.set("player", resp.Player)
 
 			var returnUrl = lscache.get("returnUrl")
 			if (returnUrl) {
@@ -71,12 +73,13 @@ $().ready(function() {
 	})
 
 	$("#weiboChangeAccount").click(function(){
-		var uuid = lscache.get("uuid")
-		if (uuid) {
-			$('#weiboChangeAccountModal').modal('show')
-		} else {
-			doWeiboChangeAccount()
-		}
+		// var uuid = lscache.get("uuid")
+		// if (uuid) {
+		// 	$('#weiboChangeAccountModal').modal('show')
+		// } else {
+		// 	doWeiboChangeAccount()
+		// }
+		doWeiboChangeAccount()
 	})
 
 	$("#weiboChangeAccountConfirm").click(function(){
@@ -96,7 +99,12 @@ $().ready(function() {
 		delCookie("usertoken")
 		lscache.remove("accountType")
 		lscache.remove("userName")
+		lscache.remove("player")
 		location.reload()
+	})
+
+	$("#setPlayer").click(function(){
+		window.location.href = "playerSettings.html"
 	})
 
 	function setPlayerInfo(player) {
@@ -147,6 +155,7 @@ $().ready(function() {
 	
 
 	function onNotLogin() {
+		console.log("not login")
 		$("#userRow").hide()
 
 		var uuid = lscache.get("uuid")
@@ -158,5 +167,13 @@ $().ready(function() {
 		//show buttons
 		$("#weiboLogin").show();
 	}
+
+	window.onpageshow = function() {
+		var player = lscache.get("player")
+		if (player) {
+			setPlayerInfo(player)
+			$("#menuAccount").text("账号（"+player.NickName+"）")
+		}
+	};
 	
 })

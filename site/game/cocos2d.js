@@ -25,7 +25,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 (function () {
-    var d = document;
+    var singleFile = true
+    var d = document
     var c = {
         COCOS2D_DEBUG:2, //0 to turn debug off, 1 for basic debug, and 2 for full debug
         box2d:false,
@@ -35,7 +36,7 @@
         loadExtension:false,
         renderMode:0,       //Choose of RenderMode: 0(default), 1(Canvas only), 2(WebGL only)
         tag:'gameCanvas', //the dom element to run cocos2d on
-        SingleEngineFile:'slider.js'
+        // SingleEngineFile:'slider.js'
         // engineDir:'./cocos2d/',
         // appFiles:[
         //     'src/zepto.min.js',
@@ -45,6 +46,18 @@
         //     'src/lscache.min.js',
         // ]
     };
+    if (singleFile) {
+        c.SingleEngineFile = 'slider.js'
+    } else {
+        c.engineDir='./cocos2d/'
+        c.appFiles=[
+            'src/zepto.min.js',
+            'src/resource.js',
+            'src/battleConnectScene.js',
+            'src/sliderScene.js',
+            'src/lscache.min.js',
+        ]
+    }
 
     if(!d.createElement('canvas').getContext){
         var s = d.createElement('div');

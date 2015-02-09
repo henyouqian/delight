@@ -128,14 +128,18 @@ function makeGravatarUrl(key, size) {
 	return url
 }
 
-function getPlayerAvatarUrl(player) {
+function getPlayerAvatarUrl(player, size) {
 	var customKey = player.CustomAvatarKey
 	var gravatarKey = player.GravatarKey
 	if (customKey.length > 0) {
 		var url = RES_HOST + customKey
 		return url
 	} else if (gravatarKey.length > 0) {
-		return makeGravatarUrl(gravatarKey, 40)
+		if (size) {
+			return makeGravatarUrl(gravatarKey, size)
+		} else {
+			return makeGravatarUrl(gravatarKey, 40)
+		}
 	}
 }
 
@@ -181,9 +185,9 @@ function addHeader() {
 
 	var menuAccount = $("#menuAccount")
 	if (lscache.get("accountType")) {
-		var userName = lscache.get("userName")
-		if (userName) {
-			menuAccount.text("账号（"+userName+"）")
+		var player = lscache.get("player")
+		if (player) {
+			menuAccount.text("账号（"+player.NickName+"）")
 		} else {
 			menuAccount.text("账号")
 		}
@@ -257,6 +261,7 @@ function post(url, data, func, errFunc) {
 		if (isdef(resp.Error) && resp.Error == "err_auth") {
 			if (window.location.pathname != "/account.html") {
 				lscache.set("returnUrl", window.location.href)
+				lscache.remove("player")
 				window.location.href = "account.html"
 			}
 		} else {
@@ -314,7 +319,7 @@ function getTime() {
 
 
 (function(){
-	if (window.location.hostname == "localhost" || window.location.hostname == "192.168.2.55") {
+	if (window.location.hostname == "localhost" || window.location.hostname == "192.168.2.55" || window.location.hostname == "192.168.1.43") {
 	    HOST = "http://"+window.location.hostname+":9998/"
 	}
 

@@ -1,4 +1,4 @@
-(function(){
+$().ready(function() {
 
 	var action = lscache.get("action")
 	
@@ -26,6 +26,7 @@
 		lscache.set("accountType", "weibo")
 		lscache.set("userName", resp.Player.NickName)
 		lscache.set("userId", resp.UserId)
+		lscache.set("player", resp.Player)
 		
 		var returnUrl = lscache.get("returnUrl")
 		if (returnUrl) {
@@ -49,4 +50,4 @@
 		window.history.go(-2)
 	})
 	
-})()
+})
