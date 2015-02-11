@@ -189,7 +189,7 @@ var SliderLayer = cc.Layer.extend({
         // 1. super init first
         this._super()
         this._sliderNum = g_sliderNum
-        this._sliderNum = 3
+        // this._sliderNum = 3
 
         updateWeixin()
 

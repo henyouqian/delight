@@ -224,7 +224,8 @@ cc.Loader = cc.Class.extend(/** @lends cc.Loader# */{
                 this._registerFaceFont(resInfo);
                 break;
             default:
-                throw "cocos2d:unknown filename extension: " + type;
+                // throw "cocos2d:unknown filename extension: " + type;
+                sharedTextureCache.addImage(resInfo.src);
                 break;
         }
     },

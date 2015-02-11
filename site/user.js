@@ -32,14 +32,21 @@ $().ready(function() {
 	var _matches = {}
 	var packs = {}
 	var ownerMap = {}
-	var currType = 0
+	var currType = -1
 	var _typePageMap = {}
 	var matchExMap = {}
 
 	var likePlayInfo = null
 	var _likeButton = null
 	var likeMatchId = 0
-	
+
+	var publishButton = $("#publishButton")
+	if (isMe) {
+		publishButton.show()
+	}
+	publishButton.click(function() {
+		window.location.href = "upload.html"
+	})
 
 	$("#tab>li").click(function() {
 		if ($(this).hasClass("active")) {
@@ -49,14 +56,13 @@ $().ready(function() {
 		$(this).addClass("active")
 
 		_typePageMap[currType] = currPage
-		currType = parseInt($(this).attr("type"))
-		var pageIndex = _typePageMap[currType]
+		var typeIndex = parseInt($(this).attr("type"))
+		var pageIndex = _typePageMap[typeIndex]
 		if (!isdef(pageIndex)) {
 			pageIndex = -1
 		}
 
-
-		loadPage(pageIndex, false)
+		loadPage(typeIndex, pageIndex)
 	})
 
 	if (isMe) {
@@ -65,12 +71,13 @@ $().ready(function() {
 		$("#privateTab").hide()
 	}
 	
-
-	function loadPage(pageIndex, saveHistory) {
-		if (pageIndex == currPage) {
+	function loadPage(typeIndex, pageIndex) {
+		if (pageIndex == currPage && typeIndex == currType) {
 			return
 		}
 		console.log(currType, pageIndex)
+
+		currType = typeIndex
 
 		var lis = $("#tab>li")
 		lis.removeClass("active")
@@ -245,6 +252,12 @@ $().ready(function() {
 					modal.modal("show")
 				})
 
+				var me = lscache.get("player")
+				if (match.OwnerId == me.UserId) {
+					likeButton.hide()
+					privateButton.hide()
+				}
+
 				var playInfo = playedMatchMap[match.Id]
 				if (isdef(playInfo)) {
 					if (playInfo.Liked) {
@@ -349,8 +362,12 @@ $().ready(function() {
 	post(url, data, function(resp){
 		console.log(resp)
 		var pageIndex = getPageIndexFromUrl()
-		currType = getTypeFromUrl()
-		loadPage(pageIndex, true)
+		var typeIndex = getTypeFromUrl()
+		if (lscache.get("matchPublished")) {
+			pageIndex = -1
+			typeIndex = 0
+		}
+		loadPage(typeIndex ,pageIndex)
 
 		var nickName = resp.NickName
 		var customKey = resp.CustomAvatarKey
@@ -419,14 +436,14 @@ $().ready(function() {
 		if (currPage == 0) {
 			return
 		}
-		loadPage(currPage-1,true)
+		loadPage(currType, currPage-1)
 		$(this).removeClass("active")
 	})
 	$(".next").click(function(){
 		if (currPage == pageNum - 1) {
 			return
 		}
-		loadPage(currPage+1,true)
+		loadPage(currType, currPage+1)
 		$(this).removeClass("active")
 	})
 
@@ -494,7 +511,7 @@ $().ready(function() {
 			$("#pageModal").modal("hide")
 		} else if (pageIdx >= 0 && pageIdx < pageNum) {
 			$("#pageModal").modal("hide")
-			loadPage(pageIdx,true)
+			loadPage(currType, pageIdx)
 		} else {
 			input.val("")
 			input.attr("placeholder", "输入错误，请输入跳转页码（"+1+"-"+pageNum+"）")
@@ -523,8 +540,8 @@ $().ready(function() {
 
 	window.onhashchange = function(){
 		var pageIndex = getPageIndexFromUrl()
-		currType = getTypeFromUrl()
-		loadPage(pageIndex, false)
+		var typeIndex = getTypeFromUrl()
+		loadPage(typeIndex, pageIndex)
 	}
 
 	window.onpageshow = function() {
@@ -689,9 +706,5 @@ $().ready(function() {
 			}, 0);
 		});
 	}
-
-	// window.onload = function() {
-	// 	window.onpageshow()
-	// }
 	
 })

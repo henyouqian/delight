@@ -12,14 +12,16 @@
 		<link rel="stylesheet" href="css/pintu.css">
 		<style type="text/css">
 			body {
-				padding-top: 50px;
+				padding-top: 80px;
 			}
 		</style>
 	</head>
 
 	<body>
 		<input id="imgInput" type="file" accept="image/*" multiple style="display:none" >
-		<button id="selectImageButton" type="button" class="btn btn-warning btn btn-block">选择图片</button>
+
+		<button id="selectImageButton" type="button" class="btn btn-warning btn-lg btn-block">选择图片</button>
+		<br>
 		<div id="thumbRoot">
 			<!-- <div class="thumbnail thumb" style="position:relative;">
 				<img src="http://pintuuserupload.qiniudn.com/0gqoM_k4eW_h1hrtue4FnmwKcrs=.jpg">
@@ -32,6 +34,27 @@
 			</div> -->
 			
 		</div>
+		<br>
+
+		<div class="well">
+			<form>
+			  <div class="form-group">
+			    <label>拼图块数(3-8)</label>
+			    <input type="number" class="form-control" id="sliderNumInput" value="7">
+			  </div>
+			  <div class="form-group">
+			    <label>封面索引(选第一张就填1)</label>
+			    <input type="number" class="form-control" id="coverIndexInput" value="1">
+			  </div>
+			  <div class="checkbox" style="display:none">
+			    <label>
+			      <input id="privateCb" type="checkbox">不发送到最新列表
+			    </label>
+			  </div>
+			</form>
+		</div>
+
+		<button id="uploadButton" type="button" class="btn btn-info btn-lg btn-block" data-loading-text="发布中..." style="display:none">发布</button>
 
 		<!-- template -->
 		<div id="template" style="display:none">
