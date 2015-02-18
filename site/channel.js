@@ -1,14 +1,7 @@
 $().ready(function() {
 	addHeader()
 	addFooter()
-	
-	//move ads
-	var iframe = $("iframe")
-	if (iframe) {
-		var div = iframe.parent().parent()
-		div.detach()
-		$("#loadMore").before(div)
-	}
+	moveTaobaoAds()
 	
 	var channelName = getUrlParam("name")
 	if (!channelName) {

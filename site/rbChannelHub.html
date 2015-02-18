@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" type="image/png" href="res/icon.png"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<title>慢慢拼</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/pintu.css">
+		<style type="text/css">
+			body {
+				padding-top: 20px;
+			}
+			#tagsContainer {
+				padding:5px;
+			}
+			.tag {
+				margin: 3px auto;
+				/*font-size: 20px;*/
+				font-size:14px;
+				text-align: center;
+				width: 100%;
+				display: inline-block;
+			}
+			.chanThumb {
+				display: inline-block;
+				width:23%;
+				padding: 2px 2px 0px 2px;
+				margin: 1px;
+				border-radius: 2px;
+				box-shadow: 1px 1px 2px #ccc;
+				max-width: 100px;
+				position: relative;
+				left:2px;
+			}
+			.chanThumb img {
+				width:100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="tagsContainer">
+		</div>
+
+		<div id="template" style="display:none">
+			<div class="thumbnail chanThumb" style="position:relative;">
+				<img src="http://pintuuserupload.qiniudn.com/1X0TVNKJNw1hkU4hRz54wuFj4Cw=.jpg">
+				<a class="tag"></a>
+			</div>
+		</div>
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/util.js"></script>
+		<script src="rbChannelHub.js"></script>
+
+	</body>
+</html>

@@ -264,23 +264,27 @@ function makeGravatarUrl(key, size) {
 function getPlayerAvatarUrl(player, size) {
 	var customKey = player.CustomAvatarKey
 	var gravatarKey = player.GravatarKey
-	if (customKey.length > 0) {
-		var url = RES_HOST + customKey
-		return url
-	} else if (gravatarKey.length > 0) {
-		if (size) {
-			return makeGravatarUrl(gravatarKey, size)
+	return getAvatarUrl(customKey, gravatarKey, size)
+}
+
+function getAvatarUrl(avatar, gravatar, gravatarSize) {
+	if (avatar.length > 0) {
+		return RES_HOST + avatar
+	} else if (gravatar.length > 0) {
+		if (gravatarSize) {
+			return makeGravatarUrl(gravatar, gravatarSize)
 		} else {
-			return makeGravatarUrl(gravatarKey, 40)
+			return makeGravatarUrl(gravatar, 40)
 		}
 	}
+	return ""
 }
 
 function isWeixin(){
 	var ua = navigator.userAgent.toLowerCase();
 	if(ua.match(/MicroMessenger/i)=="micromessenger") {
 		return true;
-	} else {isweix
+	} else {
 		return false;
 	}
 }
@@ -401,6 +405,27 @@ function post(url, data, func, errFunc) {
 			if (errFunc) {
 				errFunc(resp)
 			}
+		}
+	})
+}
+
+function rbPost(url, data, func, errFunc) {
+	var idx = url.indexOf("?")
+	if (idx == -1) {
+		url = HOST + url + "?nocache=" + getTime()
+	} else {
+		url = HOST + url + "&nocache=" + getTime()
+	}
+
+	data.Secret = _secret
+	return $.post(url, JSON.stringify(data), function(resp, textStatus, jqXHR){
+		func(resp, textStatus, jqXHR)
+	}, "json")
+	.error(function(xhr){
+		var resp = xhr.responseJSON
+		console.log(resp)
+		if (errFunc) {
+			errFunc(resp)
 		}
 	})
 }
