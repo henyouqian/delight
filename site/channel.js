@@ -32,6 +32,10 @@ $().ready(function() {
 	var _likeButton = null
 	var likeMatchId = 0
 
+	$("#publisherList").click(function() {
+		window.location.href = "channelPublisher.html?name=" + channelName
+	})
+
 	loadMoreBtn.click(function(){
 		moreMatch()
 	})

@@ -12,18 +12,42 @@
 		<link rel="stylesheet" href="css/pintu.css">
 		<style type="text/css">
 			body {
-				padding-top: 50px;
+				padding-top: 60px;
+			}
+			#loadingLabel {
+				font-size: 20px;
+				margin: 40px auto;
+				color: #999;
+				text-align: center;
 			}
 		</style>
 	</head>
 
 	<body>
-		<button id="loadMore" type="button" class="btn btn-info btn-block btn-lg" style="margin-top:10px;">更多</button>
+		<div id="loadingLabel">
+			读取中...
+		</div>
+
+		<div id="userRows" class="card">
+		</div>
+
+		<!-- template -->
+		<div id="template" style="display:none;">
+			<div class="userRow">
+				<a>
+					<img class="avatar40"></img>
+					<a class="userNameLabel"></a>
+					<HR class="userLine">
+				</a>
+			</div>
+		</div>
+
+
 
 		<script src="js/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/util.js"></script>
-		<script src="rbLogin.js"></script>
+		<script src="channelPublisher.js"></script>
 
 	</body>
 </html>
