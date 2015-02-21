@@ -3,13 +3,7 @@ $().ready(function() {
 	addFooter()
 	moveTaobaoAds()
 	
-	var channelName = getUrlParam("name")
-	if (!channelName) {
-		alert("缺少name参数！")
-		return
-	}
-
-	setTitle("#"+channelName)
+	setTitle("主页")
 
 	var unlikedText = "喜欢"
 	var privateUnlikedText = "私藏"
@@ -33,18 +27,13 @@ $().ready(function() {
 	var _likeButton = null
 	var likeMatchId = 0
 
-	$("#publisherList").click(function() {
-		window.location.href = "channelPublisher.html?name=" + channelName
-	})
-
 	loadMoreBtn.click(function(){
 		moreMatch()
 	})
 
 	function moreMatch() {
-		var url = "channel/listMatch"
+		var url = "match/listTimeline"
 		var data = {
-			"ChannelName": channelName,
 			"Key": lastKey,
 			"Score": lastScore,
 			"Limit": limit,

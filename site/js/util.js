@@ -311,7 +311,8 @@ function addHeader() {
 				</div>\
 				<div id="navbar" class="collapse navbar-collapse">\
 					<ul class="nav navbar-nav">\
-						<li><a href="user.html?u=0">我的主页</a></li>\
+						<li><a href="timeline.html">主页</a></li>\
+						<li><a href="user.html?u=0">我的</a></li>\
 						<li><a href="channelHub.html">分类推荐</a></li>\
 						<li><a href="search.html">搜索</a></li>\
 						<li><a id="menuAccount" href="account.html">账号</a></li>\

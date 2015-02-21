@@ -22,15 +22,27 @@
     //
     function loadMore() {
         $("#loadMore").prop('disabled', true)
-        var url = HOST + "player/web/followList"
-        var data = {
-            "Type": type,
-            "UserId": userId,
-            "LastKey": lastKey,
-            "LastScore": lastScore,
-            "Limit" :limit,
+        // var url = HOST + "player/web/followList"
+        // var data = {
+        //     "Type": type,
+        //     "UserId": userId,
+        //     "LastKey": lastKey,
+        //     "LastScore": lastScore,
+        //     "Limit" :limit,
+        // }
+
+        var url = "player/followList"
+        if (type != 0) {
+            url = "player/fanList"
         }
-        $.post(url, JSON.stringify(data), function(resp){
+        var data = {
+            UserId: userId,
+            StartId: lastKey,
+            LastScore: lastScore,
+            Limit: limit,
+        }
+        console.log(data)
+        post(url, data, function(resp){
             // console.log(resp)
             var players = resp.PlayerInfoLites
             lastKey = resp.LastKey
@@ -72,7 +84,7 @@
             } else {
                 $("#loadMore").prop('disabled', false)
             }
-        }, "json")
+        })
     }
 
     $("#loadMore").click(loadMore)

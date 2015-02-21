@@ -2,6 +2,7 @@ $().ready(function() {
 	addHeader()
 	addFooter()
 	moveTaobaoAds()
+	setTitle("我的")
 
 	var unlikedText = "喜欢"
 	var likedText = "已喜欢"
@@ -75,7 +76,6 @@ $().ready(function() {
 		if (pageIndex == currPage && typeIndex == currType) {
 			return
 		}
-		console.log(currType, pageIndex)
 
 		currType = typeIndex
 
@@ -139,6 +139,8 @@ $().ready(function() {
 						avatar.attr("src", url)
 					}
 				}
+
+				//playTimesLable
 				var playTimesLabel = cardElem.find(".playTimesLabel")
 				var matchIdStr = match.Id.toString()
 				var playTimes = 0
@@ -366,6 +368,7 @@ $().ready(function() {
 		if (lscache.get("matchPublished")) {
 			pageIndex = -1
 			typeIndex = 0
+			lscache.remove("matchPublished")
 		}
 		loadPage(typeIndex ,pageIndex)
 
