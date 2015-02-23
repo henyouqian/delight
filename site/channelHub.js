@@ -1,7 +1,7 @@
 $().ready(function() {
 	addHeader()
 	addFooter()
-	setTitle("频道推荐")
+	setTitle("分类推荐")
 
 	var url = "channel/list"
 	var data = {
