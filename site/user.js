@@ -217,7 +217,11 @@ $().ready(function() {
 				}
 				//timeLabel
 				var timeLabel = cardElem.find(".publishTimeLabel")
-				var timeStr = match.BeginTimeStr.replace("T", " ");
+				var timeStr = match.BeginTimeStr
+				if (match.RepostTimeStr != "") {
+					timeStr = match.RepostTimeStr
+				}
+				timeStr = timeStr.replace("T", " ");
 				timeLabel.text(timeStr)
 
 				//playButton
