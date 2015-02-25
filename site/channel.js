@@ -11,9 +11,7 @@ $().ready(function() {
 
 	setTitle("#"+channelName)
 
-	var unlikedText = "喜欢"
 	var privateUnlikedText = "私藏"
-	var likedText = "已喜欢"
 	var privateLikedText = "已私藏"
 	var unlikedColor = "#5bc0de"
 	var likedColor = "#f0ad4e"
@@ -65,7 +63,7 @@ $().ready(function() {
 			resp.Matches.length < limit
 
 			var contentElem = $("#content")
-			for (var i in resp.Matches) {
+			$(resp.Matches).each(function(i, match) {
 				var match = resp.Matches[i]
 				matches[match.Id] = match
 				var cardElem = $("#template>.card").clone()
@@ -151,11 +149,21 @@ $().ready(function() {
 					var playInfo = playedMatchMap[matchId]
 
 					var modal = $("#likeModal")
-					var title = modal.find("#likeModalLabel")
-					if (playInfo.Liked) {
-						title.text("取消喜欢这组拼图吗？")
+					modal.modal("show")
+					likeMatchId = matchId
+				})
+				
+				var privateButton = $(".privateButton", cardElem)
+				privateButton.click(function(){
+					var matchId = match.Id
+					var playInfo = playedMatchMap[matchId]
+
+					var modal = $("#privateLikeModal")
+					var title = modal.find("#privateLikeModalLabel")
+					if (playInfo.PrivateLiked) {
+						title.text("取消私藏这组拼图吗？")
 					} else {
-						title.text("喜欢这组拼图吗？")
+						title.text("私藏这组拼图吗？")
 					}
 
 					likePlayInfo = playInfo
@@ -164,23 +172,9 @@ $().ready(function() {
 
 					modal.modal("show")
 				})
-				
-				var privateButton = $(".privateButton", cardElem)
-				privateButton[0].matchId = match.Id
-				privateButton.click(function(){
-					alert("暂未实现:matchId="+$(this)[0].matchId)
-					// window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
-				})
 
 				var playInfo = playedMatchMap[match.Id]
 				if (isdef(playInfo)) {
-					if (playInfo.Liked) {
-						likeButton.text(likedText)
-						likeButton.css("color", likedColor)
-					} else {
-						likeButton.text(unlikedText)
-						likeButton.css("color", unlikedColor)
-					}
 					if (playInfo.PrivateLiked) {
 						privateButton.text(privateLikedText)
 						privateButton.css("color", likedColor)
@@ -210,7 +204,7 @@ $().ready(function() {
 				} else {
 					playTimesLabel.text("已拼"+playTimes+"次")
 				}
-			}
+			})
 		})
 	}
 	moreMatch()
@@ -276,25 +270,37 @@ $().ready(function() {
 
 	$("#confirmLikeButton").click(function(){
 		$("#likeModal").modal("hide")
-		// var matchId = $(this)[0].matchId
+		var url = "match/like"
+		var data = {
+			"MatchId": likeMatchId
+		}
+		post(url, data, function(resp){
+			$("#repostSuccessModal").modal("show")
+		}, function(resp) {
+			alert("like error")
+		})
+	})
+
+	$("#confirmPrivateLikeButton").click(function(){
+		$("#privateLikeModal").modal("hide")
 		var playInfo = likePlayInfo
 
-		var url = "match/like"
-		if (playInfo.Liked) {
-			url = "match/unlike"
+		var url = "match/privateLike"
+		if (playInfo.PrivateLiked) {
+			url = "match/privateUnlike"
 		}
 		var data = {
 			"MatchId": likeMatchId
 		}
 		var button = _likeButton
 		post(url, data, function(resp){
-			playInfo.Liked = !playInfo.Liked
+			playInfo.PrivateLiked = !playInfo.PrivateLiked
 
-			if (playInfo.Liked) {
-				button.text(likedText)
+			if (playInfo.PrivateLiked) {
+				button.text(privateLikedText)
 				button.css("color", likedColor)
 			} else {
-				button.text(unlikedText)
+				button.text(privateUnlikedText)
 				button.css("color", unlikedColor)
 			}
 

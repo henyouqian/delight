@@ -38,8 +38,8 @@
 			.likeLink {
 				position:absolute;
 				font-size:16px;
-				/*color:#5bc0de;*/
-				color:#337ab7;
+				color:#5bc0de;
+				/*color:#337ab7;*/
 				text-align: center;
 				width:70px;
 				/*background-color: #eee;*/
@@ -115,100 +115,138 @@
 		</ul>
 
 		<!-- Modal -->
-			<div id="pageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-							<h4 class="modal-title" id="myModalLabel">页面跳转</h4>
-						</div>
-						<div class="modal-body">
-							<input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div id="likeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-							<h4 class="modal-title" id="likeModalLabel">只是确定一下</h4>
-						</div>
-						<!-- <div class="modal-body">
-							<p></p>
-						</div> -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button id="confirmLikeButton" type="button" class="btn btn-primary">确定</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div id="privateLikeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-							<h4 class="modal-title" id="privateLikeModalLabel">只是确定一下</h4>
-						</div>
-						<!-- <div class="modal-body">
-							<p></p>
-						</div> -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button id="confirmPrivateLikeButton" type="button" class="btn btn-primary">确定</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
+		<div id="pageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalLabel">页面跳转</h4>
+					</div>
+					<div class="modal-body">
+						<input id="pageInput" type="number" class="form-control" placeholder="跳转页码">
 					</div>
 					<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="playConfirmButton btn btn-primary">开始拼图</button>
-					</div>
-				</div>
-				</div>
-			</div>
-
-			<div id="followModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-							<h4 class="modal-title">取消关注吗？</h4>
-						</div>
-						<!-- <div class="modal-body">
-							<p></p>
-						</div> -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button id="confirmFollowButton" type="button" class="btn btn-primary">取消关注</button>
-						</div>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button id="gotoPage" type="button" class="btn btn-primary">跳转</button>
 					</div>
 				</div>
 			</div>
+		</div>
+
+		<div id="likeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="likeModalLabel">转发这组拼图吗？</h4>
+					</div>
+					<!-- <div class="modal-body">
+						<p></p>
+					</div> -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button id="confirmLikeButton" type="button" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="delModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="likeModalLabel">删除这组拼图吗？</h4>
+					</div>
+					<!-- <div class="modal-body">
+						<p></p>
+					</div> -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button id="confirmDelButton" type="button" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="privateLikeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="privateLikeModalLabel">只是确定一下</h4>
+					</div>
+					<!-- <div class="modal-body">
+						<p></p>
+					</div> -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button id="confirmPrivateLikeButton" type="button" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="repostSuccessModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="likeModalLabel">转发成功</h4>
+					</div>
+					<!-- <div class="modal-body">
+						<p></p>
+					</div> -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">好的</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="thumbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">先完成拼图才能查看大图哟！</h4>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="playConfirmButton btn btn-primary">开始拼图</button>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<div id="followModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title">取消关注吗？</h4>
+					</div>
+					<!-- <div class="modal-body">
+						<p></p>
+					</div> -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button id="confirmFollowButton" type="button" class="btn btn-primary">取消关注</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
-			<div id="template" style="display:none">
+		<div id="template" style="display:none">
 			<div class="card">
 				<div class="userRowSm" style="margin:2px 0 2px;position:relative;min-height:20px">
 					<div class="userDiv" style="display:none">
 						<img class="avatarSm"></img>
-						<a class="userName" style="position:relative;font:16px bold;top:0px">name</a>
+						<a class="userName" style="position:relative;font:16px bold;top:-6px">name</a>
+						<a class="sourceUserName" style="display:none;position:absolute;left:58px;top:18px;font:10px;color:#aaa;">
+							from：xxxx
+						</a>
 					</div>
 					<span class="playTimesLabel" style="position:absolute;top:0px;right:10px;color:#999;font-size:12px">已拼189</span>
 				</div>
@@ -219,17 +257,26 @@
 						<img>
 					</div> -->
 				</div>
+
+				<div style="position:relative;height:10px">
+					<div class="publishTimeLabel" style="position:absolute;right:10px;top:4px;color:#ddd;font-size:10px">
+						2015-34-56 25:53
+					</div>
+				</div>
 				
 				<div style="position:relative;padding:10px 5px">
 					<button type="button" class="playButton btn btn-info" style="margin-left:10px">开始拼图</button>
 
 					<!-- <div style="display:none"> -->
 						<div style="position:absolute;right:0px;bottom:10px;display:inline-block;width:150px;height:36px;//background-color:#ccc">
-							<a class="likeLink likeButton" style="right:70px;bottom:7px;">喜欢</a>
+							<a class="likeLink delButton" style="right:105px;bottom:7px;color:#d9534f">删除</a>
+							<a class="likeLink likeButton" style="right:55px;bottom:7px;">转发</a>
 							<a class="likeLink privateButton" style="right:5px;bottom:7px;">私藏</a>
 						</div>
 					<!-- </div> -->
 				</div>
+
+				
 
 			</div>
 

@@ -5,9 +5,7 @@ $().ready(function() {
 	
 	setTitle("主页")
 
-	var unlikedText = "喜欢"
 	var privateUnlikedText = "私藏"
-	var likedText = "已喜欢"
 	var privateLikedText = "已私藏"
 	var unlikedColor = "#5bc0de"
 	var likedColor = "#f0ad4e"
@@ -23,9 +21,13 @@ $().ready(function() {
 
 	var loadMoreBtn = $("#loadMore")
 
-	var likePlayInfo = null
 	var _likeButton = null
 	var likeMatchId = 0
+
+	var delCard = null
+	var	delMatchId = 0
+
+	var myUserId = parseInt(lscache.get("userId"))
 
 	loadMoreBtn.click(function(){
 		moreMatch()
@@ -54,27 +56,44 @@ $().ready(function() {
 			resp.Matches.length < limit
 
 			var contentElem = $("#content")
-			for (var i in resp.Matches) {
-				var match = resp.Matches[i]
+			$(resp.Matches).each(function(i, match) {
 				matches[match.Id] = match
-				var cardElem = $("#template>.card").clone()
 				$.extend(ownerMap, resp.OwnerMap)
 
+				var cardElem = $("#template>.card").clone()
 				contentElem.append(cardElem)
-				var userNameElem = $(".userName", cardElem)
-				userNameElem.text(match.OwnerName)
-				userNameElem.attr("href", "user.html?u="+match.OwnerId)
 
-				var avatar = cardElem.find(".avatarSm")
+				//userDiv
+				var userDiv = cardElem.find(".userDiv")
+				userDiv.show()
+
+				var avatar = userDiv.find(".avatarSm")
 				avatar[0].href = "user.html?u="+match.OwnerId
 				avatar.click(function(){
 					window.location.href = $(this)[0].href
 				})
 
-				if (match.OwnerId in ownerMap) {
-					var owner = ownerMap[""+match.OwnerId]
-					var url = getPlayerAvatarUrl(owner)
+				var avatarUserId = match.OwnerId
+				if (match.RepostUserId > 0) {
+					avatarUserId = match.RepostUserId
+					sourceUserId = match.OwnerId
+					if (sourceUserId in ownerMap) {
+						var player = ownerMap[""+sourceUserId]
+
+						var userNameElem = userDiv.find(".sourceUserName")
+						userNameElem.show()
+						userNameElem.text("from: "+player.NickName)
+						userNameElem.attr("href", "user.html?u="+player.UserId)
+					}
+				}
+				if (avatarUserId in ownerMap) {
+					var player = ownerMap[""+avatarUserId]
+					var url = getPlayerAvatarUrl(player)
 					avatar.attr("src", url)
+
+					var userNameElem = userDiv.find(".userName")
+					userNameElem.text(player.NickName)
+					userNameElem.attr("href", "user.html?u="+player.UserId)
 				}
 
 				var thumbRoot = $(".thumbRoot", cardElem)
@@ -127,24 +146,55 @@ $().ready(function() {
 
 					})
 				}
+
+				//timeLabel
+				var timeLabel = cardElem.find(".publishTimeLabel")
+				var timeStr = match.BeginTimeStr.replace("T", " ");
+				timeLabel.text(timeStr)
+
+				//
 				var playButton = $(".playButton", cardElem)
 				playButton[0].matchId = match.Id
 				playButton.click(function(){
 					window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
 				})
 
+				//delButton
+				var delButton = $(".delButton", cardElem)
+				delButton.click(function(){
+					var matchId = match.Id
+					if (match.RepostId > 0) {
+						matchId = match.RepostId
+					}
+
+					var modal = $("#delModal")
+					delCard = cardElem
+					delMatchId = matchId
+
+					modal.modal("show")
+				})
+
 				var likeButton = $(".likeButton", cardElem)
-				likeButton[0].matchId = match.Id
 				likeButton.click(function(){
-					var matchId = $(this)[0].matchId
+					var matchId = match.Id
 					var playInfo = playedMatchMap[matchId]
 
 					var modal = $("#likeModal")
-					var title = modal.find("#likeModalLabel")
-					if (playInfo.Liked) {
-						title.text("取消喜欢这组拼图吗？")
+					modal.modal("show")
+					likeMatchId = matchId
+				})
+				
+				var privateButton = $(".privateButton", cardElem)
+				privateButton.click(function(){
+					var matchId = match.Id
+					var playInfo = playedMatchMap[matchId]
+
+					var modal = $("#privateLikeModal")
+					var title = modal.find("#privateLikeModalLabel")
+					if (playInfo.PrivateLiked) {
+						title.text("取消私藏这组拼图吗？")
 					} else {
-						title.text("喜欢这组拼图吗？")
+						title.text("私藏这组拼图吗？")
 					}
 
 					likePlayInfo = playInfo
@@ -153,23 +203,21 @@ $().ready(function() {
 
 					modal.modal("show")
 				})
-				
-				var privateButton = $(".privateButton", cardElem)
-				privateButton[0].matchId = match.Id
-				privateButton.click(function(){
-					alert("暂未实现:matchId="+$(this)[0].matchId)
-					// window.location.href = GAME_DIR+'?matchId='+$(this)[0].matchId
-				})
+
+				var mine = false
+				if (match.OwnerId == myUserId && match.RepostUserId == 0) {
+					mine = true
+				} else if (match.RepostUserId == myUserId) {
+					mine = true
+				}
+				if (mine) {
+					delButton.show()
+				} else {
+					delButton.hide()
+				}
 
 				var playInfo = playedMatchMap[match.Id]
 				if (isdef(playInfo)) {
-					if (playInfo.Liked) {
-						likeButton.text(likedText)
-						likeButton.css("color", likedColor)
-					} else {
-						likeButton.text(unlikedText)
-						likeButton.css("color", unlikedColor)
-					}
 					if (playInfo.PrivateLiked) {
 						privateButton.text(privateLikedText)
 						privateButton.css("color", likedColor)
@@ -199,7 +247,7 @@ $().ready(function() {
 				} else {
 					playTimesLabel.text("已拼"+playTimes+"次")
 				}
-			}
+			})
 		})
 	}
 	moreMatch()
@@ -265,30 +313,59 @@ $().ready(function() {
 
 	$("#confirmLikeButton").click(function(){
 		$("#likeModal").modal("hide")
-		// var matchId = $(this)[0].matchId
+		var url = "match/like"
+		var data = {
+			"MatchId": likeMatchId
+		}
+		post(url, data, function(resp){
+			$("#repostSuccessModal").modal("show")
+		}, function(resp) {
+			alert("like error")
+		})
+	})
+
+	$("#confirmPrivateLikeButton").click(function(){
+		$("#privateLikeModal").modal("hide")
 		var playInfo = likePlayInfo
 
-		var url = "match/like"
-		if (playInfo.Liked) {
-			url = "match/unlike"
+		var url = "match/privateLike"
+		if (playInfo.PrivateLiked) {
+			url = "match/privateUnlike"
 		}
 		var data = {
 			"MatchId": likeMatchId
 		}
 		var button = _likeButton
 		post(url, data, function(resp){
-			playInfo.Liked = !playInfo.Liked
+			playInfo.PrivateLiked = !playInfo.PrivateLiked
 
-			if (playInfo.Liked) {
-				button.text(likedText)
+			if (playInfo.PrivateLiked) {
+				button.text(privateLikedText)
 				button.css("color", likedColor)
 			} else {
-				button.text(unlikedText)
+				button.text(privateUnlikedText)
 				button.css("color", unlikedColor)
 			}
 
 		}, function(resp) {
 			alert("like error")
+		})
+	})
+
+	$("#confirmDelButton").click(function(){
+		$("#delModal").modal("hide")
+
+		var url = "match/del"
+		var data = {
+			"MatchId": delMatchId
+		}
+
+		post(url, data, function(resp){
+			delCard.hide(500, function(){
+				delCard.remove()
+			})
+		}, function(resp) {
+			alert("del error")
 		})
 	})
 

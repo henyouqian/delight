@@ -295,6 +295,7 @@ function isMobile(){
 
 function setTitle(title) {
 	$(".navbar-brand").text(title)
+	$("title").text(title)
 }
 
 function addHeader() {
